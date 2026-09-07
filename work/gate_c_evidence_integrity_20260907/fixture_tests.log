@@ -1,0 +1,10 @@
+test_balanced_first_thread_order (__main__.ThreadAuditPreparationTests.test_balanced_first_thread_order) ... ok
+test_cases_legal_diverse_and_unlabelled (__main__.ThreadAuditPreparationTests.test_cases_legal_diverse_and_unlabelled) ... ok
+test_exact_complete_schedule_with_fixed_total_hash (__main__.ThreadAuditPreparationTests.test_exact_complete_schedule_with_fixed_total_hash) ... ok
+test_no_execution_or_strength_authority (__main__.ThreadAuditPreparationTests.test_no_execution_or_strength_authority) ... ok
+test_repeated_preparation_is_identical (__main__.ThreadAuditPreparationTests.test_repeated_preparation_is_identical) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.628s
+
+OK

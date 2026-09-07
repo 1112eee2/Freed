@@ -3981,6 +3981,55 @@ Verdict: **RUNNING, not strength evidence**. Completion requires every shard
 PASS and one immutable final report; resume the same shards after interruption,
 never create a second opening.
 
+### 2026-09-07 GitHub Gate C evidence-integrity review (KEEP TOOLING ONLY)
+
+Base commit: `f45f7ab388025e91d6fad9442a0566ee84af4e74`.
+Hypothesis: the lifecycle monitor can accept mathematically impossible W/D/L
+totals despite matching pair counts and score mass; it also needs to reject
+invalid consecutive log deltas and unfinalized checkpoints already at the cap.
+The baseline accepted four draws for buckets `1/0/0/0/1` (LL + WW). The updated
+validator rejects it. Independent exhaustive outcome enumeration through three
+pairs verifies both acceptance of realizable totals and rejection of impossible
+ones. Live checks cover the bounded observed tail, not a full journal audit.
+
+Changed code: `work/nnue_gate_c_control.py` and its separate lifecycle tests.
+Added read-only `preflight`: checks local prerequisites, leaves result/manifest
+payloads and large tablebases unopened, and always reports runtime state as
+unknown. Exit 2 reports blockers; even prerequisites-present is not launch or
+promotion authorization. It diagnoses LF checkout versus frozen CRLF contract
+bytes without rewriting files or weakening the exact contract check.
+
+Read/hashed all 216 tracked files (32,792,306 bytes), parsed Python ASTs and all
+JSON/JSONL records, and manually reviewed the relevant plans and lifecycle code.
+This is not a claim of manual line-by-line review of every source/data file.
+Accepted HCE/model hashes match the immutable identities above. Candidate DLL,
+three tablebases, five bound evidence files, both Gate C results and the active
+manifest are absent. The original host's current 2000ms verdict remains unknown.
+
+Validation: lifecycle **25/25**, fixture preparation **5/5**, no failures/errors/
+skips in those focused checks; skill validator and diff check PASS. The Linux
+full-suite attempt discovered 355 cases including failed-import placeholders,
+ran 312 in 61.436s, and ended with **6 failures, 25 errors, 51 skips**. Seven
+imports failed for absent `psutil`; other failures/errors reflect missing native
+fixtures, Windows DLL/clang requirements and Windows-specific workload locking.
+This is **not** a complete-suite PASS or production attestation. Original
+Windows validation remains required; no test was disabled or altered to pass.
+
+Frozen source inventory: 153 files,
+`E8F223128CA34BAFD7AF5E3E93F58D56777D0647A1D279B7C13A3BF20DC383A0`.
+Frozen test inventory: 52 files,
+`FE123C50E916829F8AA735E4862E726595F89BB8AE03BEF47403B2FFF1E8281B`.
+Both still match the contract exactly. No playing source, rules, model, DLL,
+search setting or frozen test changed; no strength experiment was launched.
+
+Reproduction commands and exact tool/log hashes are in
+[validation.json](../../../../work/gate_c_evidence_integrity_20260907/validation.json),
+with the actual full-suite log and preflight report beside it.
+Verdict: **KEEP tooling only; HCE remains production default**. Next action is
+original-host Gate C manifest/evidence verification, followed by the unchanged
+2000ms continuation only if resumable under all existing gates. Independent
+PASS at both controls precedes production smoke/reversible promotion review.
+
 ## Build and smoke commands
 
 Build the full native tool set with:
