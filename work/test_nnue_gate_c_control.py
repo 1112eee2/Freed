@@ -105,7 +105,8 @@ class GateControlTests(unittest.TestCase):
     def read_lines(self, *lines):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "stdout.log"
-            path.write_text('SPRT_CONFIG ' + json.dumps(self.config) + '\n' + ''.join(lines), encoding="utf-8")
+            content = ('SPRT_CONFIG ' + json.dumps(self.config) + '\n' + ''.join(lines)).encode("utf-8")
+            path.write_bytes(content)
             return control.read_live_result(path, self.config)
 
     def test_live_pairs_must_be_contiguous_and_never_rewrite_past_outcomes(self):
