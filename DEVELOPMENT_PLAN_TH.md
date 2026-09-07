@@ -1,219 +1,118 @@
-# แผนพัฒนา ThaiMakhosEngine: NNUE v1 → Threads → Elo
+﻿# คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
-สถานะ: คู่มือดำเนินงานที่ผู้ใช้อนุมัติเมื่อ 2026-09-07
-เป้าหมาย: ความแข็งแกร่งทั่วไปสูงสุดที่มีหลักฐานรองรับ พร้อมความถูกต้อง
-ความเสถียร และ rollback ไม่ใช่ชนะตำแหน่งหรือคู่แข่งรายเดียว
+## 1. จุดเริ่มต้นและเป้าหมายที่ใช้ตัดสิน
 
-## 1. สถานะและแหล่งอ้างอิง
+สถานะที่ตรวจล่าสุดวันที่ 7 กันยายน:
 
-อ่านสถานะปัจจุบันเพียงจุดเดียวที่
-[references/current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md)
-และตรวจ atomic results/process manifest ก่อนทำงานทุกครั้ง
-ขณะเริ่มใช้คู่มือนี้ Gate C 1000ms ผ่านแล้ว; ขั้นดำเนินงานคือชุด 2000ms
-ยังไม่มี production promotion หรือข้อพิสูจน์ว่า 12 Threads คุ้มกว่า 1 Thread
+- NNUE ฝึกและผ่านการตรวจข้อมูล/การคำนวณแล้ว; Gate A และ Gate B **PASS**
+- Gate C ที่ 1 วินาที: **972 เกม, LLR +2.680 — ยังไม่ผ่าน** เกณฑ์ +2.944; ชุด 2 วินาทียังไม่เริ่ม
+- GUI ยังใช้ HCE เป็นค่าเริ่มต้น จึงยังไม่ถือว่า NNUE ขึ้นใช้งานจริงแล้ว
+- เครื่องมี **6 คอร์จริง/12 เธรด** ตามที่คุณเลือก เป้าหมายคือความแข็งแกร่งสูงสุดบนเครื่อง ไม่บังคับใช้ 12 เธรดหากจำนวนอื่นมีหลักฐานว่าดีกว่า
 
-ลำดับอำนาจ: คำสั่งผู้ใช้ → current directive/invariants ใน
-[SKILL.md](.agents/skills/thai-makhos-engine/SKILL.md) → คู่มือนี้ →
-[NNUE_ROADMAP.md](NNUE_ROADMAP.md) สำหรับ feature/model/data contract →
-historical evidence ledger → แผนที่พักไว้
+แยกความสำเร็จเป็นสามเรื่อง: NNUE แข็งแกร่งกว่า HCE, การใช้หลายเธรดคุ้มค่า และรุ่นใหม่แข็งแกร่งกว่ารุ่นก่อน อย่าใช้ผลทดสอบเรื่องหนึ่งแทนอีกเรื่องหนึ่ง
 
-แผนเดิมและประวัติ Phase 0–8 ถูกเก็บครบใน
-[historical plan](.agents/skills/thai-makhos-engine/references/history/20260907-development-plan-before.md)
-อ่านเมื่อจำเป็นต้องสืบ provenance เท่านั้น ไม่ resume acquisition หรือ Gate A/B
-จากข้อความ “current/next” ในประวัติ
+เมื่อดำเนินการ ให้อัปเดต [แผนหลัก](D:/ThaiMakhosEngine/DEVELOPMENT_PLAN_TH.md) และคำสั่งปัจจุบันใน `SKILL.md` ให้ตรงกัน ย้ายข้อความสถานะเก่าไปส่วนประวัติ ไม่ให้มี “งานถัดไป” หลายชุดขัดกัน
 
-แยกความสำเร็จสามเรื่อง:
-1. NNUE candidate แรงกว่า accepted HCE ภายใต้เงื่อนไขที่ล็อก
-2. การใช้หลายเธรดคุ้มกว่า single-thread ของรุ่นเดียวกัน
-3. accepted รุ่นใหม่มีหลักฐานดีกว่ารุ่นก่อนและคู่แข่งภายนอก
+## 2. ปิดงาน NNUE v1 และนำขึ้นใช้งานจริง
 
-เครื่องเป้าหมาย Ryzen 5 5600H มี 6 คอร์จริง/12 logical threads
-ให้แนะนำค่าที่เล่นแข็งแกร่งที่สุดจาก measurement; ไม่บังคับใช้ครบ 12
-การเปลี่ยนไปใช้เธรดน้อยลงอย่างเดียวไม่ถือว่าแก้ SMP สำเร็จ
+### จบ Gate C ตามสัญญาทดสอบเดิม
 
-## 2. ปิด Gate C ตามสัญญาเดิม
+ดำเนินชุด 1 วินาทีให้ได้ข้อสรุป แล้วจึงชุด 2 วินาที ใช้ candidate/model เดิม เทียบ accepted HCE ที่ **12 Threads, Hash รวม 512 MiB ต่อเอนจิ้น** ด้วยกติกาและ tablebase เดียวกัน
 
-สัญญาที่ห้ามแก้: `build/nnue_gate_c_contract_v1.json`
-ใช้ DLL/model เดิมกับ accepted control, fixed 1000ms แล้ว 2000ms,
-12 Threads และ Hash รวม 512 MiB ต่อเอนจิ้น, production TB3/4/5/6,
-opening 8 plies, paired color swaps, persistent search, sequential games,
-H0=0/H1=+2, alpha=beta=0.05, สูงสุด 10,000 คู่ต่อชุด
-max_game_plies=300 ต้อง fail closed; ไม่แปลง truncation เป็น draw
+ห้ามเปลี่ยน seed, DLL, model หรือเงื่อนไขระหว่างการทดสอบ และห้ามรวมผลสองชุดเพื่อกลบชุดที่ไม่ผ่าน
 
-- ทั้งสองชุด PASS: เข้า production review
-- ชุดใด FAIL: คง HCE; วิเคราะห์เกม/runtime แล้วเปิด experiment แก้สาเหตุแยก
-- ถึงเพดาน INCONCLUSIVE: ไม่ promote; ไม่เริ่ม seed ใหม่เพื่อหาผลบวก
-- ขัดข้องหรือ GUI ขอทรัพยากร: ตรวจ identity/config/logs แล้ว resume คู่ที่จบครบ
-- ห้ามรวมสอง time controls หรือปน smoke/diagnostic games เพื่อให้ผ่าน
-- ห้ามเปลี่ยน settings/model/source ที่ถูกผูกไว้หลังคู่แรก
+| ผล | การดำเนินการ |
+|---|---|
+| ทั้งสองชุด PASS | เข้าตรวจความพร้อมก่อนขึ้น GUI |
+| ชุดใด FAIL | คง HCE; วิเคราะห์เกมเสียและ runtime แล้วเปิดการทดลองแก้สาเหตุแยกต่างหาก |
+| ถึงเพดานแล้วยัง INCONCLUSIVE | บันทึกว่ายังพิสูจน์ไม่ได้ ไม่ promote และไม่สุ่มเริ่มใหม่เพื่อหาผลบวก |
+| หยุดเพราะ GUI หรือโปรเซสขัดข้อง | ตรวจตัวตนโปรเซส/ไฟล์/การตั้งค่า แล้ว resume จากคู่ที่จบครบล่าสุด |
 
-### การรันและหน้าสถานะ
+ระหว่างนี้ทำได้เฉพาะงานเตรียมที่ไม่แย่งทรัพยากร เช่น ตรวจโค้ด เตรียม fixtures และเอกสาร ไม่รัน training, benchmark หรือ arena อีกชุดทับกัน
 
-`work/nnue_gate_c_control.py verify` ตรวจ contract/artifacts/evidence/inventories
-และ recompute ผลชุดแรก; `launch` เริ่มหรือ resume เฉพาะชุด 2000ms ที่ยังไม่จบ
-โดย exact argv จาก contract, hidden detached BelowNormal, เก็บ launch intent,
-PID/creation ticks, logs และ run manifest ในโฟลเดอร์ใหม่
-การ resume ที่มี stderr ต้องตรวจ incident ก่อน; ไม่มี blind automatic restart
+### ตรวจ production ก่อนเปลี่ยนค่าเริ่มต้น
 
-`build/runtime/nnue_gate_c_active_run.json` ชี้ immutable run manifest ปัจจุบัน
-`work/nnue_gate_c_status_terminal.ps1` อ่านทั้งสองชุดและแสดงจำนวนคู่/เกม,
-LLR/bounds, เวลาคู่ล่าสุด, process identity และ RUNNING/PAUSED/ERROR/FINISHED
-ใช้ Unix timestamp สำหรับการแสดงวันที่ไทย/อังกฤษ; ไม่ผูก PID ใน script
-ระหว่างโปรเซสยังรัน ให้อ่าน append-only pair log และ recompute สถิติเท่านั้น
-อ่าน canonical checkpoint หลัง writer หยุดแล้ว เพื่อไม่รบกวน atomic replace
-ไม่แสดง LLR เป็นเปอร์เซ็นต์เสร็จหรือ ETA ที่รับประกันไม่ได้
-ปิดจอสถานะแล้ว arena ต้องยังอยู่
+- ผูก DLL, model, ABI และการตั้งค่าเป็น release bundle ที่ตรวจสอบย้อนหลังได้ เก็บ accepted HCE สำหรับ rollback
+- ตรวจเปิด server แบบเย็น, หน้าเว็บพร้อมใช้งาน, ตาแรก, เกมใหม่, เปลี่ยน Threads/Hash, คนเล่นกับบอท และบอทเล่นกันเอง
+- ตรวจ forced move, จบเกม, กติกาเสมอ, โหลด tablebase, ยกเลิกการคิด และคืนผลจาก iteration ที่เสร็จสมบูรณ์เมื่อหมดเวลา
+- GUI ต้องแสดง backend/model และทรัพยากรที่ใช้จริง หาก NNUE โหลดไม่ได้ต้องแจ้งชัด ห้าม fallback เงียบแล้วแสดงว่าเป็น NNUE
+- เปลี่ยน default แบบย้อนกลับได้ แล้วตรวจซ้ำผ่านเส้นทาง GUI จริง ไม่ใช้ผลทดสอบเรียกเอนจิ้นโดยตรงแทนทั้งหมด
 
-ระหว่าง arena ใช้เครื่อง ทำเฉพาะ docs/read-only/fixtures/low-resource tooling
-ไม่ compile native, train, profile, full-suite หรือแข่งอีกชุดทับกัน
-GUI มี priority สูงสุด; เก็บคู่ที่ถูกขัดจังหวะเป็น unscored
+**นิยาม “NNUE v1 เสร็จ”:** ผ่าน Gates ครบ, GUI ใช้ NNUE จริง, ไม่มี runtime regression ที่สำคัญ และ rollback ได้ ไม่ได้หมายความว่าการพัฒนา NNUE จบถาวร
 
-## 3. Production promotion และนิยาม “NNUE v1 เสร็จ”
+## 3. แก้ปัญหา 12 Threads ไม่คุ้มโดยแยกสาเหตุให้ได้ก่อน
 
-หลัง Gate C ทั้งสองชุด PASS เท่านั้น:
+### การทดลองถัดไปหลังปิด Gate C: NNUE thread-scaling audit
 
-1. ตรวจ reproduction/provenance ของ DLL/model และครบทุก correctness gate
-2. ทำ immutable release bundle ผูก DLL/model/feature ABI/rules/config/hashes
-   เก็บ accepted HCE และ release manifest เดิมเป็น rollback target
-3. รันทดสอบครบ suite ขณะเครื่อง idle และตรวจ source/test identity หลังรัน
-4. ทดสอบ cold server → หน้าเว็บพร้อม → ตาแรก ผ่าน HTTP/GUI จริง
-   แยก setup, model/TB load และเวลาคิด; เทียบ HCE ในสภาพเดียวกัน
-5. ทดสอบเกมใหม่, คนกับบอท, บอทกับบอท, ทั้งสองสี, ลากเดิน,
-   หมุนกระดานโดยไม่เปลี่ยนฝ่าย, เปลี่ยน Threads/Hash และยกเลิกการคิด
-6. ทดสอบ forced move, terminal, repetition/no-progress, TB priority,
-   timeout ที่คืน complete iteration, corrupt/missing/incompatible model
-7. GUI/API แสดง requested/effective Threads, Hash จริง, backend และ model/build
-   identity; ห้าม fallback เงียบแล้วอ้างว่าใช้ NNUE
-8. เปลี่ยน default แบบ reversible แล้ว isolated post-promotion rebaseline
-   ทดสอบ rollback กลับ HCE จริงและเก็บรายงาน; คืนค่า candidate เฉพาะเมื่อผ่าน
+ใช้ NNUE รุ่นเดียวกันตลอด เปรียบเทียบ **1 / 2 / 4 / 6 / 8 / 12 เธรด** ที่ 1 และ 2 วินาที Hash รวม 512 MiB โดยรายงานหน่วยความจำ TT ที่จัดสรรจริงด้วย
 
-เพิ่ม provenance แบบ additive ไม่ทำให้ game export เดิมอ่านไม่ได้
-คงค่าที่ผู้ใช้ตั้งเอง; ข้อเสนอ Threads เป็น recommendation ไม่แอบ override
+ใช้ชุดตำแหน่งหลากหลายอย่างน้อย 96 ตำแหน่ง ครอบคลุมต้นเกม กลางเกม ฮอส การกินต่อเนื่อง และใกล้เสมอ ทดสอบซ้ำอย่างน้อยห้ารอบ สลับลำดับการรัน และแยกตำแหน่งวินิจฉัยจากเกมเซียนเฒ่าออกจากชุดหลัก
 
-NNUE v1 เสร็จเมื่อ Gates ครบ, GUI ใช้ NNUE จริง, runtime regression ที่สำคัญถูก
-ปิด และ rollback ได้ ไม่ใช่เพียง training หรือ self-play ผ่าน
-หาก smoke ไม่ผ่าน ให้แก้ production integration แบบแยก candidate;
-ประเมิน gate ที่ต้องรันใหม่ตาม playing-path/resource/time changes จริง
+วัดพร้อมกัน:
 
-## 4. การทดลองหลัง promotion: NNUE thread-scaling/profile audit
+- เวลาคิดจริง ความลึกที่จบ และความเสถียรของตาเดิน
+- งานค้นหาซ้ำ จำนวน worker ที่มีงานจริง และเวลารอประสานงาน
+- ขนาด/ประสิทธิภาพ TT ต่อ worker และผลจากการแบ่ง Hash
+- เวลาที่ใช้ใน NNUE, qsearch, move generation และ tablebase
+- CPU, RAM และอาการลดความเร็วเมื่อเครื่องร้อน
 
-ใช้ NNUE รุ่นเดียวกันทั้ง matrix; คง features/model/search/rules/TB
-วัด Threads 1/2/4/6/8/12 ที่ fixed 1 และ 2 วินาที, Hash รวม 512 MiB
-รายงาน TT จริงต่อ worker/รวม; หาก allocator ทำให้ยอดจริงต่างกันให้แสดงไว้
-และแยกการทดสอบ matched-allocation เพื่อวินิจฉัย ไม่แอบให้แต่ละ worker 512 MiB
+ผลค้นลึกใช้เป็นข้อมูลวินิจฉัย ไม่ถือเป็นคำตอบถูกแน่นอน และไม่ใช้ NPS รวมแทนความแข็งแกร่ง
 
-### ชุดตำแหน่งและวิธีวัด
+### เลือกวิธีแก้จากหลักฐาน
 
-- อย่างน้อย 96 ตำแหน่งหลากหลาย: ต้นเกม/กลางเกม/ฮอส/กินต่อ/ใกล้เสมอ,
-  ทั้งสองสี และหลาย reversible clocks
-- แยก external เซียนเฒ่า/เกมแพ้คนเป็น diagnostic appendix;
-  ไม่ใช้เป็น proven labels หรือเป็นจุดเลือก configuration เดี่ยว
-- อย่างน้อย 5 repetitions, balanced/สลับลำดับรัน, fresh-state protocol เดียวกัน
-- ตรึง corpus/hash/seed/schedule ก่อนวัด; รอบที่ถูกรบกวนไม่เป็น evidence
-- แยก fixed-depth diagnostic กับ fixed-time playing-quality observations
+- **ถ้างานซ้ำหรือการแบ่ง TT เป็นต้นเหตุหลัก:** เปิดการทดลองโครงสร้าง parallel search เพียงแนวคิดเดียว โดยระบุกลไกที่แก้สาเหตุเดิมอย่างชัดเจน
+- **ถ้าเสียเวลากับการประสานงาน:** ทดลองลด overhead โดยคงพฤติกรรมค้นหาเดิมก่อน
+- **ถ้า 6 เธรดดี แต่ 12 เธรดเสียจากการแย่งทรัพยากร:** ยืนยันด้วยการแข่งขัน แล้วเสนอค่าที่เหมาะกับเครื่อง ไม่บังคับใช้ครบทุก logical thread
+- **ถ้าคอขวดอยู่ในงานที่ทุก worker ทำร่วมกัน เช่น NNUE:** ลดต้นทุนส่วนนั้นก่อนเปลี่ยนสถาปัตยกรรมใหญ่
 
-วัด elapsed/deadline overshoot, complete depth, move/score/PV distribution,
-nodes/qnodes, worker utilization, duplicated work, coordinator wait,
-TT hit/layout, NNUE materialization/features updated/evaluation cost,
-move generation/TB cost, CPU/RAM และ clock/thermal throttling เมื่ออ่านได้จริง
-metric ที่ไม่มี counter ให้รายงาน unavailable; instrument ใน diagnostic build
-แยกจาก timing control และวัด overhead ของ instrumentation ก่อนใช้สรุป
+ไม่รื้อฟื้น private-root fail-low, root-alpha, leader-only Lazy-SMP หรือ adaptive routing รุ่นที่ถูก reject โดยเพียงเปลี่ยนชื่อ ต้องมีหลักฐานและกลไกใหม่ที่ตอบสาเหตุที่เคยไม่ผ่าน
 
-ผลค้นลึกเป็น observational reference ไม่ใช่ ground truth
-NPS รวมและจำนวน nodes ที่เพิ่มไม่แทน Elo
+คัด configuration ที่มีแนวโน้มดีจาก audit แล้วทดสอบแบบ paired/SPRT กับ 1 เธรดของเอนจิ้นรุ่นเดียวกัน ที่เวลาใช้งานจริงทั้งสองระดับ ใช้ openings ใหม่สำหรับการยืนยัน หากเปลี่ยน backend ต้องเทียบ backend เดิมที่จำนวนเธรดเท่ากันด้วย
 
-### เลือกการทดลองเดียวจากผล
+**เกณฑ์จบ:** มี configuration แนะนำที่ผ่านหลักฐานความแข็งแกร่งและ runtime พร้อมคำอธิบายว่า 12 เธรดเสียตรงไหน หากยังไม่พบ multi-thread configuration ที่เหนือกว่า 1 เธรด ให้รายงานว่า SMP ยังไม่สำเร็จ แม้จะตั้งค่าที่ปลอดภัยกว่าให้ใช้ชั่วคราวแล้วก็ตาม
 
-- duplicate-root/TT fragmentation เด่น: ออกแบบ parallel mechanism ที่แก้สาเหตุ
-  และต่างจาก rejected prototypes อย่างระบุได้
-- coordination overhead เด่น: ทดลองลด overhead โดยคง semantics ก่อน
-- 6T ดีกว่า 12T จาก contention: คัดเป็น configuration candidate แล้วพิสูจน์แข่ง
-- NNUE/eval cost เด่น: ทดสอบต้นทุนร่วมของทุก worker ก่อน architecture ใหญ่
+## 4. เพิ่ม Elo จากด้านอื่น โดยเลือกทีละการทดลอง
 
-ก่อนเขียน candidate ใด ต้องมี experiment contract ระบุสมมติฐานหนึ่งข้อ,
-หลักฐาน, control, classification, expected change และ fail/stop gates
-ไม่ revive private-root fail-low, root-alpha, leader-only Lazy-SMP,
-fixed-window scout หรือ adaptive routing รุ่นที่แพ้ โดยไม่มี mechanism ใหม่
-ที่ตอบสาเหตุเดิมใน ledger
+ลำดับนี้เป็นคิวตามชนิดของหลักฐาน ไม่ใช่คำสั่งให้เพิ่ม heuristic ทุกตัว
 
-คัด configuration ที่มีแนวโน้มดีจาก audit แล้ว paired pentanomial SPRT
-เทียบ 1T ของ NNUE รุ่นเดียวกันที่ 1s/2s ใช้ openings ใหม่ที่ไม่ใช้คัดเลือก
-หากเปลี่ยน backend ให้เทียบ backend เดิมที่ Threads เท่ากันด้วย
-ทดสอบ candidate ทีละตัว; ผ่านเฉพาะ STC ไม่พอสำหรับค่าที่ผู้ใช้เล่นจริง
-กรณีผลยังแยกไม่ได้ ให้รายงาน uncertainty ไม่อ้างว่าจำนวนเธรดเท่ากัน
-
-เกณฑ์จบ: มี configuration แนะนำที่ผ่าน strength/runtime evidence พร้อม
-คำอธิบาย 12T; ถ้ายังไม่มี multi-thread configuration ชนะ 1T อย่างมีหลักฐาน
-ให้คงสถานะ SMP unresolved แม้เลือกค่าชั่วคราวที่เหมาะกว่าแล้ว
-
-## 5. คิวเพิ่ม Elo และ NNUE รุ่นต่อไป
-
-หลัง audit เลือก single highest-value experiment ตาม measurement ไม่ทำครบ
-ทุก heuristic และไม่ stack แนวคิดที่ยังไม่ผ่าน
-
-| ด้าน | Candidate แรกที่พิจารณา | หลักฐานที่ต้องมี |
+| ด้าน | งานที่ควรทดลอง | เงื่อนไขเลือก |
 |---|---|---|
-| NNUE cost | nearest-valid-ancestor delta ที่ staged ไว้ | materialization/update เป็น hotspot |
-| งานสูญเปล่า | qsearch/move-generation/data-layout/TT work ซ้ำ | profiler และ diverse corpus |
-| Single-thread quality | ordering/history/horizon reduction | ค้นผิดทิศหลายตำแหน่ง ไม่ใช่ความช้าอย่างเดียว |
-| เวลา | setup/stop/iteration commit overhead | requested-versus-actual budget และ fallback evidence |
-| NNUE v2 | label/data quality ก่อน capacity | error strata และ learning curve |
+| ต้นทุน NNUE | `ancestor delta` ที่เตรียมไว้: ลดการสร้าง accumulator ระหว่างทาง | profile ยืนยันว่าต้นทุนส่วนนี้สำคัญ |
+| งานค้นหาสิ้นเปลือง | ลดการสร้างตาซ้ำ งาน qsearch ที่ซ้ำ และต้นทุนข้อมูล/หน่วยความจำ | มี hotspot และยังรักษาความหมายเดิมได้ |
+| คุณภาพ single-thread search | move ordering, history และการลดปัญหา horizon | ตำแหน่งหลากหลายแสดงว่าค้นผิดทิศ ไม่ใช่แค่ช้า |
+| การบริหารเวลา | ลด setup/stop overhead และรักษาผล iteration ที่จบ | มีเวลาสูญเปล่าหรือผลถอยเมื่อ deadline |
+| NNUE รุ่นถัดไป | เพิ่มคุณภาพข้อมูล/teacher ก่อนขยายโมเดล | error analysis และ learning curve สนับสนุน |
 
-Ancestor delta อยู่ใน `work/nnue_ancestor_delta_v1` ยังไม่ผ่าน native/performance/
-strength gates ต้องผูก snapshot ใหม่กับ baseline ปัจจุบันในบันทึกใหม่
-ไม่แก้หลักฐาน v21 เดิมให้ดูเหมือนใหม่ จากนั้น build control/off/on/guard แยก
-และตรวจ full-refresh/accumulator bit-exact: quiet/capture/multi-capture/promotion,
-clock reset/boundary/80, null move, deep/PVS/siblings, reload/corruption/overflow
-วัดทั้งจำนวน materializations และจำนวน feature deltas เพราะน้อยครั้งอาจแพงขึ้น
+สำหรับ `ancestor delta` ต้องเริ่มจากตรวจ snapshot และอัปเดตการผูกกับ baseline ปัจจุบันในบันทึกใหม่ เพราะ preflight เดิมยังอ้างรุ่นเก่า จากนั้นตรวจ native accumulator เทียบ full refresh ให้ตรงทุกค่า รวมกินหลายต่อ เลื่อนเป็นฮอส เปลี่ยน clock, null move, sibling และ PVS retry ก่อนวัดความเร็ว
 
-Behavior-preserving candidate ต้องตรง move/score/nodes/PV ใน deterministic 1T
-และไม่ช้าลงซ้ำได้; เมื่อ throughput เปลี่ยน depth ที่ถึงในเวลาจริง ให้ยืนยัน
-paired fixed-time strength ก่อน promotion
-Strength-changing candidate ต้องทดสอบ legality/bounds/stop semantics และ SPRT
-ไม่บังคับ exact move parity แล้วเรียกความต่างทุกอย่างว่า correctness bug
-หลายเธรดที่ scheduling ไม่ deterministic ให้วัด distribution แยกจาก oracle
+การแก้ประสิทธิภาพที่อ้างว่าไม่เปลี่ยนพฤติกรรม ต้องคง move/score/nodes/PV ใน deterministic single-thread benchmark ส่วนการเปลี่ยน search quality ให้ประกาศว่าเป็น **strength-changing candidate** และตรวจความถูกต้องของกติกา/ขอบเขตคะแนนควบคู่กับการแข่งขัน ไม่อ้างว่าเป็น refactor ที่เหมือนเดิม
 
-Fixed 1s ต้องเคารพงบต่อตา ไม่โยกเวลาไปตาอื่นหรือ sleep เติมเวลา
-forced/terminal/exact อาจตอบเร็วได้; clock-based allocation เป็นอีกโหมดหนึ่ง
+การบริหารเวลาต้องเคารพโหมดผู้ใช้: ตั้ง 1 วินาทีต่อตาไม่ควรแอบย้ายงบข้ามตา และไม่เพิ่มการรอเฉย ๆ ให้ดูเหมือนใช้เวลาครบ ส่วนตาบังคับหรือคำตอบ exact อาจคืนผลเร็วได้
 
-### NNUE v2 และข้อมูล
+สำหรับ NNUE รุ่นถัดไป:
 
-- snapshot accepted teacher แต่ละรุ่น; เก็บ fresh games/independent opponents/
-  controlled exploration พร้อม actual terminal outcome และ provenance
-- mine disagreement/uncertainty/horizon เฉพาะ development pool
-- quiet-leaf label distribution ต้องใกล้ search จริง; แยก teacher scalar,
-  game outcome, exact WDL และ uncertainty ไม่ปนเป็น solved truth
-- แบ่งระดับเกมก่อนเลือกตำแหน่ง/augmentation; trajectory/clock variants อยู่ split
-  เดิมและ canonical dedup ข้าม split; external diagnostics ไม่เป็น tuning labels
-- fresh sealed test ต่อ major generation; เปิดครั้งเดียวหลัง model freeze
-- เปลี่ยน data amount, label depth, loss หรือ model size ทีละแกน
-- หาก learning curve ยังดีขึ้นเมื่อเพิ่มข้อมูล ให้เพิ่มข้อมูลก่อนเพิ่ม network
-- offline loss ลดไม่ใช่ Elo; model ใหม่ผ่าน export/parity/search/arena/production
-  ตาม gate เดิม โดยไม่ยืมการอนุมัติหรือ sealed test ของรุ่นก่อน
+- เก็บเกมใหม่จากรุ่นที่ผ่านแล้ว คู่แข่งอิสระ และการสำรวจตาที่หลากหลาย
+- ใช้ตำแหน่งไม่แน่ใจ/เสียเปรียบเพื่อหาข้อมูลเพิ่ม ไม่ตีตราตาจากเกมเดียวว่าเป็นคำตอบจริง
+- แยกข้อมูลระดับเกม ป้องกันตำแหน่งซ้ำข้ามชุด และสร้าง sealed test ใหม่สำหรับรุ่นใหญ่
+- เปลี่ยนทีละแกน: ข้อมูล, คุณภาพ label, loss หรือขนาดโมเดล
+- ไม่เปิดชุดทดสอบที่เคยใช้แล้วซ้ำเพื่อเลือกโมเดล และไม่ถือว่า offline loss ลดลงแปลว่า Elo เพิ่ม
 
-## 6. ป้องกันถอยหลังและส่งมอบ
+## 5. ระบบป้องกันถอยหลังและเกณฑ์ส่งมอบ
 
-วงจร: hypothesis/contract → correctness → deterministic benchmark/profile →
-paired SPRT → PROMOTE/KEEP/REJECT/INCONCLUSIVE → rollback state → next experiment
+ทุกการทดลองใช้วงจรเดียวกัน:
 
-- Accepted control แยก immutable; current source ไม่ได้ accepted โดยชื่อไฟล์
-- `RULESET.json` และ `makhos/core.py` คงเดิม; native move/state change ต้อง perft
-  depth 10 และ randomized Python/native differential
-- Full suite ต้อง discover จริงทุกครั้ง รายงาน failures/errors/skips/count/time
-  ใช้ `scratch/nnue_full_suite_attestation.py` ขณะ idle ไม่รันคู่กับ arena
-- เพิ่ม regression ที่จับข้อผิดพลาดได้จริง ไม่เพียงตรวจข้อความในเอกสาร
-- Freeze seed/time/rules/Threads/Hash/source/model ก่อนเกม; default confirmation
-  H0=0/H1=+2, alpha=beta=.05, cap 10,000 คู่ถ้าไม่ได้ประกาศอย่างอื่นก่อนเริ่ม
-- ไม่ pool controls, นับคู่ซ้ำ, คิด incomplete pair หรือ truncate เป็น draw
-- เก็บ compiler/model/config hashes, raw benchmark, pentanomial/LLR/Elo interval,
-  actual resources, verdict และ rollback ใน historical ledger
-- Current-state เปลี่ยนเฉพาะ milestone/run identity; ไม่สะสมคำสั่ง current หลายชั้น
+**ล็อกสมมติฐาน/เกณฑ์ → correctness → benchmark/profile → paired SPRT → PROMOTE / REJECT / INCONCLUSIVE**
 
-หลังแต่ละ promotion ทดสอบกับคู่แข่งภายนอกหลายระดับอย่างเป็นธรรม สลับสี
-opening ไม่เลือกจากเกมที่ชนะ กติกา/เวลาชัด พร้อม game JSON และ identity
-self-play gain ไม่เท่ากับ absolute Elo หรือ world strongest
-world-strength claim ต้องมี independent reproducible competitive evidence
-ทั้ง short และ longer control; unavailable opponent ให้ระบุขอบเขตตามจริง
+- เก็บ accepted เป็น control เสมอ แยก candidate และข้อมูลผลทดสอบ ไม่ overwrite ของที่กำลังใช้งาน
+- รันชุดทดสอบเดิมทั้งหมด—หลักฐานล่าสุดมี 393 tests—พร้อม regression ใหม่ของสิ่งที่แก้ การผ่าน tests อย่างเดียวไม่ใช่หลักฐานเพิ่ม Elo
+- ล็อก seed, กติกา, เวลา, Hash, Threads, hashes และเกณฑ์หยุดก่อนแข่ง สำหรับการยืนยัน strength ใช้กรอบ H0=0/H1=+2, α=β=0.05 และเพดานที่ประกาศล่วงหน้า; ไม่เปลี่ยนกลางทาง
+- ทดสอบทั้งการกลับมาทำงานหลังหยุด การไม่เพิ่มผลคู่ซ้ำ การให้ GUI ใช้ทรัพยากรก่อน และการไม่แปลงเกมที่ถูกตัดเป็นเสมอ
+- บันทึกผลแต่ละครั้งใน ledger; ให้ `SKILL.md` ชี้เพียงงานถัดไปที่ยังใช้จริง พร้อมเหตุผลเลือกและเงื่อนไขหยุด
 
-พัก DFPN, initial-position proof, tablebase >6 และ proof-guided policy/value
-จนกว่าผู้ใช้สั่งเฉพาะ ไม่ทำ Goal ใหญ่ complete เพียงเพราะจบ NNUE หรือ SPRT หนึ่งชุด
+Status terminal ต้องแสดงขั้นปัจจุบัน จำนวนคู่/เกม LLR เทียบขอบเขต เวลาที่ผลขยับล่าสุด และสถานะรัน/พัก/ผิดพลาด อ่านตัวตนโปรเซสจากข้อมูลการรันแทน PID ที่ฝังไว้ และไม่แปลง LLR เป็น “เปอร์เซ็นต์ใกล้เสร็จ”
+
+หลังแต่ละ promotion จึงแข่งกับคู่แข่งภายนอกหลายระดับด้วย openings และสีที่สมดุล เก็บเกมพร้อม provenance เพื่อแยกความก้าวหน้าใน self-play ออกจากความสามารถจริงกับคู่แข่ง
+
+**ลำดับหลัก:** จบ Gate C → ขึ้น NNUE v1 อย่างปลอดภัย → วัด thread scaling/profile → แก้คอขวดที่คุ้มที่สุดทีละตัว → ยืนยัน Elo → พัฒนาข้อมูล/NNUE รุ่นถัดไป
+
+ไม่รวมการกลับไปทำ DFPN หรือ tablebase ใหญ่กว่า 6 ตัวในรอบนี้ และไม่รับประกันว่า 12 เธรดต้องเร็วหรือแรงกว่าเสมอ เป้าหมายคือรุ่นที่เล่นแข็งแกร่งขึ้นจริงโดยมีหลักฐานและย้อนกลับได้
