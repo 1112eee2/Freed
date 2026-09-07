@@ -1,0 +1,33 @@
+{
+  "format": "thai-makhos-game-v1",
+  "start_position": "B:BM25,26,27,28,29,30,31,32:RM1,2,3,4,5,6,7,8",
+  "start_reversible_plies": 0,
+  "final_position": "B:BM17,26,27,28,29,30,31,32:RM2,3,4,5,6,7,8,9",
+  "reversible_plies": 4,
+  "moves": [
+    {
+      "ply": 1,
+      "player": "black",
+      "notation": "25-21",
+      "actor": "engine",
+      "engine": { "think_time_seconds": 2.0, "threads": 1, "hash_mb": 64, "mode": "win" }
+    },
+    { "ply": 2, "player": "red", "notation": "5-9", "actor": "human" },
+    {
+      "ply": 3,
+      "player": "black",
+      "notation": "21-17",
+      "actor": "engine",
+      "engine": { "think_time_seconds": 2.0, "threads": 1, "hash_mb": 64, "mode": "win" }
+    },
+    { "ply": 4, "player": "red", "notation": "1-5", "actor": "human" }
+  ],
+  "engine": {
+    "think_time_seconds": 2.0,
+    "threads": 1,
+    "hash_mb": 64,
+    "mode": "win",
+    "game_mode": "human",
+    "human_side": "red"
+  }
+}

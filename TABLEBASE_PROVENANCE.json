@@ -1,0 +1,48 @@
+{
+  "format": "makhos-tablebase-provenance",
+  "version": 1,
+  "hash_algorithm": "sha256",
+  "ruleset": {
+    "path": "RULESET.json",
+    "canonical_json_sha256": "708bffcc2a264929616ba9cff8e63e926a96b992fced9692fe88feded2bd0e6a"
+  },
+  "generator": {
+    "algorithm": "sha256-path-length-lf-v1",
+    "files": [
+      "native/makhos_native.c",
+      "native/makhos_tb4.c",
+      "native/makhos_tb5.c",
+      "native/makhos_tb6.c"
+    ],
+    "bundle_sha256": "649025844ca9b8cb5c0ab0d8c1cb1c5e656596cf595d1ae094b0837abe4f62d1"
+  },
+  "artifacts": [
+    {
+      "piece_count": 4,
+      "no_progress_plies": 80,
+      "representation": "full",
+      "file_name": "tb4_np80.bin",
+      "file_bytes": 251477834,
+      "fnv1a64": "d78fa125921c73e9",
+      "sha256": "8a98f19eaa28f65b2c152d97eef78ff667e70974ae1d455af9598ea101cf9d1d"
+    },
+    {
+      "piece_count": 5,
+      "no_progress_plies": 80,
+      "representation": "compact",
+      "file_name": "tb5_np80.compact.bin",
+      "file_bytes": 278902544,
+      "fnv1a64": "c9e825ce79ecc0c9",
+      "sha256": "718763fb0f7e026e2fbfe09c066b5b40c480d37df9586f1be84cbe604466f4cc"
+    },
+    {
+      "piece_count": 6,
+      "no_progress_plies": 80,
+      "representation": "compact",
+      "file_name": "tb6_np80.compact.bin",
+      "file_bytes": 4852172800,
+      "fnv1a64": "7102f5514870a253",
+      "sha256": "17a0196f3afeefd9d57fb00b641045b0ef790b38a64da73e19da3f3369d04a4f"
+    }
+  ]
+}

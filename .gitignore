@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / test cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts, tablebases, and compiled binaries
+build/
+*.dll
+*.exe
+*.obj
+*.exp
+*.lib
+*.bin
+*.tt
+
+# Logs and runtime artifacts
+logs/
+*.log
+work/skill_validator_dependencies/
+
+# IDE and OS
+.vscode/
+.idea/
+Thumbs.db
+[Dd]esktop.ini

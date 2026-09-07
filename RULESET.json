@@ -1,0 +1,62 @@
+{
+  "format": "makhos-ruleset",
+  "version": 1,
+  "name": "thai-makhos-fmjd-king-halt",
+  "board": {
+    "rows": 8,
+    "columns": 8,
+    "playable_squares": 32,
+    "numbering": "row-major-1-to-32-on-dark-squares",
+    "dark_square_condition": "(row+column)%2==1"
+  },
+  "initial_position": {
+    "black_men": [25, 26, 27, 28, 29, 30, 31, 32],
+    "red_men": [1, 2, 3, 4, 5, 6, 7, 8],
+    "side_to_move": "black"
+  },
+  "men": {
+    "black_forward_row_delta": -1,
+    "red_forward_row_delta": 1,
+    "quiet_move": "one-forward-diagonal-square",
+    "capture_direction": "forward-only",
+    "capture_landing": "first-square-immediately-beyond-captured-piece"
+  },
+  "kings": {
+    "quiet_move": "any-distance-along-clear-diagonal",
+    "capture_target": "first-opponent-on-selected-diagonal-ray",
+    "capture_landing": "first-square-immediately-beyond-captured-piece",
+    "direction_after_capture": "any-diagonal-including-reversal"
+  },
+  "captures": {
+    "mandatory_when_available": true,
+    "maximum-capture-selection_required": false,
+    "complete_chain_is_one_move": true,
+    "continuation_with_same_piece_required": true,
+    "captured_piece_removal": "immediate-after-each-jump"
+  },
+  "promotion": {
+    "black_row": 0,
+    "red_row": 7,
+    "timing": "on-landing",
+    "ends_move_immediately": true,
+    "resets_no_progress_clock": true
+  },
+  "draws": {
+    "play_repetition_occurrences": 3,
+    "no_progress_reversible_plies": 80,
+    "capture_resets_no_progress_clock": true,
+    "quiet_nonpromotion_increments_no_progress_clock": 1,
+    "tablebase_repetition": "disabled-history-free-state"
+  },
+  "terminal_precedence": [
+    "repetition-draw-when-enabled",
+    "no-progress-draw",
+    "side-with-no-legal-move-loses",
+    "ongoing"
+  ],
+  "tablebase_state": [
+    "board",
+    "side-to-move",
+    "reversible-plies-0-through-80"
+  ]
+}

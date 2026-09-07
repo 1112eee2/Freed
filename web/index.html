@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thai Makhos Engine — เอนจิ้นหมากฮอสไทย 2.0</title>
+  <meta name="description" content="เอนจิ้นหมากฮอสไทยระดับพรีเมียม เล่นกับบอทหรือดูบอทแข่งกันเองพร้อมการวิเคราะห์ตำแหน่งและกระดานหมุนได้">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260813-3">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar / Control Panel -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">👑</div>
+        <div class="brand-text">
+          <h1>THAI MAKHOS</h1>
+          <span class="version-tag">ENGINE v2.1</span>
+        </div>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="panel-card">
+        <h2>🎮 โหมดการเล่น</h2>
+        <div class="mode-buttons">
+          <button id="btn-mode-human" class="mode-btn active" data-mode="human">
+            <span class="icon">👤</span> คน vs บอท
+          </button>
+          <button id="btn-mode-bot" class="mode-btn" data-mode="bot">
+            <span class="icon">🤖</span> บอท vs บอท
+          </button>
+          <button id="btn-mode-edit" class="mode-btn" data-mode="edit">
+            <span class="icon">✏️</span> จัดกระดาน
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Panel -->
+      <div class="panel-card">
+        <h2>⚙️ ตั้งค่าเกม</h2>
+        
+        <div class="setting-group" id="group-human-side">
+          <label for="select-human-side">ฝั่งของคุณ:</label>
+          <select id="select-human-side">
+            <option value="black" selected>⚫ ดำ (เดินก่อน)</option>
+            <option value="red">🔴 แดง (เดินหลัง)</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label for="select-think-time">เวลาคิดต่อตา:</label>
+          <select id="select-think-time">
+            <option value="0.5">0.5 วินาที (เร็ว)</option>
+            <option value="1.0" selected>1.0 วินาที (มาตรฐาน)</option>
+            <option value="2.0">2.0 วินาที (ลึก)</option>
+            <option value="3.0">3.0 วินาที (ลึกมาก)</option>
+            <option value="5.0">5.0 วินาที (ทัวร์นาเมนต์)</option>
+          </select>
+        </div>
+
+        <div class="engine-resource-grid">
+          <div class="setting-group">
+            <label for="select-engine-threads">Threads:</label>
+            <select id="select-engine-threads">
+              <option value="1" selected>1 Thread (control แนะนำที่ 1 วิ)</option>
+              <option value="2">2 Threads</option>
+              <option value="4">4 Threads</option>
+              <option value="8">8 Threads</option>
+              <option value="12">12 Threads (root split ทดลอง)</option>
+            </select>
+            <small class="setting-note">ค่ามากกว่า 1 ใช้ root split ซึ่งยังไม่ได้พิสูจน์ว่าแกร่งกว่า control ที่เวลา 1 วินาที</small>
+          </div>
+
+          <div class="setting-group">
+            <label for="select-engine-hash">Hash (รวม):</label>
+            <select id="select-engine-hash">
+              <option value="16">16 MB</option>
+              <option value="32">32 MB</option>
+              <option value="64" selected>64 MB</option>
+              <option value="128">128 MB</option>
+              <option value="256">256 MB</option>
+              <option value="512">512 MB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="select-engine-mode">นโยบายเลือกตา:</label>
+          <select id="select-engine-mode">
+            <option value="win" selected>Win-First (ปลอดภัย & ปิดเกมเร็ว)</option>
+            <option value="best">Best (Minimax score สูงสุด)</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label for="select-rules-profile">กติกาเสมอ:</label>
+          <select id="select-rules-profile">
+            <option value="project" selected>โปรเจกต์ (ซ้ำ 3 ครั้ง / 80 plies)</option>
+            <option value="external-no-repetition">ทดสอบเว็บ (ไม่ตัดสามซ้ำ)</option>
+          </select>
+        </div>
+
+        <div class="action-buttons">
+          <button id="btn-new-game" class="primary-btn">
+            <span>🔄</span> เกมใหม่
+          </button>
+          <button id="btn-flip-board" class="secondary-btn">
+            <span>🔄</span> หมุนกระดาน
+          </button>
+        </div>
+      </div>
+
+      <!-- Engine Status & Metrics -->
+      <div class="panel-card engine-card">
+        <h2>📊 สถานะการประเมิน</h2>
+        <div class="eval-bar-container">
+          <div class="eval-bar" id="eval-bar-fill" style="height: 50%;"></div>
+          <div class="eval-score-badge" id="eval-score-text">0.00</div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="label">Depth:</span>
+            <span class="value" id="val-depth">-</span>
+          </div>
+          <div class="metric-item">
+            <span class="label">Nodes:</span>
+            <span class="value" id="val-nodes">-</span>
+          </div>
+          <div class="metric-item">
+            <span class="label">Time:</span>
+            <span class="value" id="val-time">- ms</span>
+          </div>
+          <div class="metric-item">
+            <span class="label">Result:</span>
+            <span class="value" id="val-wdl">UNKNOWN</span>
+          </div>
+          <div class="metric-item">
+            <span class="label">Evaluator:</span>
+            <span class="value" id="val-evaluator">-</span>
+          </div>
+        </div>
+
+        <div class="pv-container">
+          <span class="pv-label">Best Move / PV:</span>
+          <div class="pv-text" id="val-pv">-</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Game Area -->
+    <main class="game-area">
+      <header class="game-header">
+        <div class="player-indicator top-player" id="player-top">
+          <span class="player-dot" id="dot-top">🔴</span>
+          <span class="player-name" id="name-top">RED</span>
+          <span class="turn-badge" id="badge-top"></span>
+        </div>
+      </header>
+
+      <!-- 8x8 Board Container -->
+      <div class="board-wrapper">
+        <div class="board" id="checkers-board">
+          <!-- 64 Squares generated dynamically by JS -->
+        </div>
+      </div>
+
+      <footer class="game-footer">
+        <div class="player-indicator bottom-player" id="player-bottom">
+          <span class="player-dot" id="dot-bottom">⚫</span>
+          <span class="player-name" id="name-bottom">BLACK</span>
+          <span class="turn-badge" id="badge-bottom">กำลังเดิน</span>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Right Sidebar: Move History & Game Log -->
+    <aside class="move-log-sidebar">
+      <div class="panel-card history-card">
+        <div class="history-header">
+          <h2>📜 ประวัติการเดิน (Move History)</h2>
+          <button id="btn-copy-game" class="log-action-btn" type="button">
+            📋 คัดลอกเกม
+          </button>
+        </div>
+        <div class="move-list-container" id="move-list">
+          <!-- Move entries injected by JS -->
+        </div>
+      </div>
+
+      <div class="panel-card game-status-card">
+        <h2>📢 ข้อความสถานะ</h2>
+        <div class="status-msg" id="status-message">
+          เตรียมพร้อม... ดำเดินก่อน
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="app.js?v=20260831-1"></script>
+</body>
+</html>
