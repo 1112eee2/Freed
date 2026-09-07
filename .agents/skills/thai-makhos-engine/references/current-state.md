@@ -42,6 +42,28 @@ resume completed Gate A/B/1000ms, pool time controls, or alter the frozen model.
 
 ## Immutable result and artifact identities
 
+### GitHub checkout verification (2026-09-07)
+
+The original Windows host's current 2000ms state cannot be established from
+the repository alone. Use `python -B work/nnue_gate_c_control.py preflight`
+for local prerequisites before host verification. It does not read result
+payloads, inspect remote processes, run search, or authorize promotion; exit 2
+means prerequisites are blocked. Missing local results never mean NOT_STARTED.
+
+This checkout lacks the candidate DLL, tablebases, bound smoke/suite evidence,
+Gate C results and active manifest. Accepted DLL/model hashes match. The Git
+contract has LF bytes, while its frozen SHA binds CRLF; preflight diagnoses the
+exact CRLF reconstruction without rewriting or accepting the checkout. Restore
+the original immutable artifacts on the original host and verify their exact
+identities before considering any resume. Do not change frozen hashes to fit
+a checkout or replace missing evidence with a new run.
+
+Lifecycle validation now rejects unrealizable W/D/L versus pentanomial totals,
+invalid consecutive pair deltas in the observed log tail, and resume at the
+declared cap even before final checkpoint publication. Focused tooling tests
+are separate from the frozen suite. The Linux full-suite attempt is not a PASS
+attestation; see the latest evidence-ledger entry for its measured limitations.
+
 | Artifact | SHA-256 |
 |---|---|
 | Accepted HCE `build/makhos_native_accepted.dll` | `FEEDD39CF16E5F5ABC236452BE897ABE1ECF26B8BA7ADCDA4A25022B868C3DDD` |

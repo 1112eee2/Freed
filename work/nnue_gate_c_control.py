@@ -66,15 +66,7 @@ def contract_at(root=ROOT):
     return read_json(root / CONTRACT)
 
 
-def checked_result(payload, expected_config):
-    from makhos.sprt import calculate_pentanomial_sprt
-    if payload.get("format") != "thai-makhos-sprt-result-v2":
-        raise ValueError("Unsupported checkpoint format")
-    if payload.get("config") != expected_config:
-        raise ValueError("Checkpoint configuration mismatch")
-    if type(payload.get("complete")) is not bool:
-        raise ValueError("Invalid completion flag")
-    result = payload["result"]
+def checked_pair_counts(result, max_pairs):
     buckets = result["pentanomial"]
     if len(buckets) != 5:
         raise ValueError("Expected five pentanomial buckets")
@@ -84,8 +76,28 @@ def checked_result(payload, expected_config):
     pairs, games, wins, draws, losses = counts
     if (pairs != sum(buckets) or games != 2 * pairs or games != wins + draws + losses
             or 2 * wins + draws != sum(i * n for i, n in enumerate(buckets))
-            or pairs > expected_config["max_pairs"]):
+            or pairs > max_pairs):
         raise ValueError("Inconsistent completed-pair counts")
+    # The middle bucket may contain either WL/LW or DD. Score mass alone
+    # cannot distinguish them (and would accept four draws for LL + WW).
+    split_pairs = wins - buckets[3] - 2 * buckets[4]
+    if (not 0 <= split_pairs <= buckets[2]
+            or losses != 2 * buckets[0] + buckets[1] + split_pairs
+            or draws != buckets[1] + buckets[3] + 2 * (buckets[2] - split_pairs)):
+        raise ValueError("W/D/L cannot be realized by the pentanomial buckets")
+
+
+def checked_result(payload, expected_config):
+    from makhos.sprt import calculate_pentanomial_sprt
+    if payload.get("format") != "thai-makhos-sprt-result-v2":
+        raise ValueError("Unsupported checkpoint format")
+    if payload.get("config") != expected_config:
+        raise ValueError("Checkpoint configuration mismatch")
+    if type(payload.get("complete")) is not bool:
+        raise ValueError("Invalid completion flag")
+    result = payload["result"]
+    checked_pair_counts(result, expected_config["max_pairs"])
+    buckets = result["pentanomial"]
     status, llr, elo, error = calculate_pentanomial_sprt(
         tuple(buckets), expected_config["elo0"], expected_config["elo1"])
     if result["status"] != status:
@@ -93,9 +105,16 @@ def checked_result(payload, expected_config):
     for key, value in (("llr", llr), ("elo", elo), ("elo_95_error", error)):
         if not math.isclose(result[key], value, rel_tol=1e-12, abs_tol=1e-12):
             raise ValueError(f"SPRT {key} does not reproduce")
-    if payload["complete"] and status == "INCONCLUSIVE" and pairs < expected_config["max_pairs"]:
+    if payload["complete"] and status == "INCONCLUSIVE" and result["pairs"] < expected_config["max_pairs"]:
         raise ValueError("Premature finalization before the declared cap")
     return result
+
+
+def require_resumable_result(payload, expected_config):
+    result = checked_result(payload, expected_config)
+    if (payload["complete"] or result["status"] != "INCONCLUSIVE"
+            or result["pairs"] >= expected_config["max_pairs"]):
+        raise RuntimeError("2000ms match reached a stop condition; do not restart")
 
 
 def expected_configs(contract, root=ROOT):
@@ -131,6 +150,86 @@ def verify_bindings(contract, root=ROOT):
     if Path(sys.executable).resolve() != Path(contract["python_executable"]).resolve():
         raise ValueError("Python executable changed")
     return expected_configs(contract, root)
+
+
+def repository_preflight(root=ROOT):
+    """Cheap local prerequisites only; never inspect results or start work.
+
+    A Git clone cannot establish the state of the original Windows arena.
+    Large tablebases receive existence checks only to avoid competing for I/O.
+    Full binding/process verification remains the host lifecycle's job.
+    """
+    root = Path(root).resolve()
+    blockers, files = [], []
+    report = {"format": "thai-makhos-gate-c-preflight-v1",
+              "scope": "local_prerequisites_only", "root": str(root),
+              "runtime_state": "UNKNOWN_NOT_INSPECTED",
+              "result_payload_reads": 0, "native_search_authorized": False,
+              "production_promoted": False, "files": files, "blockers": blockers,
+              "verification_pending": ["full artifact and source/test inventory hashes",
+                  "original Windows host process creation identity and GUI/workload state",
+                  "manifest-bound live logs or stopped results; independent Gate C verdicts",
+                  "production smoke and reversible promotion review after both controls PASS"]}
+    try:
+        contract = contract_at(root)
+    except (OSError, ValueError) as error:
+        blockers.append({"kind": "contract", "detail": str(error)})
+        # Git's LF checkout of the Windows-frozen CRLF contract is a useful
+        # diagnosis, never a replacement identity or launch authorization.
+        try:
+            raw = (root / CONTRACT).read_bytes()
+            crlf = raw.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+            if hashlib.sha256(crlf).hexdigest().upper() != CONTRACT_SHA:
+                report["status"] = "BLOCKED_LOCAL_PREREQUISITES"
+                return report
+            report["contract_checkout"] = {
+                "actual_sha256": hashlib.sha256(raw).hexdigest().upper(),
+                "required_sha256": CONTRACT_SHA,
+                "diagnosis": "CRLF reconstruction matches frozen identity; checkout still rejected"}
+            contract = json.loads(crlf)
+        except (OSError, ValueError):
+            report["status"] = "BLOCKED_LOCAL_PREREQUISITES"
+            return report
+    # Even if a future contract references a checkpoint as evidence, do not
+    # open it here. Only the live/stopped manifest-bound monitor may do that.
+    result_paths = {(root / m["output"]).resolve() for m in contract["matches"]}
+    for section in ("artifact_sha256", "evidence_sha256"):
+        for name, expected in contract[section].items():
+            path = root / name
+            row = {"path": name, "section": section, "expected_sha256": expected}
+            try:
+                path.resolve().relative_to(root)
+                if not path.is_file():
+                    row["check"] = "MISSING"
+                    blockers.append({"kind": "missing_file", "path": name})
+                elif path.resolve() in result_paths or path.stat().st_size > 1024 * 1024:
+                    row["check"] = "PRESENT_NOT_HASHED"
+                else:
+                    row["actual_sha256"] = sha(path)
+                    row["check"] = "MATCH" if row["actual_sha256"] == expected else "HASH_MISMATCH"
+                    if row["check"] == "HASH_MISMATCH":
+                        blockers.append({"kind": "hash_mismatch", "path": name})
+            except (OSError, ValueError) as error:
+                row["check"] = "UNREADABLE"
+                blockers.append({"kind": "file_error", "path": name, "detail": str(error)})
+            files.append(row)
+    for name in [ACTIVE, *(match["output"] for match in contract["matches"])]:
+        present = (root / name).is_file()
+        files.append({"path": name, "section": "runtime_evidence",
+                      "check": "PRESENT_NOT_READ" if present else "MISSING"})
+        if not present:
+            blockers.append({"kind": "missing_runtime_evidence", "path": name})
+    if os.name != "nt":
+        blockers.append({"kind": "host_platform", "required": "Windows", "actual": os.name})
+    if sys.version.split()[0] != contract["python_version"]:
+        blockers.append({"kind": "python_version", "required": contract["python_version"],
+                         "actual": sys.version.split()[0]})
+    if Path(sys.executable).resolve() != Path(contract["python_executable"]).resolve():
+        blockers.append({"kind": "python_executable", "required": contract["python_executable"],
+                         "actual": sys.executable})
+    report["status"] = ("BLOCKED_LOCAL_PREREQUISITES" if blockers else
+                        "LOCAL_PREREQUISITES_PRESENT_HOST_VERIFICATION_REQUIRED")
+    return report
 
 
 def process_identity(pid):
@@ -206,7 +305,14 @@ def read_live_result(log_path, expected_config):
         head = stream.readline(65536)
         stream.seek(0, os.SEEK_END)
         length = stream.tell()
-        stream.seek(max(0, length - 65536))
+        offset = max(0, length - 65536)
+        stream.seek(offset)
+        if offset:
+            # Discard only a clipped first line, preserving a line that starts
+            # exactly at the bounded tail window.
+            stream.seek(offset - 1)
+            if stream.read(1) != b"\n":
+                stream.readline()
         tail = stream.read()
     if not head.endswith(b"\n"):
         return None
@@ -234,6 +340,18 @@ def read_live_result(log_path, expected_config):
                 "wins": wins, "draws": draws, "losses": losses, "pentanomial": buckets,
                 "status": status, "llr": llr, "elo": elo, "elo_95_error": error}}
         checked_result(payload, expected_config)
+        if pairs:
+            previous = pairs[-1]["result"]
+            if (previous["status"] != "INCONCLUSIVE"
+                    or count != previous["pairs"] + 1):
+                raise ValueError("Live pair sequence duplicated, missing, or past a stop condition")
+            # Validate the delta as one actual color-swapped pair. Independently
+            # valid cumulative totals must not rewrite earlier game outcomes.
+            delta = {key: payload["result"][key] - previous[key]
+                     for key in ("pairs", "games", "wins", "draws", "losses")}
+            delta["pentanomial"] = [n - old for n, old in
+                                     zip(buckets, previous["pentanomial"])]
+            checked_pair_counts(delta, 1)
         pairs.append(payload)
     return pairs[-1] if pairs else None
 
@@ -308,9 +426,7 @@ def launch(root=ROOT):
             result_path = root / match["output"]
             if result_path.exists():
                 payload = read_json(result_path)
-                checked_result(payload, configs[1])
-                if payload["complete"] or payload["result"]["status"] != "INCONCLUSIVE":
-                    raise RuntimeError("2000ms match reached a stop condition; do not restart")
+                require_resumable_result(payload, configs[1])
             previous = active_manifest(root)
             if previous:
                 observed = process_identity(previous["process"]["pid"])
@@ -361,9 +477,11 @@ def launch(root=ROOT):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("status", "verify", "launch"))
+    parser.add_argument("action", choices=("preflight", "status", "verify", "launch"))
     args = parser.parse_args()
-    if args.action == "status":
+    if args.action == "preflight":
+        result = repository_preflight()
+    elif args.action == "status":
         result = snapshot()
     elif args.action == "verify":
         verify_bindings(contract_at())
@@ -371,6 +489,8 @@ def main():
     else:
         result = launch()
     print(json.dumps(result, sort_keys=True), flush=True)
+    if args.action == "preflight" and result["blockers"]:
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":
