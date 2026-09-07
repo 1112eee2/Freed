@@ -1,0 +1,163 @@
+{
+  "format": "thai-makhos-positional-regressions-v1",
+  "cases": [
+    {
+      "id": "sian-thao-draw-black-ply21",
+      "source_game_id": "374f92e56f20496b",
+      "source_game": "build/external_games/20260814_sian-thao_draw_black_raw.json",
+      "ply": 21,
+      "position": "B:BM19,20,25,27,29,31:RM1,3,6,8,10,17",
+      "reversible_plies": 2,
+      "rules_profile": "external-no-repetition",
+      "played_move": "27-23",
+      "evidence": {
+        "kind": "search-horizon-diagnostic",
+        "library_sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+        "threads": 12,
+        "hash_mb": 512,
+        "short": {
+          "budget_ms": 1000,
+          "depth": 24,
+          "best_move": "25-21",
+          "root_scores": {
+            "25-21": -57,
+            "27-23": -101,
+            "25-22": -104,
+            "27-24": -143,
+            "19-15": -159,
+            "19-16": -163,
+            "20-16": -201,
+            "31-26": -224
+          }
+        },
+        "long": {
+          "budget_ms": 5000,
+          "depth": 25,
+          "best_move": "27-23",
+          "root_scores": {
+            "27-23": -60,
+            "25-22": -66,
+            "25-21": -95,
+            "27-24": -100,
+            "19-16": -120,
+            "19-15": -140,
+            "20-16": -201,
+            "31-26": -273
+          }
+        },
+        "fixed_depth_ladder": [
+          {"depth": 22, "best_move": "25-22", "score": -71, "elapsed_ms": 553},
+          {"depth": 23, "best_move": "19-15", "score": -21, "elapsed_ms": 691},
+          {"depth": 24, "best_move": "25-21", "score": -57, "elapsed_ms": 1018},
+          {"depth": 25, "best_move": "27-23", "score": -60, "elapsed_ms": 1538},
+          {"depth": 26, "best_move": "27-23", "score": -114, "elapsed_ms": 8947}
+        ],
+        "interpretation": "The root ranking flips between completed depths 24 and 25. Treat this as a search-stability regression, not an independently proven best-move label."
+      }
+    },
+    {
+      "id": "sian-thao-win-red-ply20",
+      "source_game_id": "2be26354ecbb234e",
+      "source_game": "user attachment sha256:ff90398719dc1020601bb8fa8b9c163bb0fd81490aa4635c5b3721169015d930",
+      "source_analysis": "build/siantao_loss_20260823_accepted_analysis.json",
+      "source_analysis_sha256": "23feeeeecb521d2775956d4cafbae685c65782e0c68a66b845231f013a1fb8e5",
+      "ply": 20,
+      "position": "R:BM22,23,27,30,31,32:RM1,6,9,10,11,15",
+      "reversible_plies": 1,
+      "rules_profile": "project",
+      "played_move": "9-14",
+      "evidence": {
+        "kind": "external-loss-search-divergence",
+        "library_sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+        "threads": 12,
+        "hash_mb": 512,
+        "short": {
+          "budget_ms": 1000,
+          "depth": 23,
+          "best_move": "10-14",
+          "root_scores": {
+            "1-5": -43,
+            "9-13": -121,
+            "9-14": -133,
+            "10-14": -41,
+            "11-16": -526,
+            "15-18": -749,
+            "15-19": -909
+          }
+        },
+        "long": {
+          "budget_ms": 20000,
+          "depth": 27,
+          "best_move": "1-5",
+          "root_scores": {
+            "1-5": -68,
+            "9-13": -111,
+            "9-14": -180,
+            "10-14": -100,
+            "11-16": -539,
+            "15-18": -999979,
+            "15-19": -999975
+          }
+        },
+        "timed_ladder": [
+          {"budget_ms": 1000, "depth": 23, "best_move": "10-14", "score": -41},
+          {"budget_ms": 5000, "depth": 26, "best_move": "10-14", "score": -62},
+          {"budget_ms": 20000, "depth": 27, "best_move": "1-5", "score": -68}
+        ],
+        "interpretation": "The recorded 9-14 is 80 to 112 cp below the strongest completed long-search alternatives. This is the first clear one-move loss of value in the supplied game; keep it as an external regression, not a proven best-move label."
+      }
+    },
+    {
+      "id": "sian-thao-win-red-engine-first-ply19",
+      "source_game_id": "50c2e37c4239346c",
+      "source_game": "user attachment sha256:cf23379cbb83c2f0243ca90f49aaca3aac6599f557e56a50e112a4c8cefd8eba",
+      "source_analysis": "build/siantao_loss_black_ply19_12t_long_20260824.json",
+      "source_analysis_sha256": "fefe944464b8ada2f2923f041576d7f1a6a1bdb0404a9e3c39d2fbf0fc8a11e7",
+      "ply": 19,
+      "position": "B:BM22,23,24,25,26,28,30:RM1,3,7,10,11,13,15",
+      "reversible_plies": 8,
+      "rules_profile": "project",
+      "played_move": "25-21",
+      "evidence": {
+        "kind": "external-loss-positional-search-divergence",
+        "library_sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+        "threads": 12,
+        "hash_mb": 512,
+        "short": {
+          "budget_ms": 2000,
+          "depth": 24,
+          "best_move": "24-20",
+          "root_scores": {
+            "22-17": -888,
+            "22-18": -840,
+            "23-18": -563,
+            "23-19": -28,
+            "24-19": -239,
+            "24-20": 31,
+            "25-21": -36
+          }
+        },
+        "long": {
+          "budget_ms": 20000,
+          "depth": 26,
+          "best_move": "24-20",
+          "root_scores": {
+            "22-17": -866,
+            "22-18": -842,
+            "23-18": -603,
+            "23-19": -10,
+            "24-19": -240,
+            "24-20": -4,
+            "25-21": -31
+          }
+        },
+        "timed_ladder": [
+          {"budget_ms": 2000, "depth": 24, "best_move": "24-20", "score": 31},
+          {"budget_ms": 5000, "depth": 25, "best_move": "24-20", "score": 4},
+          {"budget_ms": 20000, "depth": 26, "best_move": "24-20", "score": -4}
+        ],
+        "interpretation": "The recorded 25-21 is the first reproducible loss of root value in this game: 27 cp below 24-20 at 20 seconds. The following 10-14 and forced sequence expose a further roughly 100 cp horizon swing. Static HCE separates 24-20 from 25-21 by only 3 cp, so retain this as mixed positional-evaluation and search-stability evidence, not a proven best-move label."
+      }
+    }
+  ]
+}
