@@ -1,0 +1,133 @@
+{
+  "cutoff_control": [
+    {
+      "variant": "TraceEngine",
+      "move": "6-9",
+      "score": 1000000,
+      "bound": [
+        "DRAW",
+        "WIN"
+      ],
+      "visited_plies": {
+        "1": 39
+      },
+      "candidate_details": [
+        {
+          "move": "6-24",
+          "pressure": 0.0,
+          "policy_value": {
+            "win": 0.25,
+            "draw": 0.5,
+            "loss": 0.25,
+            "policy": 0.07692307692307693,
+            "samples": 0.0
+          }
+        },
+        {
+          "move": "6-9",
+          "pressure": 29.257716166685157,
+          "policy_value": {
+            "win": 0.25,
+            "draw": 0.5,
+            "loss": 0.25,
+            "policy": 0.07692307692307693,
+            "samples": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "variant": "NoTBCutoff",
+      "move": "5-32",
+      "score": 999997,
+      "bound": [
+        "WIN",
+        "WIN"
+      ],
+      "visited_plies": {
+        "1": 39,
+        "2": 110,
+        "3": 175
+      },
+      "candidate_details": [
+        {
+          "move": "6-24",
+          "pressure": 0.0,
+          "policy_value": {
+            "win": 0.25,
+            "draw": 0.5,
+            "loss": 0.25,
+            "policy": 0.07692307692307693,
+            "samples": 0.0
+          }
+        },
+        {
+          "move": "6-9",
+          "pressure": 29.257716166685157,
+          "policy_value": {
+            "win": 0.25,
+            "draw": 0.5,
+            "loss": 0.25,
+            "policy": 0.07692307692307693,
+            "samples": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "distance_control": [
+    {
+      "lower_piece_limit": 3,
+      "budget": 0,
+      "distance": {
+        "outcome": 1,
+        "dtm": null,
+        "dtr": null,
+        "exact": false
+      },
+      "expanded": 1,
+      "exact_solver_states": 0
+    },
+    {
+      "lower_piece_limit": 3,
+      "budget": 1,
+      "distance": {
+        "outcome": 1,
+        "dtm": 3,
+        "dtr": null,
+        "exact": true
+      },
+      "expanded": 1,
+      "exact_solver_states": 2
+    },
+    {
+      "lower_piece_limit": 2,
+      "budget": 1,
+      "distance": {
+        "outcome": 1,
+        "dtm": null,
+        "dtr": null,
+        "exact": false
+      },
+      "expanded": 1,
+      "exact_solver_states": 0
+    }
+  ],
+  "handler_control": {
+    "status": 200,
+    "bestmove": "6-9",
+    "score": 1000000,
+    "wdl": "DRAW..WIN",
+    "tablebase_hits": 39,
+    "search_backend": "python",
+    "history_current_root_count": 2,
+    "scope": "Real handler, isolated real Engine; engine factory replaced"
+  },
+  "immediate_repetition_control": {
+    "score": 0,
+    "bound": [
+      "DRAW",
+      "DRAW"
+    ]
+  }
+}

@@ -1,0 +1,624 @@
+{
+  "initial": "B:BK1,5,9:RK32",
+  "legal_prefix": [
+    "9-6",
+    "32-28",
+    "6-9",
+    "28-32",
+    "9-6",
+    "32-28"
+  ],
+  "root": "B:BK1,5,6:RK28",
+  "clock": 6,
+  "rules": {
+    "repetition_limit": 3,
+    "no_progress_plies": 80
+  },
+  "history": [
+    "B:BK1,5,9:RK32",
+    "R:BK1,5,6:RK32",
+    "B:BK1,5,6:RK28",
+    "R:BK1,5,9:RK28",
+    "B:BK1,5,9:RK32",
+    "R:BK1,5,6:RK32",
+    "B:BK1,5,6:RK28"
+  ],
+  "root_tablebase": "WIN",
+  "verified_forced_win": [
+    "6-24",
+    "28x19",
+    "1x24"
+  ],
+  "trials": [
+    {
+      "mode": "best",
+      "depth": 1,
+      "selected": "6-9",
+      "score": 1000000,
+      "backend": "python",
+      "tablebase_hits": 13,
+      "distance_budget": 0,
+      "drawing_replies": [
+        {
+          "move": "28-32",
+          "reason": "repetition"
+        }
+      ],
+      "candidates": [
+        {
+          "move": "5-14",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-18",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-23",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-27",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-32",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-10",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-13",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-15",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-19",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-2",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-24",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        }
+      ]
+    },
+    {
+      "mode": "best",
+      "depth": 8,
+      "selected": "6-9",
+      "score": 1000000,
+      "backend": "python",
+      "tablebase_hits": 104,
+      "distance_budget": 0,
+      "drawing_replies": [
+        {
+          "move": "28-32",
+          "reason": "repetition"
+        }
+      ],
+      "candidates": [
+        {
+          "move": "5-14",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-18",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-23",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-27",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-32",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-10",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-13",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-15",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-19",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-2",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-24",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        }
+      ]
+    },
+    {
+      "mode": "win",
+      "depth": 1,
+      "selected": "6-9",
+      "score": 1000000,
+      "backend": "python",
+      "tablebase_hits": 13,
+      "distance_budget": 0,
+      "drawing_replies": [
+        {
+          "move": "28-32",
+          "reason": "repetition"
+        }
+      ],
+      "candidates": [
+        {
+          "move": "5-14",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-18",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-23",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-27",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-32",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-10",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-13",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-15",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-19",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-2",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-24",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        }
+      ]
+    },
+    {
+      "mode": "win",
+      "depth": 8,
+      "selected": "6-9",
+      "score": 1000000,
+      "backend": "python",
+      "tablebase_hits": 104,
+      "distance_budget": 0,
+      "drawing_replies": [
+        {
+          "move": "28-32",
+          "reason": "repetition"
+        }
+      ],
+      "candidates": [
+        {
+          "move": "5-14",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-18",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-23",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-27",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-32",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "5-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-10",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-13",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-15",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-19",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-2",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-24",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        },
+        {
+          "move": "6-9",
+          "score": 1000000,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "dtm": null,
+          "distance_exact": false
+        }
+      ]
+    }
+  ],
+  "bug_reproduced": true,
+  "scope": "Real Engine and local TB4; no native DLL, model, TB3 builder, or live GUI"
+}
