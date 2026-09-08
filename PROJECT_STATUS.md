@@ -23,6 +23,7 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
   - 554 pairs / 1,108 games | W 477 D 404 L 227 | LLR +2.946 (Threshold +/- 2.944)  
   - **Result: +79.8 +/- 12.9 Elo** vs Accepted HCE baseline.
   - JSON artifact: `build/nnue_gate_c_2000ms_seed20261106.json` (SHA-256: `B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F`).
+- **Production Promotion Attestation**: Published at `releases/nnue-v1-20260908/promotion_attestation.json` and `PROMOTION_ATTESTATION.md`, formally binding commit `2cec9f4`, Gate C evidence, HTTP smoke, and reversible HCE fallback.
 
 ---
 
@@ -63,16 +64,20 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
    - Both controls passed conclusively (+80 Elo vs baseline HCE).
 2. **Production Smoke & Web GUI Promotion to NNUE v1**: **COMPLETED (PROMOTED)**
    - Hash-bound release manifest frozen at `releases/nnue-v1-20260908/manifest.json`.
+   - Standalone promotion attestation published: `releases/nnue-v1-20260908/promotion_attestation.json`.
    - Production pointer active at `config/gui_release.json` defaulting to `nnue` profile.
    - Reversible HCE rollback preserved via `--release-profile hce`.
-   - Web GUI race condition fixed (`AbortController` & `gameGeneration` in `web/app.js`).
-   - Forced-move latency fixed from 12s down to 2.5ms (bypassing redundant TB3 init).
-   - Real HTTP smoke passed; all 403 Python tests + 3 Node.js lifecycle tests passing 100%.
-3. **Immediate Next Action — NNUE Thread-Scaling Audit**:
-   - Run multi-thread scaling benchmark comparing 1, 2, 4, 6, 8, 12 threads at 1s and 2s fixed time controls across 96 balanced test positions (5 repetitions).
-   - Generate analytical report via `work/nnue_thread_audit_report.py`.
-4. **Subsequent Milestone — Evidence-Driven Elo Enhancement**:
-   - Move ordering, search pruning, and ancestor delta accumulator evaluation based on the thread audit profile.
+   - Real HTTP smoke passed; 403 Python tests + 3 Node.js tests passing 100%.
+3. **Phase 4 — NNUE Thread-Scaling Audit Pilot**: **COMPLETED (48/48 observations)**
+   - Native measurement collector implemented: `work/nnue_thread_audit_collect.py` + tests `work/test_nnue_thread_audit_collect.py`.
+   - Evaluated 1, 2, 4, 6, 8, 12 threads @ 1s & 2s with 512 MiB total Hash.
+   - Verified workload isolation (`PAUSED_FOR_INTERACTIVE_PLAY` yields to web play), fresh state (`searcher.clear()`), and strict timing (overshoot <= 5.5ms).
+   - Findings: Quiet middlegame nodes scale from 1.94M (1T) -> 5.32M (6T, 2.74x) -> 5.43M (12T, hyperthreading saturation on 6 physical cores).
+4. **Immediate Next Action — Full Matrix Collection**:
+   - Execute the complete 5,760-observation benchmark (`work/nnue_thread_audit_collect.py collect`).
+   - Summarize with `work/nnue_thread_audit_report.py summarize` to produce authoritative `report.json`.
+5. **Subsequent Milestone — Evidence-Driven Search/Eval Enhancement (Phase 5)**:
+   - Identify precise root-split vs TT lock/contention bottlenecks from report data before tuning search or accumulator updates.
 
 ---
 

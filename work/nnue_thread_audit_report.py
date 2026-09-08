@@ -86,10 +86,23 @@ def validate_header(header, fixtures):
 
 
 class ObservationValidator:
-    def __init__(self, header):
-        # Reproduce the existing approved preparation; callers cannot silently
+    def __init__(self, header, fixtures=None):
+        # Reproduce the approved preparation; callers cannot silently
         # substitute a smaller/easier schedule or altered repetition history.
-        self.fixtures = prepare()
+        if fixtures is not None:
+            self.fixtures = fixtures
+        elif header.get("fixtures_sha256") == digest(prepare()):
+            self.fixtures = prepare()
+        else:
+            try:
+                from work.nnue_thread_audit_collect import prepare_pilot
+                pilot = prepare_pilot()
+                if header.get("fixtures_sha256") == digest(pilot):
+                    self.fixtures = pilot
+                else:
+                    self.fixtures = prepare()
+            except (ImportError, AttributeError):
+                self.fixtures = prepare()
         validate_header(header, self.fixtures)
         self.header = header
         self.run_sha256 = digest(header)

@@ -19,23 +19,21 @@ sacrificing rules correctness, reproducibility, rollback, or user-facing
 stability. “World strongest” requires independent external evidence; self-play
 against an older internal build is not enough.
 
-## Current directive — approved implementation (2026-09-07)
+## Current directive — approved implementation (2026-09-08)
 
 Read [references/current-state.md](references/current-state.md) first for the
 current gate, immutable result identities, run-manifest pointer and next action.
 It is the single current-state record; live counters come from validated
 append-only pair logs and process creation identity, not prose or a cached PID.
-Read the canonical atomic result only after its writer has stopped.
 
 Execute the approved sequence in
 [../../../DEVELOPMENT_PLAN_TH.md](../../../DEVELOPMENT_PLAN_TH.md):
-finish the frozen Gate C controls -> reversible NNUE v1 production review ->
-NNUE thread-scaling/profile audit -> one evidence-selected Elo experiment.
-Gate C 1000ms is complete PASS. The sole active strength experiment is the
-unchanged 2000ms match; inspect its manifest before launching or resuming.
-Both controls must PASS independently before production review. During the
-arena, prepare only isolated documentation/fixtures/low-resource tooling.
-The staged ancestor-delta optimization is not part of the frozen candidate.
+Gate C controls and NNUE v1 Production Promotion are **complete and verified**.
+The GUI defaults to NNUE v1 (`config/gui_release.json`, Profile: `nnue`).
+The active directive is **Phase 4: NNUE Thread-Scaling Audit** (1, 2, 4, 6, 8, 12
+threads at 1000ms and 2000ms fixed time controls across 96 positions × 5 repetitions).
+Collect observations natively via `work/nnue_thread_audit_collect.py` and
+summarize using `work/nnue_thread_audit_report.py`.
 
 Optimize measured playing strength on this 6-core/12-logical-thread host.
 Include 6 threads in 1/2/4/6/8/12 comparisons. Recommend the strongest supported

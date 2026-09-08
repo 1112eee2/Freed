@@ -1,0 +1,81 @@
+{
+  "format": "thai-makhos-gui-promotion-attestation-v1",
+  "release_id": "nnue-v1-20260908",
+  "created_at_utc": "2026-09-08T09:15:00Z",
+  "promoted_git_head": "2cec9f471e9a26388414ba6cfdbf15ae1c70eeb2",
+  "manifest": {
+    "path": "releases/nnue-v1-20260908/manifest.json",
+    "sha256": "8A8F15B0E0864D54D6E86E05A0AD9E6F0AF10AA5F245CF53790CB7C8C89A89B1",
+    "frozen_git_head": "d0b34aa4a2466e81faebd46928f2f5a53f6a89bc",
+    "frozen_script_sha256": "528FCF91C2B15249D2E5F60EEDD4004456D1A30A83DBA49695AE9EC142CB2274",
+    "current_smoke_script_sha256": "8F349984C087C494527DBFB3D940FBD3508EDF705CEE0AA213FF27D871039CB6",
+    "provenance_note": "Manifest was created during freeze at d0b34aa before release harness and tests were committed in 2cec9f4. The frozen manifest is preserved immutably."
+  },
+  "pointer": {
+    "path": "config/gui_release.json",
+    "sha256": "55F1935DE8DAD3DF7DF2DFE3F2E85B94E7D20BBAB7B9F2027FEF65AC01A02EF0",
+    "active_profile": "nnue"
+  },
+  "inventories": {
+    "source_files_count": 155,
+    "source_inventory_sha256": "3F6B6FA4FDB3C10FE3C82782F2F417E1915C99DE47CF297B415662972E3D77A4",
+    "test_files_count": 53,
+    "test_inventory_sha256": "5253316EE5CF646DDC72A39B061702B220B3BF94DDEC3BA5018FC8C67ECF1B47"
+  },
+  "gate_c_evidence": {
+    "1000ms": {
+      "status": "FINISHED_PASS",
+      "path": "build/nnue_gate_c_1000ms_seed20261105.json",
+      "sha256": "41E78EF359BB9BA6E1CDF189FCD15B56D1D9ED36E2CCD684D4F96D0C8AFE94D8",
+      "elo_vs_hce": 80.3,
+      "llr": 2.946
+    },
+    "2000ms": {
+      "status": "FINISHED_PASS",
+      "path": "build/nnue_gate_c_2000ms_seed20261106.json",
+      "sha256": "B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F",
+      "elo_vs_hce": 79.8,
+      "llr": 2.946
+    }
+  },
+  "verification_suite": {
+    "python_tests": {
+      "total": 403,
+      "passed": 403,
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS_100_PERCENT"
+    },
+    "node_lifecycle_tests": {
+      "path": "work/test_gui_lifecycle.cjs",
+      "sha256": "3784375EA50A9ECC5414932E1E59610113763392A8B9FEA02ED63942BFE65DB0",
+      "total": 3,
+      "passed": 3,
+      "status": "PASS_100_PERCENT"
+    },
+    "http_production_smoke": {
+      "path": "work/nnue_production_smoke.py",
+      "sha256": "8F349984C087C494527DBFB3D940FBD3508EDF705CEE0AA213FF27D871039CB6",
+      "status": "PASS",
+      "tested_cases": [
+        "first_move",
+        "second_budget",
+        "settings_single",
+        "settings_restore",
+        "forced",
+        "tablebase4",
+        "terminal",
+        "clock80",
+        "repetition"
+      ]
+    },
+    "rollback_capability": {
+      "supported": true,
+      "profile": "hce",
+      "cli_argument": "--release-profile hce",
+      "baseline_dll": "build/makhos_native_accepted.dll",
+      "baseline_dll_sha256": "FEEDD39CF16E5F5ABC236452BE897ABE1ECF26B8BA7ADCDA4A25022B868C3DDD"
+    }
+  },
+  "verdict": "PRODUCTION_PROMOTION_CONFIRMED"
+}
