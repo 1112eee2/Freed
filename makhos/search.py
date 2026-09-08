@@ -997,7 +997,8 @@ class Engine:
         return max(
             safe,
             key=lambda item: (
-                item.bound.exact_outcome == Outcome.WIN or item.score >= MATE_SCORE - 10_000,
+                item.bound.exact_outcome == Outcome.WIN,
+                item.score if item.score >= MATE_SCORE - 10_000 else 0,
                 self._decisive_distance_rank(item.distance),
                 item.policy_value.win,
                 item.policy_value.expected_score,
@@ -1054,8 +1055,11 @@ class Engine:
             return known_bound
         lower = max(bound.lower for bound in move_bounds)
         upper = max(bound.upper for bound in move_bounds) if complete else Outcome.WIN
-        # A search cutoff leaves unvisited replies, but cannot erase known WDL.
-        return WDLBound(max(lower, known_bound.lower), min(upper, known_bound.upper))
+        comb_lower = max(lower, known_bound.lower)
+        comb_upper = min(upper, known_bound.upper)
+        if comb_lower > comb_upper:
+            comb_lower = comb_upper
+        return WDLBound(comb_lower, comb_upper)
 
     @staticmethod
     def _safety_rank(bound: WDLBound) -> tuple[int, int]:
