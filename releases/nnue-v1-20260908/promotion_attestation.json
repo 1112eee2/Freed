@@ -2,7 +2,14 @@
   "format": "thai-makhos-gui-promotion-attestation-v1",
   "release_id": "nnue-v1-20260908",
   "created_at_utc": "2026-09-08T09:15:00Z",
-  "promoted_git_head": "2cec9f471e9a26388414ba6cfdbf15ae1c70eeb2",
+  "promoted_git_head": "2cec9f480c3e91aedbee18ba043dc81bff9dca33",
+  "attestation_revisions": [
+    {
+      "revision": 2,
+      "date": "2026-09-08",
+      "change": "Corrected promoted_git_head to match git rev-parse 2cec9f4 (2cec9f480c3e91aedbee18ba043dc81bff9dca33) from previous typographic error."
+    }
+  ],
   "manifest": {
     "path": "releases/nnue-v1-20260908/manifest.json",
     "sha256": "8A8F15B0E0864D54D6E86E05A0AD9E6F0AF10AA5F245CF53790CB7C8C89A89B1",

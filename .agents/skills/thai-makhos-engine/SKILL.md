@@ -31,10 +31,9 @@ Execute the approved sequence in
 Gate C controls and NNUE v1 Production Promotion are **complete and verified**.
 Phase 4 (NNUE Thread-Scaling Audit) is **complete and verified** (5,760 observations,
 `build/nnue_thread_scaling_measured_v1/report.json`).
-The active directive is **Phase 5: Evidence-Driven Bottleneck Optimization**.
-Formulate a single evidence-backed hypothesis addressing the thread audit findings
-(e.g., hardware-matched thread defaults, selective root search, or ancestor delta updates)
-and validate via paired SPRT.
+The active directive is **Phase 5: Experiment A (Direct 6T vs 12T Superiority SPRT)**.
+Test whether NNUE v1 at 6T provides higher Elo than production 12T under fixed
+1000ms and 2000ms time controls, bounded by manifest `build/nnue_sprt_6t_vs_12t/manifest.json`.
 
 Optimize measured playing strength on this 6-core/12-logical-thread host.
 Include 6 threads in 1/2/4/6/8/12 comparisons. Recommend the strongest supported

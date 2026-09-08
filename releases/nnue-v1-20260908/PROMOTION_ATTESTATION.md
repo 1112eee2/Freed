@@ -8,7 +8,7 @@ nue-v1-20260908
 nue)
 - **Release Manifest**: 
 eleases/nnue-v1-20260908/manifest.json (SHA-256: 8A8F15B0E0864D54D6E86E05A0AD9E6F0AF10AA5F245CF53790CB7C8C89A89B1)
-- **Promoted Git Commit**: 2cec9f471e9a26388414ba6cfdbf15ae1c70eeb2
+- **Promoted Git Commit**: 2cec9f480c3e91aedbee18ba043dc81bff9dca33 (Errata revision 2: corrected from earlier typographic error)
 
 ---
 

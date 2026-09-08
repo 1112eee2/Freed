@@ -72,15 +72,23 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
    - Measured native matrix: 1, 2, 4, 6, 8, 12 threads @ 1000ms & 2000ms, 512 MiB Hash across 96 positions (5 repetitions).
    - Full observations: `build/nnue_thread_scaling_measured_v1/observations.jsonl` (7.2 MB, SHA-256: `254FB1C685E458F7C43DCCE4C4DBB1518874FA79BC319E85BC9554689EF4384F`).
    - Authoritative report: `build/nnue_thread_scaling_measured_v1/report.json` (SHA-256: `5F19083ADE11DD9E76C9B1AC90102376328B988D1D1DF5722B20856BF477757E`).
-   - Core Bottleneck Diagnoses:
-     1. **Root-Split Branch Starvation**: Average legal moves is 6.82; 31/96 positions have <= 6 legal moves. Threads exceeding move count remain idle.
-     2. **SMT Saturation (6 Cores vs 12 Threads)**: 6T achieves 2.45x node speedup over 1T. Going from 6T to 12T only adds +21.3% nodes due to SMT execution pipeline sharing on AMD Ryzen 5 5600H.
-     3. **Synchronization Overhead**: In root-splitting, depth D is accepted only when all root moves complete depth D-1, explaining lower completed depth (18-20 vs 22-23 on 1T) even though 12T evaluates 3x more total positions.
-4. **Immediate Next Action — Phase 5 Evidence-Driven Optimization**:
-   - Align with Lead Architect (ChatGPT Web) on single targeted optimization hypothesis:
-     - Option A: Benchmark 6T vs 12T directly in SPRT (hardware-matched thread configuration).
-     - Option B: Evaluate selective root allocation / root-alpha to overcome root-split synchronization barrier.
-     - Option C: Profile & evaluate ancestor delta accumulator updates.
+   - Audit Limitations & Methodology Clarifications:
+     - 5,760 observations is an offline diagnostic benchmark, NOT complete production profile coverage (`profile_coverage_complete=false`, `strength_evidence=false`).
+     - Collector set `wall_ms=1.0` and `score=0` directly for forced moves in software logic; not a hardware timer measurement.
+     - Tablebase validation in collector checked file size and manifest checksums; did not route through full Engine endgame oracle (10 playout positions have <= 6 pieces where production engine routes to tablebase).
+     - Telemetry for active workers, coordination, NNUE time, CPU frequency, and temperature remained unmeasured (`null`). Branch starvation and SMT saturation are mechanistic hypotheses consistent with empirical data, not hardware-counter measurements; root barrier is architectural code logic.
+     - Playout subset comprises 66 positions x 5 reps = 330 observations per configuration (30 other positions are 14 forced + 16 clock-edge). 98.5% move stability represents 65/66 positions.
+     - Overshoot p95 is <= 4.4ms across most configurations, but 2T @ 2000ms playout reached p95 = 8.044ms.
+4. **Phase 5 — Approved Experiment A: Direct 6T vs 12T Superiority SPRT**:
+   - Question: Does 6T provide higher Elo than production 12T under fixed realistic time budgets (1000ms & 2000ms)?
+   - Hypothesis: On a 6 physical core / 12 logical thread host (AMD Ryzen 5 5600H), reducing threads from 12T to 6T may increase playing strength by eliminating SMT pipeline contention and idle thread overhead, despite lower total node count.
+   - Candidate: NNUE v1 6T (512 MiB Hash).
+   - Control: NNUE v1 12T (512 MiB Hash).
+   - Both engines use identical production DLL and `model_a.mknnue`. Two distinct file copies used to satisfy CLI validation.
+   - Statistical Framework: Pentanomial SPRT, H0=0, H1=+2 Elo, alpha=beta=0.05, LLR bounds +/- 2.944438979, cap 10,000 pairs.
+   - Time Controls: Fixed 1000ms (seed 20261108) and 2000ms (seed 20261109) evaluated sequentially with `parallel-games=1`.
+   - Tablebases: Native 3-piece and ranked 4/5/6 pieces verified before starting.
+   - Superiority testing note: A FAIL or INCONCLUSIVE result does not prove equality; it indicates lack of statistically significant superiority under the defined contract.
 
 ---
 

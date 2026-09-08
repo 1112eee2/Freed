@@ -1,0 +1,91 @@
+{
+  "format": "thai-makhos-experiment-a-manifest-v1",
+  "experiment_id": "experiment-a-6t-vs-12t",
+  "created_at_utc": "2026-09-08T13:38:00Z",
+  "objective": "Superiority test comparing NNUE v1 at 6 Threads versus production 12 Threads under fixed 1000ms and 2000ms time controls",
+  "research_question": "Does 6T provide higher Elo than 12T under fixed realistic time controls?",
+  "hypothesis": "On a host with 6 physical cores and 12 logical threads (AMD Ryzen 5 5600H), reducing threads from 12T to 6T may improve playing strength by eliminating SMT execution pipeline contention and idle thread overhead under root-splitting, despite lower total node count.",
+  "statistical_framework": {
+    "type": "pentanomial-sprt",
+    "elo0": 0.0,
+    "elo1": 2.0,
+    "alpha": 0.05,
+    "beta": 0.05,
+    "llr_bounds": [
+      -2.9444389791664403,
+      2.9444389791664403
+    ],
+    "max_pairs_per_control": 10000,
+    "verdict_policy": "Superiority test: FAIL or INCONCLUSIVE retains 12T default; both controls must PASS to warrant production promotion review."
+  },
+  "engines": {
+    "candidate": {
+      "label": "NNUE v1 (6 Threads)",
+      "threads": 6,
+      "hash_mb": 512,
+      "library_path": "build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll",
+      "library_sha256": "32C323026A7F78CCD9C4013FC3067422A564EE3D0A6ADE4F1CE5C62356747E79",
+      "nnue_model_path": "build/nnue_quantized_v1/model_a.mknnue",
+      "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+      "persistent_search": true,
+      "selective_root": false,
+      "root_alpha": false,
+      "shared_tt": false
+    },
+    "baseline": {
+      "label": "NNUE v1 (12 Threads, Production Default)",
+      "threads": 12,
+      "hash_mb": 512,
+      "library_path": "build/nnue_sprt_6t_vs_12t/makhos_native_12t.dll",
+      "library_sha256": "32C323026A7F78CCD9C4013FC3067422A564EE3D0A6ADE4F1CE5C62356747E79",
+      "nnue_model_path": "build/nnue_quantized_v1/model_a.mknnue",
+      "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+      "persistent_search": true,
+      "selective_root": false,
+      "root_alpha": false,
+      "shared_tt": false
+    }
+  },
+  "tablebases": {
+    "native_3_piece": true,
+    "ranked_pieces": [
+      {
+        "piece_count": 4,
+        "path": "build/tb4_np80.compact.bin",
+        "sha256": "650B0C862343D718FD0FE438DB28E47D48618DEA69D693D65210088775DE30E9"
+      },
+      {
+        "piece_count": 5,
+        "path": "build/tb5_np80.compact.bin",
+        "sha256": "718763FB0F7E026E2FBFE09C066B5B40C480D37DF9586F1BE84CBE604466F4CC"
+      },
+      {
+        "piece_count": 6,
+        "path": "build/tb6_np80.compact.bin",
+        "sha256": "17A0196F3AFEEFD9D57FB00B641045B0EF790B38A64DA73E19DA3F3369D04A4F"
+      }
+    ]
+  },
+  "time_controls": [
+    {
+      "control_id": "tc-1000ms",
+      "fixed_move_time_ms": 1000,
+      "seed": 20261108,
+      "opening_plies": 6,
+      "parallel_games": 1,
+      "output_path": "build/nnue_sprt_6t_vs_12t/sprt_6t_vs_12t_1000ms_seed20261108.json"
+    },
+    {
+      "control_id": "tc-2000ms",
+      "fixed_move_time_ms": 2000,
+      "seed": 20261109,
+      "opening_plies": 6,
+      "parallel_games": 1,
+      "output_path": "build/nnue_sprt_6t_vs_12t/sprt_6t_vs_12t_2000ms_seed20261109.json"
+    }
+  ],
+  "workload_isolation": {
+    "parallel_games": 1,
+    "interactive_session_priority": true
+  }
+}
