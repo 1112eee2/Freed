@@ -1,0 +1,109 @@
+{
+  "complete": true,
+  "config": {
+    "baseline_persistent_search": true,
+    "baseline_threads": 12,
+    "candidate_persistent_search": true,
+    "candidate_threads": 12,
+    "elo0": 0.0,
+    "elo1": 2.0,
+    "fixed_move_time_ms": 1000,
+    "hash_mb": 512,
+    "increment_seconds": 0.1,
+    "libraries": {
+      "baseline": {
+        "fixed_search": false,
+        "nnue_enabled": false,
+        "nnue_feature_abi": null,
+        "nnue_model": null,
+        "nnue_model_sha256": null,
+        "path": "D:\\ThaiMakhosEngine\\build\\makhos_native_accepted.dll",
+        "search_abi": 5,
+        "sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+        "shared_tt": false,
+        "threads": 12,
+        "window_search": false
+      },
+      "candidate": {
+        "fixed_search": true,
+        "nnue_enabled": true,
+        "nnue_feature_abi": "thai-makhos-shared-137-v1",
+        "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+        "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+        "path": "D:\\ThaiMakhosEngine\\build\\nnue_search_v1_r5\\makhos_native_nnue_candidate_v1.dll",
+        "search_abi": 5,
+        "sha256": "32c323026a7f78ccd9c4013fc3067422a564ee3d0a6ade4f1ce5c62356747e79",
+        "shared_tt": false,
+        "threads": 12,
+        "window_search": true
+      }
+    },
+    "max_game_plies": 300,
+    "max_pairs": 10000,
+    "move_time_cap_ms": null,
+    "opening_plies": 8,
+    "parallel_games": 1,
+    "persistent_search": true,
+    "resume": true,
+    "root_alpha": false,
+    "root_alpha_margin": 32,
+    "root_alpha_min_depth": 16,
+    "search_hash_power": 20,
+    "seed": 20261105,
+    "selective_candidates": 4,
+    "selective_margin": 160,
+    "selective_reserve": 0.6,
+    "selective_root": false,
+    "shared_tt": false,
+    "shared_tt_group_size": 4,
+    "tablebases": {
+      "native_3_piece": true,
+      "ranked": [
+        {
+          "header_fnv1a64": "89459baacbcf2c6b",
+          "no_progress_plies": 80,
+          "path": "D:\\ThaiMakhosEngine\\build\\tb4_np80.compact.bin",
+          "piece_count": 4
+        },
+        {
+          "header_fnv1a64": "c9e825ce79ecc0c9",
+          "no_progress_plies": 80,
+          "path": "D:\\ThaiMakhosEngine\\build\\tb5_np80.compact.bin",
+          "piece_count": 5
+        },
+        {
+          "header_fnv1a64": "7102f5514870a253",
+          "no_progress_plies": 80,
+          "path": "D:\\ThaiMakhosEngine\\build\\tb6_np80.compact.bin",
+          "piece_count": 6
+        }
+      ]
+    },
+    "threads": 12,
+    "time_seconds": 10.0,
+    "workload_isolation": {
+      "checkpoint_granularity": "before-each-pair-and-ply",
+      "policy": "interactive-gui-priority-v1",
+      "process_priority": "BelowNormal"
+    }
+  },
+  "format": "thai-makhos-sprt-result-v2",
+  "result": {
+    "draws": 396,
+    "elo": 80.30494069566105,
+    "elo_95_error": 13.472250255618,
+    "games": 1092,
+    "llr": 2.945906196582963,
+    "losses": 224,
+    "pairs": 546,
+    "pentanomial": [
+      2,
+      65,
+      233,
+      175,
+      71
+    ],
+    "status": "PASS",
+    "wins": 472
+  }
+}

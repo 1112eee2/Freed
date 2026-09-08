@@ -16,10 +16,12 @@ build/
 *.bin
 *.tt
 
-# Exceptions: Essential model weights and accepted baseline (< 300 KB)
+# Exceptions: Essential model weights, accepted baseline, and Gate C results
 !build/nnue_quantized_v1/model_a.mknnue
 !build/makhos_native_accepted.dll
 !build/nnue_gate_c_contract_v1.json
+!build/nnue_gate_c_1000ms_seed20261105.json
+!build/nnue_gate_c_2000ms_seed20261106.json
 
 # Logs and runtime artifacts
 logs/
