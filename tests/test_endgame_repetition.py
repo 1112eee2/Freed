@@ -172,6 +172,57 @@ class RankedEndgameRepetitionTests(unittest.TestCase):
                     self.assertNotEqual(abs(score), 123456)
                     self.assertGreaterEqual(bound.lower, Outcome.DRAW)
 
+    def test_alternating_histories_no_state_leakage(self):
+        state, h_threat = repetition_fixture()
+        h_clean = Counter({state.position_key: 1})
+        with RankedTablebase(TB4_PATH) as tablebase:
+            engine = Engine(ranked_tablebase=tablebase)
+            # 1. Search with clean history
+            res1 = engine.search(state, SearchLimits(depth=3), mode=Mode.WIN, history=h_clean)
+            # 2. Search with repetition threat history (H2)
+            res2 = engine.search(state, SearchLimits(depth=3), mode=Mode.WIN, history=h_threat)
+            self.assertIn(res2.move.notation, WINNING_MOVES)
+            # 3. Search with clean history (H1) again on the same engine instance
+            res3 = engine.search(state, SearchLimits(depth=3), mode=Mode.WIN, history=h_clean)
+            self.assertEqual(res1.move.notation, res3.move.notation)
+            self.assertEqual(res1.score, res3.score)
+            self.assertEqual(res1.bound, res3.bound)
+
+    def test_extended_repetition_cycle_longer_than_2_plies(self):
+        state = parse_position("B:BK1,5,9:RK32")
+        history = Counter({state.position_key: 2})
+        with RankedTablebase(TB4_PATH) as tablebase:
+            engine = Engine(ranked_tablebase=tablebase)
+            res = engine.search(state, SearchLimits(depth=3), mode=Mode.WIN, history=history)
+            child = apply_move(state, res.move)
+            status = terminal_status(child, repetition_count=history[child.position_key] + 1)
+            self.assertFalse(status.terminal and status.winner is None)
+
+    def test_piece_count_transitions_6_to_3(self):
+        tb5_path = Path(__file__).resolve().parents[1] / "build/tb5_np80.compact.bin"
+        tb6_path = Path(__file__).resolve().parents[1] / "build/tb6_np80.compact.bin"
+        if not tb5_path.is_file() or not tb6_path.is_file():
+            self.skipTest("TB5 and TB6 compact binaries required")
+        with RankedTablebase(TB4_PATH) as tb4, RankedTablebase(tb5_path) as tb5, RankedTablebase(tb6_path) as tb6:
+            engine = Engine(ranked_tablebases=(tb4, tb5, tb6))
+            state, history = repetition_fixture()
+            res = engine.search(state, SearchLimits(depth=3), mode=Mode.BEST, history=history)
+            self.assertIn(res.move.notation, WINNING_MOVES)
+
+    def test_zero_window_bound_consistency(self):
+        state, history = repetition_fixture()
+        with RankedTablebase(TB4_PATH) as tablebase:
+            engine = Engine(ranked_tablebase=tablebase)
+            for alpha, beta in ((-1, 1), (0, 1), (-1, 0), (-10, 0), (0, 10)):
+                with self.subTest(alpha=alpha, beta=beta):
+                    score, pv, bound = engine._negamax(
+                        state, depth=2, alpha=alpha, beta=beta, counts=history, ply_from_root=0
+                    )
+                    self.assertLessEqual(bound.lower, bound.upper)
+                    if bound.exact_outcome == Outcome.WIN:
+                        self.assertGreaterEqual(score, MATE_SCORE - 1000)
+
+
 
 class SearchHistoryContractTests(unittest.TestCase):
     def test_quiescence_respects_terminal_draw_before_captures(self):
