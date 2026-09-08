@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 import json
 import os
 import sys
@@ -47,7 +47,17 @@ def main():
             time_ms = req.get('time_ms')
             depth = req.get('depth', 6)
             history_dict = req.get('history', {})
-            history = Counter(history_dict)
+            
+            history = Counter()
+            for k, v in history_dict.items():
+                if isinstance(k, str) and (':' in k):
+                    try:
+                        history[parse_position(k).position_key] = v
+                    except Exception:
+                        history[k] = v
+                else:
+                    history[k] = v
+                    
             limits = SearchLimits(depth=depth, time_ms=time_ms)
             state = parse_position(pos_str)
             
