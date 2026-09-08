@@ -5,24 +5,18 @@ live counter. Check atomic result files, run manifest and process identity.
 
 ## Current gate and next action
 
-**Both Gate C 1000ms and Gate C 2000ms are complete independent PASS.**
-Both independent controls have reached conclusive statistical PASS under the
-frozen Gate C contract:
-- 1000ms: 546 pairs / 1,092 games | W 472 D 396 L 224 | LLR +2.945906 | Elo vs HCE +80.3 +/- 13.5
-- 2000ms: 554 pairs / 1,108 games | W 477 D 404 L 227 | LLR +2.946336 | Elo vs HCE +79.8 +/- 12.9
-- 2000ms result SHA-256: `B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F`
+**Gate C and Production Promotion are both complete and verified.**
+- Gate C 1000ms: 546 pairs / 1,092 games | W 472 D 396 L 224 | LLR +2.945906 | Elo vs HCE +80.3 +/- 13.5
+- Gate C 2000ms: 554 pairs / 1,108 games | W 477 D 404 L 227 | LLR +2.946336 | Elo vs HCE +79.8 +/- 12.9
+- NNUE v1 Promotion: **PROMOTED AS DEFAULT GUI ENGINE**
+  - Release ID: `nnue-v1-20260908`
+  - Active pointer: `config/gui_release.json` (Profile: `nnue`)
+  - Manifest: `releases/nnue-v1-20260908/manifest.json`
+  - Attestation: `releases/nnue-v1-20260908/promotion_attestation.json`
+  - Verification: 403 Python tests (100% OK), 3 Node.js lifecycle tests (100% OK), HTTP production smoke passed.
+  - Reversible rollback preserved: `--release-profile hce`.
 
-**Next action:** Enter production smoke and reversible NNUE v1 promotion review,
-followed by the prepared NNUE 1/2/4/6/8/12-thread scaling audit at 1s and 2s.
-
-- Live pointer: `build/runtime/nnue_gate_c_active_run.json`.
-- Initial 2000ms manifest:
-  `build/nnue_gate_c_2000ms_run_20260907_091842_617489/run.json`.
-- Read-only display: `work/nnue_gate_c_status_terminal.ps1` (`-Once` for a snapshot).
-- Verifier/launcher/status: `work/nnue_gate_c_control.py` with
-  `verify`, `launch`, or `status`. Launch only after inspecting workload/logs.
-- Current result: `build/nnue_gate_c_2000ms_seed20261106.json`.
-- Exact argv/settings: immutable `build/nnue_gate_c_contract_v1.json`.
+**Next action:** Execute Phase 4 — NNUE 1/2/4/6/8/12-Thread Scaling Audit at 1s and 2s across 96 positions (5 repetitions, 5,760 observations total) using `work/nnue_thread_audit_collect.py` and `work/nnue_thread_audit_report.py`.
 
 The monitor reads append-only stdout while the arena is alive and recomputes
 exact paired statistics; it never opens the active checkpoint. It reads the
@@ -96,33 +90,24 @@ focused tests are separate evidence, not an increased discovered-suite count.
 
 ## Boundaries and next development milestone
 
-GUI default remains HCE. Verify actual runtime identity from provenance/API;
-filenames and source edits are not deployment evidence. Gate C runtime audit
-already measured 12 workers, 480 MiB actual TT within 512 MiB total, correct
-model/backend/TBs and <=6.11ms max overshoot; it did not prove cold GUI latency.
+GUI default is now NNUE v1 (Release ID `nnue-v1-20260908`), actively bound via
+`config/gui_release.json`. Verified runtime provenance shows `NNUE v1 ·
+native-root-split · 12T · TT 480/512 MiB`. Reversible rollback to baseline HCE is
+preserved via `--release-profile hce`. Full Python test suite (403 tests) and
+Node.js lifecycle suite (3 tests) pass 100%.
 
 Acquisition, training, quantization, native scalar/incremental/AVX2 parity,
-search pre-game gates and the one-time sealed report are complete. The opened
-sealed partition cannot select a future model. No reacquisition/training is
-needed merely to finish the present Gate C.
+search pre-game gates, Gate C SPRT verification, and production promotion review
+are complete.
 
-After promotion the single next experiment is an NNUE 1/2/4/6/8/12-thread
-scaling/profile audit at 1s/2s and total Hash 512 MiB, >=96 diverse positions,
->=5 balanced repetitions. Optimize the strongest measured configuration on the
-6-physical-core/12-logical-thread host; do not force 12 threads.
+The active experiment is the Phase 4 NNUE 1/2/4/6/8/12-thread scaling/profile audit
+at 1s/2s and total Hash 512 MiB, 96 diverse positions, 5 balanced repetitions
+(5,760 observations total) collected natively via `work/nnue_thread_audit_collect.py`
+and summarized via `work/nnue_thread_audit_report.py`. Optimize the strongest
+measured configuration on the 6-physical-core/12-logical-thread host; do not force 12 threads.
 
 `work/nnue_ancestor_delta_v1` is staged only, uncompiled/unprofiled/unproven.
-Its old preflight binds v21; record a fresh rebaseline rather than altering
-historical evidence. Select it only if post-NNUE profiling supports the cost.
-No rejected parallel/search prototype is reactivated by this guide.
-
-Offline preparation now includes `work/nnue_thread_audit_report.py`: validates
-the existing 5,760-row schedule and runtime bindings, reports actual TT and
-nullable telemetry, separates forced/clock-edge strata, and withholds matched
-comparisons for incomplete data. It has only synthetic-fixture evidence; it
-does not collect native measurements or authorize an audit/promotion. See the
-[recording contract](../../../../work/NNUE_THREAD_AUDIT_REPORT.md). The native
-collector remains a post-Gate-C/production-review task.
+Select it only if post-NNUE thread-audit profiling identifies NNUE accumulator as the primary bottleneck.
 
 ## Reference routing
 
