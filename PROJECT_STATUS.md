@@ -68,16 +68,19 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
    - Production pointer active at `config/gui_release.json` defaulting to `nnue` profile.
    - Reversible HCE rollback preserved via `--release-profile hce`.
    - Real HTTP smoke passed; 403 Python tests + 3 Node.js tests passing 100%.
-3. **Phase 4 — NNUE Thread-Scaling Audit Pilot**: **COMPLETED (48/48 observations)**
-   - Native measurement collector implemented: `work/nnue_thread_audit_collect.py` + tests `work/test_nnue_thread_audit_collect.py`.
-   - Evaluated 1, 2, 4, 6, 8, 12 threads @ 1s & 2s with 512 MiB total Hash.
-   - Verified workload isolation (`PAUSED_FOR_INTERACTIVE_PLAY` yields to web play), fresh state (`searcher.clear()`), and strict timing (overshoot <= 5.5ms).
-   - Findings: Quiet middlegame nodes scale from 1.94M (1T) -> 5.32M (6T, 2.74x) -> 5.43M (12T, hyperthreading saturation on 6 physical cores).
-4. **Immediate Next Action — Full Matrix Collection**:
-   - Execute the complete 5,760-observation benchmark (`work/nnue_thread_audit_collect.py collect`).
-   - Summarize with `work/nnue_thread_audit_report.py summarize` to produce authoritative `report.json`.
-5. **Subsequent Milestone — Evidence-Driven Search/Eval Enhancement (Phase 5)**:
-   - Identify precise root-split vs TT lock/contention bottlenecks from report data before tuning search or accumulator updates.
+3. **Phase 4 — NNUE Thread-Scaling Audit**: **COMPLETED (5,760/5,760 observations)**
+   - Measured native matrix: 1, 2, 4, 6, 8, 12 threads @ 1000ms & 2000ms, 512 MiB Hash across 96 positions (5 repetitions).
+   - Full observations: `build/nnue_thread_scaling_measured_v1/observations.jsonl` (7.2 MB, SHA-256: `254FB1C685E458F7C43DCCE4C4DBB1518874FA79BC319E85BC9554689EF4384F`).
+   - Authoritative report: `build/nnue_thread_scaling_measured_v1/report.json` (SHA-256: `5F19083ADE11DD9E76C9B1AC90102376328B988D1D1DF5722B20856BF477757E`).
+   - Core Bottleneck Diagnoses:
+     1. **Root-Split Branch Starvation**: Average legal moves is 6.82; 31/96 positions have <= 6 legal moves. Threads exceeding move count remain idle.
+     2. **SMT Saturation (6 Cores vs 12 Threads)**: 6T achieves 2.45x node speedup over 1T. Going from 6T to 12T only adds +21.3% nodes due to SMT execution pipeline sharing on AMD Ryzen 5 5600H.
+     3. **Synchronization Overhead**: In root-splitting, depth D is accepted only when all root moves complete depth D-1, explaining lower completed depth (18-20 vs 22-23 on 1T) even though 12T evaluates 3x more total positions.
+4. **Immediate Next Action — Phase 5 Evidence-Driven Optimization**:
+   - Align with Lead Architect (ChatGPT Web) on single targeted optimization hypothesis:
+     - Option A: Benchmark 6T vs 12T directly in SPRT (hardware-matched thread configuration).
+     - Option B: Evaluate selective root allocation / root-alpha to overcome root-split synchronization barrier.
+     - Option C: Profile & evaluate ancestor delta accumulator updates.
 
 ---
 

@@ -1,0 +1,4590 @@
+{
+  "format": "thai-makhos-thread-report-v1",
+  "data_kind": "measured",
+  "run_id": "audit-run-v1-1788859348",
+  "run_sha256": "2285C9F2B6D69893AFE1DA5FCB15CC9A073A089D0C717075F2E68F8099CE196E",
+  "status": "COMPLETE_DIAGNOSTIC",
+  "synthetic_warning": null,
+  "schedule_rows": 5760,
+  "valid_rows": 5760,
+  "missing_rows": 0,
+  "trailing_partial_bytes": 0,
+  "host": {
+    "id": "AMD Ryzen 5 5600H",
+    "physical_cores": 6,
+    "logical_threads": 12
+  },
+  "identity": {
+    "native_library_sha256": "32C323026A7F78CCD9C4013FC3067422A564EE3D0A6ADE4F1CE5C62356747E79",
+    "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+    "native_search_abi": 5,
+    "nnue_feature_abi": "thai-makhos-shared-137-v1",
+    "tablebase_sha256": {
+      "4": "650B0C862343D718FD0FE438DB28E47D48618DEA69D693D65210088775DE30E9",
+      "5": "718763FB0F7E026E2FBFE09C066B5B40C480D37DF9586F1BE84CBE604466F4CC",
+      "6": "17A0196F3AFEEFD9D57FB00B641045B0EF790B38A64DA73E19DA3F3369D04A4F"
+    }
+  },
+  "target_host_matches": true,
+  "summaries": [
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 36.5,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 3212288.0,
+          "p95": 10764288
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.2964999999999,
+          "p95": 1000.569
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1000.0,
+          "p95": 1000
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.29649999999998045,
+          "p95": 0.56899999999996
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 984.375,
+          "p95": 1000.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 22.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 1938944.0,
+          "p95": 2895872
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1000.7925,
+          "p95": 1001.224
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1000.0,
+          "p95": 1001
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 0.7925000000000182,
+          "p95": 1.2240000000000464
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 1000.0,
+          "p95": 1000.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 20.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 5731098.0,
+          "p95": 14036395
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.625,
+          "p95": 1006.311
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1000.0,
+          "p95": 1006
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.625,
+          "p95": 6.3110000000000355
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 1617.1875,
+          "p95": 1921.875
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 17.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 2824598.0,
+          "p95": 3856662
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1001.1685,
+          "p95": 1007.61
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1001.0,
+          "p95": 1007
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.1684999999999945,
+          "p95": 7.610000000000014
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 1687.5,
+          "p95": 1859.375
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 20.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 7395114.0,
+          "p95": 23152704
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.7135000000001,
+          "p95": 1004.268
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1001.0,
+          "p95": 1004
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.7135000000000105,
+          "p95": 4.268000000000029
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 2343.75,
+          "p95": 2984.375
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 18.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 4049282.5,
+          "p95": 5481952
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1001.091,
+          "p95": 1004.615
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1001.0,
+          "p95": 1004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.0910000000000082,
+          "p95": 4.615000000000009
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 2578.125,
+          "p95": 3218.75
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 20.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 8685905.5,
+          "p95": 25924862
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.801,
+          "p95": 1003.471
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1001.0,
+          "p95": 1003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.8010000000000446,
+          "p95": 3.4710000000000036
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 2937.5,
+          "p95": 3812.5
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 18.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 4758064.5,
+          "p95": 6765514
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1001.1785,
+          "p95": 1004.436
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1001.0,
+          "p95": 1004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.1784999999999854,
+          "p95": 4.4360000000000355
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 3132.8125,
+          "p95": 4265.625
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 20.5,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 9762483.0,
+          "p95": 38212590
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.7925,
+          "p95": 1003.102
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1001.0,
+          "p95": 1003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.7924999999999613,
+          "p95": 3.1019999999999754
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 3617.1875,
+          "p95": 5390.625
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 19.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 5568450.0,
+          "p95": 7638556
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1001.281,
+          "p95": 1003.716
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1001.0,
+          "p95": 1004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.281000000000006,
+          "p95": 3.716000000000008
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 3812.5,
+          "p95": 4906.25
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 21.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 10427728.0,
+          "p95": 42603849
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1000.81,
+          "p95": 1003.081
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1001.0,
+          "p95": 1003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.8100000000000023,
+          "p95": 3.0810000000000173
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 3820.3125,
+          "p95": 6609.375
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 19.0,
+          "p95": 27
+        },
+        "nodes": {
+          "available": 330,
+          "median": 5819654.0,
+          "p95": 8874115
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 1001.3834999999999,
+          "p95": 1003.343
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 1001.0,
+          "p95": 1003
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.3834999999999695,
+          "p95": 3.342999999999961
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 3968.75,
+          "p95": 5812.5
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 45.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 5720064.0,
+          "p95": 15587057
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 1758.191,
+          "p95": 2000.55
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 1758.0,
+          "p95": 2000
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.13549999999997908,
+          "p95": 0.5499999999999545
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 1718.75,
+          "p95": 2000.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 23.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 3943936.0,
+          "p95": 6194176
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2000.769,
+          "p95": 2001.201
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2000.0,
+          "p95": 2001
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 0.7690000000000055,
+          "p95": 1.2010000000000218
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 1984.375,
+          "p95": 2000.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 21.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 11263486.5,
+          "p95": 31181176
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 2000.633,
+          "p95": 2005.843
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 2000.0,
+          "p95": 2006
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.6330000000000382,
+          "p95": 5.843000000000075
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 3117.1875,
+          "p95": 3859.375
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 19.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 5765327.5,
+          "p95": 8631892
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2001.1305,
+          "p95": 2008.044
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2001.0,
+          "p95": 2008
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.1304999999999836,
+          "p95": 8.044000000000096
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 3304.6875,
+          "p95": 3703.125
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 21.5,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 13427223.0,
+          "p95": 50384175
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 2000.751,
+          "p95": 2004.358
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 2001.0,
+          "p95": 2004
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.7509999999999764,
+          "p95": 4.357999999999947
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 4171.875,
+          "p95": 5968.75
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 20.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 8409776.0,
+          "p95": 11629509
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2001.0855000000001,
+          "p95": 2004.051
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2001.0,
+          "p95": 2004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.0855000000000246,
+          "p95": 4.050999999999931
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 5117.1875,
+          "p95": 6421.875
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 21.5,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 13492730.0,
+          "p95": 53737978
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 2000.8719999999998,
+          "p95": 2003.55
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 2001.0,
+          "p95": 2003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.8719999999999573,
+          "p95": 3.5499999999999545
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 4539.0625,
+          "p95": 7703.125
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 20.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 9668479.5,
+          "p95": 14424512
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2001.196,
+          "p95": 2004.134
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2001.0,
+          "p95": 2004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.1960000000000264,
+          "p95": 4.1340000000000146
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 6265.625,
+          "p95": 8406.25
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 23.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 18146806.5,
+          "p95": 79044226
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 2000.8854999999999,
+          "p95": 2003.379
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 2001.0,
+          "p95": 2003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.8854999999999791,
+          "p95": 3.3789999999999054
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 6031.25,
+          "p95": 10921.875
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 20.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 11010360.5,
+          "p95": 15706720
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2001.2815,
+          "p95": 2003.527
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2001.0,
+          "p95": 2003
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.2814999999999372,
+          "p95": 3.5270000000000437
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 320.0,
+          "p95": 320.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 7226.5625,
+          "p95": 10093.75
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "clock_edge",
+      "observations": 80,
+      "metrics": {
+        "depth": {
+          "available": 80,
+          "median": 23.0,
+          "p95": 64
+        },
+        "nodes": {
+          "available": 80,
+          "median": 18212753.0,
+          "p95": 88466102
+        },
+        "wall_ms": {
+          "available": 80,
+          "median": 2000.863,
+          "p95": 2003.076
+        },
+        "elapsed_ms": {
+          "available": 80,
+          "median": 2001.0,
+          "p95": 2003
+        },
+        "tablebase_hits": {
+          "available": 80,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 80,
+          "median": 0.8630000000000564,
+          "p95": 3.076000000000022
+        },
+        "allocated_tt_mb": {
+          "available": 80,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 80,
+          "median": 6015.625,
+          "p95": 12968.75
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "forced",
+      "observations": 70,
+      "metrics": {
+        "depth": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "nodes": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1
+        },
+        "wall_ms": {
+          "available": 70,
+          "median": 1.0,
+          "p95": 1.0
+        },
+        "elapsed_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "tablebase_hits": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "allocated_tt_mb": {
+          "available": 70,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 70,
+          "median": 0.0,
+          "p95": 0.0
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "playout",
+      "observations": 330,
+      "metrics": {
+        "depth": {
+          "available": 330,
+          "median": 20.0,
+          "p95": 29
+        },
+        "nodes": {
+          "available": 330,
+          "median": 11732744.0,
+          "p95": 16904701
+        },
+        "wall_ms": {
+          "available": 330,
+          "median": 2001.343,
+          "p95": 2003.772
+        },
+        "elapsed_ms": {
+          "available": 330,
+          "median": 2001.0,
+          "p95": 2004
+        },
+        "tablebase_hits": {
+          "available": 330,
+          "median": 0.0,
+          "p95": 0
+        },
+        "overshoot_ms": {
+          "available": 330,
+          "median": 1.3430000000000746,
+          "p95": 3.7719999999999345
+        },
+        "allocated_tt_mb": {
+          "available": 330,
+          "median": 480.0,
+          "p95": 480.0
+        },
+        "active_workers": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "qnodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "coordinator_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_time_ms": {
+          "available": 330,
+          "median": 7859.375,
+          "p95": 11234.375
+        },
+        "process_peak_rss_bytes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "nnue_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "movegen_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "tablebase_ms": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "duplicate_nodes": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "cpu_frequency_mhz": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        },
+        "temperature_c": {
+          "available": 0,
+          "median": null,
+          "p95": null
+        }
+      }
+    }
+  ],
+  "comparisons_vs_1t": [
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 20,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 40,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -0.5,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 5.018500000000017,
+        "p95": 422.495
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 234,
+      "deeper_than_1t": 6,
+      "shallower_than_1t": 299,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -3.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.3925000000000409,
+        "p95": 6.970000000000027
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 15,
+      "deeper_than_1t": 5,
+      "shallower_than_1t": 38,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": 0.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 3.1440000000000055,
+        "p95": 426.283
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 219,
+      "deeper_than_1t": 10,
+      "shallower_than_1t": 282,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.3490000000000464,
+        "p95": 3.9429999999999836
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 10,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 40,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -0.5,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 2.6924999999999955,
+        "p95": 425.62199999999996
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 218,
+      "deeper_than_1t": 14,
+      "shallower_than_1t": 268,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.37899999999996226,
+        "p95": 3.6480000000000246
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 15,
+      "deeper_than_1t": 9,
+      "shallower_than_1t": 45,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.5,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 2.2695000000000505,
+        "p95": 424.0970000000001
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 230,
+      "deeper_than_1t": 15,
+      "shallower_than_1t": 248,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.5030000000000427,
+        "p95": 3.0919999999999845
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 15,
+      "deeper_than_1t": 10,
+      "shallower_than_1t": 45,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.5,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 2.34800000000007,
+        "p95": 423.95000000000005
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 237,
+      "deeper_than_1t": 19,
+      "shallower_than_1t": 238,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -1.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.6305000000000405,
+        "p95": 2.455000000000041
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 20,
+      "deeper_than_1t": 4,
+      "shallower_than_1t": 44,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 5.922499999999989,
+        "p95": 1393.514
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 206,
+      "deeper_than_1t": 4,
+      "shallower_than_1t": 303,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -3.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.36350000000004457,
+        "p95": 7.463999999999942
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 21,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 40,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -0.5,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 6.777999999999977,
+        "p95": 1393.753
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 225,
+      "deeper_than_1t": 7,
+      "shallower_than_1t": 280,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.29150000000004184,
+        "p95": 3.25
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 15,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 42,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 7.673000000000032,
+        "p95": 1393.721
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 212,
+      "deeper_than_1t": 22,
+      "shallower_than_1t": 277,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.44500000000005,
+        "p95": 3.3730000000000473
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 17,
+      "deeper_than_1t": 7,
+      "shallower_than_1t": 44,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 8.80099999999993,
+        "p95": 1393.812
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 197,
+      "deeper_than_1t": 18,
+      "shallower_than_1t": 270,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.5314999999999372,
+        "p95": 2.928000000000111
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "clock_edge",
+      "matched_observations": 80,
+      "same_move": 17,
+      "deeper_than_1t": 8,
+      "shallower_than_1t": 44,
+      "depth_delta_vs_1t": {
+        "available": 80,
+        "median": -1.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 80,
+        "median": 8.889999999999914,
+        "p95": 1393.72
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "forced",
+      "matched_observations": 70,
+      "same_move": 70,
+      "deeper_than_1t": 0,
+      "shallower_than_1t": 0,
+      "depth_delta_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 70,
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "playout",
+      "matched_observations": 330,
+      "same_move": 198,
+      "deeper_than_1t": 21,
+      "shallower_than_1t": 258,
+      "depth_delta_vs_1t": {
+        "available": 330,
+        "median": -2.0,
+        "p95": 1
+      },
+      "wall_delta_ms_vs_1t": {
+        "available": 330,
+        "median": 0.5780000000000882,
+        "p95": 2.900000000000091
+      }
+    }
+  ],
+  "repeatability": [
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 16,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 1,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 64,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 2,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 52,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 16,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 4,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 58,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 6,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 59,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 8,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 61,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 16,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 1000,
+      "threads": 12,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 61,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 16,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 1,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 65,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 2,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 58,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 4,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 61,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 16,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 6,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 59,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 8,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 59,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "clock_edge",
+      "positions": 16,
+      "all_repetitions_same_move": 15,
+      "modal_move_fraction": {
+        "available": 16,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "forced",
+      "positions": 14,
+      "all_repetitions_same_move": 14,
+      "modal_move_fraction": {
+        "available": 14,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    },
+    {
+      "budget_ms": 2000,
+      "threads": 12,
+      "category": "playout",
+      "positions": 66,
+      "all_repetitions_same_move": 61,
+      "modal_move_fraction": {
+        "available": 66,
+        "median": 1.0,
+        "p95": 1.0
+      }
+    }
+  ],
+  "missing_telemetry_rows": {
+    "active_workers": 4920,
+    "qnodes": 5760,
+    "coordinator_ms": 5760,
+    "cpu_time_ms": 0,
+    "process_peak_rss_bytes": 5760,
+    "nnue_ms": 5760,
+    "movegen_ms": 5760,
+    "tablebase_ms": 5760,
+    "duplicate_nodes": 5760,
+    "cpu_frequency_mhz": 5760,
+    "temperature_c": 5760
+  },
+  "profile_coverage_complete": false,
+  "strength_evidence": false,
+  "recommended_threads": null,
+  "production_promoted": false,
+  "limitations": [
+    "Input identities and metrics are recorded claims, not independently measured by this reader.",
+    "Release manifest, workload isolation, and profiling provenance need host verification.",
+    "Move agreement and deeper search do not establish the correct move or an Elo improvement.",
+    "Unavailable telemetry is null, never zero; full profile completion is separate from schedule completion.",
+    "Forced positions and synthetic clock edges are reported separately from the main playout positions."
+  ],
+  "input_sha256": "254FB1C685E458F7C43DCCE4C4DBB1518874FA79BC319E85BC9554689EF4384F"
+}

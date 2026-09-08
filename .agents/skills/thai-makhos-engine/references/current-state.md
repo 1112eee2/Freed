@@ -16,7 +16,16 @@ live counter. Check atomic result files, run manifest and process identity.
   - Verification: 403 Python tests (100% OK), 3 Node.js lifecycle tests (100% OK), HTTP production smoke passed.
   - Reversible rollback preserved: `--release-profile hce`.
 
-**Next action:** Execute Phase 4 — NNUE 1/2/4/6/8/12-Thread Scaling Audit at 1s and 2s across 96 positions (5 repetitions, 5,760 observations total) using `work/nnue_thread_audit_collect.py` and `work/nnue_thread_audit_report.py`.
+**Phase 4 (NNUE Thread-Scaling Audit) is COMPLETE.**
+- 5,760 observations collected and verified: `build/nnue_thread_scaling_measured_v1/observations.jsonl` (SHA-256: `254FB1C685E458F7C43DCCE4C4DBB1518874FA79BC319E85BC9554689EF4384F`).
+- Authoritative analytical report: `build/nnue_thread_scaling_measured_v1/report.json` (SHA-256: `5F19083ADE11DD9E76C9B1AC90102376328B988D1D1DF5722B20856BF477757E`).
+- Key findings:
+  1. Node speedup vs 1T: 2T=1.46x, 4T=2.13x, 6T=2.45x, 8T=2.79x, 12T=2.97x (at 2000ms).
+  2. Diminishing returns from 6T to 12T: +21.3% nodes for 2x threads due to SMT hardware resource sharing on 6 physical cores.
+  3. Root-split branch starvation: 31/96 positions have <= 6 moves; idle threads explain low CPU utilization (3.93x out of 12T).
+  4. Synchronization barrier: All root moves must complete depth D-1 before depth D is accepted, causing lower reported completed depth (18-20 vs 22-23 on 1T) despite 3x higher total nodes.
+
+**Next action:** Phase 5 — Review audit report with Lead Architect (ChatGPT Web) to select single evidence-backed optimization (e.g. tuning thread default to 6T vs 12T, selective root search, or ancestor delta accumulator updates).
 
 The monitor reads append-only stdout while the arena is alive and recomputes
 exact paired statistics; it never opens the active checkpoint. It reads the

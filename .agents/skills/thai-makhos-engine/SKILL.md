@@ -29,11 +29,12 @@ append-only pair logs and process creation identity, not prose or a cached PID.
 Execute the approved sequence in
 [../../../DEVELOPMENT_PLAN_TH.md](../../../DEVELOPMENT_PLAN_TH.md):
 Gate C controls and NNUE v1 Production Promotion are **complete and verified**.
-The GUI defaults to NNUE v1 (`config/gui_release.json`, Profile: `nnue`).
-The active directive is **Phase 4: NNUE Thread-Scaling Audit** (1, 2, 4, 6, 8, 12
-threads at 1000ms and 2000ms fixed time controls across 96 positions × 5 repetitions).
-Collect observations natively via `work/nnue_thread_audit_collect.py` and
-summarize using `work/nnue_thread_audit_report.py`.
+Phase 4 (NNUE Thread-Scaling Audit) is **complete and verified** (5,760 observations,
+`build/nnue_thread_scaling_measured_v1/report.json`).
+The active directive is **Phase 5: Evidence-Driven Bottleneck Optimization**.
+Formulate a single evidence-backed hypothesis addressing the thread audit findings
+(e.g., hardware-matched thread defaults, selective root search, or ancestor delta updates)
+and validate via paired SPRT.
 
 Optimize measured playing strength on this 6-core/12-logical-thread host.
 Include 6 threads in 1/2/4/6/8/12 comparisons. Recommend the strongest supported
