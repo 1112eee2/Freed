@@ -29,6 +29,15 @@ let gameState = {
 };
 
 const SETTINGS_STORAGE_KEY = 'thai-makhos-engine-settings-v1';
+let gameGeneration = 0;
+let activeSearchController = null;
+
+function invalidateSearch() {
+  gameGeneration += 1;
+  if (activeSearchController) activeSearchController.abort();
+  activeSearchController = null;
+  gameState.isBotThinking = false;
+}
 
 function restoreSettings() {
   let saved = {};
@@ -94,6 +103,7 @@ function coordToIndex(row, col) {
 document.addEventListener('DOMContentLoaded', () => {
   setupUI();
   startNewGame();
+  loadEngineIdentity();
 });
 
 function setupUI() {
@@ -106,6 +116,7 @@ function setupUI() {
 
   // Settings
   document.getElementById('select-human-side').addEventListener('change', (e) => {
+    invalidateSearch();
     gameState.humanSide = e.target.value;
     persistSettings();
     updatePlayerLabels();
@@ -145,6 +156,7 @@ function setupUI() {
 }
 
 function setMode(mode) {
+  invalidateSearch();
   const previousMode = gameState.gameMode;
   gameState.gameMode = mode;
 
@@ -220,6 +232,8 @@ function updateTurnBadges() {
 }
 
 async function startNewGame() {
+  invalidateSearch();
+  const generation = gameGeneration;
   if (gameState.botVsBotTimer) {
     clearTimeout(gameState.botVsBotTimer);
     gameState.botVsBotTimer = null;
@@ -242,6 +256,8 @@ async function startNewGame() {
       }) // Black moves first
     });
     const data = await res.json();
+    if (generation !== gameGeneration) return;
+    if (!res.ok || data.error) throw new Error(data.error || 'Cannot start game');
     updateGameState(data);
     gameState.startPosition = generatePositionString();
     gameState.startReversiblePlies = gameState.reversiblePlies;
@@ -507,6 +523,9 @@ async function triggerBotSearch() {
   });
 
   gameState.isBotThinking = true;
+  const generation = gameGeneration;
+  const controller = new AbortController();
+  activeSearchController = controller;
   setStatusMessage(
     `เอนจิ้นกำลังคิด... ${searchSettings.time_sec}s · ` +
     `${searchSettings.threads} Thread${searchSettings.threads > 1 ? 's' : ''} · ` +
@@ -517,6 +536,7 @@ async function triggerBotSearch() {
 
   try {
     const res = await fetch('/api/bestmove', {
+      signal: controller.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -534,11 +554,10 @@ async function triggerBotSearch() {
     });
 
     const data = await res.json();
-    gameState.isBotThinking = false;
+    if (generation !== gameGeneration) return;
 
     if (data.error || !data.bestmove) {
-      console.error('Bot search error:', data.error);
-      return;
+      throw new Error(data.error || 'Engine did not return a move');
     }
 
     // Update Eval metrics in UI
@@ -554,6 +573,7 @@ async function triggerBotSearch() {
     }
 
     const applyRes = await fetch('/api/apply-move', {
+      signal: controller.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -566,6 +586,7 @@ async function triggerBotSearch() {
     });
 
     const applyData = await applyRes.json();
+    if (generation !== gameGeneration) return;
     if (!applyRes.ok || applyData.error) {
       throw new Error(applyData.error || `apply-move failed (${applyRes.status})`);
     }
@@ -609,6 +630,9 @@ async function triggerBotSearch() {
         native_tablebase_error: data.native_tablebase_error,
         runtime_isolation: data.runtime_isolation,
         native_error: data.native_error,
+        evaluator_used: data.evaluator_used,
+        release_id: data.release_id,
+        release_manifest_sha256: data.release_manifest_sha256,
       },
     });
     updateGameState(applyData);
@@ -625,13 +649,43 @@ async function triggerBotSearch() {
       }
     }
   } catch (err) {
-    gameState.isBotThinking = false;
+    if (generation !== gameGeneration || err.name === 'AbortError') return;
     console.error('Failed bot search:', err);
-    setStatusMessage('เกิดข้อผิดพลาดในการสื่อสารกับเอนจิ้น');
+    document.getElementById('val-evaluator').textContent = 'ไม่พร้อมใช้งาน';
+    setStatusMessage(`เอนจิ้นไม่พร้อม: ${err.message}`);
+  } finally {
+    if (generation === gameGeneration) {
+      gameState.isBotThinking = false;
+      activeSearchController = null;
+    }
+  }
+}
+
+function showEngineIdentity(data) {
+  const backend = data.configured_backend || data.search_backend || 'unavailable';
+  document.getElementById('val-evaluator').textContent = data.nnue_enabled ? 'NNUE v1' : 'HCE';
+  document.getElementById('engine-identity').textContent =
+    `${data.nnue_enabled ? 'NNUE v1' : 'HCE'} · ${backend} · ` +
+    `${data.threads}T · TT ${data.hash_allocated_mb}/${data.hash_mb} MiB`;
+  document.getElementById('engine-identity').title =
+    `DLL: ${data.native_library_sha256 || '-'}\nModel: ${data.nnue_model_sha256 || '-'}\nRelease: ${data.release_id || 'explicit'}`;
+}
+
+async function loadEngineIdentity() {
+  try {
+    const response = await fetch('/api/engine', {method:'POST'});
+    const data = await response.json();
+    if (!response.ok || data.error || data.native_error) throw new Error(data.error || data.native_error);
+    showEngineIdentity(data);
+  } catch (error) {
+    document.getElementById('engine-identity').textContent = `เอนจิ้นไม่พร้อม: ${error.message}`;
+    document.getElementById('val-evaluator').textContent = 'ไม่พร้อมใช้งาน';
+    setStatusMessage(`เอนจิ้นไม่พร้อม: ${error.message}`);
   }
 }
 
 function updateEvalUI(data) {
+  showEngineIdentity(data);
   document.getElementById('val-depth').textContent = data.depth || '-';
   document.getElementById('val-nodes').textContent = (data.nodes || 0).toLocaleString();
   document.getElementById('val-time').textContent = `${data.elapsed_ms || 0} ms`;

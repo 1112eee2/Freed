@@ -1403,6 +1403,8 @@ def build_parser() -> argparse.ArgumentParser:
     gui_parser.add_argument("--no-browser", action="store_true", help="do not open browser automatically")
     gui_parser.add_argument("--native-library", help="explicit opt-in native-search DLL")
     gui_parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
+    gui_parser.add_argument("--release-pointer", help="GUI release selection JSON")
+    gui_parser.add_argument("--release-profile", choices=["nnue", "hce"])
     gui_parser.set_defaults(func=command_gui)
 
     sprt_parser = subparsers.add_parser(
@@ -1967,6 +1969,8 @@ def command_gui(args: argparse.Namespace) -> int:
         open_browser=not args.no_browser,
         native_library=args.native_library,
         nnue_model=args.nnue_model,
+        release_pointer=args.release_pointer,
+        release_profile=args.release_profile,
     )
     return 0
 

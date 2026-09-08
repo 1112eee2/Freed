@@ -57,16 +57,22 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
 
 ---
 
-## 4. Immediate Next Milestones (Where Help is Needed)
+## 4. Current Milestone Status & Next Steps
 
-1. **Verify the existing Gate C 2.0s run on the original Windows host**:
-   - Use the manifest-bound monitor and unchanged frozen contract. Never restart a completed PASS/FAIL or cap-INCONCLUSIVE checkpoint.
-2. **Production smoke and reversible NNUE v1 promotion review**:
-   - Both independent Gate C controls must PASS first. Verify real GUI/runtime identity and preserve accepted HCE rollback.
-3. **NNUE Thread Scaling & Profile Audit**:
-   - After production review, compare 1 / 2 / 4 / 6 / 8 / 12 threads at 1s and 2s, total Hash 512 MiB, at least 96 positions and five balanced repetitions.
-4. **One evidence-selected Elo experiment**:
-   - Select from measured bottlenecks under [DEVELOPMENT_PLAN_TH.md](DEVELOPMENT_PLAN_TH.md). Staged ancestor delta remains unproven; future model work requires a fresh development/sealed split and its own frozen contract.
+1. **Gate C 1.0s & 2.0s SPRT Verification**: **COMPLETED (FINISHED_PASS)**
+   - Both controls passed conclusively (+80 Elo vs baseline HCE).
+2. **Production Smoke & Web GUI Promotion to NNUE v1**: **COMPLETED (PROMOTED)**
+   - Hash-bound release manifest frozen at `releases/nnue-v1-20260908/manifest.json`.
+   - Production pointer active at `config/gui_release.json` defaulting to `nnue` profile.
+   - Reversible HCE rollback preserved via `--release-profile hce`.
+   - Web GUI race condition fixed (`AbortController` & `gameGeneration` in `web/app.js`).
+   - Forced-move latency fixed from 12s down to 2.5ms (bypassing redundant TB3 init).
+   - Real HTTP smoke passed; all 403 Python tests + 3 Node.js lifecycle tests passing 100%.
+3. **Immediate Next Action — NNUE Thread-Scaling Audit**:
+   - Run multi-thread scaling benchmark comparing 1, 2, 4, 6, 8, 12 threads at 1s and 2s fixed time controls across 96 balanced test positions (5 repetitions).
+   - Generate analytical report via `work/nnue_thread_audit_report.py`.
+4. **Subsequent Milestone — Evidence-Driven Elo Enhancement**:
+   - Move ordering, search pruning, and ancestor delta accumulator evaluation based on the thread audit profile.
 
 ---
 
@@ -75,12 +81,13 @@ The authoritative routing record is [current-state.md](.agents/skills/thai-makho
 - **On GitHub Repository**:
   - Full C & Python source code (`native/`, `makhos/`)
   - Web GUI (`web/`)
-  - Unit tests suite (`tests/` - 393 tests)
+  - Unit tests suite (`tests/` - 403 tests)
   - Active NNUE model weights (`build/nnue_quantized_v1/model_a.mknnue`)
   - Accepted baseline DLL (`build/makhos_native_accepted.dll`)
-  - Contract & Verification specs (`build/nnue_gate_c_contract_v1.json`, `VERIFICATION.md`); the contract is stored as LF in Git but its frozen SHA binds Windows CRLF bytes. Preflight diagnoses this without rewriting or accepting a different identity.
+  - Gate C results (`build/nnue_gate_c_1000ms_seed20261105.json`, `build/nnue_gate_c_2000ms_seed20261106.json`)
+  - Contract & Verification specs (`build/nnue_gate_c_contract_v1.json`, `VERIFICATION.md`)
+  - GUI Release manifest & config (`releases/nnue-v1-20260908/manifest.json`, `config/gui_release.json`)
 - **Kept Local (Excluded from Git due to 7.8 GB size)**:
   - Tablebase binaries: `tb4_np80.bin`, `tb5_np80.compact.bin`, `tb6_np80.compact.bin` (5.4 GB).
   - Test run logs and 35,000 game self-play analysis JSON shards.
 
-The frozen NNUE candidate DLL, Gate C results/run manifest and bound smoke/full-suite evidence are also absent from this checkout. Preserve and verify those artifacts on the original host; missing local evidence does not mean the match has not started.
