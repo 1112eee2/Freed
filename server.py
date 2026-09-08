@@ -21,6 +21,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Thai Makhos Web GUI Launcher")
     parser.add_argument("--port", type=int, default=8000, help="HTTP server port (default 8000)")
     parser.add_argument("--no-browser", action="store_true", help="Do not open browser automatically")
+    parser.add_argument("--release-pointer", help="GUI release selection JSON")
+    parser.add_argument("--release-profile", choices=["nnue", "hce"], help="Select the release evaluator (HCE rollback)")
+    parser.add_argument("--native-library", help="Explicit native DLL instead of the release")
+    parser.add_argument("--nnue-model", help="Explicit NNUE model")
     args = parser.parse_args()
 
-    run_server(port=args.port, open_browser=not args.no_browser)
+    run_server(port=args.port, open_browser=not args.no_browser,
+               native_library=args.native_library, nnue_model=args.nnue_model,
+               release_pointer=args.release_pointer, release_profile=args.release_profile)

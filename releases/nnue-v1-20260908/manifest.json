@@ -1,0 +1,279 @@
+{
+  "created_at_utc": "2026-09-08T08:47:47.092332+00:00",
+  "format": "thai-makhos-gui-release-v1",
+  "freeze_script_sha256": "528FCF91C2B15249D2E5F60EEDD4004456D1A30A83DBA49695AE9EC142CB2274",
+  "gate_contract_sha256": "5B727707FBED8D5E9D79AE89159D9DF1EAF5C74D8AFE31A654F3CDC191F6A3F7",
+  "gate_results": [
+    {
+      "config": {
+        "baseline_persistent_search": true,
+        "baseline_threads": 12,
+        "candidate_persistent_search": true,
+        "candidate_threads": 12,
+        "elo0": 0.0,
+        "elo1": 2.0,
+        "fixed_move_time_ms": 1000,
+        "hash_mb": 512,
+        "increment_seconds": 0.1,
+        "libraries": {
+          "baseline": {
+            "fixed_search": false,
+            "nnue_enabled": false,
+            "nnue_feature_abi": null,
+            "nnue_model": null,
+            "nnue_model_sha256": null,
+            "path": "D:\\ThaiMakhosEngine\\build\\makhos_native_accepted.dll",
+            "search_abi": 5,
+            "sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+            "shared_tt": false,
+            "threads": 12,
+            "window_search": false
+          },
+          "candidate": {
+            "fixed_search": true,
+            "nnue_enabled": true,
+            "nnue_feature_abi": "thai-makhos-shared-137-v1",
+            "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+            "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+            "path": "D:\\ThaiMakhosEngine\\build\\nnue_search_v1_r5\\makhos_native_nnue_candidate_v1.dll",
+            "search_abi": 5,
+            "sha256": "32c323026a7f78ccd9c4013fc3067422a564ee3d0a6ade4f1ce5c62356747e79",
+            "shared_tt": false,
+            "threads": 12,
+            "window_search": true
+          }
+        },
+        "max_game_plies": 300,
+        "max_pairs": 10000,
+        "move_time_cap_ms": null,
+        "opening_plies": 8,
+        "parallel_games": 1,
+        "persistent_search": true,
+        "resume": true,
+        "root_alpha": false,
+        "root_alpha_margin": 32,
+        "root_alpha_min_depth": 16,
+        "search_hash_power": 20,
+        "seed": 20261105,
+        "selective_candidates": 4,
+        "selective_margin": 160,
+        "selective_reserve": 0.6,
+        "selective_root": false,
+        "shared_tt": false,
+        "shared_tt_group_size": 4,
+        "tablebases": {
+          "native_3_piece": true,
+          "ranked": [
+            {
+              "header_fnv1a64": "89459baacbcf2c6b",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb4_np80.compact.bin",
+              "piece_count": 4
+            },
+            {
+              "header_fnv1a64": "c9e825ce79ecc0c9",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb5_np80.compact.bin",
+              "piece_count": 5
+            },
+            {
+              "header_fnv1a64": "7102f5514870a253",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb6_np80.compact.bin",
+              "piece_count": 6
+            }
+          ]
+        },
+        "threads": 12,
+        "time_seconds": 10.0,
+        "workload_isolation": {
+          "checkpoint_granularity": "before-each-pair-and-ply",
+          "policy": "interactive-gui-priority-v1",
+          "process_priority": "BelowNormal"
+        }
+      },
+      "path": "build/nnue_gate_c_1000ms_seed20261105.json",
+      "result": {
+        "draws": 396,
+        "elo": 80.30494069566105,
+        "elo_95_error": 13.472250255618,
+        "games": 1092,
+        "llr": 2.945906196582963,
+        "losses": 224,
+        "pairs": 546,
+        "pentanomial": [
+          2,
+          65,
+          233,
+          175,
+          71
+        ],
+        "status": "PASS",
+        "wins": 472
+      },
+      "sha256": "41E78EF359BB9BA6E1CDF189FCD15B56D1D9ED36E2CCD684D4F96D0C8AFE94D8"
+    },
+    {
+      "config": {
+        "baseline_persistent_search": true,
+        "baseline_threads": 12,
+        "candidate_persistent_search": true,
+        "candidate_threads": 12,
+        "elo0": 0.0,
+        "elo1": 2.0,
+        "fixed_move_time_ms": 2000,
+        "hash_mb": 512,
+        "increment_seconds": 0.1,
+        "libraries": {
+          "baseline": {
+            "fixed_search": false,
+            "nnue_enabled": false,
+            "nnue_feature_abi": null,
+            "nnue_model": null,
+            "nnue_model_sha256": null,
+            "path": "D:\\ThaiMakhosEngine\\build\\makhos_native_accepted.dll",
+            "search_abi": 5,
+            "sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+            "shared_tt": false,
+            "threads": 12,
+            "window_search": false
+          },
+          "candidate": {
+            "fixed_search": true,
+            "nnue_enabled": true,
+            "nnue_feature_abi": "thai-makhos-shared-137-v1",
+            "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+            "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+            "path": "D:\\ThaiMakhosEngine\\build\\nnue_search_v1_r5\\makhos_native_nnue_candidate_v1.dll",
+            "search_abi": 5,
+            "sha256": "32c323026a7f78ccd9c4013fc3067422a564ee3d0a6ade4f1ce5c62356747e79",
+            "shared_tt": false,
+            "threads": 12,
+            "window_search": true
+          }
+        },
+        "max_game_plies": 300,
+        "max_pairs": 10000,
+        "move_time_cap_ms": null,
+        "opening_plies": 8,
+        "parallel_games": 1,
+        "persistent_search": true,
+        "resume": true,
+        "root_alpha": false,
+        "root_alpha_margin": 32,
+        "root_alpha_min_depth": 16,
+        "search_hash_power": 20,
+        "seed": 20261106,
+        "selective_candidates": 4,
+        "selective_margin": 160,
+        "selective_reserve": 0.6,
+        "selective_root": false,
+        "shared_tt": false,
+        "shared_tt_group_size": 4,
+        "tablebases": {
+          "native_3_piece": true,
+          "ranked": [
+            {
+              "header_fnv1a64": "89459baacbcf2c6b",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb4_np80.compact.bin",
+              "piece_count": 4
+            },
+            {
+              "header_fnv1a64": "c9e825ce79ecc0c9",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb5_np80.compact.bin",
+              "piece_count": 5
+            },
+            {
+              "header_fnv1a64": "7102f5514870a253",
+              "no_progress_plies": 80,
+              "path": "D:\\ThaiMakhosEngine\\build\\tb6_np80.compact.bin",
+              "piece_count": 6
+            }
+          ]
+        },
+        "threads": 12,
+        "time_seconds": 10.0,
+        "workload_isolation": {
+          "checkpoint_granularity": "before-each-pair-and-ply",
+          "policy": "interactive-gui-priority-v1",
+          "process_priority": "BelowNormal"
+        }
+      },
+      "path": "build/nnue_gate_c_2000ms_seed20261106.json",
+      "result": {
+        "draws": 404,
+        "elo": 79.76499283831097,
+        "elo_95_error": 12.944739387900334,
+        "games": 1108,
+        "llr": 2.9463363428969616,
+        "losses": 227,
+        "pairs": 554,
+        "pentanomial": [
+          3,
+          59,
+          240,
+          189,
+          63
+        ],
+        "status": "PASS",
+        "wins": 477
+      },
+      "sha256": "B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F"
+    }
+  ],
+  "gate_source_inventory_sha256": "E8F223128CA34BAFD7AF5E3E93F58D56777D0647A1D279B7C13A3BF20DC383A0",
+  "gate_test_inventory_sha256": "FE123C50E916829F8AA735E4862E726595F89BB8AE03BEF47403B2FFF1E8281B",
+  "git_head": "d0b34aa4a2466e81faebd46928f2f5a53f6a89bc",
+  "profiles": {
+    "hce": {
+      "native_library": "build/makhos_native_accepted.dll",
+      "native_library_sha256": "FEEDD39CF16E5F5ABC236452BE897ABE1ECF26B8BA7ADCDA4A25022B868C3DDD",
+      "native_search_abi": 5,
+      "nnue_enabled": false,
+      "nnue_feature_abi": null,
+      "nnue_model": null,
+      "nnue_model_sha256": null
+    },
+    "nnue": {
+      "native_library": "build/nnue_search_v1_r5/makhos_native_nnue_candidate_v1.dll",
+      "native_library_sha256": "32C323026A7F78CCD9C4013FC3067422A564EE3D0A6ADE4F1CE5C62356747E79",
+      "native_search_abi": 5,
+      "nnue_enabled": true,
+      "nnue_feature_abi": "thai-makhos-shared-137-v1",
+      "nnue_model": "build/nnue_quantized_v1/model_a.mknnue",
+      "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C"
+    }
+  },
+  "promotion": "REQUIRES_HTTP_BROWSER_FULL_SUITE_AND_ROLLBACK_EVIDENCE",
+  "release_id": "nnue-v1-20260908",
+  "rules_sha256": "77528ADDC0E08B17217346C511C7C4084BAD4AF48789955C3EC85EF76A64871F",
+  "settings": {
+    "budgets_ms": [
+      1000,
+      2000
+    ],
+    "hash_mb_total": 512,
+    "mode": "win",
+    "rules_profile": "project",
+    "threads": 12
+  },
+  "tablebases": [
+    {
+      "bytes": 12419180,
+      "path": "build/tb4_np80.compact.bin",
+      "sha256": "650B0C862343D718FD0FE438DB28E47D48618DEA69D693D65210088775DE30E9"
+    },
+    {
+      "bytes": 278902544,
+      "path": "build/tb5_np80.compact.bin",
+      "sha256": "718763FB0F7E026E2FBFE09C066B5B40C480D37DF9586F1BE84CBE604466F4CC"
+    },
+    {
+      "bytes": 4852172800,
+      "path": "build/tb6_np80.compact.bin",
+      "sha256": "17A0196F3AFEEFD9D57FB00B641045B0EF790B38A64DA73E19DA3F3369D04A4F"
+    }
+  ]
+}

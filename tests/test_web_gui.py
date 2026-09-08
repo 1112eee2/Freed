@@ -37,7 +37,7 @@ class WebGuiContractTests(unittest.TestCase):
         self.assertIn('ENGINE v2.1', page)
         self.assertIn('id="select-rules-profile"', page)
         self.assertIn('value="external-no-repetition"', page)
-        self.assertIn('app.js?v=20260831-1', page)
+        self.assertIn('app.js?v=20260908-1', page)
 
     def test_engine_settings_persist_across_refreshes(self) -> None:
         app = (WEB_DIR / "app.js").read_text(encoding="utf-8")

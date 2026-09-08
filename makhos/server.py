@@ -39,6 +39,7 @@ from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from .ranked_tablebase import RankedTablebase
 from .search import Engine, Mode, SearchLimits
 from .workload_isolation import InteractiveSessionLease
+from .gui_release import DEFAULT_POINTER, load_release
 
 
 # Global engine instance shared by HTTP requests
@@ -47,6 +48,7 @@ GLOBAL_ENGINE_CONFIG: tuple[int, int, str, str, str | None] | None = None
 GLOBAL_ENGINE_PROVENANCE: dict[str, object] | None = None
 GUI_NATIVE_LIBRARY_OVERRIDE: Path | None = None
 GUI_NNUE_MODEL_OVERRIDE: Path | None = None
+GUI_RELEASE: dict | None = None
 NATIVE_TABLEBASE_WARMUP_THREAD: threading.Thread | None = None
 NATIVE_TABLEBASE_WARMUP_ERROR: str | None = None
 ENGINE_SEARCH_LOCK = threading.RLock()
@@ -55,7 +57,7 @@ WEB_DIR = str(PROJECT_ROOT / "web")
 DEFAULT_ENGINE_THREADS = 1
 DEFAULT_ENGINE_HASH_MB = 64
 GUI_SEARCH_DEPTH = 64
-WEB_ASSET_VERSION = "20260831-1"
+WEB_ASSET_VERSION = "20260908-1"
 EXTERNAL_NO_REPETITION_RULES = Rules(
     name="external-no-repetition",
     starting_player=BLACK,
@@ -112,7 +114,7 @@ def configure_gui_native_search(
 ) -> None:
     """Select an explicit GUI candidate without changing the production default."""
 
-    global GUI_NATIVE_LIBRARY_OVERRIDE, GUI_NNUE_MODEL_OVERRIDE
+    global GUI_NATIVE_LIBRARY_OVERRIDE, GUI_NNUE_MODEL_OVERRIDE, GUI_RELEASE
     if native_library is None and nnue_model is not None:
         raise ValueError("--nnue-model requires an explicit --native-library")
     library = None if native_library is None else Path(native_library).resolve()
@@ -132,6 +134,7 @@ def configure_gui_native_search(
     close_global_engine()
     GUI_NATIVE_LIBRARY_OVERRIDE = library
     GUI_NNUE_MODEL_OVERRIDE = model
+    GUI_RELEASE = None
 
 
 def configured_gui_native_library() -> Path:
@@ -177,6 +180,12 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     configured["provenance_version"] = "search-v1"
     configured["search_backend"] = backend
     configured["native_error"] = engine.last_native_error or native_load_error
+    configured["release_id"] = None if GUI_RELEASE is None else GUI_RELEASE["release_id"]
+    configured["release_manifest_sha256"] = None if GUI_RELEASE is None else GUI_RELEASE["manifest_sha256"]
+    configured["evaluator_used"] = (
+        "nnue" if backend.startswith("native-") and configured.get("nnue_enabled")
+        else "hce" if backend.startswith("native-") else backend
+    )
     configured.setdefault("native_library", None)
     configured.setdefault("native_library_sha256", None)
     configured.setdefault("native_search_abi", None)
@@ -397,6 +406,8 @@ def get_default_engine(
     rules = RULE_PROFILES[rules_profile]
     native_dll = configured_gui_native_library()
     nnue_model = GUI_NNUE_MODEL_OVERRIDE
+    if nnue_model is not None and not native_dll.is_file():
+        raise RuntimeError(f"NNUE library unavailable: {native_dll}")
     config = (
         threads,
         hash_mb,
@@ -429,6 +440,10 @@ def get_default_engine(
                     nnue_model=nnue_model,
                 )
             except Exception as err:
+                if nnue_model is not None:
+                    for tablebase in ranked:
+                        tablebase.close()
+                    raise RuntimeError(f"NNUE initialization failed: {err}") from err
                 print(f"Notice: could not load native search {native_dll}: {err}", file=sys.stderr)
                 native_search_error = str(err)
 
@@ -471,6 +486,8 @@ def get_default_engine(
                         nnue_model=nnue_model,
                     )
                 except Exception as err:
+                    if nnue_model is not None:
+                        raise RuntimeError(f"NNUE reconfiguration failed: {err}") from err
                     print(
                         f"Notice: could not reconfigure native search {native_dll}: {err}",
                         file=sys.stderr,
@@ -525,7 +542,29 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         elif path == "/api/apply-move":
             self.handle_apply_move(data)
         elif path == "/api/bestmove":
-            self.handle_bestmove(data)
+            try:
+                self.handle_bestmove(data)
+            except (OSError, RuntimeError, ValueError) as error:
+                self.send_json({"error": str(error), "engine_unavailable": True}, 503)
+        elif path == "/api/engine":
+            try:
+                with ENGINE_SEARCH_LOCK:
+                    settings = {} if GUI_RELEASE is None else GUI_RELEASE["settings"]
+                    engine = GLOBAL_ENGINE or get_default_engine(
+                        threads=settings.get("threads", DEFAULT_ENGINE_THREADS),
+                        hash_mb=settings.get("hash_mb_total", DEFAULT_ENGINE_HASH_MB))
+                    native = engine.native_search
+                    self.send_json({
+                        **engine_search_provenance(engine),
+                        "configured_backend": "native-root-split" if isinstance(native, ParallelNativeSearch) else "native-single" if native else "unavailable",
+                        "threads": GLOBAL_ENGINE_CONFIG[0], "hash_mb": GLOBAL_ENGINE_CONFIG[1],
+                        "hash_allocated_mb": getattr(native, "allocated_hash_mb", 0),
+                        "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
+                        "defaults": GUI_RELEASE["settings"] if GUI_RELEASE else {
+                            "threads": DEFAULT_ENGINE_THREADS, "hash_mb_total": DEFAULT_ENGINE_HASH_MB},
+                    })
+            except (OSError, RuntimeError, ValueError) as error:
+                self.send_json({"error": str(error), "engine_unavailable": True}, 503)
         else:
             self.send_error(404, "API endpoint not found")
 
@@ -536,7 +575,10 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass  # A cancelled browser request cannot consume this response.
 
     def handle_get_state(self, data: dict) -> None:
         pos_str = data.get("position")
@@ -752,7 +794,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 hash_mb=hash_mb,
                 rules_profile=rules_profile,
             )
-            if sum(piece != EMPTY for piece in state.board) <= 3:
+            if (sum(piece != EMPTY for piece in state.board) <= 3
+                    and len(legal_moves(state)) > 1):
                 # Runtime TB3 construction is expensive. Pay it only when its
                 # exact result can affect the current move, never during the
                 # opening or concurrently with a live middlegame search.
@@ -768,6 +811,11 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 history=history,
             )
             provenance = engine_search_provenance(engine)
+            if GUI_NNUE_MODEL_OVERRIDE is not None and (
+                not provenance["nnue_enabled"] or provenance["native_error"]
+                or provenance["search_backend"] == "python-fallback"
+            ):
+                raise RuntimeError(f"NNUE search unavailable: {provenance['native_error']}")
 
         pv_notation = [m.notation for m in result.pv]
         wdl_text = "UNKNOWN"
@@ -812,6 +860,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             "native_tablebase_ready": engine.native_tablebase is not None,
             "native_tablebase_error": NATIVE_TABLEBASE_WARMUP_ERROR,
             "runtime_isolation": "interactive-exclusive-v1",
+            "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
+            "worker_count": len(engine.native_search._workers) if isinstance(engine.native_search, ParallelNativeSearch) else (1 if engine.native_search else 0),
             **provenance,
         })
 
@@ -822,8 +872,24 @@ def run_server(
     *,
     native_library: str | Path | None = None,
     nnue_model: str | Path | None = None,
+    release_pointer: str | Path | None = None,
+    release_profile: str | None = None,
 ) -> None:
+    global GUI_RELEASE
+    if native_library is not None and (release_pointer is not None or release_profile is not None):
+        raise ValueError("Select explicit native files or a release, not both")
+    release = None
+    if native_library is None and nnue_model is None:
+        release = load_release(DEFAULT_POINTER if release_pointer is None else Path(release_pointer).resolve(),
+                               profile=release_profile)
+        if release is not None:
+            native_library, nnue_model = release["native_library"], release["nnue_model"]
     configure_gui_native_search(native_library, nnue_model)
+    GUI_RELEASE = release
+    if release is not None:
+        with NativeSearch(native_library, hash_power=12, persistent=True, nnue_model=nnue_model) as probe:
+            if probe.abi_version != release["native_search_abi"] or probe.nnue_feature_abi != release["nnue_feature_abi"]:
+                raise ValueError("GUI release ABI mismatch")
     server_address = ("", port)
     url = f"http://localhost:{port}/?v={WEB_ASSET_VERSION}"
     try:
@@ -855,7 +921,9 @@ def run_server(
     def warm_engine() -> None:
         try:
             with ENGINE_SEARCH_LOCK:
-                get_default_engine()
+                settings = {} if GUI_RELEASE is None else GUI_RELEASE["settings"]
+                get_default_engine(threads=settings.get("threads", DEFAULT_ENGINE_THREADS),
+                                   hash_mb=settings.get("hash_mb_total", DEFAULT_ENGINE_HASH_MB))
         except Exception as error:
             print(f"Notice: background engine warm-up failed: {error}", file=sys.stderr)
 
@@ -884,10 +952,14 @@ if __name__ == "__main__":
     parser.add_argument("--no-browser", action="store_true", help="Do not open browser automatically")
     parser.add_argument("--native-library", help="explicit opt-in native-search DLL")
     parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
+    parser.add_argument("--release-pointer", help="GUI release selection JSON")
+    parser.add_argument("--release-profile", choices=["nnue", "hce"])
     args = parser.parse_args()
     run_server(
         port=args.port,
         open_browser=not args.no_browser,
         native_library=args.native_library,
         nnue_model=args.nnue_model,
+        release_pointer=args.release_pointer,
+        release_profile=args.release_profile,
     )
