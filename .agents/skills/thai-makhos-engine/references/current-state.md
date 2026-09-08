@@ -1,21 +1,19 @@
 # Current ThaiMakhosEngine state
 
-Reviewed: 2026-09-07. This is the single current-state routing record, not a
+Reviewed: 2026-09-08. This is the single current-state routing record, not a
 live counter. Check atomic result files, run manifest and process identity.
 
 ## Current gate and next action
 
-**Gate C 1000ms is complete PASS. The sole active strength experiment is the
-frozen 2000ms match. No NNUE production promotion has occurred.**
-It was launched 2026-09-07 after the unchanged full suite passed 393/393.
-Revalidate live state before assuming it is still running.
+**Both Gate C 1000ms and Gate C 2000ms are complete independent PASS.**
+Both independent controls have reached conclusive statistical PASS under the
+frozen Gate C contract:
+- 1000ms: 546 pairs / 1,092 games | W 472 D 396 L 224 | LLR +2.945906 | Elo vs HCE +80.3 +/- 13.5
+- 2000ms: 554 pairs / 1,108 games | W 477 D 404 L 227 | LLR +2.946336 | Elo vs HCE +79.8 +/- 12.9
+- 2000ms result SHA-256: `B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F`
 
-User-reported update in the current session: verified local resume of the
-unchanged 2000ms run, PID 20288, continuing from pair 282 with LLR +1.461.
-This records the user's observation, not a fresh process probe or a permanent
-PID binding. Leave that run under its existing stopping/isolation conditions.
-The cloud checkout is preparing isolated offline thread-audit reporting while
-the match runs; there is no new arena, training, native build or full-suite run.
+**Next action:** Enter production smoke and reversible NNUE v1 promotion review,
+followed by the prepared NNUE 1/2/4/6/8/12-thread scaling audit at 1s and 2s.
 
 - Live pointer: `build/runtime/nnue_gate_c_active_run.json`.
 - Initial 2000ms manifest:

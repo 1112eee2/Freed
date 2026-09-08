@@ -1,6 +1,6 @@
-﻿# ThaiMakhosEngine: Project Status & Architecture Brief
+# ThaiMakhosEngine: Project Status & Architecture Brief
 
-> **Status as of: 2026-09-07**  
+> **Status as of: 2026-09-08**  
 > Document for Lead Architect / AI Reviewer (ChatGPT / External Developers)
 
 ---
@@ -11,17 +11,18 @@
 - **Current Development Phase**: **Phase 9 — NNUE Production Promotion (Gate C)**
 - **Hardware Profile**: 6 physical cores / 12 logical threads on Windows host with AVX2 support.
 
-### Gate C Status (Historical host snapshot; revalidate before use):
+### Gate C Status: **BOTH TIME CONTROLS FINISHED_PASS** (Completed 2026-09-08)
 
-The authoritative routing record is [current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md). The counters below are a historical snapshot, not a live observation from a GitHub checkout. Run `python -B work/nnue_gate_c_control.py preflight` for a read-only local prerequisite report; it does not inspect the original host or authorize a launch.
+The authoritative routing record is [current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md). Both independent time controls have reached conclusive PASS:
 - **Gate A (Contract & Parity)**: **PASS** (Bit-exact parity between Python oracle, C scalar, incremental, and AVX2 vectorization).
 - **Gate B (Intrinsic Strength 1T / 256 MiB / 10s+0.1s)**: **PASS** (+94.2 +/- 13.5 Elo vs accepted HCE).
 - **Gate C — 1.0s / move (12T / 512 MiB)**: **FINISHED_PASS**  
   - 546 pairs / 1,092 games | W 472 D 396 L 224 | LLR +2.946 (Threshold +/- 2.944)  
   - **Result: +80.3 +/- 13.5 Elo** vs Accepted HCE baseline.
-- **Gate C — 2.0s / move (12T / 512 MiB)**: **LAST REPORTED IN PROGRESS (282 pairs / 564 games); current state unverified here**
-  - W 235 D 214 L 115 | LLR +1.461 | **Result so far: +75.1 +/- 17.7 Elo** vs Accepted HCE.
-  - Target: Reach LLR >= +2.944 to confirm PASS.
+- **Gate C — 2.0s / move (12T / 512 MiB)**: **FINISHED_PASS** (Completed at 2026-09-08 08:41 +07:00)
+  - 554 pairs / 1,108 games | W 477 D 404 L 227 | LLR +2.946 (Threshold +/- 2.944)  
+  - **Result: +79.8 +/- 12.9 Elo** vs Accepted HCE baseline.
+  - JSON artifact: `build/nnue_gate_c_2000ms_seed20261106.json` (SHA-256: `B32B043F7144B7DC85E982FA0EF44342D22E21773FF969D2C3859D468A2AF19F`).
 
 ---
 
