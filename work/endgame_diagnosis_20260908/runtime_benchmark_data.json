@@ -1,0 +1,3097 @@
+{
+  "control_commit": "ba9481dbc8c48f09771638fab3aa3f9d7efbf3b5",
+  "candidate_commit": "main (with endgame repetition fix)",
+  "timestamp": "2026-09-08 22:52:35",
+  "cold_start": {
+    "control": {
+      "startup_ms": 15032.602199993562,
+      "first_search_ms": 9.852300019701943
+    },
+    "candidate": {
+      "startup_ms": 13325.07349998923,
+      "first_search_ms": 18.98680001613684
+    }
+  },
+  "timed_matches": [
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 93.18150000763126,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.19921875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 119.18489998788573,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.20703125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 8512,
+          "elapsed_ms": 1011.7889999819454,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 669.015625,
+          "overshoot_ms": 11.78899998194538
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 7,
+          "nodes": 8064,
+          "elapsed_ms": 1012.3049999820068,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 669.15625,
+          "overshoot_ms": 12.304999982006848
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 138.03719999850728,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.25,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 112.33629999333061,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.25,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 7,
+          "nodes": 8064,
+          "elapsed_ms": 1004.5614999835379,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 669.16015625,
+          "overshoot_ms": 4.561499983537942
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 8832,
+          "elapsed_ms": 1004.715999995824,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 669.26171875,
+          "overshoot_ms": 4.71599999582395
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 64.89300000248477,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.26171875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 63.68059999658726,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.26171875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 7424,
+          "elapsed_ms": 1001.2704999826383,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 669.90625,
+          "overshoot_ms": 1.2704999826382846
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 7232,
+          "elapsed_ms": 1003.7259999953676,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 670.02734375,
+          "overshoot_ms": 3.7259999953676015
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14730001566931605,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.26171875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.1100999943446368,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 667.26171875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14360001659952104,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 670.02734375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14590000500902534,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 670.02734375,
+          "overshoot_ms": 0.0
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 88.43819997855462,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 667.296875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 72.11649999953806,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 667.30078125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 7936,
+          "elapsed_ms": 1001.0375999845564,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 670.4296875,
+          "overshoot_ms": 1.0375999845564365
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 8064,
+          "elapsed_ms": 1003.6599999875762,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 670.55859375,
+          "overshoot_ms": 3.659999987576157
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "time_limit_ms": 1000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 5,
+          "nodes": 6592,
+          "elapsed_ms": 1000.8956000092439,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 670.046875,
+          "overshoot_ms": 0.8956000092439353
+        },
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 6,
+          "nodes": 15744,
+          "elapsed_ms": 1003.2041000085883,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 3.2041000085882843
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 5,
+          "nodes": 7680,
+          "elapsed_ms": 1005.824499996379,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 673.21875,
+          "overshoot_ms": 5.824499996379018
+        },
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 6,
+          "nodes": 8832,
+          "elapsed_ms": 1005.9749000065494,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 675.2890625,
+          "overshoot_ms": 5.974900006549433
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 121.99689997942187,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 87.11469999980181,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 8832,
+          "elapsed_ms": 1001.0214000067208,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.30078125,
+          "overshoot_ms": 1.0214000067207962
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 7,
+          "nodes": 8384,
+          "elapsed_ms": 1001.2701999803539,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.30078125,
+          "overshoot_ms": 1.2701999803539366
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 118.88270001509227,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 88.4968000173103,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 7,
+          "nodes": 8320,
+          "elapsed_ms": 1002.6134999934584,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.33984375,
+          "overshoot_ms": 2.6134999934583902
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 7,
+          "nodes": 8000,
+          "elapsed_ms": 1008.0854000116233,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.33984375,
+          "overshoot_ms": 8.085400011623278
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 62.08800000604242,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.7421875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 51.24989998876117,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.74609375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 7488,
+          "elapsed_ms": 1002.6820999919437,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 2.682099991943687
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 7360,
+          "elapsed_ms": 1006.7793000198435,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 6.779300019843504
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14370001736097038,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.74609375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.11259998427703977,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 674.74609375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.1464999804738909,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.07899999036453664,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 0.0
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 70.79669999075122,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 674.74609375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 60.97649998264387,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 674.74609375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 8192,
+          "elapsed_ms": 1005.1674999995157,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 5.167499999515712
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 8640,
+          "elapsed_ms": 1002.6825000240933,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 675.34375,
+          "overshoot_ms": 2.682500024093315
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 573,
+          "depth": 7,
+          "nodes": 15104,
+          "elapsed_ms": 1002.3067000147421,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.375,
+          "overshoot_ms": 2.3067000147420913
+        },
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 577,
+          "depth": 8,
+          "nodes": 15104,
+          "elapsed_ms": 1002.900999999838,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.609375,
+          "overshoot_ms": 2.90099999983795
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 7,
+          "nodes": 8448,
+          "elapsed_ms": 1003.9154999831226,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.671875,
+          "overshoot_ms": 3.9154999831225723
+        },
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 444,
+          "depth": 7,
+          "nodes": 8576,
+          "elapsed_ms": 1003.489399998216,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 678.98828125,
+          "overshoot_ms": 3.4893999982159585
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 122.01010002172552,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.609375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 111.19319999124855,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.61328125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16320,
+          "elapsed_ms": 2010.925699985819,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.0390625,
+          "overshoot_ms": 10.925699985818937
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16128,
+          "elapsed_ms": 2009.7566999902483,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.04296875,
+          "overshoot_ms": 9.756699990248308
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 119.05750000732951,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.61328125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 101.58370001590811,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.61328125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16576,
+          "elapsed_ms": 2002.3209000064526,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.05078125,
+          "overshoot_ms": 2.3209000064525753
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 13568,
+          "elapsed_ms": 2007.5057999929413,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.0546875,
+          "overshoot_ms": 7.50579999294132
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 62.77879999834113,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 64.23370001721196,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 15744,
+          "elapsed_ms": 2004.335000005085,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.2265625,
+          "overshoot_ms": 4.335000005085021
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 14592,
+          "elapsed_ms": 2008.5155999986455,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.2265625,
+          "overshoot_ms": 8.515599998645484
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.1252999936696142,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.13540001236833632,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14940000255592167,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.2265625,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.12120002065785229,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.2265625,
+          "overshoot_ms": 0.0
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 85.19250000244938,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 67.16819998109713,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 679.55859375,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 7,
+          "nodes": 14848,
+          "elapsed_ms": 2004.289800010156,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 679.26953125,
+          "overshoot_ms": 4.289800010155886
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 7,
+          "nodes": 17600,
+          "elapsed_ms": 2005.245999986073,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 679.44140625,
+          "overshoot_ms": 5.245999986073002
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "time_limit_ms": 2000,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-32",
+          "score": 577,
+          "depth": 8,
+          "nodes": 31104,
+          "elapsed_ms": 2005.1777999906335,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 685.28515625,
+          "overshoot_ms": 5.177799990633503
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 9,
+          "nodes": 30464,
+          "elapsed_ms": 2004.2826000135392,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.37890625,
+          "overshoot_ms": 4.282600013539195
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 8,
+          "nodes": 15616,
+          "elapsed_ms": 2006.689899979392,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 685.0546875,
+          "overshoot_ms": 6.689899979392067
+        },
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 456,
+          "depth": 8,
+          "nodes": 16192,
+          "elapsed_ms": 2007.2733999986667,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 685.87890625,
+          "overshoot_ms": 7.273399998666719
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 119.14520000573248,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 110.39590000291355,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16640,
+          "elapsed_ms": 2005.134500010172,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.16015625,
+          "overshoot_ms": 5.134500010171905
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16256,
+          "elapsed_ms": 2009.464399976423,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.16796875,
+          "overshoot_ms": 9.46439997642301
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 126.36739999288693,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 115.41520000901073,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 16832,
+          "elapsed_ms": 2007.9889000044204,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.16796875,
+          "overshoot_ms": 7.9889000044204295
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 15872,
+          "elapsed_ms": 2002.2083999938332,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.16796875,
+          "overshoot_ms": 2.2083999938331544
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 73.25570000102744,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 56.8963999976404,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 9,
+          "nodes": 15104,
+          "elapsed_ms": 2003.6427000013646,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.1875,
+          "overshoot_ms": 3.642700001364574
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 9,
+          "nodes": 16000,
+          "elapsed_ms": 2009.5522000046913,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.1953125,
+          "overshoot_ms": 9.552200004691258
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.12140002218075097,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.07879998884163797,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.09900002623908222,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.1953125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.07720000576227903,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 686.1953125,
+          "overshoot_ms": 0.0
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 75.99360001040623,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 73.07529999525286,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 689.3828125,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 7,
+          "nodes": 17728,
+          "elapsed_ms": 2005.7273000129499,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 686.1953125,
+          "overshoot_ms": 5.727300012949854
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 7,
+          "nodes": 17536,
+          "elapsed_ms": 2006.1427000036929,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 686.19921875,
+          "overshoot_ms": 6.14270000369288
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "time_limit_ms": 2000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 9,
+          "nodes": 30400,
+          "elapsed_ms": 2007.4540999776218,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 693.48046875,
+          "overshoot_ms": 7.454099977621809
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 10,
+          "nodes": 32000,
+          "elapsed_ms": 2006.9309000100475,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.765625,
+          "overshoot_ms": 6.9309000100474805
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 9,
+          "nodes": 16192,
+          "elapsed_ms": 2004.7198999964166,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 689.01953125,
+          "overshoot_ms": 4.719899996416643
+        },
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 456,
+          "depth": 9,
+          "nodes": 17600,
+          "elapsed_ms": 2006.496900023194,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.0078125,
+          "overshoot_ms": 6.49690002319403
+        }
+      ]
+    }
+  ],
+  "depth_matches": [
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 18.535600014729425,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 21.852700010640547,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2289,
+          "elapsed_ms": 299.41219999454916,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 257.3549000080675,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 21.431800007121637,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 25.780199997825548,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 256.376100005582,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 277.3610000149347,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 6,
+          "nodes": 90,
+          "elapsed_ms": 16.327599994838238,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 6,
+          "nodes": 90,
+          "elapsed_ms": 11.634900001809001,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 1415,
+          "elapsed_ms": 193.42830000096,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 1365,
+          "elapsed_ms": 184.91089998860843,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.13950001448392868,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.08609998621977866,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.11559997801668942,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.08709999383427203,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 6,
+          "nodes": 84,
+          "elapsed_ms": 13.75660000485368,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 6,
+          "nodes": 84,
+          "elapsed_ms": 19.413200003327802,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 6043,
+          "elapsed_ms": 726.0304000228643,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 5896,
+          "elapsed_ms": 871.1424999928568,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "depth": 6,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 44.447199994465336,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 52.63869999907911,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 48.92250002012588,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 62.45550001040101,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 36.755100009031594,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 26.765599992359057,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 328.8335000106599,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 267.74109998950735,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 25.426100008189678,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 6,
+          "nodes": 78,
+          "elapsed_ms": 25.401000020792708,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 297.7027000160888,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 2281,
+          "elapsed_ms": 275.3680999740027,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 6,
+          "nodes": 90,
+          "elapsed_ms": 14.926500007277355,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 6,
+          "nodes": 90,
+          "elapsed_ms": 9.977299981983379,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 1366,
+          "elapsed_ms": 170.20809999667108,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 6,
+          "nodes": 1365,
+          "elapsed_ms": 191.45060001756065,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.20959999528713524,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.15780000831000507,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.1618000096641481,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.09580000187270343,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 6,
+          "nodes": 84,
+          "elapsed_ms": 12.789400003384799,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 6,
+          "nodes": 84,
+          "elapsed_ms": 16.76149998093024,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 5970,
+          "elapsed_ms": 800.9325999883004,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 5896,
+          "elapsed_ms": 739.8440999968443,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "depth": 6,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 33.636199979810044,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 33.84160000132397,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 30.87070002220571,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        },
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 6,
+          "nodes": 61,
+          "elapsed_ms": 31.453299976419657,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.04296875
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 30.96999999252148,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 38.467600010335445,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 35964,
+          "elapsed_ms": 4472.131500020623,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.17578125
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 36012,
+          "elapsed_ms": 4603.25150002609,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.19140625
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 42.44990000734106,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 33.17180002341047,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 36081,
+          "elapsed_ms": 4398.924899986014,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.1953125
+        },
+        {
+          "status": "ok",
+          "move": "6-24",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 36079,
+          "elapsed_ms": 4474.592500017025,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.1953125
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 10,
+          "nodes": 150,
+          "elapsed_ms": 26.577799988444895,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 10,
+          "nodes": 150,
+          "elapsed_ms": 26.484200003324077,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.76953125
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 24729,
+          "elapsed_ms": 3300.8226999954786,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.26171875
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 23900,
+          "elapsed_ms": 3425.7125000003725,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.2734375
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.23820000933483243,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.08710002293810248,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.12820001575164497,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.2734375
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.11789999553002417,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 691.2734375
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 10,
+          "nodes": 140,
+          "elapsed_ms": 27.766200015321374,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -1000000,
+          "depth": 10,
+          "nodes": 140,
+          "elapsed_ms": 29.069899988826364,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -488,
+          "depth": 10,
+          "nodes": 60008,
+          "elapsed_ms": 7555.365200008964,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 694.30859375
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -488,
+          "depth": 10,
+          "nodes": 68897,
+          "elapsed_ms": 8254.318899998907,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 694.87890625
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "depth": 10,
+      "mode": "BEST",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 43.03770000115037,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 44.52089997357689,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 10,
+          "nodes": 45243,
+          "elapsed_ms": 4862.566099996911,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 706.18359375
+        },
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 47.421099996427074,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.18359375
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 28.536500001791865,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 29.773299989756197,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 36927,
+          "elapsed_ms": 4018.1881000171416,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.0625
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 37056,
+          "elapsed_ms": 3995.2406999946106,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.0625
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 29.09440000075847,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 130,
+          "elapsed_ms": 33.57030000188388,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 37053,
+          "elapsed_ms": 4728.0031999980565,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.0625
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 36836,
+          "elapsed_ms": 4927.502000005916,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.0625
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 10,
+          "nodes": 150,
+          "elapsed_ms": 18.983400019351393,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 10,
+          "nodes": 150,
+          "elapsed_ms": 20.668900018790737,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 22107,
+          "elapsed_ms": 3093.5104000091087,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.34765625
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 10,
+          "nodes": 24355,
+          "elapsed_ms": 3243.7582000275142,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.3515625
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.13520001084543765,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.09919999865815043,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.10899998596869409,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.3515625
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.11039999662898481,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.3515625
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 10,
+          "nodes": 140,
+          "elapsed_ms": 27.09419999155216,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 10,
+          "nodes": 140,
+          "elapsed_ms": 24.73249999457039,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -488,
+          "depth": 10,
+          "nodes": 66120,
+          "elapsed_ms": 8152.796000009403,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 706.3671875
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -488,
+          "depth": 10,
+          "nodes": 64657,
+          "elapsed_ms": 7971.398699999554,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 706.390625
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "depth": 10,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 53.05970000335947,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        },
+        {
+          "status": "ok",
+          "move": "9-13",
+          "score": 999999,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 56.387700024060905,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 697.75390625
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 57.91339999996126,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.390625
+        },
+        {
+          "status": "ok",
+          "move": "12-8",
+          "score": 456,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 53.50080001517199,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 706.390625
+        }
+      ]
+    }
+  ],
+  "determinism": {
+    "control_deterministic": true,
+    "candidate_deterministic": true,
+    "candidate_move": "5-32",
+    "candidate_nodes": 882
+  }
+}
