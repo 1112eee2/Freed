@@ -547,10 +547,12 @@ class Engine:
             self._check_time()
             child = apply_move(state, move, validate=False)
             counts[child.position_key] += 1
-            score, child_pv, child_bound = self._negamax(
-                child, depth - 1, -INFINITY, INFINITY, counts, ply_from_root=1
-            )
-            counts[child.position_key] -= 1
+            try:
+                score, child_pv, child_bound = self._negamax(
+                    child, depth - 1, -INFINITY, INFINITY, counts, ply_from_root=1
+                )
+            finally:
+                counts[child.position_key] -= 1
             score = -score
             pressure = self._human_pressure(child, state.turn)
             candidates.append(
@@ -613,28 +615,49 @@ class Engine:
         self.nodes += 1
         self._check_time()
 
-        if (
-            self.rules.repetition_limit is not None
-            and counts[state.position_key] >= self.rules.repetition_limit
-        ):
-            return 0, (), WDLBound.exact(Outcome.DRAW)
-        if state.reversible_plies >= self.rules.no_progress_plies:
-            return 0, (), WDLBound.exact(Outcome.DRAW)
+        status = terminal_status(
+            state, repetition_count=counts[state.position_key], rules=self.rules
+        )
+        if status.terminal:
+            if status.winner is None:
+                return 0, (), WDLBound.exact(Outcome.DRAW)
+            return -MATE_SCORE + ply_from_root, (), WDLBound.exact(Outcome.LOSS)
 
         moves = legal_moves(state)
-        if not moves:
-            return -MATE_SCORE + ply_from_root, (), WDLBound.exact(Outcome.LOSS)
+        exact_bound = UNKNOWN_WDL
         exact_value = self._probe_exact(state)
         if exact_value is not None:
             exact_score, exact_bound = exact_value
-            return exact_score, (), exact_bound
+            if exact_bound.exact_outcome is not None:
+                return exact_score, (), exact_bound
+            # History-free WDL only constrains a repetition-aware search.
+            # A WIN/LOSS may become a draw after the opponent's next move.
+            if exact_bound.lower == Outcome.DRAW:
+                alpha = max(alpha, 0)
+            if exact_bound.upper == Outcome.DRAW:
+                beta = min(beta, 0)
+            if alpha >= beta:
+                score = alpha if exact_bound.lower == Outcome.DRAW else beta
+                return score, (), exact_bound
         if depth <= 0:
             return self._quiescence(state, alpha, beta, counts, ply_from_root, moves)
 
         # Transposition Table Probe
         tt_entry = self._tt.get(state.position_key)
+        in_repetition_endgame = (
+            self.rules.repetition_limit is not None
+            and (
+                counts[state.position_key] > 1
+                or sum(piece != EMPTY for piece in state.board) <= max(
+                    self.exact_piece_limit,
+                    self.native_tablebase.max_pieces if self.native_tablebase is not None else 0,
+                    max(self.ranked_tablebases, default=0),
+                )
+            )
+        )
         if (
             tt_entry is not None
+            and not in_repetition_endgame
             and tt_entry.depth >= depth
             and counts[state.position_key] <= 1
             and state.reversible_plies + depth < self.rules.no_progress_plies
@@ -689,62 +712,62 @@ class Engine:
         for idx, move in enumerate(ordered_moves):
             child = apply_move(state, move, validate=False)
             counts[child.position_key] += 1
-
-            if idx == 0:
-                score, child_pv, child_bound = self._negamax(
-                    child,
-                    depth - 1,
-                    -beta,
-                    -alpha,
-                    counts,
-                    ply_from_root=ply_from_root + 1,
-                )
-                score = -score
-            else:
-                is_quiet = not move.is_capture and not move.promotes
-                if is_quiet and idx >= 3 and depth >= 3:
-                    red = 1 + (1 if idx >= 6 else 0)
-                    score, child_pv, child_bound = self._negamax(
-                        child,
-                        depth - 1 - red,
-                        -alpha - 1,
-                        -alpha,
-                        counts,
-                        ply_from_root=ply_from_root + 1,
-                    )
-                    score = -score
-                    if score > alpha:
-                        score, child_pv, child_bound = self._negamax(
-                            child,
-                            depth - 1,
-                            -beta,
-                            -alpha,
-                            counts,
-                            ply_from_root=ply_from_root + 1,
-                        )
-                        score = -score
-                else:
+            try:
+                if idx == 0:
                     score, child_pv, child_bound = self._negamax(
                         child,
                         depth - 1,
-                        -alpha - 1,
+                        -beta,
                         -alpha,
                         counts,
                         ply_from_root=ply_from_root + 1,
                     )
                     score = -score
-                    if alpha < score < beta:
+                else:
+                    is_quiet = not move.is_capture and not move.promotes
+                    if is_quiet and idx >= 3 and depth >= 3:
+                        red = 1 + (1 if idx >= 6 else 0)
                         score, child_pv, child_bound = self._negamax(
                             child,
-                            depth - 1,
-                            -beta,
+                            depth - 1 - red,
+                            -alpha - 1,
                             -alpha,
                             counts,
                             ply_from_root=ply_from_root + 1,
                         )
                         score = -score
-
-            counts[child.position_key] -= 1
+                        if score > alpha:
+                            score, child_pv, child_bound = self._negamax(
+                                child,
+                                depth - 1,
+                                -beta,
+                                -alpha,
+                                counts,
+                                ply_from_root=ply_from_root + 1,
+                            )
+                            score = -score
+                    else:
+                        score, child_pv, child_bound = self._negamax(
+                            child,
+                            depth - 1,
+                            -alpha - 1,
+                            -alpha,
+                            counts,
+                            ply_from_root=ply_from_root + 1,
+                        )
+                        score = -score
+                        if alpha < score < beta:
+                            score, child_pv, child_bound = self._negamax(
+                                child,
+                                depth - 1,
+                                -beta,
+                                -alpha,
+                                counts,
+                                ply_from_root=ply_from_root + 1,
+                            )
+                            score = -score
+            finally:
+                counts[child.position_key] -= 1
             move_bounds.append(self._invert_bound(child_bound))
 
             if score > best_score:
@@ -761,6 +784,10 @@ class Engine:
         if best_pv:
             self._move_hints[state.position_key] = best_pv[0]
 
+        if exact_bound.lower == Outcome.DRAW:
+            best_score = max(best_score, 0)
+        if exact_bound.upper == Outcome.DRAW:
+            best_score = min(best_score, 0)
         if best_score >= beta:
             flag = TTFlag.BETA
         elif best_score > original_alpha:
@@ -776,7 +803,7 @@ class Engine:
             best_move=best_pv[0] if best_pv else None,
         )
 
-        return best_score, best_pv, self._combine_bounds(move_bounds, complete)
+        return best_score, best_pv, self._combine_bounds(move_bounds, complete, exact_bound)
 
     def _probe_exact(self, state: State) -> tuple[int, WDLBound] | None:
         piece_count = sum(piece != EMPTY for piece in state.board)
@@ -838,17 +865,36 @@ class Engine:
         ply_from_root: int,
         moves: tuple[Move, ...] | None = None,
     ) -> tuple[int, tuple[Move, ...], WDLBound]:
-        moves = legal_moves(state) if moves is None else moves
-        if not moves:
+        status = terminal_status(
+            state, repetition_count=counts[state.position_key], rules=self.rules
+        )
+        if status.terminal:
+            if status.winner is None:
+                return 0, (), WDLBound.exact(Outcome.DRAW)
             return -MATE_SCORE + ply_from_root, (), WDLBound.exact(Outcome.LOSS)
+        moves = legal_moves(state) if moves is None else moves
+        exact_bound = UNKNOWN_WDL
         exact_value = self._probe_exact(state)
         if exact_value is not None:
             exact_score, exact_bound = exact_value
-            return exact_score, (), exact_bound
+            if exact_bound.exact_outcome is not None:
+                return exact_score, (), exact_bound
+            if exact_bound.lower == Outcome.DRAW:
+                alpha = max(alpha, 0)
+            if exact_bound.upper == Outcome.DRAW:
+                beta = min(beta, 0)
+            if alpha >= beta:
+                score = alpha if exact_bound.lower == Outcome.DRAW else beta
+                return score, (), exact_bound
 
         # Every generated capture already includes its full mandatory chain.
         if not moves[0].is_capture:
-            return self.eval_fn(state, state.turn), (), UNKNOWN_WDL
+            score = self.eval_fn(state, state.turn)
+            if exact_bound.lower == Outcome.DRAW:
+                score = max(score, 0)
+            if exact_bound.upper == Outcome.DRAW:
+                score = min(score, 0)
+            return score, (), exact_bound
 
         best_score = -INFINITY
         best_pv: tuple[Move, ...] = ()
@@ -859,21 +905,13 @@ class Engine:
             self._check_time()
             child = apply_move(state, move, validate=False)
             counts[child.position_key] += 1
-            if (
-                self.rules.repetition_limit is not None
-                and counts[child.position_key] >= self.rules.repetition_limit
-            ):
-                score, child_pv, child_bound = (
-                    0,
-                    (),
-                    WDLBound.exact(Outcome.DRAW),
-                )
-            else:
+            try:
                 child_moves = legal_moves(child)
                 score, child_pv, child_bound = self._quiescence(
                     child, -beta, -alpha, counts, ply_from_root + 1, child_moves
                 )
-            counts[child.position_key] -= 1
+            finally:
+                counts[child.position_key] -= 1
             score = -score
             move_bounds.append(self._invert_bound(child_bound))
             if score > best_score:
@@ -884,7 +922,11 @@ class Engine:
             if alpha >= beta:
                 complete = False
                 break
-        return best_score, best_pv, self._combine_bounds(move_bounds, complete)
+        if exact_bound.lower == Outcome.DRAW:
+            best_score = max(best_score, 0)
+        if exact_bound.upper == Outcome.DRAW:
+            best_score = min(best_score, 0)
+        return best_score, best_pv, self._combine_bounds(move_bounds, complete, exact_bound)
 
     def _order_moves(self, state: State, moves: Iterable[Move], ply: int = 0) -> tuple[Move, ...]:
         tt_entry = self._tt.get(state.position_key)
@@ -955,6 +997,7 @@ class Engine:
         return max(
             safe,
             key=lambda item: (
+                item.bound.exact_outcome == Outcome.WIN or item.score >= MATE_SCORE - 10_000,
                 self._decisive_distance_rank(item.distance),
                 item.policy_value.win,
                 item.policy_value.expected_score,
@@ -1005,16 +1048,18 @@ class Engine:
     def _combine_bounds(
         move_bounds: list[WDLBound],
         complete: bool,
+        known_bound: WDLBound = UNKNOWN_WDL,
     ) -> WDLBound:
         if not move_bounds:
-            return UNKNOWN_WDL
+            return known_bound
         lower = max(bound.lower for bound in move_bounds)
         upper = max(bound.upper for bound in move_bounds) if complete else Outcome.WIN
-        return WDLBound(lower, upper)
+        # A search cutoff leaves unvisited replies, but cannot erase known WDL.
+        return WDLBound(max(lower, known_bound.lower), min(upper, known_bound.upper))
 
     @staticmethod
-    def _safety_rank(bound: WDLBound) -> int:
-        return int(bound.lower)
+    def _safety_rank(bound: WDLBound) -> tuple[int, int]:
+        return int(bound.lower), int(bound.upper)
 
     def _human_pressure(self, child: State, engine_player: int) -> float:
         """Estimate gain against a bounded-error reply policy.

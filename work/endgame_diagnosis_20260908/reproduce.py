@@ -1,8 +1,8 @@
 """Isolated TB4/repetition regression; does not build or change playing code.
 
 Run from the repository: python -B work/endgame_diagnosis_20260908/reproduce.py
-Exit 1 means the existing engine concedes an immediate repetition draw despite
-a separately verified, mandatory three-ply winning continuation.
+Exit 0 means every trial selects a verified three-ply winning move and denies
+an immediate draw reply. No native search or tablebase builder is started.
 """
 from __future__ import annotations
 
@@ -26,6 +26,8 @@ from makhos.exact import Outcome
 from makhos.ranked_tablebase import RankedTablebase
 from makhos.search import Engine, Mode, SearchLimits
 from makhos.server import parse_position_history
+
+WINNING_MOVES = {"5-32", "6-10", "6-15", "6-19", "6-24"}
 
 
 def named_move(state, notation):
@@ -106,9 +108,13 @@ def main():
     print(json.dumps(report, indent=2))
     if len(sys.argv) > 1:
         Path(sys.argv[1]).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    for trial in trials:
+        assert trial["selected"] in WINNING_MOVES, (
+            f"{trial['mode']} depth {trial['depth']}: selected {trial['selected']}; "
+            f"expected a verified winning move in {sorted(WINNING_MOVES)}"
+        )
     assert not report["bug_reproduced"], (
-        "TB4 WIN: Engine chooses 6-9, allowing 28-32 to draw by repetition; "
-        "6-24 instead forces 28x19 1x24 and wins."
+        "A selected move allows an immediate draw despite the verified winning alternatives."
     )
 
 
