@@ -10,6 +10,13 @@ frozen 2000ms match. No NNUE production promotion has occurred.**
 It was launched 2026-09-07 after the unchanged full suite passed 393/393.
 Revalidate live state before assuming it is still running.
 
+User-reported update in the current session: verified local resume of the
+unchanged 2000ms run, PID 20288, continuing from pair 282 with LLR +1.461.
+This records the user's observation, not a fresh process probe or a permanent
+PID binding. Leave that run under its existing stopping/isolation conditions.
+The cloud checkout is preparing isolated offline thread-audit reporting while
+the match runs; there is no new arena, training, native build or full-suite run.
+
 - Live pointer: `build/runtime/nnue_gate_c_active_run.json`.
 - Initial 2000ms manifest:
   `build/nnue_gate_c_2000ms_run_20260907_091842_617489/run.json`.
@@ -110,6 +117,14 @@ scaling/profile audit at 1s/2s and total Hash 512 MiB, >=96 diverse positions,
 Its old preflight binds v21; record a fresh rebaseline rather than altering
 historical evidence. Select it only if post-NNUE profiling supports the cost.
 No rejected parallel/search prototype is reactivated by this guide.
+
+Offline preparation now includes `work/nnue_thread_audit_report.py`: validates
+the existing 5,760-row schedule and runtime bindings, reports actual TT and
+nullable telemetry, separates forced/clock-edge strata, and withholds matched
+comparisons for incomplete data. It has only synthetic-fixture evidence; it
+does not collect native measurements or authorize an audit/promotion. See the
+[recording contract](../../../../work/NNUE_THREAD_AUDIT_REPORT.md). The native
+collector remains a post-Gate-C/production-review task.
 
 ## Reference routing
 

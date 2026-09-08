@@ -4030,6 +4030,58 @@ original-host Gate C manifest/evidence verification, followed by the unchanged
 2000ms continuation only if resumable under all existing gates. Independent
 PASS at both controls precedes production smoke/reversible promotion review.
 
+### 2026-09-07 offline thread-audit reporting (KEEP PREPARATION ONLY)
+
+Base: `252b06116a7f7a140c5c81a5e007ae8f9ca4648a`, including the user's Windows
+newline correction to the prior lifecycle test. The user reports verified
+2000ms resume on the original host (PID 20288, from pair 282, LLR +1.461).
+These are user-reported snapshot values, not a new process probe. The existing
+match remains under its frozen stop/isolation conditions.
+
+Hypothesis: the already prepared thread matrix needs an offline result
+contract that catches missing/duplicated observations, mixed runtime identities,
+incorrect total Hash accounting and unavailable telemetry before comparison.
+Inspection found that the iterative-session root splitter deliberately exposes
+no per-layer telemetry delta; missing measurements must remain null.
+
+Added `work/nnue_thread_audit_report.py`, focused tests and the recording guide.
+The tool reproduces the unchanged preparation (96 cases x 6 thread counts x
+2 budgets x 5 repetitions = 5,760 observations), validates header/row identity
+bindings and sequential indices, replays move/PV legality, checks actual private
+TT allocations, and summarizes each budget/thread/position stratum separately.
+Complete data enables matched case/repetition/budget comparisons against 1T
+and five-run move stability. Partial schedules/tails withhold these comparisons.
+Fallback/errors/nonfinite data fail validation. No configuration recommendation,
+native execution, strength gate or promotion is implemented by the reader.
+
+Focused validation: **25/25 PASS**, zero failures/errors/skips, 5.143s,
+56,284 KiB peak RSS on Linux/Python 3.12.13; guarded native loading and subprocess
+call counts both zero. This comprises 20 new reporting tests and five unchanged
+fixture tests. Cases include mixed identities, Hash overflow, illegal PVs,
+recording gaps/duplicates, partial tails, LF/CRLF equivalence, missing telemetry,
+and matched comparison keys. Skill validation and documentation links pass.
+No full suite, native benchmark, training, match or external workload was run.
+
+The complete demo contains fabricated data only, with 36 summary groups and
+30 paired-comparison groups. Re-reading its 5,760-row stream reproduced the
+report byte-for-byte: SHA-256
+`1423C7D9D4979ECF72F23FA77F14278A4C82A00ECABBF49623650ACBB5C3718B`.
+All eleven optional telemetry fields are explicitly unavailable in the demo;
+profile coverage stays incomplete despite a complete schedule. Demo values
+must not be cited as measured speed, scaling, correctness labels or strength.
+
+Frozen source/test inventories still match the Gate C contract exactly:
+153 source files `E8F223128CA34BAFD7AF5E3E93F58D56777D0647A1D279B7C13A3BF20DC383A0`,
+52 test files `FE123C50E916829F8AA735E4862E726595F89BB8AE03BEF47403B2FFF1E8281B`.
+Playing source, model, DLLs, rules, frozen tests and preparation remain unchanged.
+
+Exact tool/evidence hashes and reproduction commands:
+[validation.json](../../../../work/nnue_thread_report_evidence_v1/validation.json).
+Verdict: **KEEP offline tooling/preparation only**. The next engine milestone
+remains completion of the unchanged Gate C, then production smoke/reversible
+review. After those gates, implement/verify the native collector, run the
+approved matrix and select one measured bottleneck for an isolated experiment.
+
 ## Build and smoke commands
 
 Build the full native tool set with:
