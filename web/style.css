@@ -440,6 +440,7 @@ button.secondary-btn:hover {
 .history-card {
   flex: 1;
   max-height: 420px;
+  min-height: 230px;
 }
 
 .history-header {
@@ -449,6 +450,7 @@ button.secondary-btn:hover {
   gap: 0.75rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .history-header h2 {
@@ -507,4 +509,64 @@ button.secondary-btn:hover {
   font-size: 0.85rem;
   color: var(--accent-color);
   text-align: center;
+}
+
+.game-record-card {
+  flex-shrink: 0;
+}
+
+.game-help {
+  color: var(--text-sub);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.result-summary {
+  color: var(--accent-gold);
+  font-size: 0.9rem;
+}
+
+.save-game-status {
+  color: var(--accent-color);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+button:disabled, select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+button:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1000px) {
+  .app-container {
+    grid-template-columns: 280px minmax(0, 1fr);
+    height: auto;
+    min-height: 94vh;
+  }
+  .move-log-sidebar {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+  .game-status-card { grid-column: 1 / -1; }
+  .board { width: min(540px, calc(96vw - 330px)); height: auto; aspect-ratio: 1; }
+}
+
+@media (max-width: 640px) {
+  .app-container { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { overflow: visible; }
+  .move-log-sidebar { display: flex; }
+  .history-card { height: 300px; flex: auto; }
+  .board { width: min(540px, calc(96vw - 20px)); }
 }

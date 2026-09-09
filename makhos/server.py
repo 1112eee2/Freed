@@ -40,6 +40,7 @@ from .ranked_tablebase import RankedTablebase
 from .search import Engine, Mode, SearchLimits
 from .workload_isolation import InteractiveSessionLease
 from .gui_release import DEFAULT_POINTER, load_release
+from .game_records import MAX_RECORD_BYTES, save_game_record
 
 
 # Global engine instance shared by HTTP requests
@@ -54,10 +55,11 @@ NATIVE_TABLEBASE_WARMUP_ERROR: str | None = None
 ENGINE_SEARCH_LOCK = threading.RLock()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 WEB_DIR = str(PROJECT_ROOT / "web")
+GAME_RECORDS_DIR = PROJECT_ROOT / "saved_games"
 DEFAULT_ENGINE_THREADS = 1
 DEFAULT_ENGINE_HASH_MB = 64
 GUI_SEARCH_DEPTH = 64
-WEB_ASSET_VERSION = "20260908-1"
+WEB_ASSET_VERSION = "20260909-1"
 EXTERNAL_NO_REPETITION_RULES = Rules(
     name="external-no-repetition",
     starting_player=BLACK,
@@ -531,6 +533,10 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         parsed_url = urllib.parse.urlparse(self.path)
         path = parsed_url.path
 
+        if path == "/api/save-game":
+            self.handle_save_game()
+            return
+
         content_length = int(self.headers.get("Content-Length", 0))
         body_bytes = self.rfile.read(content_length)
         data = json.loads(body_bytes.decode("utf-8")) if body_bytes else {}
@@ -567,6 +573,30 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 self.send_json({"error": str(error), "engine_unavailable": True}, 503)
         else:
             self.send_error(404, "API endpoint not found")
+
+    def handle_save_game(self) -> None:
+        # This endpoint writes only to a server-owned directory. Requiring JSON
+        # also prevents cross-origin HTML forms from creating game files.
+        if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
+            self.send_json({"error": "Content-Type must be application/json"}, 415)
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if length <= 0 or length > MAX_RECORD_BYTES:
+                self.send_json({"error": "game record must be between 1 byte and 4 MiB"}, 413)
+                return
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            if not isinstance(payload, dict) or not isinstance(payload.get("engine"), dict):
+                raise ValueError("game record and engine must be JSON objects")
+            _, rules = parse_rules_profile(payload["engine"])
+            path = save_game_record(payload, GAME_RECORDS_DIR, rules=rules)
+        except (ValueError, UnicodeError, RecursionError) as error:
+            self.send_json({"error": f"invalid game record: {error}"}, 400)
+            return
+        except OSError:
+            self.send_json({"error": "cannot write saved_games; check folder permissions and free space"}, 500)
+            return
+        self.send_json({"saved": True, "filename": path.name, "path": f"saved_games/{path.name}"}, 201)
 
     def send_json(self, response_dict: dict, status_code: int = 200) -> None:
         body = json.dumps(response_dict).encode("utf-8")

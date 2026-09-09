@@ -1,5 +1,10 @@
 # คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
+งาน GUI ตามคำขอผู้ใช้ 2026-09-09: เพิ่ม save เกม, ผลตัดสินโดยผู้ใช้ และ undo 1 ply
+อยู่ใน branch แยก รอ Local smoke/full-suite และประสานแพตช์ rematch ก่อนรวมเข้าระบบ
+รายละเอียดและหลักฐาน: [GUI implementation](work/GUI_GAME_RECORDS_IMPLEMENTATION_TH.md)
+งานนี้ไม่สั่ง resume Experiment A ที่พักไว้ 27 คู่ และไม่แก้ search/native/release pointer
+
 ## 1. จุดเริ่มต้นและเป้าหมายที่ใช้ตัดสิน
 
 สถานะอ้างอิงจาก [บันทึกปัจจุบัน](.agents/skills/thai-makhos-engine/references/current-state.md) วันที่ 8 กันยายน:

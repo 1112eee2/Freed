@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260813-3">
+  <link rel="stylesheet" href="style.css?v=20260909-1">
 </head>
 <body>
 
@@ -72,7 +72,7 @@
               <option value="4">4 Threads</option>
               <option value="6">6 Threads</option>
               <option value="8">8 Threads</option>
-              <option value="12">12 Threads (root split ทดลอง)</option>
+              <option value="12" selected>12 Threads (root split ทดลอง)</option>
             </select>
             <small class="setting-note">ค่ามากกว่า 1 ใช้ root split ซึ่งยังไม่ได้พิสูจน์ว่าแกร่งกว่า control ที่เวลา 1 วินาที</small>
           </div>
@@ -85,7 +85,7 @@
               <option value="64">64 MB</option>
               <option value="128">128 MB</option>
               <option value="256">256 MB</option>
-              <option value="512">512 MB</option>
+              <option value="512" selected>512 MB</option>
             </select>
           </div>
         </div>
@@ -192,6 +192,29 @@
         <div class="move-list-container" id="move-list">
           <!-- Move entries injected by JS -->
         </div>
+        <div class="action-buttons">
+          <button id="btn-undo-move" class="secondary-btn" type="button" disabled>↶ ย้อน 1 ตา</button>
+          <button id="btn-resume-game" class="secondary-btn" type="button" disabled>▶ เล่นต่อ</button>
+        </div>
+        <p class="game-help">ย้อนฝั่งที่เดินล่าสุด 1 ครั้ง (1 ply) แล้วพักเกมไว้</p>
+      </div>
+
+      <div class="panel-card game-record-card">
+        <h2>ผลและบันทึกเกม</h2>
+        <p id="game-result-summary" class="result-summary" aria-live="polite">ยังไม่จบเกม</p>
+        <div class="setting-group">
+          <label for="select-game-result">เลือกผลโดยผู้ใช้</label>
+          <select id="select-game-result" disabled>
+            <option value="">— เลือกผล —</option>
+            <option value="black">ดำชนะ / แดงแพ้</option>
+            <option value="red">แดงชนะ / ดำแพ้</option>
+            <option value="draw">เสมอ</option>
+          </select>
+        </div>
+        <button id="btn-adjudicate-game" class="secondary-btn" type="button" disabled>ตัดสินและจบเกม</button>
+        <button id="btn-save-game" class="primary-btn" type="button" disabled>💾 บันทึกเกม</button>
+        <p class="game-help">เมื่อเกมจบ กดบันทึกเพื่อเก็บตาเดินและผลลงโฟลเดอร์ saved_games/ บนเครื่องที่เปิดเซิร์ฟเวอร์</p>
+        <p id="save-game-status" class="save-game-status" role="status" aria-live="polite"></p>
       </div>
 
       <div class="panel-card game-status-card">
@@ -203,6 +226,6 @@
     </aside>
   </div>
 
-  <script src="app.js?v=20260908-1"></script>
+  <script src="app.js?v=20260909-1"></script>
 </body>
 </html>
