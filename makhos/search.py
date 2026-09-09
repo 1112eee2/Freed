@@ -256,6 +256,25 @@ class Engine:
         self._killer_moves: dict[int, list[Move]] = {}
         self._history_scores: dict[tuple[int, Move], int] = {}
 
+    def clear(self) -> None:
+        """Clear transposition table, heuristics, and diagnostics at game boundary."""
+        if self.native_search is not None:
+            self.native_search.clear()
+        self._tt.clear()
+        self._move_hints.clear()
+        self._exact_failed.clear()
+        self._killer_moves.clear()
+        self._history_scores.clear()
+        self._deadline = None
+        if hasattr(self, "_distance") and self._distance is not None:
+            self._distance._dtm_cache.clear()
+            self._distance._dtr_cache.clear()
+            self._distance._nodes = 0
+        self.nodes = 0
+        self.tablebase_hits = 0
+        self.last_native_error = None
+        self.last_search_backend = "unsearched"
+
     def search(
         self,
         state: State,
@@ -1058,7 +1077,10 @@ class Engine:
         comb_lower = max(lower, known_bound.lower)
         comb_upper = min(upper, known_bound.upper)
         if comb_lower > comb_upper:
-            comb_lower = comb_upper
+            raise ValueError(
+                f"conflicting bounds: search [{lower.name}..{upper.name}] "
+                f"contradicts known [{known_bound.lower.name}..{known_bound.upper.name}]"
+            )
         return WDLBound(comb_lower, comb_upper)
 
     @staticmethod

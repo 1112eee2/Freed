@@ -37,16 +37,18 @@ Arena ใช้สถาปัตยกรรมแบบแยกโปรเ�
 | เกม | หมากดำ (เดินก่อน) | หมากแดง | ตาแรกของหมากดำ | ผลการแข่งขัน | สาเหตุที่จบเกม | จำนวนพลาย |
 |---|---|---|---|---|---|---|
 | เกม 1 | **Candidate** | Control | `5-32` | **Candidate ชนะ** | no_legal_move (แดงหมดตาเดิน) | 3 พลาย |
-| เกม 2 | Control | **Candidate** | `6-9` (บั๊กเดิม) | **เสมอ (DRAW)** | 3-fold repetition (ซ้ำ 3 ครั้ง) | 36 พลาย |
+| เกม 2 | Control | **Candidate** | `6-9` (บั๊กเดิม) | **เสมอ (DRAW)** | repetition (ซ้ำ 3 ครั้ง) | 2 พลาย |
 
 **สรุปผลนำร่อง**:
-- ในเกม 1: Candidate ไม่หลงเลือกตาเสมอ `6-9` แต่เลือก `5-32` ซึ่งเป็นตาชนะที่สั้นที่สุด บังคับให้ Control แพ้ใน 3 พลาย
-- ในเกม 2: Control เดินตาติดบั๊ก `6-9` และถูก Candidate บังคับให้เกิดการเดินซ้ำ 3 ครั้งจนจบเสมอ
+- ในเกม 1: Candidate ไม่หลงเลือกตาเสมอ `6-9` แต่เลือก `5-32` (หรือ `6-24`) ซึ่งเป็นตาชนะ บังคับให้ Control แพ้ใน 3 พลาย
+- ในเกม 2: Control เดินตาติดบั๊ก `6-9` ทำให้ Candidate (แดง) ตอบ `28-32` ส่งผลให้ตำแหน่งเกิดการซ้ำ 3 ครั้ง (threefold repetition) จบเสมอทันทีใน 2 พลาย
 - สกอร์รวมของคู่เกมนี้: Candidate ชนะ 1.5 - 0.5 (+1 พอยต์ใน Pentanomial WD class)
 
 ---
 
 ## 4. โครงสร้างการทดสอบแบบคู่เกม (Paired-SPRT Manifest)
+
+ไฟล์ Machine-readable Manifest: `work/endgame_diagnosis_20260908/sprt_manifest.json`
 
 ### 4.1 Tier 1: Intrinsic Single-Thread (1T) Correctness & Deep Search
 - **วัตถุประสงค์**: ตรวจสอบความถูกต้องของการค้นหาลึกและยืนยันว่าไม่มี regression ในการประเมิน endgame
@@ -56,10 +58,12 @@ Arena ใช้สถาปัตยกรรมแบบแยกโปรเ�
 - **Mode**: BEST & WIN
 - **SPRT Parameters**:
   - Elo0: 0.0
-  - Elo1: +5.0
+  - Elo1: +2.0
   - Alpha (Type I error): 0.05
   - Beta (Type II error): 0.05
+  - Max Pairs: 10,000
   - Pentanomial model: WW (+2), WD (+1), DD (0), LD (-1), LL (-2)
+  - Stopping boundaries: LLR <= -2.944 (FAIL) หรือ LLR >= +2.944 (PASS)
 
 ### 4.2 Tier 2: Production Multi-Thread (12T) Standard Speed
 - **วัตถุประสงค์**: ทดสอบความเสถียรในสภาพแวดล้อมเสมือน GUI / Tournament จริง
@@ -67,7 +71,7 @@ Arena ใช้สถาปัตยกรรมแบบแยกโปรเ�
 - **Time Control**: 1000ms และ 2000ms fixed time
 - **Tablebase**: Native TB3 + Ranked TB4, TB5, TB6
 - **Stop Conditions**:
-  - LLR >= 2.944 (Accept H1: Candidate แข็งแกร่งกว่าอย่างมีนัยสำคัญทางสถิติ)
+  - LLR >= +2.944 (Accept H1: Candidate แข็งแกร่งกว่าอย่างมีนัยสำคัญทางสถิติ)
   - LLR <= -2.944 (Reject H1: ไม่ผ่านเกณฑ์)
 
 ---

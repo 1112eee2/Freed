@@ -19,8 +19,8 @@ let gameState = {
   gameMode: 'human', // 'human' or 'bot'
   humanSide: 'black', // 'black' or 'red'
   thinkTimeSec: 1.0,
-  engineThreads: 1,
-  engineHashMb: 64,
+  engineThreads: 12,
+  engineHashMb: 512,
   engineMode: 'win',
   rulesProfile: 'project',
   isBotThinking: false,
@@ -244,6 +244,7 @@ async function startNewGame() {
   gameState.moveHistory = [];
   gameState.isGameOver = false;
   gameState.isBotThinking = false;
+  resetEvalUI();
 
   // Request initial state from backend
   try {
@@ -677,11 +678,58 @@ async function loadEngineIdentity() {
     const data = await response.json();
     if (!response.ok || data.error || data.native_error) throw new Error(data.error || data.native_error);
     showEngineIdentity(data);
+    applyServerReleaseDefaults(data);
   } catch (error) {
     document.getElementById('engine-identity').textContent = `เอนจิ้นไม่พร้อม: ${error.message}`;
     document.getElementById('val-evaluator').textContent = 'ไม่พร้อมใช้งาน';
     setStatusMessage(`เอนจิ้นไม่พร้อม: ${error.message}`);
   }
+}
+
+function applyServerReleaseDefaults(data) {
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}');
+  } catch (_error) {
+    saved = {};
+  }
+  const defaults = data.defaults || {};
+  const defaultThreads = defaults.threads !== undefined ? defaults.threads : data.threads;
+  const defaultHash = defaults.hash_mb_total !== undefined ? defaults.hash_mb_total : data.hash_mb;
+
+  if (saved.engineThreads === undefined && defaultThreads !== undefined) {
+    const select = document.getElementById('select-engine-threads');
+    const valStr = String(defaultThreads);
+    if ([...select.options].some(opt => opt.value === valStr)) {
+      select.value = valStr;
+      gameState.engineThreads = defaultThreads;
+    }
+  }
+  if (saved.engineHashMb === undefined && defaultHash !== undefined) {
+    const select = document.getElementById('select-engine-hash');
+    const valStr = String(defaultHash);
+    if ([...select.options].some(opt => opt.value === valStr)) {
+      select.value = valStr;
+      gameState.engineHashMb = defaultHash;
+    }
+  }
+}
+
+function resetEvalUI() {
+  const elDepth = document.getElementById('val-depth');
+  if (elDepth) elDepth.textContent = '-';
+  const elNodes = document.getElementById('val-nodes');
+  if (elNodes) elNodes.textContent = '-';
+  const elTime = document.getElementById('val-time');
+  if (elTime) elTime.textContent = '-';
+  const elWdl = document.getElementById('val-wdl');
+  if (elWdl) elWdl.textContent = '-';
+  const elPv = document.getElementById('val-pv');
+  if (elPv) elPv.textContent = '-';
+  const elScore = document.getElementById('eval-score-text');
+  if (elScore) elScore.textContent = '0.00';
+  const elBar = document.getElementById('eval-bar-fill');
+  if (elBar) elBar.style.width = '50%';
 }
 
 function updateEvalUI(data) {

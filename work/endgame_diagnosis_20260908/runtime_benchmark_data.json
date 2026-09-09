@@ -1,15 +1,15 @@
 {
   "control_commit": "ba9481dbc8c48f09771638fab3aa3f9d7efbf3b5",
   "candidate_commit": "main (with endgame repetition fix)",
-  "timestamp": "2026-09-08 22:52:35",
+  "timestamp": "2026-09-09 10:00:34",
   "cold_start": {
     "control": {
-      "startup_ms": 15032.602199993562,
-      "first_search_ms": 9.852300019701943
+      "startup_ms": 12355.65049998695,
+      "first_search_ms": 6.681600003503263
     },
     "candidate": {
-      "startup_ms": 13325.07349998923,
-      "first_search_ms": 18.98680001613684
+      "startup_ms": 12799.574800010305,
+      "first_search_ms": 17.994399997405708
     }
   },
   "timed_matches": [
@@ -25,12 +25,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 93.18150000763126,
+          "elapsed_ms": 116.69689998961985,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.19921875,
+          "mem_rss_mb": 667.85546875,
           "overshoot_ms": 0.0
         },
         {
@@ -39,12 +39,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 119.18489998788573,
+          "elapsed_ms": 94.12470000097528,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.20703125,
+          "mem_rss_mb": 667.85546875,
           "overshoot_ms": 0.0
         }
       ],
@@ -54,28 +54,28 @@
           "move": "6-24",
           "score": 999997,
           "depth": 8,
-          "nodes": 8512,
-          "elapsed_ms": 1011.7889999819454,
+          "nodes": 10368,
+          "elapsed_ms": 1004.6836000110488,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 669.015625,
-          "overshoot_ms": 11.78899998194538
+          "mem_rss_mb": 670.08984375,
+          "overshoot_ms": 4.6836000110488385
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
-          "depth": 7,
-          "nodes": 8064,
-          "elapsed_ms": 1012.3049999820068,
+          "depth": 8,
+          "nodes": 9792,
+          "elapsed_ms": 1005.694300023606,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 669.15625,
-          "overshoot_ms": 12.304999982006848
+          "mem_rss_mb": 670.1875,
+          "overshoot_ms": 5.694300023606047
         }
       ]
     },
@@ -91,12 +91,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 138.03719999850728,
+          "elapsed_ms": 94.58469998207875,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.25,
+          "mem_rss_mb": 667.85546875,
           "overshoot_ms": 0.0
         },
         {
@@ -105,12 +105,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 112.33629999333061,
+          "elapsed_ms": 95.33439998631366,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.25,
+          "mem_rss_mb": 667.85546875,
           "overshoot_ms": 0.0
         }
       ],
@@ -120,28 +120,28 @@
           "move": "6-24",
           "score": 999997,
           "depth": 7,
-          "nodes": 8064,
-          "elapsed_ms": 1004.5614999835379,
+          "nodes": 8768,
+          "elapsed_ms": 1005.8888999919873,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 669.16015625,
-          "overshoot_ms": 4.561499983537942
+          "mem_rss_mb": 670.24609375,
+          "overshoot_ms": 5.888899991987273
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 8,
-          "nodes": 8832,
-          "elapsed_ms": 1004.715999995824,
+          "nodes": 10432,
+          "elapsed_ms": 1010.4291999887209,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 669.26171875,
-          "overshoot_ms": 4.71599999582395
+          "mem_rss_mb": 670.3515625,
+          "overshoot_ms": 10.429199988720939
         }
       ]
     },
@@ -157,12 +157,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 64.89300000248477,
+          "elapsed_ms": 73.44469998497516,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.26171875,
+          "mem_rss_mb": 667.90625,
           "overshoot_ms": 0.0
         },
         {
@@ -171,12 +171,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 63.68059999658726,
+          "elapsed_ms": 54.541499994229525,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 667.26171875,
+          "mem_rss_mb": 667.90625,
           "overshoot_ms": 0.0
         }
       ],
@@ -186,28 +186,28 @@
           "move": "6-1",
           "score": 999997,
           "depth": 8,
-          "nodes": 7424,
-          "elapsed_ms": 1001.2704999826383,
+          "nodes": 9216,
+          "elapsed_ms": 1005.6436999875586,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 669.90625,
-          "overshoot_ms": 1.2704999826382846
+          "mem_rss_mb": 670.98828125,
+          "overshoot_ms": 5.643699987558648
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 8,
-          "nodes": 7232,
-          "elapsed_ms": 1003.7259999953676,
+          "nodes": 9536,
+          "elapsed_ms": 1007.0348000153899,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 670.02734375,
-          "overshoot_ms": 3.7259999953676015
+          "mem_rss_mb": 671.2578125,
+          "overshoot_ms": 7.034800015389919
         }
       ]
     },
@@ -223,12 +223,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.14730001566931605,
+          "elapsed_ms": 0.15540001913905144,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 667.26171875,
+          "mem_rss_mb": 667.90625,
           "overshoot_ms": 0.0
         },
         {
@@ -237,12 +237,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.1100999943446368,
+          "elapsed_ms": 0.12680000509135425,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 667.26171875,
+          "mem_rss_mb": 667.90625,
           "overshoot_ms": 0.0
         }
       ],
@@ -253,12 +253,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.14360001659952104,
+          "elapsed_ms": 0.16129997675307095,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 670.02734375,
+          "mem_rss_mb": 671.2578125,
           "overshoot_ms": 0.0
         },
         {
@@ -267,12 +267,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.14590000500902534,
+          "elapsed_ms": 0.15360000543296337,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 670.02734375,
+          "mem_rss_mb": 671.2578125,
           "overshoot_ms": 0.0
         }
       ]
@@ -289,12 +289,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 88.43819997855462,
+          "elapsed_ms": 63.752599991858006,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 667.296875,
+          "mem_rss_mb": 667.94140625,
           "overshoot_ms": 0.0
         },
         {
@@ -303,12 +303,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 72.11649999953806,
+          "elapsed_ms": 78.63040000665933,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 667.30078125,
+          "mem_rss_mb": 667.94140625,
           "overshoot_ms": 0.0
         }
       ],
@@ -318,28 +318,28 @@
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 7936,
-          "elapsed_ms": 1001.0375999845564,
+          "nodes": 9152,
+          "elapsed_ms": 1005.671999999322,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 670.4296875,
-          "overshoot_ms": 1.0375999845564365
+          "mem_rss_mb": 671.84765625,
+          "overshoot_ms": 5.671999999321997
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 8064,
-          "elapsed_ms": 1003.6599999875762,
+          "nodes": 8896,
+          "elapsed_ms": 1006.2113000021782,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 670.55859375,
-          "overshoot_ms": 3.659999987576157
+          "mem_rss_mb": 671.9375,
+          "overshoot_ms": 6.211300002178177
         }
       ]
     },
@@ -353,425 +353,29 @@
           "status": "ok",
           "move": "9-6",
           "score": 0,
-          "depth": 5,
-          "nodes": 6592,
-          "elapsed_ms": 1000.8956000092439,
-          "bound": [
-            "DRAW",
-            "DRAW"
-          ],
-          "mem_rss_mb": 670.046875,
-          "overshoot_ms": 0.8956000092439353
-        },
-        {
-          "status": "ok",
-          "move": "9-6",
-          "score": 0,
           "depth": 6,
-          "nodes": 15744,
-          "elapsed_ms": 1003.2041000085883,
+          "nodes": 14912,
+          "elapsed_ms": 1002.180400013458,
           "bound": [
             "DRAW",
             "DRAW"
           ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 3.2041000085882843
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "9-6",
-          "score": 0,
-          "depth": 5,
-          "nodes": 7680,
-          "elapsed_ms": 1005.824499996379,
-          "bound": [
-            "DRAW",
-            "DRAW"
-          ],
-          "mem_rss_mb": 673.21875,
-          "overshoot_ms": 5.824499996379018
+          "mem_rss_mb": 673.609375,
+          "overshoot_ms": 2.1804000134579837
         },
-        {
-          "status": "ok",
-          "move": "9-6",
-          "score": 0,
-          "depth": 6,
-          "nodes": 8832,
-          "elapsed_ms": 1005.9749000065494,
-          "bound": [
-            "DRAW",
-            "DRAW"
-          ],
-          "mem_rss_mb": 675.2890625,
-          "overshoot_ms": 5.974900006549433
-        }
-      ]
-    },
-    {
-      "position_id": "pos1_reproducer_threat",
-      "position_name": "Reproducer (Repetition Threat)",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": 1000000,
-          "depth": 32,
-          "nodes": 416,
-          "elapsed_ms": 121.99689997942187,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": 1000000,
-          "depth": 32,
-          "nodes": 416,
-          "elapsed_ms": 87.11469999980181,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "5-32",
-          "score": 999997,
-          "depth": 8,
-          "nodes": 8832,
-          "elapsed_ms": 1001.0214000067208,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.30078125,
-          "overshoot_ms": 1.0214000067207962
-        },
-        {
-          "status": "ok",
-          "move": "5-32",
-          "score": 999997,
-          "depth": 7,
-          "nodes": 8384,
-          "elapsed_ms": 1001.2701999803539,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.30078125,
-          "overshoot_ms": 1.2701999803539366
-        }
-      ]
-    },
-    {
-      "position_id": "pos2_reproducer_clean",
-      "position_name": "Reproducer (Clean History)",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": 1000000,
-          "depth": 32,
-          "nodes": 416,
-          "elapsed_ms": 118.88270001509227,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": 1000000,
-          "depth": 32,
-          "nodes": 416,
-          "elapsed_ms": 88.4968000173103,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "5-32",
-          "score": 999997,
-          "depth": 7,
-          "nodes": 8320,
-          "elapsed_ms": 1002.6134999934584,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.33984375,
-          "overshoot_ms": 2.6134999934583902
-        },
-        {
-          "status": "ok",
-          "move": "5-32",
-          "score": 999997,
-          "depth": 7,
-          "nodes": 8000,
-          "elapsed_ms": 1008.0854000116233,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.33984375,
-          "overshoot_ms": 8.085400011623278
-        }
-      ]
-    },
-    {
-      "position_id": "pos3_branching_2k_vs_1k",
-      "position_name": "2 Kings vs 1 King",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
-        {
-          "status": "ok",
-          "move": "6-1",
-          "score": 999998,
-          "depth": 32,
-          "nodes": 480,
-          "elapsed_ms": 62.08800000604242,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.7421875,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "6-1",
-          "score": 999998,
-          "depth": 32,
-          "nodes": 480,
-          "elapsed_ms": 51.24989998876117,
-          "bound": [
-            "DRAW",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.74609375,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "6-1",
-          "score": 999997,
-          "depth": 8,
-          "nodes": 7488,
-          "elapsed_ms": 1002.6820999919437,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 2.682099991943687
-        },
-        {
-          "status": "ok",
-          "move": "6-1",
-          "score": 999997,
-          "depth": 8,
-          "nodes": 7360,
-          "elapsed_ms": 1006.7793000198435,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 6.779300019843504
-        }
-      ]
-    },
-    {
-      "position_id": "pos4_branching_3k_vs_1k",
-      "position_name": "3 Kings vs 1 King",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.14370001736097038,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.74609375,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.11259998427703977,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 674.74609375,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.1464999804738909,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.07899999036453664,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 0.0
-        }
-      ]
-    },
-    {
-      "position_id": "pos5_branching_2k_vs_2k",
-      "position_name": "2 Kings vs 2 Kings",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
-        {
-          "status": "ok",
-          "move": "15-10",
-          "score": -1000000,
-          "depth": 32,
-          "nodes": 448,
-          "elapsed_ms": 70.79669999075122,
-          "bound": [
-            "LOSS",
-            "DRAW"
-          ],
-          "mem_rss_mb": 674.74609375,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "15-10",
-          "score": -1000000,
-          "depth": 32,
-          "nodes": 448,
-          "elapsed_ms": 60.97649998264387,
-          "bound": [
-            "LOSS",
-            "DRAW"
-          ],
-          "mem_rss_mb": 674.74609375,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": -432,
-          "depth": 6,
-          "nodes": 8192,
-          "elapsed_ms": 1005.1674999995157,
-          "bound": [
-            "LOSS",
-            "DRAW"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 5.167499999515712
-        },
-        {
-          "status": "ok",
-          "move": "6-9",
-          "score": -432,
-          "depth": 6,
-          "nodes": 8640,
-          "elapsed_ms": 1002.6825000240933,
-          "bound": [
-            "LOSS",
-            "DRAW"
-          ],
-          "mem_rss_mb": 675.34375,
-          "overshoot_ms": 2.682500024093315
-        }
-      ]
-    },
-    {
-      "position_id": "pos6_mixed_pieces",
-      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
-      "time_limit_ms": 1000,
-      "mode": "WIN",
-      "control_trials": [
         {
           "status": "ok",
           "move": "9-18",
           "score": 573,
           "depth": 7,
-          "nodes": 15104,
-          "elapsed_ms": 1002.3067000147421,
+          "nodes": 18432,
+          "elapsed_ms": 1003.9083999872673,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 677.375,
-          "overshoot_ms": 2.3067000147420913
-        },
-        {
-          "status": "ok",
-          "move": "9-18",
-          "score": 577,
-          "depth": 8,
-          "nodes": 15104,
-          "elapsed_ms": 1002.900999999838,
-          "bound": [
-            "LOSS",
-            "WIN"
-          ],
-          "mem_rss_mb": 679.609375,
-          "overshoot_ms": 2.90099999983795
+          "mem_rss_mb": 677.34765625,
+          "overshoot_ms": 3.9083999872673303
         }
       ],
       "candidate_trials": [
@@ -779,29 +383,425 @@
           "status": "ok",
           "move": "9-6",
           "score": 0,
-          "depth": 7,
-          "nodes": 8448,
-          "elapsed_ms": 1003.9154999831226,
+          "depth": 6,
+          "nodes": 10112,
+          "elapsed_ms": 1002.51289998414,
           "bound": [
             "DRAW",
             "DRAW"
           ],
-          "mem_rss_mb": 677.671875,
-          "overshoot_ms": 3.9154999831225723
+          "mem_rss_mb": 675.07421875,
+          "overshoot_ms": 2.512899984139949
+        },
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 7,
+          "nodes": 9856,
+          "elapsed_ms": 1004.0355999954045,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.41015625,
+          "overshoot_ms": 4.035599995404482
+        }
+      ]
+    },
+    {
+      "position_id": "pos1_reproducer_threat",
+      "position_name": "Reproducer (Repetition Threat)",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 101.15589998895302,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.3515625,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 100.37739999825135,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 9024,
+          "elapsed_ms": 1008.7228000047617,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.515625,
+          "overshoot_ms": 8.722800004761666
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 10240,
+          "elapsed_ms": 1007.7919000177644,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.51953125,
+          "overshoot_ms": 7.791900017764419
+        }
+      ]
+    },
+    {
+      "position_id": "pos2_reproducer_clean",
+      "position_name": "Reproducer (Clean History)",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 90.16300001530908,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": 1000000,
+          "depth": 32,
+          "nodes": 416,
+          "elapsed_ms": 85.91020002495497,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 10496,
+          "elapsed_ms": 1004.0900000021793,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.54296875,
+          "overshoot_ms": 4.090000002179295
+        },
+        {
+          "status": "ok",
+          "move": "5-32",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 10176,
+          "elapsed_ms": 1002.1645000088029,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.58203125,
+          "overshoot_ms": 2.164500008802861
+        }
+      ]
+    },
+    {
+      "position_id": "pos3_branching_2k_vs_1k",
+      "position_name": "2 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 57.06230000942014,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999998,
+          "depth": 32,
+          "nodes": 480,
+          "elapsed_ms": 50.993300013942644,
+          "bound": [
+            "DRAW",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 9664,
+          "elapsed_ms": 1005.2270000160206,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.59765625,
+          "overshoot_ms": 5.227000016020611
+        },
+        {
+          "status": "ok",
+          "move": "6-1",
+          "score": 999997,
+          "depth": 8,
+          "nodes": 9408,
+          "elapsed_ms": 1003.1172999879345,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.609375,
+          "overshoot_ms": 3.11729998793453
+        }
+      ]
+    },
+    {
+      "position_id": "pos4_branching_3k_vs_1k",
+      "position_name": "3 Kings vs 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.15780000831000507,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.12539999443106353,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.20780001068487763,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.609375,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.09369998588226736,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 677.609375,
+          "overshoot_ms": 0.0
+        }
+      ]
+    },
+    {
+      "position_id": "pos5_branching_2k_vs_2k",
+      "position_name": "2 Kings vs 2 Kings",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 63.37839999468997,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "15-10",
+          "score": -1000000,
+          "depth": 32,
+          "nodes": 448,
+          "elapsed_ms": 55.93210001825355,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.35546875,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 10496,
+          "elapsed_ms": 1000.6526000215672,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.6171875,
+          "overshoot_ms": 0.6526000215671957
+        },
+        {
+          "status": "ok",
+          "move": "6-9",
+          "score": -432,
+          "depth": 6,
+          "nodes": 10560,
+          "elapsed_ms": 1002.893299999414,
+          "bound": [
+            "LOSS",
+            "DRAW"
+          ],
+          "mem_rss_mb": 677.68359375,
+          "overshoot_ms": 2.893299999414012
+        }
+      ]
+    },
+    {
+      "position_id": "pos6_mixed_pieces",
+      "position_name": "1 Man + 2 Kings vs 1 Man + 1 King",
+      "time_limit_ms": 1000,
+      "mode": "WIN",
+      "control_trials": [
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 8,
+          "nodes": 18624,
+          "elapsed_ms": 1003.3039000118151,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 680.0703125,
+          "overshoot_ms": 3.3039000118151307
         },
         {
           "status": "ok",
           "move": "9-18",
-          "score": 444,
-          "depth": 7,
-          "nodes": 8576,
-          "elapsed_ms": 1003.489399998216,
+          "score": 593,
+          "depth": 8,
+          "nodes": 18816,
+          "elapsed_ms": 1005.0727999769151,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 678.98828125,
-          "overshoot_ms": 3.4893999982159585
+          "mem_rss_mb": 682.26953125,
+          "overshoot_ms": 5.072799976915121
+        }
+      ],
+      "candidate_trials": [
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 499,
+          "depth": 7,
+          "nodes": 10432,
+          "elapsed_ms": 1006.8370999942999,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 679.9296875,
+          "overshoot_ms": 6.837099994299933
+        },
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 8,
+          "nodes": 10048,
+          "elapsed_ms": 1007.5293999980204,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 681.2265625,
+          "overshoot_ms": 7.529399998020381
         }
       ]
     },
@@ -817,12 +817,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 122.01010002172552,
+          "elapsed_ms": 86.36129999649711,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.609375,
+          "mem_rss_mb": 682.26953125,
           "overshoot_ms": 0.0
         },
         {
@@ -831,12 +831,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 111.19319999124855,
+          "elapsed_ms": 88.97450001677498,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.61328125,
+          "mem_rss_mb": 682.26953125,
           "overshoot_ms": 0.0
         }
       ],
@@ -845,29 +845,29 @@
           "status": "ok",
           "move": "6-24",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16320,
-          "elapsed_ms": 2010.925699985819,
+          "depth": 9,
+          "nodes": 18624,
+          "elapsed_ms": 2007.2223000170197,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.0390625,
-          "overshoot_ms": 10.925699985818937
+          "mem_rss_mb": 681.2734375,
+          "overshoot_ms": 7.222300017019734
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16128,
-          "elapsed_ms": 2009.7566999902483,
+          "depth": 9,
+          "nodes": 19520,
+          "elapsed_ms": 2005.2884999895468,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.04296875,
-          "overshoot_ms": 9.756699990248308
+          "mem_rss_mb": 681.4140625,
+          "overshoot_ms": 5.288499989546835
         }
       ]
     },
@@ -883,12 +883,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 119.05750000732951,
+          "elapsed_ms": 108.35310001857579,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.61328125,
+          "mem_rss_mb": 682.26953125,
           "overshoot_ms": 0.0
         },
         {
@@ -897,12 +897,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 101.58370001590811,
+          "elapsed_ms": 88.01620002486743,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.61328125,
+          "mem_rss_mb": 682.26953125,
           "overshoot_ms": 0.0
         }
       ],
@@ -911,29 +911,29 @@
           "status": "ok",
           "move": "6-24",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16576,
-          "elapsed_ms": 2002.3209000064526,
+          "depth": 9,
+          "nodes": 20288,
+          "elapsed_ms": 2007.572100003017,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.05078125,
-          "overshoot_ms": 2.3209000064525753
+          "mem_rss_mb": 681.5234375,
+          "overshoot_ms": 7.572100003017113
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 8,
-          "nodes": 13568,
-          "elapsed_ms": 2007.5057999929413,
+          "nodes": 19584,
+          "elapsed_ms": 2005.363700009184,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.0546875,
-          "overshoot_ms": 7.50579999294132
+          "mem_rss_mb": 681.5234375,
+          "overshoot_ms": 5.363700009183958
         }
       ]
     },
@@ -949,12 +949,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 62.77879999834113,
+          "elapsed_ms": 78.64210000843741,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         },
         {
@@ -963,12 +963,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 64.23370001721196,
+          "elapsed_ms": 56.92780000390485,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         }
       ],
@@ -977,29 +977,29 @@
           "status": "ok",
           "move": "6-1",
           "score": 999997,
-          "depth": 8,
-          "nodes": 15744,
-          "elapsed_ms": 2004.335000005085,
+          "depth": 9,
+          "nodes": 19264,
+          "elapsed_ms": 2007.4202999821864,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.2265625,
-          "overshoot_ms": 4.335000005085021
+          "mem_rss_mb": 682.26171875,
+          "overshoot_ms": 7.420299982186407
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
-          "depth": 8,
-          "nodes": 14592,
-          "elapsed_ms": 2008.5155999986455,
+          "depth": 9,
+          "nodes": 19200,
+          "elapsed_ms": 2006.402099999832,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.2265625,
-          "overshoot_ms": 8.515599998645484
+          "mem_rss_mb": 682.40234375,
+          "overshoot_ms": 6.402099999831989
         }
       ]
     },
@@ -1015,12 +1015,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.1252999936696142,
+          "elapsed_ms": 0.13509998098015785,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         },
         {
@@ -1029,12 +1029,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.13540001236833632,
+          "elapsed_ms": 0.0987000239547342,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         }
       ],
@@ -1045,12 +1045,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.14940000255592167,
+          "elapsed_ms": 0.11619998258538544,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.2265625,
+          "mem_rss_mb": 682.40234375,
           "overshoot_ms": 0.0
         },
         {
@@ -1059,12 +1059,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.12120002065785229,
+          "elapsed_ms": 0.10109998402185738,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 679.2265625,
+          "mem_rss_mb": 682.40234375,
           "overshoot_ms": 0.0
         }
       ]
@@ -1081,12 +1081,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 85.19250000244938,
+          "elapsed_ms": 60.0611999980174,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         },
         {
@@ -1095,12 +1095,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 67.16819998109713,
+          "elapsed_ms": 74.72849998157471,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 679.55859375,
+          "mem_rss_mb": 682.20703125,
           "overshoot_ms": 0.0
         }
       ],
@@ -1109,29 +1109,29 @@
           "status": "ok",
           "move": "6-9",
           "score": -432,
-          "depth": 7,
-          "nodes": 14848,
-          "elapsed_ms": 2004.289800010156,
+          "depth": 8,
+          "nodes": 19840,
+          "elapsed_ms": 2006.4558000012767,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 679.26953125,
-          "overshoot_ms": 4.289800010155886
+          "mem_rss_mb": 682.44921875,
+          "overshoot_ms": 6.455800001276657
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -432,
           "depth": 7,
-          "nodes": 17600,
-          "elapsed_ms": 2005.245999986073,
+          "nodes": 18752,
+          "elapsed_ms": 2007.0249999989755,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 679.44140625,
-          "overshoot_ms": 5.245999986073002
+          "mem_rss_mb": 682.50390625,
+          "overshoot_ms": 7.024999998975545
         }
       ]
     },
@@ -1143,31 +1143,31 @@
       "control_trials": [
         {
           "status": "ok",
-          "move": "9-32",
-          "score": 577,
-          "depth": 8,
-          "nodes": 31104,
-          "elapsed_ms": 2005.1777999906335,
+          "move": "9-6",
+          "score": 0,
+          "depth": 9,
+          "nodes": 37440,
+          "elapsed_ms": 2003.5963999980595,
           "bound": [
-            "LOSS",
-            "WIN"
+            "DRAW",
+            "DRAW"
           ],
-          "mem_rss_mb": 685.28515625,
-          "overshoot_ms": 5.177799990633503
+          "mem_rss_mb": 689.84765625,
+          "overshoot_ms": 3.5963999980594963
         },
         {
           "status": "ok",
-          "move": "9-13",
-          "score": 999999,
-          "depth": 9,
-          "nodes": 30464,
-          "elapsed_ms": 2004.2826000135392,
+          "move": "5-1",
+          "score": 1000000,
+          "depth": 10,
+          "nodes": 36672,
+          "elapsed_ms": 2004.1955999913625,
           "bound": [
-            "LOSS",
+            "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.37890625,
-          "overshoot_ms": 4.282600013539195
+          "mem_rss_mb": 694.72265625,
+          "overshoot_ms": 4.195599991362542
         }
       ],
       "candidate_trials": [
@@ -1175,29 +1175,29 @@
           "status": "ok",
           "move": "9-6",
           "score": 0,
-          "depth": 8,
-          "nodes": 15616,
-          "elapsed_ms": 2006.689899979392,
+          "depth": 9,
+          "nodes": 19840,
+          "elapsed_ms": 2004.181399999652,
           "bound": [
             "DRAW",
             "DRAW"
           ],
-          "mem_rss_mb": 685.0546875,
-          "overshoot_ms": 6.689899979392067
+          "mem_rss_mb": 687.70703125,
+          "overshoot_ms": 4.181399999652058
         },
         {
           "status": "ok",
           "move": "9-18",
-          "score": 456,
-          "depth": 8,
-          "nodes": 16192,
-          "elapsed_ms": 2007.2733999986667,
+          "score": 468,
+          "depth": 9,
+          "nodes": 20736,
+          "elapsed_ms": 2003.800999984378,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 685.87890625,
-          "overshoot_ms": 7.273399998666719
+          "mem_rss_mb": 690.5703125,
+          "overshoot_ms": 3.800999984377995
         }
       ]
     },
@@ -1213,12 +1213,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 119.14520000573248,
+          "elapsed_ms": 90.37220000755042,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         },
         {
@@ -1227,12 +1227,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 110.39590000291355,
+          "elapsed_ms": 87.50490000238642,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         }
       ],
@@ -1241,29 +1241,29 @@
           "status": "ok",
           "move": "5-32",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16640,
-          "elapsed_ms": 2005.134500010172,
+          "depth": 9,
+          "nodes": 19968,
+          "elapsed_ms": 2003.8239999848884,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.16015625,
-          "overshoot_ms": 5.134500010171905
+          "mem_rss_mb": 690.86328125,
+          "overshoot_ms": 3.82399998488836
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16256,
-          "elapsed_ms": 2009.464399976423,
+          "depth": 9,
+          "nodes": 19776,
+          "elapsed_ms": 2007.3629000107758,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.16796875,
-          "overshoot_ms": 9.46439997642301
+          "mem_rss_mb": 690.86328125,
+          "overshoot_ms": 7.362900010775775
         }
       ]
     },
@@ -1279,12 +1279,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 126.36739999288693,
+          "elapsed_ms": 90.2965999848675,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         },
         {
@@ -1293,12 +1293,12 @@
           "score": 1000000,
           "depth": 32,
           "nodes": 416,
-          "elapsed_ms": 115.41520000901073,
+          "elapsed_ms": 103.72019998612814,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         }
       ],
@@ -1307,29 +1307,29 @@
           "status": "ok",
           "move": "5-32",
           "score": 999997,
-          "depth": 8,
-          "nodes": 16832,
-          "elapsed_ms": 2007.9889000044204,
+          "depth": 9,
+          "nodes": 20416,
+          "elapsed_ms": 2003.595000016503,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.16796875,
-          "overshoot_ms": 7.9889000044204295
+          "mem_rss_mb": 690.8671875,
+          "overshoot_ms": 3.595000016503036
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
-          "depth": 8,
-          "nodes": 15872,
-          "elapsed_ms": 2002.2083999938332,
+          "depth": 9,
+          "nodes": 20352,
+          "elapsed_ms": 2006.7389000032563,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.16796875,
-          "overshoot_ms": 2.2083999938331544
+          "mem_rss_mb": 690.8671875,
+          "overshoot_ms": 6.738900003256276
         }
       ]
     },
@@ -1345,12 +1345,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 73.25570000102744,
+          "elapsed_ms": 53.97160002030432,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         },
         {
@@ -1359,12 +1359,12 @@
           "score": 999998,
           "depth": 32,
           "nodes": 480,
-          "elapsed_ms": 56.8963999976404,
+          "elapsed_ms": 51.29660002421588,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         }
       ],
@@ -1374,28 +1374,28 @@
           "move": "6-1",
           "score": 999997,
           "depth": 9,
-          "nodes": 15104,
-          "elapsed_ms": 2003.6427000013646,
+          "nodes": 19136,
+          "elapsed_ms": 2007.5674000254367,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.1875,
-          "overshoot_ms": 3.642700001364574
+          "mem_rss_mb": 690.8828125,
+          "overshoot_ms": 7.567400025436655
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 9,
-          "nodes": 16000,
-          "elapsed_ms": 2009.5522000046913,
+          "nodes": 19008,
+          "elapsed_ms": 2001.6866000078153,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 686.1953125,
-          "overshoot_ms": 9.552200004691258
+          "mem_rss_mb": 690.88671875,
+          "overshoot_ms": 1.6866000078152865
         }
       ]
     },
@@ -1405,6 +1405,36 @@
       "time_limit_ms": 2000,
       "mode": "WIN",
       "control_trials": [
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.14269998064264655,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 694.7265625,
+          "overshoot_ms": 0.0
+        },
+        {
+          "status": "ok",
+          "move": "10x28",
+          "score": 1000000,
+          "depth": 1,
+          "nodes": 1,
+          "elapsed_ms": 0.10030000703409314,
+          "bound": [
+            "WIN",
+            "WIN"
+          ],
+          "mem_rss_mb": 694.7265625,
+          "overshoot_ms": 0.0
+        }
+      ],
+      "candidate_trials": [
         {
           "status": "ok",
           "move": "10x28",
@@ -1416,7 +1446,7 @@
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 690.88671875,
           "overshoot_ms": 0.0
         },
         {
@@ -1425,42 +1455,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.07879998884163797,
+          "elapsed_ms": 0.0892000098247081,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 689.3828125,
-          "overshoot_ms": 0.0
-        }
-      ],
-      "candidate_trials": [
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.09900002623908222,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 686.1953125,
-          "overshoot_ms": 0.0
-        },
-        {
-          "status": "ok",
-          "move": "10x28",
-          "score": 1000000,
-          "depth": 1,
-          "nodes": 1,
-          "elapsed_ms": 0.07720000576227903,
-          "bound": [
-            "WIN",
-            "WIN"
-          ],
-          "mem_rss_mb": 686.1953125,
+          "mem_rss_mb": 690.88671875,
           "overshoot_ms": 0.0
         }
       ]
@@ -1477,12 +1477,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 75.99360001040623,
+          "elapsed_ms": 60.05040000309236,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         },
         {
@@ -1491,12 +1491,12 @@
           "score": -1000000,
           "depth": 32,
           "nodes": 448,
-          "elapsed_ms": 73.07529999525286,
+          "elapsed_ms": 57.85089998971671,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 689.3828125,
+          "mem_rss_mb": 694.7265625,
           "overshoot_ms": 0.0
         }
       ],
@@ -1505,29 +1505,29 @@
           "status": "ok",
           "move": "6-9",
           "score": -432,
-          "depth": 7,
-          "nodes": 17728,
-          "elapsed_ms": 2005.7273000129499,
+          "depth": 8,
+          "nodes": 21056,
+          "elapsed_ms": 2004.3933000124525,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 686.1953125,
-          "overshoot_ms": 5.727300012949854
+          "mem_rss_mb": 690.91015625,
+          "overshoot_ms": 4.393300012452528
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -432,
-          "depth": 7,
-          "nodes": 17536,
-          "elapsed_ms": 2006.1427000036929,
+          "depth": 8,
+          "nodes": 20992,
+          "elapsed_ms": 2002.5251999904867,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 686.19921875,
-          "overshoot_ms": 6.14270000369288
+          "mem_rss_mb": 690.9296875,
+          "overshoot_ms": 2.525199990486726
         }
       ]
     },
@@ -1541,59 +1541,59 @@
           "status": "ok",
           "move": "9-13",
           "score": 999999,
-          "depth": 9,
-          "nodes": 30400,
-          "elapsed_ms": 2007.4540999776218,
+          "depth": 10,
+          "nodes": 38272,
+          "elapsed_ms": 2005.416999978479,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 693.48046875,
-          "overshoot_ms": 7.454099977621809
+          "mem_rss_mb": 699.1875,
+          "overshoot_ms": 5.416999978478998
         },
         {
           "status": "ok",
           "move": "9-13",
           "score": 999999,
           "depth": 10,
-          "nodes": 32000,
-          "elapsed_ms": 2006.9309000100475,
+          "nodes": 37504,
+          "elapsed_ms": 2005.71409999975,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.765625,
-          "overshoot_ms": 6.9309000100474805
+          "mem_rss_mb": 703.3671875,
+          "overshoot_ms": 5.714099999750033
         }
       ],
       "candidate_trials": [
         {
           "status": "ok",
-          "move": "9-6",
-          "score": 0,
-          "depth": 9,
-          "nodes": 16192,
-          "elapsed_ms": 2004.7198999964166,
-          "bound": [
-            "DRAW",
-            "DRAW"
-          ],
-          "mem_rss_mb": 689.01953125,
-          "overshoot_ms": 4.719899996416643
-        },
-        {
-          "status": "ok",
           "move": "9-18",
-          "score": 456,
+          "score": 463,
           "depth": 9,
-          "nodes": 17600,
-          "elapsed_ms": 2006.496900023194,
+          "nodes": 20672,
+          "elapsed_ms": 2007.531499984907,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 691.0078125,
-          "overshoot_ms": 6.49690002319403
+          "mem_rss_mb": 695.68359375,
+          "overshoot_ms": 7.531499984906986
+        },
+        {
+          "status": "ok",
+          "move": "9-6",
+          "score": 0,
+          "depth": 10,
+          "nodes": 20864,
+          "elapsed_ms": 2013.9516000053845,
+          "bound": [
+            "DRAW",
+            "DRAW"
+          ],
+          "mem_rss_mb": 698.625,
+          "overshoot_ms": 13.951600005384535
         }
       ]
     }
@@ -1611,12 +1611,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 18.535600014729425,
+          "elapsed_ms": 32.67809998942539,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.3671875
         },
         {
           "status": "ok",
@@ -1624,12 +1624,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 21.852700010640547,
+          "elapsed_ms": 30.913199996575713,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.3671875
         }
       ],
       "candidate_trials": [
@@ -1638,26 +1638,26 @@
           "move": "6-24",
           "score": 999997,
           "depth": 6,
-          "nodes": 2289,
-          "elapsed_ms": 299.41219999454916,
+          "nodes": 2191,
+          "elapsed_ms": 303.97419998189434,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 257.3549000080675,
+          "nodes": 2191,
+          "elapsed_ms": 269.0470999805257,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1673,12 +1673,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 21.431800007121637,
+          "elapsed_ms": 37.742999993497506,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.3671875
         },
         {
           "status": "ok",
@@ -1686,12 +1686,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 25.780199997825548,
+          "elapsed_ms": 19.641099992441013,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.3671875
         }
       ],
       "candidate_trials": [
@@ -1700,26 +1700,26 @@
           "move": "6-24",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 256.376100005582,
+          "nodes": 2550,
+          "elapsed_ms": 363.5849000129383,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 277.3610000149347,
+          "nodes": 2551,
+          "elapsed_ms": 261.5256999852136,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1735,12 +1735,12 @@
           "score": 999998,
           "depth": 6,
           "nodes": 90,
-          "elapsed_ms": 16.327599994838238,
+          "elapsed_ms": 13.778199994703755,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.3671875
         },
         {
           "status": "ok",
@@ -1748,12 +1748,12 @@
           "score": 999998,
           "depth": 6,
           "nodes": 90,
-          "elapsed_ms": 11.634900001809001,
+          "elapsed_ms": 10.01569998334162,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -1762,26 +1762,26 @@
           "move": "6-1",
           "score": 999997,
           "depth": 6,
-          "nodes": 1415,
-          "elapsed_ms": 193.42830000096,
+          "nodes": 1376,
+          "elapsed_ms": 146.08669999870472,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 6,
-          "nodes": 1365,
-          "elapsed_ms": 184.91089998860843,
+          "nodes": 1328,
+          "elapsed_ms": 146.41060002031736,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1797,12 +1797,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.13950001448392868,
+          "elapsed_ms": 0.14879999798722565,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -1810,12 +1810,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.08609998621977866,
+          "elapsed_ms": 0.10140001541003585,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -1825,12 +1825,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.11559997801668942,
+          "elapsed_ms": 0.09950000094249845,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
@@ -1838,12 +1838,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.08709999383427203,
+          "elapsed_ms": 0.08080000407062471,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1859,12 +1859,12 @@
           "score": -1000000,
           "depth": 6,
           "nodes": 84,
-          "elapsed_ms": 13.75660000485368,
+          "elapsed_ms": 12.395300000207499,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -1872,12 +1872,12 @@
           "score": -1000000,
           "depth": 6,
           "nodes": 84,
-          "elapsed_ms": 19.413200003327802,
+          "elapsed_ms": 12.316300009842962,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -1886,26 +1886,26 @@
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 6043,
-          "elapsed_ms": 726.0304000228643,
+          "nodes": 5958,
+          "elapsed_ms": 581.9935000035912,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 5896,
-          "elapsed_ms": 871.1424999928568,
+          "nodes": 5837,
+          "elapsed_ms": 538.1960999802686,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1921,12 +1921,12 @@
           "score": 999999,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 44.447199994465336,
+          "elapsed_ms": 32.13709997362457,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -1934,40 +1934,40 @@
           "score": 999999,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 52.63869999907911,
+          "elapsed_ms": 24.387800018303096,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 48.92250002012588,
+          "elapsed_ms": 26.025200000731274,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 62.45550001040101,
+          "elapsed_ms": 28.3832999994047,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -1983,12 +1983,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 36.755100009031594,
+          "elapsed_ms": 19.34680002159439,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -1996,12 +1996,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 26.765599992359057,
+          "elapsed_ms": 17.240800021681935,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2010,26 +2010,26 @@
           "move": "5-32",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 328.8335000106599,
+          "nodes": 2194,
+          "elapsed_ms": 197.46980001218617,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 267.74109998950735,
+          "nodes": 2191,
+          "elapsed_ms": 195.05900001968257,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2045,12 +2045,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 25.426100008189678,
+          "elapsed_ms": 17.912200011778623,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2058,12 +2058,12 @@
           "score": 1000000,
           "depth": 6,
           "nodes": 78,
-          "elapsed_ms": 25.401000020792708,
+          "elapsed_ms": 17.00130000244826,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2072,26 +2072,26 @@
           "move": "5-32",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 297.7027000160888,
+          "nodes": 2550,
+          "elapsed_ms": 237.96279999078251,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
           "depth": 6,
-          "nodes": 2281,
-          "elapsed_ms": 275.3680999740027,
+          "nodes": 2551,
+          "elapsed_ms": 228.8997000141535,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2107,12 +2107,12 @@
           "score": 999998,
           "depth": 6,
           "nodes": 90,
-          "elapsed_ms": 14.926500007277355,
+          "elapsed_ms": 11.343299993313849,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2120,12 +2120,12 @@
           "score": 999998,
           "depth": 6,
           "nodes": 90,
-          "elapsed_ms": 9.977299981983379,
+          "elapsed_ms": 10.266500001307577,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2134,26 +2134,26 @@
           "move": "6-1",
           "score": 999997,
           "depth": 6,
-          "nodes": 1366,
-          "elapsed_ms": 170.20809999667108,
+          "nodes": 1328,
+          "elapsed_ms": 137.50050001544878,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 6,
-          "nodes": 1365,
-          "elapsed_ms": 191.45060001756065,
+          "nodes": 1328,
+          "elapsed_ms": 144.20489998883568,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2169,12 +2169,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.20959999528713524,
+          "elapsed_ms": 0.2623999898787588,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2182,12 +2182,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.15780000831000507,
+          "elapsed_ms": 0.17169999773614109,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2197,12 +2197,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.1618000096641481,
+          "elapsed_ms": 0.1998000079765916,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
@@ -2210,12 +2210,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.09580000187270343,
+          "elapsed_ms": 0.15020000864751637,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2231,12 +2231,12 @@
           "score": -1000000,
           "depth": 6,
           "nodes": 84,
-          "elapsed_ms": 12.789400003384799,
+          "elapsed_ms": 20.652799983508885,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2244,12 +2244,12 @@
           "score": -1000000,
           "depth": 6,
           "nodes": 84,
-          "elapsed_ms": 16.76149998093024,
+          "elapsed_ms": 13.75529999495484,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2258,26 +2258,26 @@
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 5970,
-          "elapsed_ms": 800.9325999883004,
+          "nodes": 5836,
+          "elapsed_ms": 626.6290000057779,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -432,
           "depth": 6,
-          "nodes": 5896,
-          "elapsed_ms": 739.8440999968443,
+          "nodes": 5836,
+          "elapsed_ms": 562.9988000146113,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2293,12 +2293,12 @@
           "score": 999999,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 33.636199979810044,
+          "elapsed_ms": 25.05570001085289,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2306,40 +2306,40 @@
           "score": 999999,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 33.84160000132397,
+          "elapsed_ms": 29.423600004520267,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 30.87070002220571,
+          "elapsed_ms": 26.858099998207763,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         },
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 6,
           "nodes": 61,
-          "elapsed_ms": 31.453299976419657,
+          "elapsed_ms": 28.687899990472943,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 691.04296875
+          "mem_rss_mb": 698.69140625
         }
       ]
     },
@@ -2355,12 +2355,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 30.96999999252148,
+          "elapsed_ms": 31.988599977921695,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2368,12 +2368,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 38.467600010335445,
+          "elapsed_ms": 28.04530001594685,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2382,26 +2382,26 @@
           "move": "6-24",
           "score": 999997,
           "depth": 10,
-          "nodes": 35964,
-          "elapsed_ms": 4472.131500020623,
+          "nodes": 37327,
+          "elapsed_ms": 4060.6417000235524,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.17578125
+          "mem_rss_mb": 699.28125
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 10,
-          "nodes": 36012,
-          "elapsed_ms": 4603.25150002609,
+          "nodes": 37484,
+          "elapsed_ms": 4094.8357000015676,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.19140625
+          "mem_rss_mb": 699.29296875
         }
       ]
     },
@@ -2417,12 +2417,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 42.44990000734106,
+          "elapsed_ms": 27.88850001525134,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2430,12 +2430,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 33.17180002341047,
+          "elapsed_ms": 30.017899989616126,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2444,26 +2444,26 @@
           "move": "6-24",
           "score": 999997,
           "depth": 10,
-          "nodes": 36081,
-          "elapsed_ms": 4398.924899986014,
+          "nodes": 43111,
+          "elapsed_ms": 4371.806100010872,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.1953125
+          "mem_rss_mb": 699.52734375
         },
         {
           "status": "ok",
           "move": "6-24",
           "score": 999997,
           "depth": 10,
-          "nodes": 36079,
-          "elapsed_ms": 4474.592500017025,
+          "nodes": 42964,
+          "elapsed_ms": 4347.19070000574,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.1953125
+          "mem_rss_mb": 699.6015625
         }
       ]
     },
@@ -2479,12 +2479,12 @@
           "score": 999998,
           "depth": 10,
           "nodes": 150,
-          "elapsed_ms": 26.577799988444895,
+          "elapsed_ms": 17.049599991878495,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2492,12 +2492,12 @@
           "score": 999998,
           "depth": 10,
           "nodes": 150,
-          "elapsed_ms": 26.484200003324077,
+          "elapsed_ms": 16.433499986305833,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.76953125
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2506,26 +2506,26 @@
           "move": "6-1",
           "score": 999997,
           "depth": 10,
-          "nodes": 24729,
-          "elapsed_ms": 3300.8226999954786,
+          "nodes": 18858,
+          "elapsed_ms": 1973.2564000005368,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.26171875
+          "mem_rss_mb": 699.609375
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 10,
-          "nodes": 23900,
-          "elapsed_ms": 3425.7125000003725,
+          "nodes": 19491,
+          "elapsed_ms": 2131.517800007714,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.2734375
+          "mem_rss_mb": 699.609375
         }
       ]
     },
@@ -2541,12 +2541,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.23820000933483243,
+          "elapsed_ms": 0.14059999375604093,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2554,12 +2554,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.08710002293810248,
+          "elapsed_ms": 0.18350000027567148,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.37109375
         }
       ],
       "candidate_trials": [
@@ -2569,12 +2569,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.12820001575164497,
+          "elapsed_ms": 0.12579999747686088,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.2734375
+          "mem_rss_mb": 699.609375
         },
         {
           "status": "ok",
@@ -2582,12 +2582,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.11789999553002417,
+          "elapsed_ms": 0.11430002632550895,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 691.2734375
+          "mem_rss_mb": 699.609375
         }
       ]
     },
@@ -2603,12 +2603,12 @@
           "score": -1000000,
           "depth": 10,
           "nodes": 140,
-          "elapsed_ms": 27.766200015321374,
+          "elapsed_ms": 19.14960000431165,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.37109375
         },
         {
           "status": "ok",
@@ -2616,12 +2616,12 @@
           "score": -1000000,
           "depth": 10,
           "nodes": 140,
-          "elapsed_ms": 29.069899988826364,
+          "elapsed_ms": 18.22649998939596,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -2630,26 +2630,26 @@
           "move": "6-9",
           "score": -488,
           "depth": 10,
-          "nodes": 60008,
-          "elapsed_ms": 7555.365200008964,
+          "nodes": 70938,
+          "elapsed_ms": 6925.0322000007145,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 694.30859375
+          "mem_rss_mb": 700.40234375
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -488,
           "depth": 10,
-          "nodes": 68897,
-          "elapsed_ms": 8254.318899998907,
+          "nodes": 58421,
+          "elapsed_ms": 6120.341700006975,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 694.87890625
+          "mem_rss_mb": 700.44921875
         }
       ]
     },
@@ -2665,12 +2665,12 @@
           "score": 999999,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 43.03770000115037,
+          "elapsed_ms": 48.61139997956343,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2678,40 +2678,40 @@
           "score": 999999,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 44.52089997357689,
+          "elapsed_ms": 41.42990001128055,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
         {
           "status": "ok",
-          "move": "9-6",
-          "score": 0,
-          "depth": 10,
-          "nodes": 45243,
-          "elapsed_ms": 4862.566099996911,
-          "bound": [
-            "DRAW",
-            "DRAW"
-          ],
-          "mem_rss_mb": 706.18359375
-        },
-        {
-          "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 47.421099996427074,
+          "elapsed_ms": 46.984000015072525,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 706.18359375
+          "mem_rss_mb": 700.44921875
+        },
+        {
+          "status": "ok",
+          "move": "9-18",
+          "score": 463,
+          "depth": 10,
+          "nodes": 101,
+          "elapsed_ms": 47.4899000255391,
+          "bound": [
+            "LOSS",
+            "WIN"
+          ],
+          "mem_rss_mb": 700.44921875
         }
       ]
     },
@@ -2727,12 +2727,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 28.536500001791865,
+          "elapsed_ms": 28.3548999868799,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2740,12 +2740,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 29.773299989756197,
+          "elapsed_ms": 27.77099999366328,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -2754,26 +2754,26 @@
           "move": "5-32",
           "score": 999997,
           "depth": 10,
-          "nodes": 36927,
-          "elapsed_ms": 4018.1881000171416,
+          "nodes": 35342,
+          "elapsed_ms": 3695.578299986664,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.0625
+          "mem_rss_mb": 700.91796875
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
           "depth": 10,
-          "nodes": 37056,
-          "elapsed_ms": 3995.2406999946106,
+          "nodes": 35316,
+          "elapsed_ms": 3697.293399978662,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.0625
+          "mem_rss_mb": 700.96875
         }
       ]
     },
@@ -2789,12 +2789,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 29.09440000075847,
+          "elapsed_ms": 32.62819998781197,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2802,12 +2802,12 @@
           "score": 1000000,
           "depth": 10,
           "nodes": 130,
-          "elapsed_ms": 33.57030000188388,
+          "elapsed_ms": 30.970499996328726,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -2816,26 +2816,26 @@
           "move": "5-32",
           "score": 999997,
           "depth": 10,
-          "nodes": 37053,
-          "elapsed_ms": 4728.0031999980565,
+          "nodes": 42308,
+          "elapsed_ms": 4271.383900020737,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.0625
+          "mem_rss_mb": 701.328125
         },
         {
           "status": "ok",
           "move": "5-32",
           "score": 999997,
           "depth": 10,
-          "nodes": 36836,
-          "elapsed_ms": 4927.502000005916,
+          "nodes": 42309,
+          "elapsed_ms": 4254.044000001159,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.0625
+          "mem_rss_mb": 701.33984375
         }
       ]
     },
@@ -2851,12 +2851,12 @@
           "score": 999998,
           "depth": 10,
           "nodes": 150,
-          "elapsed_ms": 18.983400019351393,
+          "elapsed_ms": 16.880700015462935,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2864,12 +2864,12 @@
           "score": 999998,
           "depth": 10,
           "nodes": 150,
-          "elapsed_ms": 20.668900018790737,
+          "elapsed_ms": 16.331999999238178,
           "bound": [
             "DRAW",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -2878,26 +2878,26 @@
           "move": "6-1",
           "score": 999997,
           "depth": 10,
-          "nodes": 22107,
-          "elapsed_ms": 3093.5104000091087,
+          "nodes": 19511,
+          "elapsed_ms": 2045.5864999967162,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.34765625
+          "mem_rss_mb": 701.33984375
         },
         {
           "status": "ok",
           "move": "6-1",
           "score": 999997,
           "depth": 10,
-          "nodes": 24355,
-          "elapsed_ms": 3243.7582000275142,
+          "nodes": 19521,
+          "elapsed_ms": 2031.16320000845,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.3515625
+          "mem_rss_mb": 701.33984375
         }
       ]
     },
@@ -2913,12 +2913,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.13520001084543765,
+          "elapsed_ms": 0.19859999883919954,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2926,12 +2926,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.09919999865815043,
+          "elapsed_ms": 0.15539999003522098,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -2941,12 +2941,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.10899998596869409,
+          "elapsed_ms": 0.12129999231547117,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.3515625
+          "mem_rss_mb": 701.33984375
         },
         {
           "status": "ok",
@@ -2954,12 +2954,12 @@
           "score": 1000000,
           "depth": 1,
           "nodes": 1,
-          "elapsed_ms": 0.11039999662898481,
+          "elapsed_ms": 0.13890000991523266,
           "bound": [
             "WIN",
             "WIN"
           ],
-          "mem_rss_mb": 706.3515625
+          "mem_rss_mb": 701.33984375
         }
       ]
     },
@@ -2975,12 +2975,12 @@
           "score": -1000000,
           "depth": 10,
           "nodes": 140,
-          "elapsed_ms": 27.09419999155216,
+          "elapsed_ms": 18.17920000758022,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -2988,12 +2988,12 @@
           "score": -1000000,
           "depth": 10,
           "nodes": 140,
-          "elapsed_ms": 24.73249999457039,
+          "elapsed_ms": 18.332999985432252,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
@@ -3002,26 +3002,26 @@
           "move": "6-9",
           "score": -488,
           "depth": 10,
-          "nodes": 66120,
-          "elapsed_ms": 8152.796000009403,
+          "nodes": 62268,
+          "elapsed_ms": 5970.793699991191,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 706.3671875
+          "mem_rss_mb": 701.3515625
         },
         {
           "status": "ok",
           "move": "6-9",
           "score": -488,
           "depth": 10,
-          "nodes": 64657,
-          "elapsed_ms": 7971.398699999554,
+          "nodes": 63425,
+          "elapsed_ms": 6568.15629999619,
           "bound": [
             "LOSS",
             "DRAW"
           ],
-          "mem_rss_mb": 706.390625
+          "mem_rss_mb": 701.359375
         }
       ]
     },
@@ -3037,12 +3037,12 @@
           "score": 999999,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 53.05970000335947,
+          "elapsed_ms": 41.67450001114048,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         },
         {
           "status": "ok",
@@ -3050,40 +3050,40 @@
           "score": 999999,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 56.387700024060905,
+          "elapsed_ms": 41.15179998916574,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 697.75390625
+          "mem_rss_mb": 703.35546875
         }
       ],
       "candidate_trials": [
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 57.91339999996126,
+          "elapsed_ms": 47.81610000645742,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 706.390625
+          "mem_rss_mb": 701.359375
         },
         {
           "status": "ok",
-          "move": "12-8",
-          "score": 456,
+          "move": "9-18",
+          "score": 463,
           "depth": 10,
           "nodes": 101,
-          "elapsed_ms": 53.50080001517199,
+          "elapsed_ms": 43.53450000053272,
           "bound": [
             "LOSS",
             "WIN"
           ],
-          "mem_rss_mb": 706.390625
+          "mem_rss_mb": 701.359375
         }
       ]
     }
@@ -3091,7 +3091,31 @@
   "determinism": {
     "control_deterministic": true,
     "candidate_deterministic": true,
-    "candidate_move": "5-32",
-    "candidate_nodes": 882
+    "details": [
+      {
+        "pos_id": "pos1_reproducer_threat",
+        "control_det": true,
+        "candidate_det": true,
+        "cand_move": "5-32",
+        "cand_score": 999997,
+        "cand_nodes": 811
+      },
+      {
+        "pos_id": "pos3_branching_2k_vs_1k",
+        "control_det": true,
+        "candidate_det": true,
+        "cand_move": "6-1",
+        "cand_score": 999997,
+        "cand_nodes": 240
+      },
+      {
+        "pos_id": "pos6_mixed_pieces",
+        "control_det": true,
+        "candidate_det": true,
+        "cand_move": "9-6",
+        "cand_score": 0,
+        "cand_nodes": 1713
+      }
+    ]
   }
 }
