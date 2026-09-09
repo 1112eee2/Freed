@@ -41,6 +41,7 @@ from .search import Engine, Mode, SearchLimits
 from .workload_isolation import InteractiveSessionLease
 from .gui_release import DEFAULT_POINTER, load_release
 from .game_records import MAX_RECORD_BYTES, save_game_record
+from .search_profile import RequestProfiler
 
 
 # Global engine instance shared by HTTP requests
@@ -755,6 +756,10 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         request_started = time.perf_counter()
         pos_str = data.get("position")
         clock = data.get("clock", 0)
+        profile_request = data.get("profile_request", False)
+        if not isinstance(profile_request, bool):
+            self.send_json({"error": "profile_request must be a boolean"}, 400)
+            return
 
         if not pos_str:
             self.send_json({"error": "missing position"}, 400)
@@ -816,35 +821,58 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         # Native Engine state and persistent TT are shared between requests.
         # Serialize engine mutation while still allowing static files and cheap
         # state/move APIs to use separate HTTP worker threads.
+        profiler = RequestProfiler(profile_request)
+        lock_requested = time.perf_counter()
         with ENGINE_SEARCH_LOCK:
-            setup_started = time.perf_counter()
-            engine = get_default_engine(
-                threads=threads,
-                hash_mb=hash_mb,
-                rules_profile=rules_profile,
-            )
-            if (sum(piece != EMPTY for piece in state.board) <= 3
-                    and len(legal_moves(state)) > 1):
-                # Runtime TB3 construction is expensive. Pay it only when its
-                # exact result can affect the current move, never during the
-                # opening or concurrently with a live middlegame search.
-                ensure_native_tablebase_ready(engine)
-            setup_elapsed_ms = round(
-                (time.perf_counter() - setup_started) * 1000,
-                3,
-            )
-            result = engine.search(
-                state,
-                limits=limits,
-                mode=mode,
-                history=history,
-            )
+            lock_acquired = time.perf_counter()
+            with profiler:
+                engine = get_default_engine(
+                    threads=threads,
+                    hash_mb=hash_mb,
+                    rules_profile=rules_profile,
+                )
+                engine_ready = time.perf_counter()
+                tb3_ready_before = engine.native_tablebase is not None
+                tb3_load_attempted = False
+                if (sum(piece != EMPTY for piece in state.board) <= 3
+                        and len(legal_moves(state)) > 1):
+                    # Preserve on-demand loading; measure it separately from search.
+                    tb3_load_attempted = not tb3_ready_before
+                    ensure_native_tablebase_ready(engine)
+                search_started = time.perf_counter()
+                result = engine.search(
+                    state,
+                    limits=limits,
+                    mode=mode,
+                    history=history,
+                )
+                search_finished = time.perf_counter()
             provenance = engine_search_provenance(engine)
             if GUI_NNUE_MODEL_OVERRIDE is not None and (
                 not provenance["nnue_enabled"] or provenance["native_error"]
                 or provenance["search_backend"] == "python-fallback"
             ):
                 raise RuntimeError(f"NNUE search unavailable: {provenance['native_error']}")
+
+            # Snapshot shared resources under the same lock as the search.
+            # A later request can reconfigure the engine before JSON is written.
+            worker_count = (
+                len(engine.native_search._workers)
+                if isinstance(engine.native_search, ParallelNativeSearch)
+                else (1 if engine.native_search else 0)
+            )
+            resource_snapshot = {
+                "hash_allocated_mb": round(getattr(engine.native_search, "allocated_hash_mb", 0.0), 1),
+                "native_tablebase_ready": engine.native_tablebase is not None,
+                "native_tablebase_error": NATIVE_TABLEBASE_WARMUP_ERROR,
+                "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
+                "worker_count": worker_count,
+                "search_thread_capacity": (
+                    worker_count if provenance["search_backend"] == "native-root-split"
+                    else 0 if provenance["search_backend"] == "forced" else 1
+                ),
+            }
+            provenance_finished = time.perf_counter()
 
         pv_notation = [m.notation for m in result.pv]
         wdl_text = "UNKNOWN"
@@ -855,6 +883,20 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             wdl_text = "UNKNOWN"
         else:
             wdl_text = f"{result.bound.lower.name}..{result.bound.upper.name}"
+
+        profile_report = profiler.report()
+        response_ready = time.perf_counter()
+        milestones = (
+            ("validation", request_started, lock_requested),
+            ("engine_lock_wait", lock_requested, lock_acquired),
+            ("engine_setup", lock_acquired, engine_ready),
+            ("tb3_prepare", engine_ready, search_started),
+            ("search", search_started, search_finished),
+            ("provenance", search_finished, provenance_finished),
+            ("response_prepare", provenance_finished, response_ready),
+        )
+        timings_ms = {name: round((end - start) * 1000, 3) for name, start, end in milestones}
+        request_elapsed_ms = round((response_ready - request_started) * 1000, 3)
 
         self.send_json({
             "bestmove": result.move.notation,
@@ -868,11 +910,15 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             "selective_root": result.selective_root,
             "nodes": result.nodes,
             "elapsed_ms": result.elapsed_ms,
-            "request_elapsed_ms": round(
-                (time.perf_counter() - request_started) * 1000,
-                3,
-            ),
-            "pre_search_setup_ms": setup_elapsed_ms,
+            # Ends before JSON serialization/socket write; the HTTP benchmark
+            # separately records client wall time. Search budget is unchanged.
+            "request_elapsed_ms": request_elapsed_ms,
+            "pre_search_setup_ms": round((search_started - lock_acquired) * 1000, 3),
+            "timings_ms": timings_ms,
+            "request_overshoot_ms": round(max(0.0, request_elapsed_ms - time_ms), 3),
+            "tb3_ready_before": tb3_ready_before,
+            "tb3_load_attempted": tb3_load_attempted,
+            "python_profile": profile_report,
             "pv": pv_notation,
             "wdl": wdl_text,
             "tablebase_hits": result.tablebase_hits,
@@ -882,15 +928,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             "hash_mb": hash_mb,
             "mode": mode.value,
             "rules_profile": rules_profile,
-            "hash_allocated_mb": round(
-                getattr(engine.native_search, "allocated_hash_mb", 0.0),
-                1,
-            ),
-            "native_tablebase_ready": engine.native_tablebase is not None,
-            "native_tablebase_error": NATIVE_TABLEBASE_WARMUP_ERROR,
-            "runtime_isolation": "interactive-exclusive-v1",
-            "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
-            "worker_count": len(engine.native_search._workers) if isinstance(engine.native_search, ParallelNativeSearch) else (1 if engine.native_search else 0),
+            "runtime_isolation": getattr(getattr(self, "server", None), "runtime_isolation", "interactive-exclusive-v1"),
+            **resource_snapshot,
             **provenance,
         })
 

@@ -4119,3 +4119,43 @@ At the end of each engine change, report:
 Do not declare the mission complete merely because the GUI works, the engine is
 fast, or an internal candidate passes one SPRT. Completion requires sustained
 external competitive evidence and a reproducible development pipeline.
+
+### 2026-09-09 endgame request latency Phase 1A (KEEP_DIAGNOSTICS)
+
+User authorized implementation of the phased architecture plan, starting with
+latency profiling. Baseline is main `ec26c5e`; work is on
+`codex/endgame-latency-phase1`. No search/evaluation/TT/time-allocation change.
+
+`makhos/server.py` now partitions successful request time into validation,
+engine-lock wait, engine setup, TB3 preparation, search, provenance and response
+preparation. Resource metadata is captured under the search lock. Optional
+`profile_request` uses `makhos/search_profile.py` only on the calling thread;
+native internals/helper execution and IO wait are explicitly unmeasured.
+`benchmarks/endgame_latency.py` uses the production release/HTTP handler under an
+exclusive batch lease, retains raw observations, and checks fixed-depth parity.
+
+619 observations: 560 unprofiled timed, 56 fixed-depth and three cold-process
+requests. At requested 12T/512 MiB, TB3--6 use Python capacity 1; native7 uses
+root split capacity 12. Cold TB3 preparation was 11,920.661 ms and 11,204.566 ms;
+the pilot cold request consumed 11,671.875 ms process CPU and added 679,141,376
+RSS bytes. Warm 1s/2s handler overshoot group P95 maxima were 8.79/9.60 ms.
+The 2s run entered at four pieces without loading TB3, so it is a distinct oracle
+readiness condition, not a matched 1s-versus-2s comparison. OS cache was not
+flushed. Python movement/state self time was about 56--63% on warm BEST endgames.
+
+Profile on/off parity passed 28 pairs. Old/new handler parity at depth 1/2/3
+passed 48 cases, including repetition, clocks, draw defence and native7.
+Final discovered suite: 434/434 PASS, zero failures/errors/skips, 97.582 seconds;
+source/test inventories unchanged; protected-open attempts zero. An earlier
+verification invocation stopped at Python 3.14 namespace test discovery after
+parity passed; final invocation corrected discovery and completed all tests.
+RULESET/core/accepted-DLL SHA-256 stayed unchanged. The frozen 6T/12T SPRT
+checkpoint was neither opened nor resumed. This is diagnostic verification, not
+a new release attestation or strength promotion; no new SPRT was run.
+
+Review `docs/architecture/ENDGAME_LATENCY_PHASE1_TH.md` and
+`benchmarks/results/endgame_latency_phase1/summary.json`. Compressed raw reports,
+the executed verification snapshot, baseline parity and full-suite log are bound
+by raw/gzip SHA-256 in that summary. Next experiment: loadable TB3 artifact and
+readiness/deadline design, followed by native WDL-bound integration; do not retry
+rejected SMP while the measured cold-build and Python movement costs dominate.
