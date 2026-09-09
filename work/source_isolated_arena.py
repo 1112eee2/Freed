@@ -43,9 +43,9 @@ PILOT_OUT = str(ROOT / "work" / "endgame_diagnosis_20260908" / "arena_pilot_resu
 
 REPRODUCER_POS = "B:BK1,5,6:RK28"
 REPRODUCER_HISTORY = {
-    "B:BK1,5,6:RK28": 1,
-    "R:BK1,5,6:RK32": 1,
-    "B:BK1,5,9:RK32": 1,
+    "B:BK1,5,9:RK32": 2,
+    "R:BK1,5,6:RK32": 2,
+    "B:BK1,5,6:RK28": 2,
     "R:BK1,5,9:RK28": 1,
 }
 WINNING_CANDIDATE_MOVES = {"5-32", "6-10", "6-15", "6-19", "6-24"}
@@ -60,12 +60,27 @@ class IsolatedEngineClient:
         repo_path: str,
         tb4_path: str = DEFAULT_TB4_PATH,
         tb3_path: str | None = DEFAULT_TB3_PATH,
+        *,
+        engine_type: str = "python",
+        threads: int = 1,
+        hash_mb: int = 64,
+        nnue_model: str | None = None,
     ) -> None:
         self.name = name
         self.repo_path = repo_path
-        cmd = [sys.executable, WORKER_SCRIPT, "--repo-path", repo_path, "--tb4-path", tb4_path]
+        cmd = [
+            sys.executable,
+            WORKER_SCRIPT,
+            "--repo-path", repo_path,
+            "--tb4-path", tb4_path,
+            "--engine-type", engine_type,
+            "--threads", str(threads),
+            "--hash-mb", str(hash_mb),
+        ]
         if tb3_path and os.path.isfile(tb3_path):
             cmd.extend(["--tb3-path", tb3_path])
+        if nnue_model and os.path.isfile(nnue_model):
+            cmd.extend(["--nnue-model", nnue_model])
         self.proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -73,9 +88,17 @@ class IsolatedEngineClient:
             text=True,
         )
         line = self.proc.stdout.readline()
-        ready = json.loads(line)
-        if ready.get("status") != "ready":
+        self.ready_info = json.loads(line)
+        if self.ready_info.get("status") != "ready":
             raise RuntimeError(f"Engine {name} failed to initialize: {line}")
+
+    def reset(self) -> None:
+        self.proc.stdin.write(json.dumps({"command": "reset"}) + "\n")
+        self.proc.stdin.flush()
+        line = self.proc.stdout.readline()
+        res = json.loads(line)
+        if res.get("status") != "ok":
+            raise RuntimeError(f"Engine {self.name} reset failed: {line}")
 
     def search(
         self,
@@ -89,6 +112,9 @@ class IsolatedEngineClient:
         req = {
             "command": "search",
             "position": format_position(state),
+            "reversible_plies": state.reversible_plies,
+            "clock": state.reversible_plies,
+            "ply": state.ply,
             "mode": mode,
             "time_ms": time_ms,
             "depth": depth,
@@ -97,7 +123,10 @@ class IsolatedEngineClient:
         self.proc.stdin.write(json.dumps(req) + "\n")
         self.proc.stdin.flush()
         line = self.proc.stdout.readline()
-        return json.loads(line)
+        res = json.loads(line)
+        if res.get("status") == "error":
+            raise RuntimeError(f"Engine {self.name} search error: {res.get('error')}")
+        return res
 
     def close(self) -> None:
         try:
@@ -120,6 +149,9 @@ def play_game(
     depth: int = 32,
     max_plies: int = 200,
 ) -> dict:
+    black_player.reset()
+    red_player.reset()
+
     state = initial_state
     history = Counter(initial_history or {})
     pos_str = format_position(state)
@@ -158,12 +190,17 @@ def play_game(
         history[pos_str] += 1
         status = terminal_status(state, repetition_count=history[pos_str], rules=DEFAULT_RULES)
 
+    if not status.terminal:
+        raise RuntimeError(
+            f"Game aborted without terminal outcome after {len(moves_record)} plies (reason: {status.reason})"
+        )
+
     winner_name = None
     if status.winner == BLACK:
         winner_name = black_player.name
     elif status.winner == RED:
         winner_name = red_player.name
-    elif status.terminal:
+    else:
         winner_name = "DRAW"
 
     return {
@@ -254,7 +291,7 @@ def run_pilot():
     control = IsolatedEngineClient("Control", DEFAULT_CONTROL_PATH)
     candidate = IsolatedEngineClient("Candidate", DEFAULT_CANDIDATE_PATH)
     
-    state = parse_position(REPRODUCER_POS)
+    state = parse_position(REPRODUCER_POS, reversible_plies=6)
     
     # Game 1: Candidate as Black vs Control as Red
     print("\n--- Pilot Game 1: Candidate (BLACK) vs Control (RED) ---")

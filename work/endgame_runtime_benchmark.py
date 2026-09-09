@@ -26,7 +26,7 @@ POSITIONS = [
         'id': 'pos1_reproducer_threat',
         'name': 'Reproducer (Repetition Threat)',
         'pos': 'B:BK1,5,6:RK28',
-        'history': {'B:BK1,5,6:RK28': 1, 'R:BK1,5,6:RK32': 1, 'B:BK1,5,9:RK32': 1, 'R:BK1,5,9:RK28': 1}
+        'history': {'B:BK1,5,9:RK32': 2, 'R:BK1,5,6:RK32': 2, 'B:BK1,5,6:RK28': 2, 'R:BK1,5,9:RK28': 1}
     },
     {
         'id': 'pos2_reproducer_clean',
@@ -88,6 +88,12 @@ class WorkerClient:
             'history': history or {}
         }
         self.proc.stdin.write(json.dumps(req) + '\n')
+        self.proc.stdin.flush()
+        line = self.proc.stdout.readline()
+        return json.loads(line)
+
+    def reset(self):
+        self.proc.stdin.write(json.dumps({'command': 'reset'}) + '\n')
         self.proc.stdin.flush()
         line = self.proc.stdout.readline()
         return json.loads(line)
@@ -196,21 +202,40 @@ def run_benchmark():
                 cand_nodes = statistics.mean(t['nodes'] for t in entry['candidate_trials'])
                 print(f"[d={depth}|{mode}|{pos['id']}] C: t={c_t:.1f}ms nodes={c_nodes} | Cand: t={cand_t:.1f}ms nodes={cand_nodes}")
 
-    print('\n=== 5. Native Determinism Check ===')
-    det_c1 = control.search(POSITIONS[0]['pos'], mode='WIN', depth=4, history=POSITIONS[0]['history'])
-    det_c2 = control.search(POSITIONS[0]['pos'], mode='WIN', depth=4, history=POSITIONS[0]['history'])
-    det_cand1 = candidate.search(POSITIONS[0]['pos'], mode='WIN', depth=4, history=POSITIONS[0]['history'])
-    det_cand2 = candidate.search(POSITIONS[0]['pos'], mode='WIN', depth=4, history=POSITIONS[0]['history'])
-    
-    c_det_pass = (det_c1['move'] == det_c2['move'] and det_c1['score'] == det_c2['score'] and det_c1['nodes'] == det_c2['nodes'])
-    cand_det_pass = (det_cand1['move'] == det_cand2['move'] and det_cand1['score'] == det_cand2['score'] and det_cand1['nodes'] == det_cand2['nodes'])
+    print('\n=== 5. Multi-Position Determinism Check ===')
+    det_positions = [POSITIONS[0], POSITIONS[2], POSITIONS[5]]
+    cand_det_all = True
+    ctrl_det_all = True
+    det_details = []
+    for p in det_positions:
+        control.reset()
+        det_c1 = control.search(p['pos'], mode='WIN', depth=4, history=p['history'])
+        control.reset()
+        det_c2 = control.search(p['pos'], mode='WIN', depth=4, history=p['history'])
+        candidate.reset()
+        det_cand1 = candidate.search(p['pos'], mode='WIN', depth=4, history=p['history'])
+        candidate.reset()
+        det_cand2 = candidate.search(p['pos'], mode='WIN', depth=4, history=p['history'])
+        
+        c_det = (det_c1['move'] == det_c2['move'] and det_c1['score'] == det_c2['score'] and det_c1['nodes'] == det_c2['nodes'])
+        cand_det = (det_cand1['move'] == det_cand2['move'] and det_cand1['score'] == det_cand2['score'] and det_cand1['nodes'] == det_cand2['nodes'])
+        cand_det_all = cand_det_all and cand_det
+        ctrl_det_all = ctrl_det_all and c_det
+        det_details.append({
+            'pos_id': p['id'],
+            'control_det': c_det,
+            'candidate_det': cand_det,
+            'cand_move': det_cand1['move'],
+            'cand_score': det_cand1['score'],
+            'cand_nodes': det_cand1['nodes'],
+        })
+        print(f"[{p['id']}] Determinism: Ctrl={c_det} Cand={cand_det} (move={det_cand1['move']} score={det_cand1['score']} nodes={det_cand1['nodes']})")
+
     results['determinism'] = {
-        'control_deterministic': c_det_pass,
-        'candidate_deterministic': cand_det_pass,
-        'candidate_move': det_cand1['move'],
-        'candidate_nodes': det_cand1['nodes']
+        'control_deterministic': ctrl_det_all,
+        'candidate_deterministic': cand_det_all,
+        'details': det_details,
     }
-    print(f"Determinism Check: Control={c_det_pass}, Candidate={cand_det_pass} (Candidate move={det_cand1['move']}, nodes={det_cand1['nodes']})")
 
     control.close()
     candidate.close()

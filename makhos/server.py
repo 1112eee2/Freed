@@ -596,11 +596,10 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         else:
             # Do not wait for background engine warm-up just to draw a board.
             # A newly-created engine is already clear; an existing one is
-            # serialized before its persistent TT is reset.
+            # serialized before its persistent TT and heuristics are reset.
             if GLOBAL_ENGINE is not None:
                 with ENGINE_SEARCH_LOCK:
-                    if GLOBAL_ENGINE.native_search is not None:
-                        GLOBAL_ENGINE.native_search.clear()
+                    GLOBAL_ENGINE.clear()
             state = initial_state(first)
 
         moves = legal_moves(state)

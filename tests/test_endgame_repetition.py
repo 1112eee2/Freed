@@ -189,14 +189,25 @@ class RankedEndgameRepetitionTests(unittest.TestCase):
             self.assertEqual(res1.bound, res3.bound)
 
     def test_extended_repetition_cycle_longer_than_2_plies(self):
-        state = parse_position("B:BK1,5,9:RK32")
-        history = Counter({state.position_key: 2})
+        s0 = parse_position("B:BK1,5,9:RK32")
+        m0 = next(m for m in legal_moves(s0) if m.notation == "9-6")
+        s1 = apply_move(s0, m0)
+        m1 = next(m for m in legal_moves(s1) if m.notation == "32-28")
+        s2 = apply_move(s1, m1)
+        m2 = next(m for m in legal_moves(s2) if m.notation == "6-9")
+        s3 = apply_move(s2, m2)
+
+        history = Counter({
+            s0.position_key: 2,
+            s1.position_key: 2,
+            s2.position_key: 2,
+            s3.position_key: 2,
+        })
         with RankedTablebase(TB4_PATH) as tablebase:
             engine = Engine(ranked_tablebase=tablebase)
-            res = engine.search(state, SearchLimits(depth=3), mode=Mode.WIN, history=history)
-            child = apply_move(state, res.move)
-            status = terminal_status(child, repetition_count=history[child.position_key] + 1)
-            self.assertFalse(status.terminal and status.winner is None)
+            res = engine.search(s2, SearchLimits(depth=4), mode=Mode.WIN, history=history)
+            self.assertIn(res.move.notation, WINNING_MOVES)
+            self.assertNotEqual(res.move.notation, "6-9")
 
     def test_piece_count_transitions_6_to_3(self):
         tb5_path = Path(__file__).resolve().parents[1] / "build/tb5_np80.compact.bin"
@@ -205,9 +216,22 @@ class RankedEndgameRepetitionTests(unittest.TestCase):
             self.skipTest("TB5 and TB6 compact binaries required")
         with RankedTablebase(TB4_PATH) as tb4, RankedTablebase(tb5_path) as tb5, RankedTablebase(tb6_path) as tb6:
             engine = Engine(ranked_tablebases=(tb4, tb5, tb6))
-            state, history = repetition_fixture()
-            res = engine.search(state, SearchLimits(depth=3), mode=Mode.BEST, history=history)
-            self.assertIn(res.move.notation, WINNING_MOVES)
+            state = parse_position("B:BM18:BK3,28:RM7,14:RK32")
+            res = engine.search(state, SearchLimits(depth=4), mode=Mode.BEST)
+            self.assertEqual(res.move.notation, "18x9")
+            self.assertGreaterEqual(res.score, 0)
+            pv_moves = [m.notation for m in res.pv]
+            self.assertGreaterEqual(len(pv_moves), 3)
+            self.assertEqual(pv_moves[:3], ["18x9", "32x5", "3x10"])
+
+    def test_combine_bounds_contradiction_raises_error(self):
+        engine = Engine(exact_piece_limit=0)
+        with self.assertRaises(ValueError):
+            engine._combine_bounds(
+                [WDLBound.exact(Outcome.WIN)],
+                complete=True,
+                known_bound=WDLBound(Outcome.LOSS, Outcome.DRAW),
+            )
 
     def test_zero_window_bound_consistency(self):
         state, history = repetition_fixture()
