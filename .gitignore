@@ -25,6 +25,7 @@ build/
 
 # Logs and runtime artifacts
 logs/
+saved_games/
 *.log
 work/skill_validator_dependencies/
 

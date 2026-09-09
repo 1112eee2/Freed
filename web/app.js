@@ -25,18 +25,158 @@ let gameState = {
   rulesProfile: 'project',
   isBotThinking: false,
   isGameOver: false,
+  isLoading: false,
+  isMovePending: false,
+  isPaused: false,
+  undoStack: [],
+  result: null,
+  rulesResult: null,
+  savedPath: null,
   botVsBotTimer: null,
 };
 
 const SETTINGS_STORAGE_KEY = 'thai-makhos-engine-settings-v1';
 let gameGeneration = 0;
 let activeSearchController = null;
+let activeMoveController = null;
+let recordRevision = 0;
+let savePending = false;
 
 function invalidateSearch() {
   gameGeneration += 1;
   if (activeSearchController) activeSearchController.abort();
+  if (activeMoveController) activeMoveController.abort();
   activeSearchController = null;
+  activeMoveController = null;
+  clearTimeout(gameState.botVsBotTimer);
+  gameState.botVsBotTimer = null;
   gameState.isBotThinking = false;
+  gameState.isMovePending = false;
+}
+
+function markRecordChanged() {
+  recordRevision += 1;
+  gameState.savedPath = null;
+  document.getElementById('save-game-status').textContent = '';
+}
+
+function resetGameRecord() {
+  gameState.undoStack = [];
+  gameState.result = null;
+  gameState.rulesResult = null;
+  gameState.isPaused = false;
+  document.getElementById('select-game-result').value = '';
+  markRecordChanged();
+}
+
+function resultLabel(result) {
+  if (!result) return 'ยังไม่จบเกม';
+  if (result.winner === null) return 'เสมอ';
+  return result.winner === 'black' ? 'ดำชนะ · แดงแพ้' : 'แดงชนะ · ดำแพ้';
+}
+
+function updateGameControls() {
+  const ready = Boolean(gameState.startPosition) && !gameState.isLoading;
+  for (const id of ['btn-mode-human', 'btn-mode-bot', 'btn-mode-edit', 'select-human-side']) {
+    document.getElementById(id).disabled = gameState.isLoading;
+  }
+  document.getElementById('btn-undo-move').disabled = !ready || gameState.undoStack.length === 0;
+  document.getElementById('btn-resume-game').disabled = !ready || !gameState.isPaused || gameState.isGameOver;
+  document.getElementById('select-game-result').disabled = !ready;
+  document.getElementById('btn-adjudicate-game').disabled = !ready || !document.getElementById('select-game-result').value;
+  const saveButton = document.getElementById('btn-save-game');
+  saveButton.disabled = !ready || !gameState.isGameOver || savePending || Boolean(gameState.savedPath);
+  saveButton.textContent = savePending ? 'กำลังบันทึก…' : gameState.savedPath ? '✓ บันทึกแล้ว' : '💾 บันทึกเกม';
+  document.getElementById('game-result-summary').textContent = resultLabel(gameState.result) +
+    (gameState.result ? (gameState.result.source === 'user' ? ' (ผู้ใช้ตัดสิน)' : ' (ตามกติกา)') : '');
+}
+
+function commitMove(data, record, move) {
+  // One snapshot per completed turn: a multi-capture is still exactly one ply.
+  gameState.undoStack.push(JSON.parse(JSON.stringify({
+    board: gameState.board, turn: gameState.turn,
+    reversiblePlies: gameState.reversiblePlies, legalMoves: gameState.legalMoves,
+    lastMove: gameState.lastMove, rulesResult: gameState.rulesResult,
+  })));
+  gameState.moveHistory.push(record);
+  gameState.lastMove = move ? {start: move.start, end: move.end} : null;
+  markRecordChanged();
+  updateGameState(data);
+  gameState.positionHistory.push(generatePositionString());
+  renderBoard();
+  updateMoveHistoryUI();
+  updateGameControls();
+}
+
+function undoLastPly() {
+  if (gameState.isLoading || gameState.undoStack.length === 0) return;
+  invalidateSearch();
+  Object.assign(gameState, gameState.undoStack.pop());
+  gameState.moveHistory.pop();
+  gameState.positionHistory.pop();
+  gameState.selectedSquare = null;
+  gameState.isGameOver = false;
+  gameState.result = null;
+  // Do not let the bot immediately replay the move the user just took back.
+  gameState.isPaused = true;
+  document.getElementById('select-game-result').value = '';
+  markRecordChanged();
+  resetEvalUI();
+  renderBoard();
+  updateMoveHistoryUI();
+  updateTurnBadges();
+  updateGameControls();
+  setStatusMessage('↶ ย้อนแล้ว 1 ตา (1 ply) · พักเกมอยู่ กด “เล่นต่อ” เมื่อพร้อม');
+}
+
+function resumeGame() {
+  if (gameState.isLoading || gameState.isGameOver || !gameState.isPaused) return;
+  gameState.isPaused = false;
+  updateTurnBadges();
+  updateGameControls();
+  renderBoard();
+  setStatusMessage(`เล่นต่อ · ${gameState.turn === 'black' ? 'ดำ' : 'แดง'} เดิน`);
+  checkBotTurn();
+}
+
+function adjudicateGame() {
+  const choice = document.getElementById('select-game-result').value;
+  if (gameState.isLoading || !gameState.startPosition || !['black', 'red', 'draw'].includes(choice)) return;
+  invalidateSearch();
+  gameState.result = {source: 'user', winner: choice === 'draw' ? null : choice, reason: 'user_adjudication'};
+  gameState.isGameOver = true;
+  gameState.isPaused = false;
+  gameState.selectedSquare = null;
+  markRecordChanged();
+  renderBoard();
+  updateTurnBadges();
+  updateGameControls();
+  setStatusMessage(`ผู้ใช้ตัดสิน: ${resultLabel(gameState.result)} · กด “บันทึกเกม” เพื่อเก็บไฟล์`);
+}
+
+async function saveGameRecord() {
+  if (!gameState.isGameOver || !gameState.startPosition || gameState.isLoading || savePending || gameState.savedPath) return;
+  const revision = recordRevision;
+  const record = buildGameRecord();
+  savePending = true;
+  updateGameControls();
+  const status = document.getElementById('save-game-status');
+  status.textContent = 'กำลังบันทึก…';
+  try {
+    const response = await fetch('/api/save-game', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: record,
+    });
+    const data = await response.json();
+    if (!response.ok || !data.saved || typeof data.path !== 'string') throw new Error(data.error || 'บันทึกไม่สำเร็จ');
+    if (revision !== recordRevision) return;
+    gameState.savedPath = data.path;
+    status.textContent = `บันทึกแล้ว: ${data.path}`;
+  } catch (error) {
+    if (revision === recordRevision) status.textContent = `บันทึกไม่สำเร็จ: ${error.message} · กดบันทึกเพื่อลองใหม่`;
+  } finally {
+    savePending = false;
+    updateGameControls();
+  }
 }
 
 function restoreSettings() {
@@ -153,9 +293,15 @@ function setupUI() {
   document.getElementById('btn-new-game').addEventListener('click', () => startNewGame());
   document.getElementById('btn-flip-board').addEventListener('click', () => toggleFlipBoard());
   document.getElementById('btn-copy-game').addEventListener('click', () => copyGameRecord());
+  document.getElementById('btn-undo-move').addEventListener('click', undoLastPly);
+  document.getElementById('btn-resume-game').addEventListener('click', resumeGame);
+  document.getElementById('select-game-result').addEventListener('change', updateGameControls);
+  document.getElementById('btn-adjudicate-game').addEventListener('click', adjudicateGame);
+  document.getElementById('btn-save-game').addEventListener('click', saveGameRecord);
 }
 
 function setMode(mode) {
+  if (gameState.isLoading) return;
   invalidateSearch();
   const previousMode = gameState.gameMode;
   gameState.gameMode = mode;
@@ -177,11 +323,8 @@ function setMode(mode) {
     setStatusMessage('✏️ โหมดจัดกระดาน: คุณสามารถเดินหมากได้ทั้ง 2 ฝั่ง (เอนจิ้นปิดอยู่)');
     renderBoard();
   } else if (previousMode === 'edit') {
-    // Retain current edited position when switching from edit to human/bot mode
-    gameState.moveHistory = [];
-    gameState.startPosition = generatePositionString();
-    gameState.startReversiblePlies = gameState.reversiblePlies;
-    gameState.positionHistory = [gameState.startPosition];
+    // Edit mode plays both sides using legal moves. Keep its complete history
+    // so switching controllers cannot erase repetition evidence or undo plies.
     updateMoveHistoryUI();
     setStatusMessage(`สลับโหมดเป็น ${mode === 'human' ? 'คน vs บอท' : 'บอท vs บอท'} พร้อมลุยต่อจากตำแหน่งนี้!`);
     renderBoard();
@@ -189,6 +332,7 @@ function setMode(mode) {
   } else {
     startNewGame();
   }
+  updateGameControls();
 }
 
 function toggleFlipBoard() {
@@ -227,13 +371,16 @@ function updateTurnBadges() {
   const topColor = gameState.isFlipped ? 'black' : 'red';
   const bottomColor = gameState.isFlipped ? 'red' : 'black';
 
-  badgeTop.textContent = gameState.turn === topColor ? 'กำลังเดิน...' : '';
-  badgeBottom.textContent = gameState.turn === bottomColor ? 'กำลังเดิน...' : '';
+  const label = gameState.isGameOver ? '' : gameState.isPaused ? 'พักเกม' : 'กำลังเดิน...';
+  badgeTop.textContent = gameState.turn === topColor ? label : '';
+  badgeBottom.textContent = gameState.turn === bottomColor ? label : '';
 }
 
 async function startNewGame() {
   invalidateSearch();
   const generation = gameGeneration;
+  const controller = new AbortController();
+  activeSearchController = controller;
   if (gameState.botVsBotTimer) {
     clearTimeout(gameState.botVsBotTimer);
     gameState.botVsBotTimer = null;
@@ -244,11 +391,19 @@ async function startNewGame() {
   gameState.moveHistory = [];
   gameState.isGameOver = false;
   gameState.isBotThinking = false;
+  gameState.isLoading = true;
+  gameState.startPosition = null;
+  gameState.positionHistory = [];
+  resetGameRecord();
   resetEvalUI();
+  updateMoveHistoryUI();
+  updateGameControls();
+  setStatusMessage('กำลังเริ่มเกมใหม่…');
 
   // Request initial state from backend
   try {
     const res = await fetch('/api/state', {
+      signal: controller.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -263,12 +418,20 @@ async function startNewGame() {
     gameState.startPosition = generatePositionString();
     gameState.startReversiblePlies = gameState.reversiblePlies;
     gameState.positionHistory = [gameState.startPosition];
+    gameState.isLoading = false;
+    activeSearchController = null;
     renderBoard();
     updateMoveHistoryUI();
+    updateGameControls();
     setStatusMessage('เกมใหม่เริ่มแล้ว! ดำเดินก่อน');
 
     checkBotTurn();
   } catch (err) {
+    if (generation !== gameGeneration || err.name === 'AbortError') return;
+    gameState.isLoading = false;
+    gameState.isPaused = true;
+    activeSearchController = null;
+    updateGameControls();
     console.error('Failed to start new game:', err);
     setStatusMessage('เกิดข้อผิดพลาดในการเชื่อมต่อเอนจิ้น');
   }
@@ -279,6 +442,9 @@ function updateGameState(data) {
   gameState.turn = data.turn;
   gameState.reversiblePlies = data.reversible_plies || 0;
   gameState.legalMoves = data.legal_moves || [];
+  gameState.rulesResult = {terminal: Boolean(data.terminal), winner: data.winner || null, reason: data.reason || null};
+  gameState.isGameOver = Boolean(data.terminal);
+  gameState.result = data.terminal ? {source: 'rules', winner: data.winner || null, reason: data.reason} : null;
 
   if (data.terminal) {
     gameState.isGameOver = true;
@@ -288,9 +454,8 @@ function updateGameState(data) {
     } else {
       setStatusMessage(`🤝 จบเกม! เสมอกัน (${data.reason})`);
     }
-  } else {
-    updateTurnBadges();
   }
+  updateTurnBadges();
 }
 
 // Position string format B:BM25,26:BK29:RM1,2:RK5
@@ -383,7 +548,8 @@ function renderBoard() {
           const canHumanMove = (gameState.gameMode === 'edit' && isPieceTurn) ||
                                (gameState.gameMode === 'human' && gameState.turn === gameState.humanSide && isPieceTurn);
 
-          if (canHumanMove && !gameState.isBotThinking && !gameState.isGameOver) {
+          if (canHumanMove && !gameState.isBotThinking && !gameState.isGameOver &&
+              !gameState.isMovePending && !gameState.isPaused && !gameState.isLoading) {
             pieceEl.setAttribute('draggable', 'true');
             pieceEl.addEventListener('dragstart', (e) => onDragStart(e, sqIndex));
           }
@@ -404,7 +570,7 @@ function renderBoard() {
 
 // Click and Drag & Drop handlers
 function onSquareClick(sqIndex) {
-  if (gameState.isGameOver || gameState.isBotThinking) return;
+  if (gameState.isGameOver || gameState.isBotThinking || gameState.isMovePending || gameState.isPaused || gameState.isLoading) return;
 
   const canClick = (gameState.gameMode === 'edit') ||
                    (gameState.gameMode === 'human' && gameState.turn === gameState.humanSide);
@@ -453,6 +619,8 @@ function onDrop(e, targetSq) {
 }
 
 async function attemptUserMove(startSq, endSq) {
+  if (gameState.isGameOver || gameState.isBotThinking || gameState.isMovePending || gameState.isPaused || gameState.isLoading) return;
+  if (gameState.gameMode !== 'edit' && (gameState.gameMode !== 'human' || gameState.turn !== gameState.humanSide)) return;
   const moveObj = gameState.legalMoves.find(m => m.start === startSq && m.end === endSq);
 
   if (!moveObj) {
@@ -463,9 +631,13 @@ async function attemptUserMove(startSq, endSq) {
 
   // Execute Move
   gameState.selectedSquare = null;
-  gameState.lastMove = { start: startSq, end: endSq };
+  const generation = gameGeneration;
+  const controller = new AbortController();
+  activeMoveController = controller;
+  gameState.isMovePending = true;
   try {
     const res = await fetch('/api/apply-move', {
+      signal: controller.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -478,28 +650,34 @@ async function attemptUserMove(startSq, endSq) {
     });
 
     const data = await res.json();
+    if (generation !== gameGeneration) return;
     if (!res.ok || data.error) {
       throw new Error(data.error || `apply-move failed (${res.status})`);
     }
-    gameState.moveHistory.push({
+    commitMove(data, {
       player: gameState.turn,
       notation: moveObj.notation,
       actor: 'human',
-    });
-    updateGameState(data);
-    gameState.positionHistory.push(generatePositionString());
-    renderBoard();
-    updateMoveHistoryUI();
-
+    }, moveObj);
+    gameState.isMovePending = false;
+    activeMoveController = null;
     checkBotTurn();
   } catch (err) {
+    if (generation !== gameGeneration || err.name === 'AbortError') return;
     console.error('Failed to apply move:', err);
     setStatusMessage('เกิดข้อผิดพลาดในการเดินหมาก');
+  } finally {
+    if (generation === gameGeneration) {
+      gameState.isMovePending = false;
+      activeMoveController = null;
+      renderBoard();
+      updateGameControls();
+    }
   }
 }
 
 function checkBotTurn() {
-  if (gameState.isGameOver || gameState.gameMode === 'edit') return;
+  if (gameState.isGameOver || gameState.gameMode === 'edit' || gameState.isPaused || gameState.isLoading || gameState.isMovePending) return;
 
   const isBotMove = (gameState.gameMode === 'bot') ||
                     (gameState.gameMode === 'human' && gameState.turn !== gameState.humanSide);
@@ -510,7 +688,7 @@ function checkBotTurn() {
 }
 
 async function triggerBotSearch() {
-  if (gameState.isBotThinking || gameState.isGameOver) return;
+  if (gameState.isBotThinking || gameState.isGameOver || gameState.isPaused || gameState.isLoading || gameState.isMovePending) return;
 
   // Freeze the request values. The user may change a select box while the
   // search is running; exported evidence must describe what the server
@@ -569,10 +747,6 @@ async function triggerBotSearch() {
     const moves = gameState.legalMoves;
     const matchedMove = moves.find(m => m.notation.toLowerCase() === botMoveNotation.toLowerCase()) || moves[0];
 
-    if (matchedMove) {
-      gameState.lastMove = { start: matchedMove.start, end: matchedMove.end };
-    }
-
     const applyRes = await fetch('/api/apply-move', {
       signal: controller.signal,
       method: 'POST',
@@ -591,7 +765,7 @@ async function triggerBotSearch() {
     if (!applyRes.ok || applyData.error) {
       throw new Error(applyData.error || `apply-move failed (${applyRes.status})`);
     }
-    gameState.moveHistory.push({
+    commitMove(applyData, {
       player: gameState.turn,
       notation: botMoveNotation,
       actor: 'engine',
@@ -635,11 +809,7 @@ async function triggerBotSearch() {
         release_id: data.release_id,
         release_manifest_sha256: data.release_manifest_sha256,
       },
-    });
-    updateGameState(applyData);
-    gameState.positionHistory.push(generatePositionString());
-    renderBoard();
-    updateMoveHistoryUI();
+    }, matchedMove);
 
     if (!gameState.isGameOver) {
       setStatusMessage(`เอนจิ้นเดิน: ${botMoveNotation}`);
@@ -658,6 +828,8 @@ async function triggerBotSearch() {
     if (generation === gameGeneration) {
       gameState.isBotThinking = false;
       activeSearchController = null;
+      renderBoard();
+      updateGameControls();
     }
   }
 }
@@ -792,6 +964,8 @@ function buildGameRecord() {
     final_position: generatePositionString(),
     reversible_plies: gameState.reversiblePlies,
     position_history: gameState.positionHistory,
+    result: gameState.result,
+    rules_result: gameState.rulesResult,
     moves: gameState.moveHistory.map((move, index) => ({
       ply: index + 1,
       player: move.player,
