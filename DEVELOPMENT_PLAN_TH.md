@@ -117,3 +117,16 @@ Status terminal ต้องแสดงขั้นปัจจุบัน จ
 **ลำดับหลัก:** จบ Gate C → ขึ้น NNUE v1 อย่างปลอดภัย → วัด thread scaling/profile → แก้คอขวดที่คุ้มที่สุดทีละตัว → ยืนยัน Elo → พัฒนาข้อมูล/NNUE รุ่นถัดไป
 
 ไม่รวมการกลับไปทำ DFPN หรือ tablebase ใหญ่กว่า 6 ตัวในรอบนี้ และไม่รับประกันว่า 12 เธรดต้องเร็วหรือแรงกว่าเสมอ เป้าหมายคือรุ่นที่เล่นแข็งแกร่งขึ้นจริงโดยมีหลักฐานและย้อนกลับได้
+
+
+## 2026-09-09 — Phase 1C: native TB3 implementation milestone
+
+KEEP experimental/default-off; C1 remains incomplete pending TB4–6.
+Added native owned TB3 image, C17 versioned probe API and ctypes bridge.
+48,600 raw Python/native probes match (seed 20260909); full Windows suite
+461/461 PASS, zero skips/failures/errors in 150.154 s. Inventories unchanged;
+protected production opens zero; rules/core/accepted DLL hashes unchanged.
+Evidence: `benchmarks/results/endgame_c1_tb3/summary.json`; implementation
+notes: `docs/architecture/ENDGAME_NATIVE_C1_TB3_TH.md`. No GUI routing change
+or search performance/Elo claim. Next gate: native TB4–6 mapped readers with
+139-signature differential and opened-file provenance before C2 integration.
