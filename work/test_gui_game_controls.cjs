@@ -215,3 +215,18 @@ test('changing controllers after edit mode preserves repetition history and undo
   f.run('undoLastPly()');
   assert.deepEqual(f.value('gameState.board'), f.initial.board);
 });
+
+test('TB3 readiness error pauses without moving and allows explicit resume', async () => {
+  const f = fixture(); f.run("gameState.gameMode = 'bot'");
+  const pending = f.run('triggerBotSearch()');
+  f.reply('/api/bestmove', {error:'TB3 loading', tb3:{ready:false, state:'loading'}}, false);
+  await pending;
+  assert.equal(f.run('gameState.isPaused'), true);
+  assert.equal(f.run('gameState.isBotThinking'), false);
+  assert.equal(f.elements.get('btn-resume-game').disabled, false);
+  assert.equal(f.requests.filter(r => r.url === '/api/apply-move').length, 0);
+  assert.deepEqual(f.value('gameState.board'), f.initial.board);
+  f.run('resumeGame()');
+  assert.equal(f.requests.filter(r => r.url === '/api/bestmove').length, 2);
+  f.adjudicate(); f.reply('/api/bestmove', {bestmove:'25-21'}); await tick();
+});

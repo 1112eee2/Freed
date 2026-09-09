@@ -4159,3 +4159,28 @@ the executed verification snapshot, baseline parity and full-suite log are bound
 by raw/gzip SHA-256 in that summary. Next experiment: loadable TB3 artifact and
 readiness/deadline design, followed by native WDL-bound integration; do not retry
 rejected SMP while the measured cold-build and Python movement costs dominate.
+
+## 2026-09-09 — Phase 1B loadable TB3 candidate (Windows acceptance pending)
+
+Base `ceb25bc`; branch `codex/endgame-latency-phase1b`. KEEP as a candidate,
+not production promotion. Offline export reuses the unchanged C exact solver.
+The 410,452-byte artifact expands to 2,838,446 bytes (1,447 clock vectors), with
+52,731,648 dense slots verified by round-trip. GUI loads/checks it in a background
+service; requests only attach ready bytes. Missing/corrupt/late loads fail visibly
+without live building. Forced moves keep their bypass. Search/history/bound code,
+rules/core, accepted DLL/model and the paused 27-pair experiment remain unchanged.
+
+Linux final verification: 48,600 probes match the legacy oracle, 144 fixed-depth
+search comparisons match nodes/moves/scores/bounds/PV, 20 new TB3 tests pass and
+Node lifecycle passes 16/16. Load P95 8.956 ms, max 9.205 ms over 20 loads versus
+12,958.814 ms legacy initialization; OS cache uncontrolled. The reference native
+library is a separately compiled Linux .so, not the Windows accepted DLL.
+HTTP BEST/WIN 1s/2s smoke passes. Full discovery is 454, with 411 tests run:
+8 failures, 18 errors, 64 skips reproduce by name on unchanged `ceb25bc` (434
+discovered/391 run). This is not a Windows full-suite PASS attestation.
+
+See `docs/architecture/TB3_ARTIFACT_PHASE1B_TH.md`, `data/tb3_np80.manifest.json`
+and `benchmarks/results/tb3_phase1b/summary.json`. Next: Windows 454-test suite,
+accepted-DLL parity, startup <50 ms and production HTTP smoke at 1s/2s before
+merge/promotion. Earlier attachment during 4->3 is an availability change;
+preloaded-oracle fixed-depth parity alone is not a whole-GUI strength claim.

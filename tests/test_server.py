@@ -369,10 +369,11 @@ class ServerApiTests(unittest.TestCase):
         engine._distance._dtr_cache[("old",)] = 1
         fake_tablebase = Mock()
         fake_tablebase.max_pieces = 3
-        with patch("makhos.server.NativeTablebase", return_value=fake_tablebase):
+        with patch("makhos.tb3_service.CompactTablebase", return_value=fake_tablebase):
             thread = start_native_tablebase_warmup()
             self.assertIsNotNone(thread)
             thread.join(timeout=2)
+            self.assertTrue(ensure_native_tablebase_ready(engine))
 
         self.assertFalse(thread.is_alive())
         self.assertIs(engine.native_tablebase, fake_tablebase)
@@ -380,12 +381,13 @@ class ServerApiTests(unittest.TestCase):
         self.assertEqual(engine._distance._dtm_cache, {})
         self.assertEqual(engine._distance._dtr_cache, {})
 
-    def test_three_piece_tablebase_loads_on_demand_and_reuses_one_oracle(self) -> None:
+    def test_three_piece_tablebase_attaches_loaded_bytes_and_reuses_one_oracle(self) -> None:
         close_global_engine()
         engine = get_default_engine(threads=1, hash_mb=16)
         fake_tablebase = Mock()
         fake_tablebase.max_pieces = 3
-        with patch("makhos.server.NativeTablebase", return_value=fake_tablebase) as load:
+        with patch("makhos.tb3_service.CompactTablebase", return_value=fake_tablebase) as load:
+            start_native_tablebase_warmup().join(timeout=2)
             self.assertTrue(ensure_native_tablebase_ready(engine))
             self.assertTrue(ensure_native_tablebase_ready(engine))
 

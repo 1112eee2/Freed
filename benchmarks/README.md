@@ -18,6 +18,13 @@ first request measures engine setup. `worker_ready_ms` includes release loading,
 but is not the production launcher's browser-readiness measurement. Its runtime
 isolation is reported as `exclusive-batch-v1`.
 
+Since Phase 1B, TB3 loads independently at worker startup and the coordinator
+waits on `GET /api/readiness` before starting observations. `tb3_startup` binds
+the artifact SHA and actual load time. The first request still measures cold
+search-engine setup; it no longer includes TB3 construction. Historical Phase 1A
+reports retain their original meaning and must be compared using their recorded
+source commit. They are not rewritten by this change.
+
 The default suite contains TB3, TB4 with/without repetition, clocks 78/79, a draw
 defence, TB5, TB6 and a seven-piece native position. Both BEST and WIN are run.
 Use repeated `--case` arguments to select case IDs from `cases()`. This first
@@ -51,7 +58,7 @@ Successful `/api/bestmove` responses add `timings_ms`:
 | validation | Handler entry through settings/history validation and profiler setup |
 | engine_lock_wait | Waiting for the engine lock |
 | engine_setup | Engine/resource creation or reconfiguration after acquiring the lock |
-| tb3_prepare | TB3 eligibility check and on-demand preparation |
+| tb3_prepare | TB3 eligibility check and attachment of ready bytes (no IO/solve since Phase 1B) |
 | search | Engine.search call |
 | provenance | Runtime identity/resource snapshot |
 | response_prepare | Remaining result formatting, including optional profiler report |
@@ -63,8 +70,10 @@ search clock, and `pre_search_setup_ms` remains engine setup plus TB3 preparatio
 `request_overshoot_ms` compares the handler's complete measured interval to the
 requested search budget; this instrumentation does not change time allocation.
 
-`tb3_ready_before` and `tb3_load_attempted` distinguish cold preparation from
-reuse. `worker_count` counts configured native workers. `search_thread_capacity`
+`tb3_ready_before` and `tb3_load_attempted` retain the engine attachment semantics:
+the latter means an attempt to attach, not disk IO on the request thread.
+`tb3.ready` reports whether the independent artifact loader has finished.
+`worker_count` counts configured native workers. `search_thread_capacity`
 is the backend's capacity: zero for a forced move, one for Python, and the
 configured native pool for root split. It is not measured simultaneous worker
 utilization. Process CPU time / client wall time supplies a separate utilization
