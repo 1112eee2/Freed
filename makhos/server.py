@@ -33,7 +33,8 @@ from .core import (
     parse_position,
     terminal_status,
 )
-from .native_tablebase import NativeTablebase
+from .compact_tb3 import CompactTablebase
+from .tb3_service import TB3Service
 from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
 from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from .ranked_tablebase import RankedTablebase
@@ -51,8 +52,7 @@ GLOBAL_ENGINE_PROVENANCE: dict[str, object] | None = None
 GUI_NATIVE_LIBRARY_OVERRIDE: Path | None = None
 GUI_NNUE_MODEL_OVERRIDE: Path | None = None
 GUI_RELEASE: dict | None = None
-NATIVE_TABLEBASE_WARMUP_THREAD: threading.Thread | None = None
-NATIVE_TABLEBASE_WARMUP_ERROR: str | None = None
+TB3_SERVICE = TB3Service()
 ENGINE_SEARCH_LOCK = threading.RLock()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 WEB_DIR = str(PROJECT_ROOT / "web")
@@ -280,60 +280,11 @@ def _native_search_provenance(
 
 
 def start_native_tablebase_warmup() -> threading.Thread | None:
-    """Build the expensive three-piece oracle without blocking opening play."""
-
-    global NATIVE_TABLEBASE_WARMUP_THREAD, NATIVE_TABLEBASE_WARMUP_ERROR
-    with ENGINE_SEARCH_LOCK:
-        engine = GLOBAL_ENGINE
-        if engine is None:
-            raise RuntimeError("GUI engine must exist before tablebase warm-up")
-        if engine.native_tablebase is not None:
-            return None
-        current = NATIVE_TABLEBASE_WARMUP_THREAD
-        if current is not None and current.is_alive():
-            return current
-        native_dll = production_native_library()
-        if not native_dll.is_file():
-            NATIVE_TABLEBASE_WARMUP_ERROR = f"native DLL not found: {native_dll}"
-            return None
-        target_engine = engine
-        NATIVE_TABLEBASE_WARMUP_ERROR = None
-
-        def load_and_attach() -> None:
-            global NATIVE_TABLEBASE_WARMUP_THREAD, NATIVE_TABLEBASE_WARMUP_ERROR
-            tablebase = None
-            error = None
-            try:
-                tablebase = NativeTablebase(native_dll)
-            except Exception as caught:
-                error = str(caught)
-            with ENGINE_SEARCH_LOCK:
-                try:
-                    if error is not None:
-                        NATIVE_TABLEBASE_WARMUP_ERROR = error
-                        print(
-                            f"Notice: background three-piece tablebase warm-up failed: {error}",
-                            file=sys.stderr,
-                        )
-                    elif GLOBAL_ENGINE is target_engine and tablebase is not None:
-                        _attach_native_tablebase(target_engine, tablebase)
-                        tablebase = None
-                    NATIVE_TABLEBASE_WARMUP_THREAD = None
-                finally:
-                    if tablebase is not None:
-                        tablebase.close()
-
-        thread = threading.Thread(
-            target=load_and_attach,
-            name="makhos-tb3-warmup",
-            daemon=True,
-        )
-        NATIVE_TABLEBASE_WARMUP_THREAD = thread
-        thread.start()
-        return thread
+    """Load the immutable artifact without holding the engine/search lock."""
+    return TB3_SERVICE.start()
 
 
-def _attach_native_tablebase(engine: Engine, tablebase: NativeTablebase) -> None:
+def _attach_native_tablebase(engine: Engine, tablebase: CompactTablebase) -> None:
     """Attach one immutable TB3 oracle at a serialized engine boundary."""
 
     engine.native_tablebase = tablebase
@@ -343,23 +294,14 @@ def _attach_native_tablebase(engine: Engine, tablebase: NativeTablebase) -> None
 
 
 def ensure_native_tablebase_ready(engine: Engine) -> bool:
-    """Preserve exact three-piece strength without taxing opening search."""
-
-    global NATIVE_TABLEBASE_WARMUP_ERROR
+    """Attach already loaded bytes only; never wait, read or solve in a request."""
     if engine.native_tablebase is not None:
         return True
-    native_dll = production_native_library()
-    try:
-        tablebase = NativeTablebase(native_dll)
-    except Exception as error:
-        NATIVE_TABLEBASE_WARMUP_ERROR = str(error)
-        print(
-            f"Notice: on-demand three-piece tablebase load failed: {error}",
-            file=sys.stderr,
-        )
+    start_native_tablebase_warmup()
+    tablebase = TB3_SERVICE.ready()
+    if tablebase is None:
         return False
     _attach_native_tablebase(engine, tablebase)
-    NATIVE_TABLEBASE_WARMUP_ERROR = None
     return True
 
 
@@ -373,6 +315,7 @@ def close_global_engine() -> None:
         GLOBAL_ENGINE = None
         GLOBAL_ENGINE_CONFIG = None
         GLOBAL_ENGINE_PROVENANCE = None
+        TB3_SERVICE.close()
 
 
 class MakhosHTTPServer(ThreadingHTTPServer):
@@ -530,6 +473,13 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
+    def do_GET(self):
+        if urllib.parse.urlparse(self.path).path == "/api/readiness":
+            # This must remain available while a search or slow disk IO runs.
+            self.send_json({"tb3": TB3_SERVICE.status()})
+            return
+        super().do_GET()
+
     def do_POST(self):
         parsed_url = urllib.parse.urlparse(self.path)
         path = parsed_url.path
@@ -567,6 +517,7 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                         "threads": GLOBAL_ENGINE_CONFIG[0], "hash_mb": GLOBAL_ENGINE_CONFIG[1],
                         "hash_allocated_mb": getattr(native, "allocated_hash_mb", 0),
                         "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
+                        "tb3": TB3_SERVICE.status(),
                         "defaults": GUI_RELEASE["settings"] if GUI_RELEASE else {
                             "threads": DEFAULT_ENGINE_THREADS, "hash_mb_total": DEFAULT_ENGINE_HASH_MB},
                     })
@@ -834,11 +785,19 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 engine_ready = time.perf_counter()
                 tb3_ready_before = engine.native_tablebase is not None
                 tb3_load_attempted = False
-                if (sum(piece != EMPTY for piece in state.board) <= 3
+                if (sum(piece != EMPTY for piece in state.board) <= max((3, *engine.ranked_tablebases))
                         and len(legal_moves(state)) > 1):
-                    # Preserve on-demand loading; measure it separately from search.
+                    # Include 4..6 -> 3 transitions. A missing oracle must not
+                    # silently fall back to expensive/incomplete Python solving.
                     tb3_load_attempted = not tb3_ready_before
-                    ensure_native_tablebase_ready(engine)
+                    if not ensure_native_tablebase_ready(engine):
+                        status = TB3_SERVICE.status()
+                        self.send_json({
+                            "error": "TB3 ยังไม่พร้อม กรุณารอให้โหลดเสร็จแล้วกดเล่นต่อ; "
+                                     "ถ้าสถานะ error/timeout ให้ตรวจไฟล์แล้วเริ่มเซิร์ฟเวอร์ใหม่",
+                            "engine_unavailable": True, "tb3": status,
+                        }, 503)
+                        return
                 search_started = time.perf_counter()
                 result = engine.search(
                     state,
@@ -864,7 +823,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             resource_snapshot = {
                 "hash_allocated_mb": round(getattr(engine.native_search, "allocated_hash_mb", 0.0), 1),
                 "native_tablebase_ready": engine.native_tablebase is not None,
-                "native_tablebase_error": NATIVE_TABLEBASE_WARMUP_ERROR,
+                "native_tablebase_error": TB3_SERVICE.status()["error"],
+                "tb3": TB3_SERVICE.status(),
                 "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
                 "worker_count": worker_count,
                 "search_thread_capacity": (
@@ -992,9 +952,11 @@ def run_server(
                 settings = {} if GUI_RELEASE is None else GUI_RELEASE["settings"]
                 get_default_engine(threads=settings.get("threads", DEFAULT_ENGINE_THREADS),
                                    hash_mb=settings.get("hash_mb_total", DEFAULT_ENGINE_HASH_MB))
+                ensure_native_tablebase_ready(GLOBAL_ENGINE)
         except Exception as error:
             print(f"Notice: background engine warm-up failed: {error}", file=sys.stderr)
 
+    start_native_tablebase_warmup()
     threading.Thread(
         target=warm_engine,
         name="makhos-engine-warmup",

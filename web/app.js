@@ -736,6 +736,8 @@ async function triggerBotSearch() {
     if (generation !== gameGeneration) return;
 
     if (data.error || !data.bestmove) {
+      // Readiness errors leave a resumable game; never apply a fallback move.
+      if (data.tb3 && !data.tb3.ready) gameState.isPaused = true;
       throw new Error(data.error || 'Engine did not return a move');
     }
 
@@ -803,6 +805,7 @@ async function triggerBotSearch() {
         nnue_source_model_sha256: data.nnue_source_model_sha256,
         native_tablebase_ready: data.native_tablebase_ready,
         native_tablebase_error: data.native_tablebase_error,
+        tb3: data.tb3,
         runtime_isolation: data.runtime_isolation,
         native_error: data.native_error,
         evaluator_used: data.evaluator_used,
