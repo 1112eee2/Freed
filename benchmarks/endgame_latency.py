@@ -95,7 +95,9 @@ def worker(ready: Path) -> None:
     server.GUI_RELEASE = release
     httpd = server.MakhosHTTPServer(("127.0.0.1", 0), server.EngineRequestHandler)
     httpd.runtime_isolation = "exclusive-batch-v1"
-    # First request intentionally owns setup; no background warm-up in this harness.
+    # Search engine setup is still measured on the first request. TB3 moved to
+    # startup in Phase 1B: preload it separately, as the production server does.
+    server.start_native_tablebase_warmup()
     temporary = ready.with_suffix(".tmp")
     temporary.write_text(json.dumps({"url": f"http://127.0.0.1:{httpd.server_port}"}), encoding="utf-8")
     temporary.replace(ready)
@@ -131,6 +133,7 @@ def run(args) -> None:
                      "repeats": args.repeats, "profile_depth": args.profile_depth},
         "isolation": "exclusive-batch-v1", "strength_evidence": False,
         "cold_os_cache": "uncontrolled", "background_engine_warmup": False,
+        "tb3_startup_policy": "artifact-background-v1",
         "page_faults_include_soft_faults": True, "io_wait_separated": False,
         "profile_scope": "calling thread only; native helpers and native internals opaque",
         "observations": [],
@@ -155,6 +158,17 @@ def run(args) -> None:
                 time.sleep(0.05)
             report["worker_ready_ms"] = (time.perf_counter() - started) * 1000
             url = json.loads(ready.read_text(encoding="utf-8"))["url"]
+            tb3_started = time.perf_counter()
+            while True:
+                lease.checkpoint("during TB3 startup")
+                with urllib.request.urlopen(url + "/api/readiness", timeout=5) as response:
+                    tb3_status = json.load(response)["tb3"]
+                if tb3_status["ready"]:
+                    break
+                if tb3_status["state"] in ("error", "timeout") or time.perf_counter() - tb3_started > 5:
+                    raise RuntimeError(f"TB3 startup failed: {tb3_status}")
+                time.sleep(0.01)
+            report["tb3_startup"] = tb3_status
             observed_process = psutil.Process(process.pid)
 
             def observe(case, mode, kind, profiled=False, fixed_depth=False):
@@ -185,7 +199,7 @@ def run(args) -> None:
                     raise RuntimeError("fixed-depth observation reached its safety time cap")
                 return response
 
-            # Capture actual cold setup without profiler distortion, then attribute
+            # Capture cold search-engine setup (TB3 is already ready), then attribute
             # steady-state search in independent fixed-depth comparisons.
             observe(selected[0], "best", "cold_process", fixed_depth=True)
             for case in selected:
