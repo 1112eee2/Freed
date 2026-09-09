@@ -35,6 +35,7 @@ class EndgameLatencyTests(unittest.TestCase):
         def prepare_tb3(target):
             now[0] += 0.200
             target.native_tablebase = object()
+            return True
 
         def search(*args, **kwargs):
             self.assertEqual(kwargs["limits"].time_ms, 10)
@@ -93,6 +94,12 @@ class EndgameLatencyTests(unittest.TestCase):
     def test_profiled_http_search_preserves_repetition_results_at_fixed_depth(self):
         with RankedTablebase("build/tb4_np80.compact.bin") as tb4:
             engine = Engine(ranked_tablebase=tb4, exact_piece_limit=0)
+            # This test profiles search semantics, not the asynchronous startup.
+            from makhos.compact_tb3 import CompactTablebase
+            from makhos.server import _attach_native_tablebase
+            tb3 = CompactTablebase()
+            self.addCleanup(tb3.close)
+            _attach_native_tablebase(engine, tb3)
             for case in cases()[1:6]:
                 for mode in ("best", "win"):
                     observations = []

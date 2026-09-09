@@ -1,0 +1,42 @@
+{
+  "artifact_sha256": "f527f3484011b08792cfafaa942d3a1d9ffd6034158d46160a0144a179e8f20c",
+  "payload_sha256": "057b835e5fed60ce53e2a133cf56b180524b5c28d2ce709e5e2e0ced9f7c2673",
+  "file_bytes": 410452,
+  "loaded_bytes": 2838446,
+  "vectors": 1447,
+  "board_slots": 651008,
+  "roundtrip_clock_entries": 52731648,
+  "format": "thai-makhos-tb3-build-v1",
+  "status": "ROUNDTRIP_PASS",
+  "created_at": "2026-09-09T08:39:24.515977+00:00",
+  "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+  "source_commit": "ceb25bcccaa14510e5b84848871a24211673515b",
+  "source_sha256": {
+    "native/makhos_native.c": "7d14358aa5d45ee96b19f90810168eff7c73a620e23cfdb1bb71744f88466e8b",
+    "native/makhos_tb3_export.c": "a1bcda3d34e73d6a99e0abcb78a1467f1884bdcd4e5addaedd02f0f710812025",
+    "makhos/core.py": "03152e513bd360e6c2c97ecdf08dc58a290dca0ae6e28889ae70585a381292ab",
+    "RULESET.json": "77528addc0e08b17217346c511c7c4084bad4af48789955c3ec85ef76a64871f",
+    "makhos/compact_tb3.py": "fdeaef233ae86ca5118a984a85b96da54b85f68257c92d94f63d49541a13c68a",
+    "tools/build_tb3.py": "6fd05f64b5a89a68f65da3f4f27632b43b7560a95f1f9c59fb4f9f764fa73135"
+  },
+  "compiler_command": [
+    "gcc",
+    "-O3",
+    "-std=c17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-unused-function",
+    "-Wno-type-limits",
+    "/workspace/scratch/0fc74b904e26/ThaiMakhosEngine-phase1b/native/makhos_tb3_export.c",
+    "-o",
+    "/workspace/scratch/0fc74b904e26/ThaiMakhosEngine-phase1b/build/tb3-phase1b-v2/makhos_tb3_export"
+  ],
+  "compiler_version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "exporter_sha256": "bd0b6252d56f2d30107fbecec8d5cd2838feb0b72ee11c142c6cba0af8ebd333",
+  "no_progress_plies": 80,
+  "hash_power": 26,
+  "elapsed_sec": 41.31553991399994,
+  "independent_oracle_parity": "separate verification required",
+  "strength_evidence": false
+}
