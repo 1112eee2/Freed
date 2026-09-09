@@ -4184,3 +4184,16 @@ and `benchmarks/results/tb3_phase1b/summary.json`. Next: Windows 454-test suite,
 accepted-DLL parity, startup <50 ms and production HTTP smoke at 1s/2s before
 merge/promotion. Earlier attachment during 4->3 is an availability change;
 preloaded-oracle fixed-depth parity alone is not a whole-GUI strength claim.
+
+
+## 2026-09-09 — Phase 1C: native TB3 implementation milestone
+
+KEEP experimental/default-off; C1 remains incomplete pending TB4–6.
+Added native owned TB3 image, C17 versioned probe API and ctypes bridge.
+48,600 raw Python/native probes match (seed 20260909); full Windows suite
+461/461 PASS, zero skips/failures/errors in 150.154 s. Inventories unchanged;
+protected production opens zero; rules/core/accepted DLL hashes unchanged.
+Evidence: `benchmarks/results/endgame_c1_tb3/summary.json`; implementation
+notes: `docs/architecture/ENDGAME_NATIVE_C1_TB3_TH.md`. No GUI routing change
+or search performance/Elo claim. Next gate: native TB4–6 mapped readers with
+139-signature differential and opened-file provenance before C2 integration.
