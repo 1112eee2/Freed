@@ -117,3 +117,60 @@ Status terminal ต้องแสดงขั้นปัจจุบัน จ
 **ลำดับหลัก:** จบ Gate C → ขึ้น NNUE v1 อย่างปลอดภัย → วัด thread scaling/profile → แก้คอขวดที่คุ้มที่สุดทีละตัว → ยืนยัน Elo → พัฒนาข้อมูล/NNUE รุ่นถัดไป
 
 ไม่รวมการกลับไปทำ DFPN หรือ tablebase ใหญ่กว่า 6 ตัวในรอบนี้ และไม่รับประกันว่า 12 เธรดต้องเร็วหรือแรงกว่าเสมอ เป้าหมายคือรุ่นที่เล่นแข็งแกร่งขึ้นจริงโดยมีหลักฐานและย้อนกลับได้
+
+
+## 2026-09-09 — Phase 1C: native TB3 implementation milestone
+
+KEEP experimental/default-off; C1 remains incomplete pending TB4–6.
+Added native owned TB3 image, C17 versioned probe API and ctypes bridge.
+48,600 raw Python/native probes match (seed 20260909); full Windows suite
+461/461 PASS, zero skips/failures/errors in 150.154 s. Inventories unchanged;
+protected production opens zero; rules/core/accepted DLL hashes unchanged.
+Evidence: `benchmarks/results/endgame_c1_tb3/summary.json`; implementation
+notes: `docs/architecture/ENDGAME_NATIVE_C1_TB3_TH.md`. No GUI routing change
+or search performance/Elo claim. Next gate: native TB4–6 mapped readers with
+139-signature differential and opened-file provenance before C2 integration.
+
+
+## 2026-09-09/10 — Phase 1C C1 Part 2: compact native TB4–TB6 reader
+
+KEEP experimental/default-off; implementation ready for Windows acceptance,
+not C2/search integration or production promotion. Base `135aafb`. Added
+read-only Windows/POSIX mappings, exact typed completion ranking, canonical
+25/44/70-signature metadata checks, threshold WDL decoding, immutable worker
+references and a unified TB3–6 ctypes interface. No allocation/decompression
+per probe. Optional checksum/SHA/provenance checks use the actual mapping.
+
+Linux C1 regression: 20/20 tests pass in full discovery; 48,600 TB3 probes and
+360,288 TB4–6 probes match Python (139 signatures, both turns, all 81 clocks).
+Ranked fixtures are sparse synthetic layouts, not solved TB evidence. ASan/UBSan
+passes 100,000 probes, zero probe allocations, balanced allocation/free counts;
+LeakSanitizer is unavailable in this container. Full discovery: 474 found, 431
+run, 8 failures, 18 errors, 64 skips. Unchanged `135aafb`: 461 found, 418 run,
+same failure/error IDs and skip reasons. This is NOT a Windows full-suite PASS.
+Source/test inventories unchanged and protected-data opens zero in both runs.
+
+Existing provenance manifest has a historical generator-source mismatch and
+lacks compact TB4 binding; strict verification remains fail-closed. Local must
+resolve the original provenance chain, never rewrite hashes merely to pass.
+Rules/core, production DLL/model/pointer and paused 27-pair experiment preserved.
+Evidence: `benchmarks/results/endgame_c1_ranked/summary.json`. Windows commands
+and architecture: `docs/architecture/ENDGAME_NATIVE_C1_TB456_TH.md`. Next: isolated
+Windows build, complete suite and real TB4–6 parity/provenance before C2.
+
+
+## 2026-09-10 — Phase 1C C2: native 1T reference search
+
+KEEP experimental/default-off. Added a WDL-carrying native Negamax/PVS and
+quiescence session reusing unchanged native moves/HCE/repetition machinery.
+No scalar TT read/write, selective pruning, NNUE or GUI routing changes.
+Reference configuration matches Engine.search per-root score/WDL/PV and
+BEST/WIN choice at depth 1/2/4/6; repetition fixture at 1/2/3/8; all 139 ranked
+signatures covered at clock 79/depth 2 with both turns and repetition None/3.
+Cancellation publishes only complete layers; error and max-ply boundary gates
+pass. Windows full suite 485/485 PASS, zero skips/failures/errors, 163.304 s;
+source/test inventories unchanged, protected opens zero, invariant hashes intact.
+Evidence: `benchmarks/results/endgame_c2/summary.json` and
+`docs/architecture/ENDGAME_NATIVE_C2_TH.md`. No latency/Elo promotion claim.
+Next: C2 review and fixed-depth/fixed-time cost measurements before C3
+routing; production NNUE and root split require separate gates.

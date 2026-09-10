@@ -109,6 +109,17 @@ class CompactTablebase:
     def close(self) -> None:
         self._data = None
 
+    def export_native_image(self) -> tuple[bytes, int, int]:
+        """Return verified immutable payload, clock horizon and vector count.
+
+        Native consumers must copy the image during preparation, never retain
+        a borrowed Python pointer. This snapshot remains valid after close().
+        """
+        data = self._data
+        if data is None:
+            raise RuntimeError("compact TB3 instance is closed")
+        return data, self.no_progress_plies, self.vector_count
+
     def __enter__(self):
         return self
 
