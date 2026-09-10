@@ -617,6 +617,7 @@ class Engine:
             or not self.native_endgame_enabled
             or self.native_endgame_search is None
             or proof_strategy_used
+            or (len(legal_moves(state)) == 1 and self.enable_single_move_pruning)
         ):
             return False
         if (
