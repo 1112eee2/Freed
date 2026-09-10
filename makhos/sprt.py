@@ -433,6 +433,8 @@ def run_sprt_match(
                 )
             finally:
                 for engine in (dev_engine, master_engine):
+                    if getattr(engine, "native_endgame_search", None) is not None:
+                        engine.native_endgame_search.close()
                     if engine.native_search is not None:
                         engine.native_search.close()
 

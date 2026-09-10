@@ -357,23 +357,32 @@ class ParallelNativeEndgameSearch:
         with self._lock:
             if self._closed:
                 raise RuntimeError('parallel native endgame search is closed')
+            started = time.perf_counter()
+            deadline = started + (time_ms / 1000.0) if time_ms > 0 else None
+
             if self.threads == 1:
                 return self._workers[0].search(state, depth=depth, history=history, rules=rules,
                                                time_ms=time_ms, node_limit=node_limit)
+            first_layer_time_ms = (
+                max(1, int((deadline - time.perf_counter()) * 1000.0))
+                if deadline is not None else 0
+            )
             first_layer = self._workers[0].search(state, depth=1, history=history, rules=rules,
-                                                  time_ms=0, node_limit=0)
+                                                  time_ms=first_layer_time_ms, node_limit=0)
             if first_layer.terminal_reason:
                 return first_layer
             root_count = len(first_layer.roots)
             if root_count <= 1:
+                rem_ms = (
+                    max(1, int((deadline - time.perf_counter()) * 1000.0))
+                    if deadline is not None else 0
+                )
                 return self._workers[0].search(state, depth=depth, history=history, rules=rules,
-                                               time_ms=time_ms, node_limit=node_limit)
+                                               time_ms=rem_ms, node_limit=node_limit)
             if depth == 1:
                 return first_layer
 
             active_threads = min(self.threads, root_count)
-            started = time.perf_counter()
-            deadline = started + (time_ms / 1000.0) if time_ms > 0 else None
 
             if time_ms == 0:
                 with ThreadPoolExecutor(max_workers=active_threads) as executor:
