@@ -64,7 +64,7 @@ GAME_RECORDS_DIR = PROJECT_ROOT / "saved_games"
 DEFAULT_ENGINE_THREADS = 1
 DEFAULT_ENGINE_HASH_MB = 64
 GUI_SEARCH_DEPTH = 64
-DEFAULT_NATIVE_ENDGAME_ENABLED = False
+DEFAULT_NATIVE_ENDGAME_ENABLED = True
 DEFAULT_NATIVE_ENDGAME_C2_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c2" / (
     "makhos_endgame_search" + (".dll" if sys.platform == "win32" else ".so")
 )
@@ -129,7 +129,7 @@ def configure_gui_native_search(
     native_library: str | Path | None = None,
     nnue_model: str | Path | None = None,
     *,
-    native_endgame: bool = False,
+    native_endgame: bool = DEFAULT_NATIVE_ENDGAME_ENABLED,
     native_endgame_library: str | Path | None = None,
 ) -> None:
     """Select explicit GUI candidates without changing the production default.
@@ -988,6 +988,7 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 )
                 native_endgame_position = (
                     engine.native_endgame_enabled
+                    and len(legal_moves(state)) > 1
                     and is_native_endgame_position(state)
                 )
                 if regular_endgame or native_endgame_position:
@@ -1204,22 +1205,26 @@ if __name__ == "__main__":
     parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
     parser.add_argument(
         "--native-endgame",
-        action="store_true",
-        help="opt in to the isolated C3 native endgame search candidate",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="toggle native endgame search (default: enabled)",
     )
     parser.add_argument(
         "--native-endgame-library",
-        help="isolated C2/C3 endgame DLL (implies --native-endgame)",
+        help="isolated C2/C3/C4 endgame DLL",
     )
     parser.add_argument("--release-pointer", help="GUI release selection JSON")
     parser.add_argument("--release-profile", choices=["nnue", "hce"])
     args = parser.parse_args()
+    native_endgame = args.native_endgame
+    if native_endgame is None and args.native_endgame_library is not None:
+        native_endgame = True
     run_server(
         port=args.port,
         open_browser=not args.no_browser,
         native_library=args.native_library,
         nnue_model=args.nnue_model,
-        native_endgame=args.native_endgame or args.native_endgame_library is not None,
+        native_endgame=DEFAULT_NATIVE_ENDGAME_ENABLED if native_endgame is None else native_endgame,
         native_endgame_library=args.native_endgame_library,
         release_pointer=args.release_pointer,
         release_profile=args.release_profile,
