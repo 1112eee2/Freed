@@ -190,6 +190,10 @@ class Engine:
         enable_single_move_pruning: bool = True,
         eval_fn: Callable[[State, int], int] | None = None,
         native_search: NativeSearch | None = None,
+        native_endgame_search: object | None = None,
+        native_endgame_enabled: bool = False,
+        enable_native_endgame: bool | None = None,
+        native_endgame: bool | None = None,
         reference_search: bool = False,
     ) -> None:
         if exact_piece_limit < 0:
@@ -201,6 +205,21 @@ class Engine:
         self.enable_single_move_pruning = enable_single_move_pruning and not reference_search
         self.eval_fn = eval_fn or evaluate_handcrafted
         self.native_search = native_search
+        aliases = [flag for flag in (enable_native_endgame, native_endgame) if flag is not None]
+        if aliases and any(bool(flag) != bool(aliases[0]) for flag in aliases):
+            raise ValueError("conflicting native endgame capability flags")
+        if aliases:
+            if native_endgame_enabled and bool(aliases[0]) != bool(native_endgame_enabled):
+                raise ValueError("conflicting native endgame capability flags")
+            native_endgame_enabled = bool(aliases[0])
+        self.native_endgame_search = native_endgame_search
+        self.native_endgame_enabled = bool(native_endgame_enabled)
+        # Server-owned candidate resources are attached after TB3 warm-up.
+        # Keeping these slots on every Engine makes cleanup and provenance
+        # deterministic for both real and test backends.
+        self.native_endgame_tablebase = None
+        self.native_endgame_library = None
+        self.native_endgame_evaluator = None
         self._native_eval_compatible = eval_fn is None
         self.last_native_error: str | None = None
         # Exposed to the GUI so exported games identify the backend that
@@ -264,6 +283,10 @@ class Engine:
         """Clear transposition table, heuristics, and diagnostics at game boundary."""
         if self.native_search is not None:
             self.native_search.clear()
+        if self.native_endgame_search is not None:
+            clear = getattr(self.native_endgame_search, "clear", None)
+            if clear is not None:
+                clear()
         self._tt.clear()
         self._move_hints.clear()
         self._exact_failed.clear()
@@ -323,6 +346,36 @@ class Engine:
             ):
                 raise ValueError("verified proof strategy returned invalid moves")
             root_moves = strategy_moves
+
+        # C3 is an explicit capability gate.  It runs before the forced-move
+        # shortcut so a transition root still gets a native proof layer, while
+        # the resulting roots are handed back to the unchanged Python policy.
+        if self._can_use_native_endgame(
+            state,
+            proof_strategy_used=proof_strategy_used,
+        ):
+            try:
+                native_result = self.native_endgame_search.search(
+                    state,
+                    depth=limits.depth,
+                    time_ms=0 if limits.time_ms is None else limits.time_ms,
+                    rules=self.rules,
+                    history=counts,
+                )
+                return self._native_endgame_result(
+                    state,
+                    root_moves,
+                    native_result,
+                    mode,
+                    limits,
+                    start,
+                )
+            except (OSError, RuntimeError, ValueError) as error:
+                # Candidate DLLs are isolated from production.  A failed or
+                # unavailable C3 run falls back to the verified Python path;
+                # the error remains visible to GUI provenance.
+                self.last_native_error = str(error)
+                self.last_search_backend = "python-fallback"
 
         if len(root_moves) == 1 and not proof_strategy_used and self.enable_single_move_pruning:
             self.last_search_backend = "forced"
@@ -550,6 +603,101 @@ class Engine:
                 else native.depth
             ),
             selective_root=native.selective_root,
+        )
+
+    def _can_use_native_endgame(
+        self,
+        state: State,
+        *,
+        proof_strategy_used: bool,
+    ) -> bool:
+        """Check the additive C3 capability without touching normal roots."""
+        if (
+            self.reference_search
+            or not self.native_endgame_enabled
+            or self.native_endgame_search is None
+            or proof_strategy_used
+        ):
+            return False
+        if (
+            getattr(self.native_search, "nnue_enabled", False)
+            and getattr(self.native_endgame_search, "evaluator", "hce") != "nnue"
+        ):
+            # Never silently downgrade a production NNUE profile to an HCE
+            # endgame candidate.  The caller can inspect this diagnostic and
+            # decide whether to keep the Python fallback or disable C3.
+            self.last_native_error = (
+                "NNUE production profile requires an NNUE native endgame candidate"
+            )
+            return False
+        supports = getattr(self.native_endgame_search, "supports_position", None)
+        if callable(supports):
+            try:
+                return bool(supports(state))
+            except (OSError, RuntimeError, ValueError) as error:
+                self.last_native_error = str(error)
+                return False
+        # Small fake/adaptor backends used by integrations may expose only
+        # search().  Keep their fallback gate bounded to the documented C3
+        # endgame boundary and never inspect a normal midgame tree.
+        return sum(piece != EMPTY for piece in state.board) <= 6
+
+    def _native_endgame_result(
+        self,
+        state: State,
+        root_moves: tuple[Move, ...],
+        native,
+        mode: Mode,
+        limits: SearchLimits,
+        start: float,
+    ) -> SearchResult:
+        if getattr(native, "terminal_reason", 0):
+            raise RuntimeError("native endgame returned a terminal root")
+        if getattr(native, "status", 0) not in (0, 2):
+            raise RuntimeError("native endgame returned an invalid status")
+        if getattr(native, "depth", 0) < 1 or not getattr(native, "roots", ()):
+            raise RuntimeError("native endgame returned no completed root layer")
+
+        # Validate the native PV before allowing it into the GUI or policy.
+        legal_root_moves = set(root_moves)
+        for root in native.roots:
+            if not root.pv or root.pv[0] not in legal_root_moves:
+                raise RuntimeError("native endgame returned an illegal root move")
+            cursor = state
+            for move in root.pv:
+                if move not in legal_moves(cursor):
+                    raise RuntimeError("native endgame returned an illegal PV")
+                cursor = apply_move(cursor, move, validate=False)
+
+        convert = getattr(native, "candidates", None)
+        if not callable(convert):
+            raise RuntimeError("native endgame result has no root-policy adapter")
+        candidates = tuple(convert(self, state, mode, limits.win_margin))
+        if not candidates:
+            raise RuntimeError("native endgame result has no candidates")
+        chosen = self._choose(candidates, mode, limits.win_margin)
+        self.last_search_backend = "native-endgame"
+        self.last_native_error = None
+        self.nodes = int(getattr(native, "nodes", 0))
+        self.tablebase_hits = sum(getattr(native, "tb_hits", ()))
+        elapsed_ms = round((time.perf_counter() - start) * 1000)
+        return SearchResult(
+            chosen.move,
+            chosen.score,
+            int(native.depth),
+            self.nodes,
+            elapsed_ms,
+            chosen.pv,
+            mode,
+            tuple(sorted(candidates, key=lambda item: (-item.score, item.move.notation))),
+            self.tablebase_hits,
+            chosen.bound,
+            chosen.policy_value,
+            chosen.distance,
+            False,
+            (),
+            common_depth=int(native.depth),
+            selective_root=False,
         )
 
     def _check_time(self) -> None:

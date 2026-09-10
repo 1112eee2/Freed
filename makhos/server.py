@@ -36,6 +36,8 @@ from .core import (
 from .compact_tb3 import CompactTablebase
 from .tb3_service import TB3Service
 from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
+from .native_endgame import NativeEndgameTablebase
+from .native_endgame_search import NativeEndgameSearch
 from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from .ranked_tablebase import RankedTablebase
 from .search import Engine, Mode, SearchLimits
@@ -47,10 +49,12 @@ from .search_profile import RequestProfiler
 
 # Global engine instance shared by HTTP requests
 GLOBAL_ENGINE: Engine | None = None
-GLOBAL_ENGINE_CONFIG: tuple[int, int, str, str, str | None] | None = None
+GLOBAL_ENGINE_CONFIG: tuple[int, int, str, str, str | None, bool, str | None] | None = None
 GLOBAL_ENGINE_PROVENANCE: dict[str, object] | None = None
 GUI_NATIVE_LIBRARY_OVERRIDE: Path | None = None
 GUI_NNUE_MODEL_OVERRIDE: Path | None = None
+GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE: bool | None = None
+GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE: Path | None = None
 GUI_RELEASE: dict | None = None
 TB3_SERVICE = TB3Service()
 ENGINE_SEARCH_LOCK = threading.RLock()
@@ -60,6 +64,13 @@ GAME_RECORDS_DIR = PROJECT_ROOT / "saved_games"
 DEFAULT_ENGINE_THREADS = 1
 DEFAULT_ENGINE_HASH_MB = 64
 GUI_SEARCH_DEPTH = 64
+DEFAULT_NATIVE_ENDGAME_ENABLED = False
+DEFAULT_NATIVE_ENDGAME_C2_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c2" / (
+    "makhos_endgame_search" + (".dll" if sys.platform == "win32" else ".so")
+)
+DEFAULT_NATIVE_ENDGAME_C3_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c3" / (
+    "makhos_endgame_search_nnue" + (".dll" if sys.platform == "win32" else ".so")
+)
 WEB_ASSET_VERSION = "20260909-1"
 EXTERNAL_NO_REPETITION_RULES = Rules(
     name="external-no-repetition",
@@ -114,18 +125,36 @@ def production_native_library(project_root: Path = PROJECT_ROOT) -> Path:
 def configure_gui_native_search(
     native_library: str | Path | None = None,
     nnue_model: str | Path | None = None,
+    *,
+    native_endgame: bool = False,
+    native_endgame_library: str | Path | None = None,
 ) -> None:
-    """Select an explicit GUI candidate without changing the production default."""
+    """Select explicit GUI candidates without changing the production default.
 
-    global GUI_NATIVE_LIBRARY_OVERRIDE, GUI_NNUE_MODEL_OVERRIDE, GUI_RELEASE
+    The endgame capability is deliberately default-off.  Its DLL is a
+    separate artifact and is validated lazily after TB3 is warm, so startup
+    never maps multi-gigabyte TB4--TB6 files on the ordinary production path.
+    """
+
+    global GUI_NATIVE_LIBRARY_OVERRIDE, GUI_NNUE_MODEL_OVERRIDE
+    global GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE, GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE
+    global GUI_RELEASE
     if native_library is None and nnue_model is not None:
         raise ValueError("--nnue-model requires an explicit --native-library")
     library = None if native_library is None else Path(native_library).resolve()
     model = None if nnue_model is None else Path(nnue_model).resolve()
+    endgame_library = (
+        None if native_endgame_library is None
+        else Path(native_endgame_library).resolve()
+    )
+    if endgame_library is not None:
+        native_endgame = True
     if library is not None and not library.is_file():
         raise FileNotFoundError(f"GUI native library not found: {library}")
     if model is not None and not model.is_file():
         raise FileNotFoundError(f"GUI NNUE model not found: {model}")
+    if endgame_library is not None and not endgame_library.is_file():
+        raise FileNotFoundError(f"GUI native endgame library not found: {endgame_library}")
     if library is not None:
         with NativeSearch(
             library,
@@ -137,11 +166,20 @@ def configure_gui_native_search(
     close_global_engine()
     GUI_NATIVE_LIBRARY_OVERRIDE = library
     GUI_NNUE_MODEL_OVERRIDE = model
+    GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE = bool(native_endgame)
+    GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE = endgame_library
     GUI_RELEASE = None
 
 
 def configured_gui_native_library() -> Path:
     return GUI_NATIVE_LIBRARY_OVERRIDE or production_native_library()
+
+
+def configured_gui_native_endgame_library(*, nnue: bool = False) -> Path:
+    """Resolve the isolated C2/C3 library without inferring production state."""
+    if GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE is not None:
+        return GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE
+    return DEFAULT_NATIVE_ENDGAME_C3_LIBRARY if nnue else DEFAULT_NATIVE_ENDGAME_C2_LIBRARY
 
 
 def _sha256_file(path: Path) -> str:
@@ -166,12 +204,15 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
         }
 
     backend = engine.last_search_backend
+    endgame = getattr(engine, "native_endgame_search", None)
     if backend == "native":
         backend = (
             "native-root-split"
             if isinstance(native_search, ParallelNativeSearch)
             else "native-single"
         )
+    elif backend == "native-endgame":
+        backend = "native-endgame"
     elif backend == "python-fallback":
         backend = "python-fallback"
     elif backend == "forced":
@@ -185,10 +226,13 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     configured["native_error"] = engine.last_native_error or native_load_error
     configured["release_id"] = None if GUI_RELEASE is None else GUI_RELEASE["release_id"]
     configured["release_manifest_sha256"] = None if GUI_RELEASE is None else GUI_RELEASE["manifest_sha256"]
-    configured["evaluator_used"] = (
-        "nnue" if backend.startswith("native-") and configured.get("nnue_enabled")
-        else "hce" if backend.startswith("native-") else backend
-    )
+    if backend == "native-endgame":
+        configured["evaluator_used"] = getattr(endgame, "evaluator", "hce")
+    else:
+        configured["evaluator_used"] = (
+            "nnue" if backend.startswith("native-") and configured.get("nnue_enabled")
+            else "hce" if backend.startswith("native-") else backend
+        )
     configured.setdefault("native_library", None)
     configured.setdefault("native_library_sha256", None)
     configured.setdefault("native_search_abi", None)
@@ -197,10 +241,33 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     configured.setdefault("nnue_model", None)
     configured.setdefault("nnue_model_sha256", None)
     configured.setdefault("nnue_source_model_sha256", None)
+    configured["native_endgame_enabled"] = bool(
+        getattr(engine, "native_endgame_enabled", False)
+    )
+    configured["native_endgame_ready"] = endgame is not None
+    configured["native_endgame_evaluator"] = (
+        None if endgame is None else getattr(endgame, "evaluator", "hce")
+    )
+    endgame_enabled = bool(getattr(engine, "native_endgame_enabled", False))
+    endgame_library = getattr(engine, "native_endgame_library", None)
+    if endgame_library is None and endgame_enabled:
+        endgame_library = configured_gui_native_endgame_library(
+            nnue=bool(getattr(native_search, "nnue_enabled", False))
+        )
+    configured["native_endgame_library"] = (
+        None if endgame_library is None else str(Path(endgame_library).resolve())
+    )
+    configured["native_endgame_proof_precedence"] = "terminal>tablebase>nnue"
     return configured
 
 
 def _close_engine_resources(engine: Engine) -> None:
+    if getattr(engine, "native_endgame_search", None) is not None:
+        engine.native_endgame_search.close()
+        engine.native_endgame_search = None
+    if getattr(engine, "native_endgame_tablebase", None) is not None:
+        engine.native_endgame_tablebase.close()
+        engine.native_endgame_tablebase = None
     if engine.native_search is not None:
         engine.native_search.close()
     for tablebase in engine.ranked_tablebases.values():
@@ -305,6 +372,75 @@ def ensure_native_tablebase_ready(engine: Engine) -> bool:
     return True
 
 
+def ensure_native_endgame_ready(engine: Engine) -> bool:
+    """Create the isolated C3 session after immutable TB bytes are available.
+
+    This function is called only for an explicitly enabled capability and an
+    endgame/transition root.  It never replaces the Python TB oracle or the
+    production native search resource; failures are recorded on the Engine so
+    the request can fall back visibly.
+    """
+    if not getattr(engine, "native_endgame_enabled", False):
+        return False
+    if getattr(engine, "native_endgame_search", None) is not None:
+        return True
+    if engine.native_tablebase is None and not ensure_native_tablebase_ready(engine):
+        engine.last_native_error = "TB3 is not ready for native endgame search"
+        return False
+    nnue = bool(getattr(engine.native_search, "nnue_enabled", False))
+    library = Path(
+        getattr(engine, "native_endgame_library", None)
+        or configured_gui_native_endgame_library(nnue=nnue)
+    ).resolve()
+    if not library.is_file():
+        engine.last_native_error = f"native endgame library unavailable: {library}"
+        return False
+    ranked_paths = tuple(
+        tablebase.path
+        for pieces, tablebase in sorted(engine.ranked_tablebases.items())
+        if pieces in (4, 5, 6) and Path(tablebase.path).is_file()
+    )
+    owner = None
+    try:
+        owner = NativeEndgameTablebase(
+            engine.native_tablebase,
+            library=library,
+            ranked_paths=ranked_paths,
+            no_progress_plies=engine.rules.no_progress_plies,
+        )
+        search = NativeEndgameSearch(
+            owner,
+            nnue_model=(
+                getattr(engine.native_search, "nnue_model_path", None)
+                if nnue else None
+            ),
+        )
+    except Exception as error:
+        if owner is not None:
+            owner.close()
+        engine.last_native_error = str(error)
+        return False
+    engine.native_endgame_tablebase = owner
+    engine.native_endgame_search = search
+    engine.native_endgame_library = library
+    engine.native_endgame_evaluator = search.evaluator
+    engine.last_native_error = None
+    return True
+
+
+def is_native_endgame_position(state) -> bool:
+    """Cheap C3 routing predicate, including the seven-piece capture edge."""
+    pieces = sum(piece != EMPTY for piece in state.board)
+    if pieces <= 6:
+        return True
+    if pieces != 7:
+        return False
+    return any(
+        sum(piece != EMPTY for piece in apply_move(state, move, validate=False).board) <= 6
+        for move in legal_moves(state)
+    )
+
+
 def close_global_engine() -> None:
     """Close GUI-owned native search and tablebase resources."""
 
@@ -339,6 +475,8 @@ def get_default_engine(
     threads: int = DEFAULT_ENGINE_THREADS,
     hash_mb: int = DEFAULT_ENGINE_HASH_MB,
     rules_profile: str = "project",
+    native_endgame: bool | None = None,
+    native_endgame_library: str | Path | None = None,
 ) -> Engine:
     """Return the GUI engine configured with real Threads and total Hash."""
 
@@ -352,6 +490,21 @@ def get_default_engine(
     rules = RULE_PROFILES[rules_profile]
     native_dll = configured_gui_native_library()
     nnue_model = GUI_NNUE_MODEL_OVERRIDE
+    configured_endgame = GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE
+    endgame_enabled = (
+        DEFAULT_NATIVE_ENDGAME_ENABLED
+        if native_endgame is None and configured_endgame is None
+        else configured_endgame
+        if native_endgame is None
+        else bool(native_endgame)
+    )
+    if native_endgame_library is not None:
+        endgame_enabled = True
+    endgame_library = (
+        None
+        if native_endgame_library is None
+        else str(Path(native_endgame_library).resolve())
+    )
     if nnue_model is not None and not native_dll.is_file():
         raise RuntimeError(f"NNUE library unavailable: {native_dll}")
     config = (
@@ -360,6 +513,8 @@ def get_default_engine(
         rules_profile,
         str(native_dll.resolve()),
         None if nnue_model is None else str(nnue_model.resolve()),
+        bool(endgame_enabled),
+        endgame_library,
     )
     if GLOBAL_ENGINE is None:
         ranked = []
@@ -398,7 +553,13 @@ def get_default_engine(
             ranked_tablebases=ranked,
             native_tablebase=None,
             native_search=native_search,
+            native_endgame_enabled=endgame_enabled,
         )
+        GLOBAL_ENGINE.native_endgame_library = (
+            None if endgame_library is None else Path(endgame_library)
+        )
+        GLOBAL_ENGINE.native_endgame_tablebase = None
+        GLOBAL_ENGINE.native_endgame_evaluator = None
         GLOBAL_ENGINE_CONFIG = config
         GLOBAL_ENGINE_PROVENANCE = _native_search_provenance(
             native_dll,
@@ -408,13 +569,8 @@ def get_default_engine(
         if native_search_error is not None:
             GLOBAL_ENGINE.last_native_error = native_search_error
     elif GLOBAL_ENGINE_CONFIG != config:
-        (
-            old_threads,
-            old_hash_mb,
-            old_rules_profile,
-            old_native_dll,
-            old_nnue_model,
-        ) = GLOBAL_ENGINE_CONFIG
+        old_threads, old_hash_mb, old_rules_profile, old_native_dll, old_nnue_model, \
+            old_endgame_enabled, old_endgame_library = GLOBAL_ENGINE_CONFIG
         native_search_error = None
         if (
             threads,
@@ -443,6 +599,21 @@ def get_default_engine(
             GLOBAL_ENGINE.native_search = replacement
             if previous is not None:
                 previous.close()
+        if (
+            bool(endgame_enabled) != old_endgame_enabled
+            or endgame_library != old_endgame_library
+            or (old_endgame_enabled and old_nnue_model != config[4])
+        ):
+            if getattr(GLOBAL_ENGINE, "native_endgame_search", None) is not None:
+                GLOBAL_ENGINE.native_endgame_search.close()
+            if getattr(GLOBAL_ENGINE, "native_endgame_tablebase", None) is not None:
+                GLOBAL_ENGINE.native_endgame_tablebase.close()
+            GLOBAL_ENGINE.native_endgame_search = None
+            GLOBAL_ENGINE.native_endgame_tablebase = None
+            GLOBAL_ENGINE.native_endgame_library = (
+                None if endgame_library is None else Path(endgame_library)
+            )
+            GLOBAL_ENGINE.native_endgame_evaluator = None
         elif old_rules_profile != rules_profile and GLOBAL_ENGINE.native_search is not None:
             # Persistent TT values are not portable between repetition rules.
             GLOBAL_ENGINE.native_search.clear()
@@ -723,6 +894,9 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             hash_mb = int(data.get("hash_mb", DEFAULT_ENGINE_HASH_MB))
             mode = Mode(data.get("mode", "win"))
             rules_profile, rules = parse_rules_profile(data)
+            native_endgame_request = data.get("native_endgame")
+            if native_endgame_request is not None and not isinstance(native_endgame_request, bool):
+                raise ValueError("native_endgame must be a boolean")
         except (TypeError, ValueError) as error:
             self.send_json({"error": f"invalid engine setting: {error}"}, 400)
             return
@@ -781,12 +955,21 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                     threads=threads,
                     hash_mb=hash_mb,
                     rules_profile=rules_profile,
+                    native_endgame=native_endgame_request,
                 )
                 engine_ready = time.perf_counter()
                 tb3_ready_before = engine.native_tablebase is not None
                 tb3_load_attempted = False
-                if (sum(piece != EMPTY for piece in state.board) <= max((3, *engine.ranked_tablebases))
-                        and len(legal_moves(state)) > 1):
+                regular_endgame = (
+                    sum(piece != EMPTY for piece in state.board)
+                    <= max((3, *engine.ranked_tablebases))
+                    and len(legal_moves(state)) > 1
+                )
+                native_endgame_position = (
+                    engine.native_endgame_enabled
+                    and is_native_endgame_position(state)
+                )
+                if regular_endgame or native_endgame_position:
                     # Include 4..6 -> 3 transitions. A missing oracle must not
                     # silently fall back to expensive/incomplete Python solving.
                     tb3_load_attempted = not tb3_ready_before
@@ -798,6 +981,11 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                             "engine_unavailable": True, "tb3": status,
                         }, 503)
                         return
+                if native_endgame_position:
+                    # The candidate is created only after TB3 is ready.  If it
+                    # is unavailable, Engine.search performs a visible Python
+                    # fallback and provenance reports the reason.
+                    ensure_native_endgame_ready(engine)
                 search_started = time.perf_counter()
                 result = engine.search(
                     state,
@@ -827,9 +1015,12 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 "tb3": TB3_SERVICE.status(),
                 "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
                 "worker_count": worker_count,
+                "native_endgame_ready": bool(provenance.get("native_endgame_ready", False)),
+                "native_endgame_evaluator": provenance.get("native_endgame_evaluator"),
                 "search_thread_capacity": (
-                    worker_count if provenance["search_backend"] == "native-root-split"
-                    else 0 if provenance["search_backend"] == "forced" else 1
+                    1 if provenance.get("search_backend") == "native-endgame"
+                    else worker_count if provenance.get("search_backend") == "native-root-split"
+                    else 0 if provenance.get("search_backend") == "forced" else 1
                 ),
             }
             provenance_finished = time.perf_counter()
@@ -900,6 +1091,8 @@ def run_server(
     *,
     native_library: str | Path | None = None,
     nnue_model: str | Path | None = None,
+    native_endgame: bool = DEFAULT_NATIVE_ENDGAME_ENABLED,
+    native_endgame_library: str | Path | None = None,
     release_pointer: str | Path | None = None,
     release_profile: str | None = None,
 ) -> None:
@@ -912,7 +1105,12 @@ def run_server(
                                profile=release_profile)
         if release is not None:
             native_library, nnue_model = release["native_library"], release["nnue_model"]
-    configure_gui_native_search(native_library, nnue_model)
+    configure_gui_native_search(
+        native_library,
+        nnue_model,
+        native_endgame=native_endgame,
+        native_endgame_library=native_endgame_library,
+    )
     GUI_RELEASE = release
     if release is not None:
         with NativeSearch(native_library, hash_power=12, persistent=True, nnue_model=nnue_model) as probe:
@@ -982,6 +1180,15 @@ if __name__ == "__main__":
     parser.add_argument("--no-browser", action="store_true", help="Do not open browser automatically")
     parser.add_argument("--native-library", help="explicit opt-in native-search DLL")
     parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
+    parser.add_argument(
+        "--native-endgame",
+        action="store_true",
+        help="opt in to the isolated C3 native endgame search candidate",
+    )
+    parser.add_argument(
+        "--native-endgame-library",
+        help="isolated C2/C3 endgame DLL (implies --native-endgame)",
+    )
     parser.add_argument("--release-pointer", help="GUI release selection JSON")
     parser.add_argument("--release-profile", choices=["nnue", "hce"])
     args = parser.parse_args()
@@ -990,6 +1197,8 @@ if __name__ == "__main__":
         open_browser=not args.no_browser,
         native_library=args.native_library,
         nnue_model=args.nnue_model,
+        native_endgame=args.native_endgame or args.native_endgame_library is not None,
+        native_endgame_library=args.native_endgame_library,
         release_pointer=args.release_pointer,
         release_profile=args.release_profile,
     )
