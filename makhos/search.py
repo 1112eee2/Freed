@@ -190,11 +190,15 @@ class Engine:
         enable_single_move_pruning: bool = True,
         eval_fn: Callable[[State, int], int] | None = None,
         native_search: NativeSearch | None = None,
+        reference_search: bool = False,
     ) -> None:
         if exact_piece_limit < 0:
             raise ValueError("exact_piece_limit cannot be negative")
         self.rules = rules
-        self.enable_single_move_pruning = enable_single_move_pruning
+        # C2 differential configuration: no selective search or scalar TT.
+        # Production remains unchanged unless explicitly requested.
+        self.reference_search = reference_search
+        self.enable_single_move_pruning = enable_single_move_pruning and not reference_search
         self.eval_fn = eval_fn or evaluate_handcrafted
         self.native_search = native_search
         self._native_eval_compatible = eval_fn is None
@@ -473,6 +477,7 @@ class Engine:
         proof_strategy_used: bool,
     ) -> bool:
         if (
+            self.reference_search or
             self.native_search is None or
             not self._native_eval_compatible or
             proof_strategy_used
@@ -676,6 +681,7 @@ class Engine:
         )
         if (
             tt_entry is not None
+            and not self.reference_search
             and not in_repetition_endgame
             and tt_entry.depth >= depth
             and counts[state.position_key] <= 1
@@ -697,7 +703,8 @@ class Engine:
 
         # Null Move Pruning (NMP)
         if (
-            depth >= 3
+            not self.reference_search
+            and depth >= 3
             and ply_from_root > 0
             and not moves[0].is_capture
             and sum(p != EMPTY for p in state.board) > 6
@@ -744,7 +751,7 @@ class Engine:
                     score = -score
                 else:
                     is_quiet = not move.is_capture and not move.promotes
-                    if is_quiet and idx >= 3 and depth >= 3:
+                    if not self.reference_search and is_quiet and idx >= 3 and depth >= 3:
                         red = 1 + (1 if idx >= 6 else 0)
                         score, child_pv, child_bound = self._negamax(
                             child,
@@ -814,13 +821,14 @@ class Engine:
         else:
             flag = TTFlag.ALPHA
 
-        self._tt[state.position_key] = TTEntry(
-            key=state.position_key,
-            depth=depth,
-            score=best_score,
-            flag=flag,
-            best_move=best_pv[0] if best_pv else None,
-        )
+        if not self.reference_search:
+            self._tt[state.position_key] = TTEntry(
+                key=state.position_key,
+                depth=depth,
+                score=best_score,
+                flag=flag,
+                best_move=best_pv[0] if best_pv else None,
+            )
 
         return best_score, best_pv, self._combine_bounds(move_bounds, complete, exact_bound)
 
@@ -948,6 +956,8 @@ class Engine:
         return best_score, best_pv, self._combine_bounds(move_bounds, complete, exact_bound)
 
     def _order_moves(self, state: State, moves: Iterable[Move], ply: int = 0) -> tuple[Move, ...]:
+        if self.reference_search:
+            return tuple(sorted(moves, key=lambda move: move.notation))
         tt_entry = self._tt.get(state.position_key)
         tt_move = tt_entry.best_move if tt_entry and tt_entry.best_move else self._move_hints.get(state.position_key)
         killers = self._killer_moves.get(ply, [])

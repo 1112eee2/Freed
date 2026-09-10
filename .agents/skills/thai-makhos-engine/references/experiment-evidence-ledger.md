@@ -4224,3 +4224,20 @@ Rules/core, production DLL/model/pointer and paused 27-pair experiment preserved
 Evidence: `benchmarks/results/endgame_c1_ranked/summary.json`. Windows commands
 and architecture: `docs/architecture/ENDGAME_NATIVE_C1_TB456_TH.md`. Next: isolated
 Windows build, complete suite and real TB4–6 parity/provenance before C2.
+
+
+## 2026-09-10 — Phase 1C C2: native 1T reference search
+
+KEEP experimental/default-off. Added a WDL-carrying native Negamax/PVS and
+quiescence session reusing unchanged native moves/HCE/repetition machinery.
+No scalar TT read/write, selective pruning, NNUE or GUI routing changes.
+Reference configuration matches Engine.search per-root score/WDL/PV and
+BEST/WIN choice at depth 1/2/4/6; repetition fixture at 1/2/3/8; all 139 ranked
+signatures covered at clock 79/depth 2 with both turns and repetition None/3.
+Cancellation publishes only complete layers; error and max-ply boundary gates
+pass. Windows full suite 485/485 PASS, zero skips/failures/errors, 163.304 s;
+source/test inventories unchanged, protected opens zero, invariant hashes intact.
+Evidence: `benchmarks/results/endgame_c2/summary.json` and
+`docs/architecture/ENDGAME_NATIVE_C2_TH.md`. No latency/Elo promotion claim.
+Next: C2 review and fixed-depth/fixed-time cost measurements before C3
+routing; production NNUE and root split require separate gates.
