@@ -185,6 +185,20 @@ class EndgameC4Tests(unittest.TestCase):
         self.assertIsInstance(engine.native_endgame_search, ParallelNativeEndgameSearch)
         self.assertEqual(engine.native_endgame_search.threads, 6)
 
+    def test_parallel_native_endgame_search_deadline_compliance(self):
+        import time
+
+        with ParallelNativeEndgameSearch(self.tb, threads=4, nnue_model=NNUE_MODEL) as s:
+            state = parse_position("B:BK1,5,6:RK24,28")
+            t0 = time.perf_counter()
+            res = s.search(state, depth=16, time_ms=50)
+            elapsed_ms = (time.perf_counter() - t0) * 1000.0
+
+            self.assertEqual(res.status, 0)
+            self.assertGreaterEqual(res.depth, 1)
+            self.assertLess(res.depth, 16)
+            self.assertLess(elapsed_ms, 200.0)
+
 
 if __name__ == "__main__":
     unittest.main()

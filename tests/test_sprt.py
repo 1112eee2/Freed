@@ -427,6 +427,90 @@ class SPRTTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "configuration mismatch"):
                     _load_sprt_checkpoint(output, expected_config=different)
 
+    def test_sprt_parser_has_native_endgame_flags(self):
+        parser = build_parser()
+        args = parser.parse_args(["sprt"])
+        self.assertTrue(args.native_endgame)
+        self.assertIsNone(args.native_endgame_library)
+
+        args = parser.parse_args(["sprt", "--no-native-endgame"])
+        self.assertFalse(args.native_endgame)
+
+        args = parser.parse_args(["sprt", "--native-endgame", "--native-endgame-library", "test.dll"])
+        self.assertTrue(args.native_endgame)
+        self.assertEqual(args.native_endgame_library, "test.dll")
+
+    def test_sprt_match_closes_native_endgame_search(self):
+        from unittest.mock import MagicMock
+
+        class MockEngine:
+            def __init__(self):
+                self.native_search = MagicMock()
+                self.native_endgame_search = MagicMock()
+
+            def search(self, state, limits, **kwargs):
+                return SimpleNamespace(move=legal_moves(state)[0])
+
+        dev_eg = MockEngine()
+        master_eg = MockEngine()
+        with self.assertRaises(RuntimeError):
+            run_sprt_match(
+                lambda: dev_eg,
+                lambda: master_eg,
+                max_pairs=1,
+                max_game_plies=2,
+                seed=42,
+            )
+        self.assertGreaterEqual(dev_eg.native_endgame_search.close.call_count, 1)
+        self.assertGreaterEqual(master_eg.native_endgame_search.close.call_count, 1)
+
+    def test_command_sprt_attaches_c4_endgame_to_factories(self):
+        from makhos.cli import command_sprt, build_parser
+
+        parser = build_parser()
+        args = parser.parse_args([
+            "sprt",
+            "--dev-library", "build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll",
+            "--master-library", "build/nnue_sprt_6t_vs_12t/makhos_native_12t.dll",
+            "--dev-nnue-model", "build/nnue_quantized_v1/model_a.mknnue",
+            "--master-nnue-model", "build/nnue_quantized_v1/model_a.mknnue",
+            "--dev-threads", "6",
+            "--master-threads", "12",
+            "--native-endgame",
+            "--pairs", "1",
+        ])
+
+        captured_dev = None
+        captured_master = None
+
+        def fake_run_sprt_match(dev_factory, master_factory, **kwargs):
+            nonlocal captured_dev, captured_master
+            captured_dev = dev_factory()
+            captured_master = master_factory()
+            return SPRTResult("INCONCLUSIVE", 0.0, 0.0, 0.0, 0, 0, 0, 0, (0, 0, 0, 0, 0))
+
+        with patch("makhos.sprt.run_sprt_match", side_effect=fake_run_sprt_match):
+            command_sprt(args)
+
+        self.assertIsNotNone(captured_dev)
+        self.assertIsNotNone(captured_master)
+        try:
+            self.assertTrue(captured_dev.native_endgame_enabled)
+            self.assertEqual(captured_dev.native_endgame_search.threads, 6)
+            self.assertEqual(captured_dev.native_endgame_search.evaluator, "nnue")
+
+            self.assertTrue(captured_master.native_endgame_enabled)
+            self.assertEqual(captured_master.native_endgame_search.threads, 12)
+            self.assertEqual(captured_master.native_endgame_search.evaluator, "nnue")
+
+            self.assertIs(
+                captured_dev.native_endgame_search.tablebase,
+                captured_master.native_endgame_search.tablebase,
+            )
+        finally:
+            captured_dev.native_endgame_search.close()
+            captured_master.native_endgame_search.close()
+
 
 if __name__ == "__main__":
     unittest.main()

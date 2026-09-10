@@ -1553,6 +1553,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="atomically checkpoint each completed pair and resume --output",
     )
+    sprt_parser.add_argument(
+        "--native-endgame",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="toggle native endgame search (C4) in SPRT engines (default: enabled)",
+    )
+    sprt_parser.add_argument(
+        "--native-endgame-library",
+        default=None,
+        help="isolated C2/C3/C4 endgame DLL",
+    )
     sprt_parser.set_defaults(func=command_sprt)
 
     return parser
@@ -1728,16 +1739,56 @@ def command_sprt(args: argparse.Namespace) -> int:
 
     ranked: list[RankedTablebase] = []
     native_tablebase = None
+    shared_endgame_tb = None
+    tb3_compact = None
+    endgame_lib = None
+    native_endgame_requested = getattr(args, "native_endgame", True)
+    if native_endgame_requested is None:
+        native_endgame_requested = True
+
     try:
         for path in ranked_paths:
             ranked.append(RankedTablebase(path))
         if not args.no_tablebase:
             native_tablebase = NativeTablebase(master_library)
+            if native_endgame_requested:
+                project_root = Path(__file__).resolve().parents[1]
+                default_c4 = project_root / "build" / "native_endgame_c4" / (
+                    "makhos_endgame_search_nnue" + (".dll" if sys.platform == "win32" else ".so")
+                )
+                default_c2 = project_root / "build" / "native_endgame_c2" / (
+                    "makhos_endgame_search" + (".dll" if sys.platform == "win32" else ".so")
+                )
+                if getattr(args, "native_endgame_library", None) is not None:
+                    endgame_lib = Path(args.native_endgame_library).resolve()
+                elif (dev_nnue_model is not None or master_nnue_model is not None) and default_c4.is_file():
+                    endgame_lib = default_c4
+                else:
+                    endgame_lib = default_c2
+
+                if not endgame_lib.is_file():
+                    raise FileNotFoundError(f"native endgame library not found: {endgame_lib}")
+
+                from .compact_tb3 import CompactTablebase, DEFAULT_ARTIFACT
+                from .native_endgame import NativeEndgameTablebase
+
+                if DEFAULT_ARTIFACT.is_file():
+                    tb3_compact = CompactTablebase(DEFAULT_ARTIFACT)
+                shared_endgame_tb = NativeEndgameTablebase(
+                    tb3_compact,
+                    library=endgame_lib,
+                    ranked_paths=tuple(ranked_paths),
+                    no_progress_plies=80,
+                )
     except Exception:
         for tablebase in ranked:
             tablebase.close()
         if native_tablebase is not None:
             native_tablebase.close()
+        if shared_endgame_tb is not None:
+            shared_endgame_tb.close()
+        if tb3_compact is not None:
+            tb3_compact.close()
         raise
 
     tablebase_config = {
@@ -1752,6 +1803,14 @@ def command_sprt(args: argparse.Namespace) -> int:
             for tablebase in ranked
         ],
     }
+    if shared_endgame_tb is not None and endgame_lib is not None:
+        tablebase_config["native_endgame"] = True
+        tablebase_config["native_endgame_library"] = str(endgame_lib)
+        tablebase_config["native_endgame_library_sha256"] = hashlib.sha256(
+            endgame_lib.read_bytes()
+        ).hexdigest()
+        tablebase_config["candidate_endgame_threads"] = candidate_threads
+        tablebase_config["baseline_endgame_threads"] = baseline_threads
 
     batch_priority = _set_batch_process_priority()
     sprt_config = {
@@ -1799,6 +1858,10 @@ def command_sprt(args: argparse.Namespace) -> int:
                     "process_priority": batch_priority,
                 },
             }
+    if shared_endgame_tb is not None:
+        sprt_config["native_endgame"] = True
+        sprt_config["candidate_endgame_threads"] = candidate_threads
+        sprt_config["baseline_endgame_threads"] = baseline_threads
     # Preserve legacy clock-mode checkpoint identities byte-for-byte in shape.
     # Fixed-time checkpoints bind their budget explicitly for resume validation.
     if args.fixed_move_time_ms is not None:
@@ -1806,6 +1869,11 @@ def command_sprt(args: argparse.Namespace) -> int:
     print(
         "SPRT_CONFIG " + json.dumps(sprt_config, sort_keys=True),
         flush=True,
+    )
+
+    from .native_endgame_search import (
+        NativeEndgameSearch,
+        ParallelNativeEndgameSearch,
     )
 
     def make_native_search(
@@ -1847,6 +1915,19 @@ def command_sprt(args: argparse.Namespace) -> int:
         )
 
     def dev_factory():
+        dev_eg_search = None
+        if shared_endgame_tb is not None:
+            if candidate_threads > 1:
+                dev_eg_search = ParallelNativeEndgameSearch(
+                    shared_endgame_tb,
+                    threads=candidate_threads,
+                    nnue_model=dev_nnue_model,
+                )
+            else:
+                dev_eg_search = NativeEndgameSearch(
+                    shared_endgame_tb,
+                    nnue_model=dev_nnue_model,
+                )
         return Engine(
             DEFAULT_RULES,
             exact_piece_limit=2,
@@ -1860,9 +1941,24 @@ def command_sprt(args: argparse.Namespace) -> int:
                 root_alpha=args.root_alpha,
                 shared_tt=args.shared_tt,
             ),
+            native_endgame_search=dev_eg_search,
+            native_endgame_enabled=dev_eg_search is not None,
         )
 
     def master_factory():
+        master_eg_search = None
+        if shared_endgame_tb is not None:
+            if baseline_threads > 1:
+                master_eg_search = ParallelNativeEndgameSearch(
+                    shared_endgame_tb,
+                    threads=baseline_threads,
+                    nnue_model=master_nnue_model,
+                )
+            else:
+                master_eg_search = NativeEndgameSearch(
+                    shared_endgame_tb,
+                    nnue_model=master_nnue_model,
+                )
         return Engine(
             DEFAULT_RULES,
             exact_piece_limit=2,
@@ -1876,6 +1972,8 @@ def command_sprt(args: argparse.Namespace) -> int:
                 root_alpha=False,
                 shared_tt=False,
             ),
+            native_endgame_search=master_eg_search,
+            native_endgame_enabled=master_eg_search is not None,
         )
 
     output = Path(args.output).resolve() if args.output else None
@@ -1926,6 +2024,10 @@ def command_sprt(args: argparse.Namespace) -> int:
             tablebase.close()
         if native_tablebase is not None:
             native_tablebase.close()
+        if shared_endgame_tb is not None:
+            shared_endgame_tb.close()
+        if tb3_compact is not None:
+            tb3_compact.close()
     print("\nFinal Result:")
     print(f"  Status: {result.status}")
     print(f"  LLR: {result.llr:+.2f}")
