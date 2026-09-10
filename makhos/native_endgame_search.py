@@ -6,11 +6,13 @@ normal Python root policy; importing this module or constructing a session
 does not change the production Engine route.
 """
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 import ctypes as C
 from dataclasses import dataclass
 import os
 from pathlib import Path
 import threading
+import time
 
 from .core import State, Move, Rules, apply_move, legal_moves
 from .native import _PackedMove, _unpack_move
@@ -129,6 +131,13 @@ class NativeEndgameSearch:
         for name in ('makhos_endgame_session_destroy', 'makhos_endgame_cancel'):
             getattr(dll, name).argtypes = [C.c_void_p]
             getattr(dll, name).restype = None
+        if hasattr(dll, 'makhos_endgame_run_partition'):
+            dll.makhos_endgame_run_partition.argtypes = [
+                C.c_void_p, C.POINTER(Position), C.POINTER(History),
+                C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint64,
+                C.c_uint32, C.c_uint32,
+            ]
+            dll.makhos_endgame_run_partition.restype = C.c_int32
         dll.makhos_endgame_run.argtypes = [C.c_void_p, C.POINTER(Position), C.POINTER(History),
             C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint32, C.c_uint64]
         dll.makhos_endgame_run.restype = C.c_int32
@@ -213,7 +222,8 @@ class NativeEndgameSearch:
         # clear all configured backends uniformly.
         return None
 
-    def search(self, state, depth=1, *, history=None, rules=Rules(), time_ms=0, node_limit=0):
+    def search(self, state, depth=1, *, history=None, rules=Rules(), time_ms=0, node_limit=0,
+               worker_index=0, worker_count=1):
         if not isinstance(depth, int) or not 1 <= depth < 95:
             raise ValueError('depth must be 1..94')
         repetition = rules.repetition_limit or 0
@@ -223,6 +233,8 @@ class NativeEndgameSearch:
             raise ValueError('invalid time limit')
         if not isinstance(node_limit, int) or not 0 <= node_limit <= 2**64-1:
             raise ValueError('invalid node limit')
+        if not isinstance(worker_index, int) or not isinstance(worker_count, int) or worker_count < 1 or not 0 <= worker_index < worker_count:
+            raise ValueError('invalid worker partition')
         native_position = position(state)
         counts = Counter(history or {})
         counts[state.position_key] = max(1, counts[state.position_key])
@@ -240,8 +252,18 @@ class NativeEndgameSearch:
         with self._lock:
             if not self._handle:
                 raise RuntimeError('native endgame search is closed')
-            status = self._dll.makhos_endgame_run(self._handle, C.byref(native_position),
-                native_history, len(entries), depth, self.horizon, repetition, time_ms, node_limit)
+            if worker_count > 1 and hasattr(self._dll, 'makhos_endgame_run_partition'):
+                status = self._dll.makhos_endgame_run_partition(
+                    self._handle, C.byref(native_position),
+                    native_history, len(entries), depth, self.horizon, repetition,
+                    time_ms, node_limit, worker_index, worker_count
+                )
+            else:
+                status = self._dll.makhos_endgame_run(
+                    self._handle, C.byref(native_position),
+                    native_history, len(entries), depth, self.horizon, repetition,
+                    time_ms, node_limit
+                )
             if status not in (0, 2):
                 raise ValueError(f'native endgame search failed: status={status}')
             summary = Summary(C.sizeof(Summary), 1)
@@ -276,3 +298,142 @@ class NativeEndgameSearch:
 
     def __exit__(self, *_):
         self.close()
+
+
+class ParallelNativeEndgameSearch:
+    """Iterative-deepening root split across independent NativeEndgameSearch workers.
+
+    All workers share a single immutable NativeEndgameTablebase (mmap).
+    A common depth is published only when every root move completed that depth.
+    """
+    def __init__(self, tb: NativeEndgameTablebase, *, threads: int = 1, nnue_model=None):
+        if not isinstance(threads, int) or not 1 <= threads <= 12:
+            raise ValueError('threads must be in 1..12')
+        self.threads = threads
+        self.tablebase = tb
+        self.horizon = tb.no_progress_plies
+        self._lock = threading.RLock()
+        self._lifetime = threading.Lock()
+        self._closed = False
+        self._workers = tuple(
+            NativeEndgameSearch(tb, nnue_model=nnue_model)
+            for _ in range(self.threads)
+        )
+        self.evaluator = self._workers[0].evaluator
+        self.nnue_enabled = self._workers[0].nnue_enabled
+        self.nnue_model_path = self._workers[0].nnue_model_path
+        self.nnue_model_sha256 = self._workers[0].nnue_model_sha256
+        self.nnue_source_model_sha256 = self._workers[0].nnue_source_model_sha256
+        self.nnue_feature_abi = self._workers[0].nnue_feature_abi
+
+    def supports_position(self, state: State) -> bool:
+        return self._workers[0].supports_position(state)
+
+    def clear(self):
+        for worker in self._workers:
+            worker.clear()
+
+    def cancel(self):
+        with self._lifetime:
+            for worker in self._workers:
+                worker.cancel()
+
+    def close(self):
+        with self._lock, self._lifetime:
+            if not self._closed:
+                for worker in reversed(self._workers):
+                    worker.close()
+                self._closed = True
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.close()
+
+    def search(self, state, depth=1, *, history=None, rules=Rules(), time_ms=0, node_limit=0):
+        if not isinstance(depth, int) or not 1 <= depth < 95:
+            raise ValueError('depth must be 1..94')
+        with self._lock:
+            if self._closed:
+                raise RuntimeError('parallel native endgame search is closed')
+            if self.threads == 1:
+                return self._workers[0].search(state, depth=depth, history=history, rules=rules,
+                                               time_ms=time_ms, node_limit=node_limit)
+            first_layer = self._workers[0].search(state, depth=1, history=history, rules=rules,
+                                                  time_ms=0, node_limit=0)
+            if first_layer.terminal_reason:
+                return first_layer
+            root_count = len(first_layer.roots)
+            if root_count <= 1:
+                return self._workers[0].search(state, depth=depth, history=history, rules=rules,
+                                               time_ms=time_ms, node_limit=node_limit)
+            if depth == 1:
+                return first_layer
+
+            active_threads = min(self.threads, root_count)
+            started = time.perf_counter()
+            deadline = started + (time_ms / 1000.0) if time_ms > 0 else None
+
+            if time_ms == 0:
+                with ThreadPoolExecutor(max_workers=active_threads) as executor:
+                    def run_worker_direct(w_idx):
+                        return self._workers[w_idx].search(
+                            state, depth=depth, history=history, rules=rules,
+                            time_ms=0, node_limit=node_limit,
+                            worker_index=w_idx, worker_count=active_threads
+                        )
+
+                    futures = [executor.submit(run_worker_direct, i) for i in range(active_threads)]
+                    iter_results = [f.result() for f in futures]
+                    if all(r.status == 0 and r.depth >= depth for r in iter_results):
+                        merged = []
+                        for m_idx in range(root_count):
+                            w_idx = m_idx % active_threads
+                            merged.append(iter_results[w_idx].roots[m_idx])
+                        return EndgameResult(
+                            0, depth, tuple(merged), 0, None, None,
+                            sum(r.nodes for r in iter_results),
+                            tuple(sum(r.tb_hits[p] for r in iter_results) for p in range(7)),
+                            sum(r.repetition_draws for r in iter_results)
+                        )
+
+            completed_roots = first_layer.roots
+            completed_depth = 1
+            total_nodes = first_layer.nodes
+            total_tb_hits = list(first_layer.tb_hits)
+            total_rep_draws = first_layer.repetition_draws
+
+            with ThreadPoolExecutor(max_workers=active_threads) as executor:
+                for target_d in range(2, depth + 1):
+                    if deadline is not None and time.perf_counter() >= deadline:
+                        break
+                    rem_ms = 0 if deadline is None else max(1, int((deadline - time.perf_counter()) * 1000.0))
+
+                    def run_worker(w_idx):
+                        return self._workers[w_idx].search(
+                            state, depth=target_d, history=history, rules=rules,
+                            time_ms=rem_ms, node_limit=node_limit,
+                            worker_index=w_idx, worker_count=active_threads
+                        )
+
+                    futures = [executor.submit(run_worker, i) for i in range(active_threads)]
+                    iter_results = [f.result() for f in futures]
+
+                    if all(r.status == 0 and r.depth >= target_d for r in iter_results):
+                        merged = []
+                        for m_idx in range(root_count):
+                            w_idx = m_idx % active_threads
+                            merged.append(iter_results[w_idx].roots[m_idx])
+                        completed_roots = tuple(merged)
+                        completed_depth = target_d
+                        total_nodes = sum(r.nodes for r in iter_results)
+                        total_tb_hits = [sum(r.tb_hits[p] for r in iter_results) for p in range(7)]
+                        total_rep_draws = sum(r.repetition_draws for r in iter_results)
+                    else:
+                        break
+
+            return EndgameResult(
+                0, completed_depth, completed_roots, 0, None, None,
+                total_nodes, tuple(total_tb_hits), total_rep_draws
+            )
