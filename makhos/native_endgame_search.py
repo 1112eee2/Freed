@@ -1,4 +1,10 @@
-"""Default-off C2 1T/HCE search. No production Engine routing change."""
+"""Opt-in native endgame search bridge.
+
+The C2 kernel remains a small, history-aware 1T search.  C3 adds an
+optional NNUE candidate DLL and exposes the same root candidates to the
+normal Python root policy; importing this module or constructing a session
+does not change the production Engine route.
+"""
 from collections import Counter
 import ctypes as C
 from dataclasses import dataclass
@@ -6,7 +12,7 @@ import os
 from pathlib import Path
 import threading
 
-from .core import State, Move, Rules
+from .core import State, Move, Rules, apply_move, legal_moves
 from .native import _PackedMove, _unpack_move
 from .native_endgame import NativeEndgameTablebase, Position
 from .search import Engine, Mode, RootCandidate, WDLBound
@@ -65,16 +71,18 @@ class EndgameResult:
     tb_hits: tuple[int, ...]
     repetition_draws: int
 
-    def choose(self, policy: Engine, state: State, mode=Mode.BEST, win_margin=0):
-        """Reuse Python root policy on completed native roots, never tree search.
+    def candidates(self, policy: Engine, state: State, mode=Mode.BEST, win_margin=0):
+        """Convert native roots to the existing Python root-policy contract.
 
-        Policy must have the same rules/artifacts; this is a C2 gate adapter,
-        not production routing. No candidate is invented before depth 1.
+        Native search owns terminal/TB proof and returns every completed root.
+        The policy layer still owns pressure, distance, BEST/WIN selection and
+        safety ranking, so routing does not create a second root behaviour.
         """
         if not self.roots:
             raise ValueError('no completed native root layer')
-        from .core import apply_move
         mode = Mode(mode)
+        if any(not root.pv for root in self.roots):
+            raise ValueError('native root is missing its first move')
         moves = tuple(root.pv[0] for root in self.roots)
         predictions = policy.policy_value_model.predict(state, moves)
         candidates = tuple(RootCandidate(
@@ -82,8 +90,13 @@ class EndgameResult:
             policy._human_pressure(apply_move(state, root.pv[0]), state.turn),
             root.bound, predictions[root.pv[0]],
         ) for root in self.roots)
-        candidates = policy._attach_distances(state, candidates, mode, win_margin)
-        return policy._choose(candidates, mode, win_margin)
+        return policy._attach_distances(state, candidates, mode, win_margin)
+
+    def choose(self, policy: Engine, state: State, mode=Mode.BEST, win_margin=0):
+        """Apply the normal Python root policy to completed native roots."""
+
+        candidates = self.candidates(policy, state, mode, win_margin)
+        return policy._choose(candidates, Mode(mode), win_margin)
 
 
 class NativeEndgameSearch:
@@ -92,17 +105,25 @@ class NativeEndgameSearch:
     search/close serialize; cancel may run concurrently and requests unwind.
     All rule/history inputs are copied. Scalar TT allocation/reuse is absent.
     """
-    def __init__(self, tb: NativeEndgameTablebase):
+    def __init__(self, tb: NativeEndgameTablebase, *, nnue_model=None):
         self._lock = threading.RLock()
         self._lifetime = threading.Lock()
         self._handle = C.c_void_p()
         self._dll = dll = tb._dll
         self.horizon = tb.no_progress_plies
+        self.tablebase = tb
+        self.evaluator = "hce"
+        self.nnue_enabled = False
+        self.nnue_model_path = None
+        self.nnue_model_sha256 = None
+        self.nnue_source_model_sha256 = None
+        self.nnue_feature_abi = None
         if not hasattr(dll, 'makhos_endgame_search_version'):
-            raise ValueError('C2 search requires the isolated C2 DLL')
+            raise ValueError('native endgame search requires the isolated C2/C3 DLL')
         dll.makhos_endgame_search_version.restype = C.c_uint32
         if dll.makhos_endgame_search_version() != 1:
             raise ValueError('unsupported endgame search ABI')
+        self._configure_nnue_candidate(nnue_model)
         dll.makhos_endgame_session_create.argtypes = [C.c_void_p, C.POINTER(C.c_void_p)]
         dll.makhos_endgame_session_create.restype = C.c_int32
         for name in ('makhos_endgame_session_destroy', 'makhos_endgame_cancel'):
@@ -119,6 +140,78 @@ class NativeEndgameSearch:
             status = dll.makhos_endgame_session_create(tb._handle, C.byref(self._handle))
         if status:
             raise ValueError(f'endgame session creation failed: status={status}')
+
+    def _configure_nnue_candidate(self, model):
+        """Load the production NNUE model only in an explicit C3 candidate.
+
+        The C2/HCE DLL has no NNUE symbols and remains valid with no model.
+        A model passed to such a DLL fails closed instead of silently using
+        HCE, matching the GUI provenance contract.
+        """
+        names = (
+            'makhos_search_nnue_load_model',
+            'makhos_search_nnue_ready',
+            'makhos_search_nnue_feature_abi',
+            'makhos_search_nnue_model_sha256',
+            'makhos_search_nnue_source_model_sha256',
+            'makhos_search_nnue_last_error',
+        )
+        candidate = all(hasattr(self._dll, name) for name in names)
+        if not candidate:
+            if model is not None:
+                raise ValueError('nnue_model requires the isolated C3 NNUE DLL')
+            return
+        if model is None:
+            raise ValueError('C3 NNUE DLL requires an explicit nnue_model')
+        path = Path(model).resolve()
+        if not path.is_file():
+            raise FileNotFoundError(f'NNUE model not found: {path}')
+        self._dll.makhos_search_nnue_load_model.argtypes = [C.c_char_p]
+        self._dll.makhos_search_nnue_load_model.restype = C.c_int
+        self._dll.makhos_search_nnue_ready.argtypes = []
+        self._dll.makhos_search_nnue_ready.restype = C.c_int
+        for name in names[2:]:
+            function = getattr(self._dll, name)
+            function.argtypes = []
+            function.restype = C.c_char_p
+        status = int(self._dll.makhos_search_nnue_load_model(
+            str(path).encode('utf-8')
+        ))
+        if status != 0 or not self._dll.makhos_search_nnue_ready():
+            encoded = self._dll.makhos_search_nnue_last_error()
+            detail = encoded.decode('utf-8', errors='replace') if encoded else ''
+            raise RuntimeError(
+                f'NNUE endgame candidate model load failed ({status})'
+                + (f': {detail}' if detail else '')
+            )
+        self.evaluator = 'nnue'
+        self.nnue_enabled = True
+        self.nnue_model_path = path
+        self.nnue_model_sha256 = self._dll.makhos_search_nnue_model_sha256().decode('ascii')
+        self.nnue_source_model_sha256 = self._dll.makhos_search_nnue_source_model_sha256().decode('ascii')
+        self.nnue_feature_abi = self._dll.makhos_search_nnue_feature_abi().decode('ascii')
+
+    def supports_position(self, state: State) -> bool:
+        """Return whether C3 owns this endgame/transition root.
+
+        Seven-piece positions are admitted only when a legal move crosses into
+        the native TB boundary.  This keeps ordinary midgame routing untouched
+        while allowing the capture transition to retain native speed.
+        """
+        pieces = sum(piece != 0 for piece in state.board)
+        if pieces <= 6:
+            return True
+        if pieces != 7:
+            return False
+        return any(sum(piece != 0 for piece in apply_move(state, move, validate=False).board) <= 6
+                   for move in legal_moves(state))
+
+    def clear(self):
+        """Reset the transient cancellation bit at a game boundary."""
+        # The C session owns no persistent TT or root policy state.  A fresh
+        # run resets cancellation internally; retaining this no-op lets Engine
+        # clear all configured backends uniformly.
+        return None
 
     def search(self, state, depth=1, *, history=None, rules=Rules(), time_ms=0, node_limit=0):
         if not isinstance(depth, int) or not 1 <= depth < 95:

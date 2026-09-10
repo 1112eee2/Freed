@@ -1,9 +1,13 @@
 /* Isolated reference kernel, like other candidate translation units. Reuse
- * verified native moves, HCE and repetition machinery without editing them.
- * The legacy scalar-only search cannot carry WDL proofs; C2 has its own loop.
+ * verified native moves, evaluator and repetition machinery without editing
+ * them.  The legacy scalar-only search cannot carry WDL proofs; C2/C3 has its
+ * own loop.
  */
+#ifndef MAKHOS_ENDGAME_SEARCH_NATIVE_INCLUDED
+#define MAKHOS_ENDGAME_SEARCH_NATIVE_INCLUDED 1
 #define MAKHOS_NO_MAIN
 #include "makhos_native.c"
+#endif
 #include "makhos_endgame_search.h"
 
 typedef struct { int score, lower, upper; } EGValue;
@@ -96,7 +100,10 @@ static EGValue eg_search(MakhosEndgameSession *s, Position p, int depth,
     if (!quiet && depth<=0) return eg_search(s,p,0,alpha,beta,ply,true);
     MoveList *moves=&s->moves[ply];
     if (quiet && !moves->moves[0].capture_count) {
-        known.score=native_evaluate(p,p.turn);
+        /* Use the same evaluator seam as the native search.  In the ordinary
+         * C2 build this is HCE; the isolated C3 wrapper selects NNUE through
+         * MAKHOS_NNUE_SEARCH_CANDIDATE without changing the search contract. */
+        known.score=native_search_evaluate(s->context,p,p.turn,ply);
         if (known.lower==0 && known.score<0) known.score=0;
         if (known.upper==0 && known.score>0) known.score=0;
         return known;
@@ -108,12 +115,22 @@ static EGValue eg_search(MakhosEndgameSession *s, Position p, int depth,
         Move *move=&moves->moves[i];
         EGValue child;
         if (quiet || i==0) {
+            if (!native_search_prepare_child(s->context,move->next,ply+1)) {
+                s->status=MK_EG_CORRUPT; return known;
+            }
             child=eg_search(s,move->next,depth-1,-beta,-alpha,ply+1,quiet);
         } else {
+            if (!native_search_prepare_child(s->context,move->next,ply+1)) {
+                s->status=MK_EG_CORRUPT; return known;
+            }
             child=eg_search(s,move->next,depth-1,-alpha-1,-alpha,ply+1,false);
             int score=-child.score;
-            if (!s->status && alpha<score && score<beta)
+            if (!s->status && alpha<score && score<beta) {
+                if (!native_search_prepare_child(s->context,move->next,ply+1)) {
+                    s->status=MK_EG_CORRUPT; return known;
+                }
                 child=eg_search(s,move->next,depth-1,-beta,-alpha,ply+1,false);
+            }
         }
         if (s->status) return known;
         int score=-child.score;
@@ -152,6 +169,9 @@ int32_t makhos_endgame_session_create(MakhosTBSet *tb, MakhosEndgameSession **ou
     if (!s->context || !s->moves || !s->completed || !s->pending) {
         makhos_endgame_session_destroy(s); return MK_EG_NO_MEMORY;
     }
+#if MAKHOS_NNUE_SEARCH_CANDIDATE
+    native_nnue_initialize_stack(s->context);
+#endif
     atomic_init(&s->cancelled,false);
     s->status=MK_EG_INVALID; /* no snapshot exists before the first run */
     makhos_tb_set_retain(tb); s->tb=tb; *out=s; return MK_EG_OK;
@@ -198,6 +218,19 @@ int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition 
         s->summary.score=terminal==3?-MAKHOS_SEARCH_MATE:0;
         s->summary.lower=s->summary.upper=terminal==3?-1:0;
     } else {
+#if MAKHOS_NNUE_SEARCH_CANDIDATE
+        /* Terminal adjudication must precede NNUE feature encoding.  In
+         * particular a clock-80 root is a draw even though NNUE rejects the
+         * 80-ply feature bucket. */
+        if (!native_search_refresh_root(s->context,p)) {
+            s->status=MK_EG_CORRUPT;
+        }
+#endif
+        if (s->status) {
+            s->context->initial_history=NULL; s->context->initial_history_count=0;
+            memset(s->context->line,0,sizeof(s->context->line)); free(entries);
+            return s->status;
+        }
         qsort(s->moves[0].moves,s->moves[0].count,sizeof(Move),eg_compare);
         for (uint32_t d=1;d<=depth && !s->status;d++) {
             for (uint32_t i=0;i<s->moves[0].count;i++) {

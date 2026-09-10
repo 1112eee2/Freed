@@ -23,7 +23,9 @@ typedef struct {
 MK_TB_API uint32_t makhos_endgame_search_version(void);
 /* One owner per session. run/get/destroy are idle-only except cancel, which is
  * thread-safe. Run copies history, owns private line/workspace and retains TB.
- * No TT scores are read/written; no selective pruning; HCE only, 1T only.
+ * No TT scores are read/written; no selective pruning; 1T only.  The
+ * translation unit may select the isolated NNUE candidate evaluator, while
+ * terminal/TB WDL proofs remain authoritative over scalar evaluation.
  */
 MK_TB_API int32_t makhos_endgame_session_create(MakhosTBSet *, MakhosEndgameSession **);
 MK_TB_API void makhos_endgame_session_destroy(MakhosEndgameSession *);
