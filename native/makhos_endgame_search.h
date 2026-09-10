@@ -34,6 +34,11 @@ MK_TB_API int32_t makhos_endgame_run(MakhosEndgameSession *,
     const MakhosEndgamePosition *, const MakhosEndgameHistory *, uint32_t history_count,
     uint32_t depth, uint32_t no_progress_plies, uint32_t repetition_limit,
     uint32_t time_ms, uint64_t node_limit);
+MK_TB_API int32_t makhos_endgame_run_partition(MakhosEndgameSession *,
+    const MakhosEndgamePosition *, const MakhosEndgameHistory *, uint32_t history_count,
+    uint32_t depth, uint32_t no_progress_plies, uint32_t repetition_limit,
+    uint32_t time_ms, uint64_t node_limit,
+    uint32_t worker_index, uint32_t worker_count);
 /* CANCELLED returns only the last completed all-root layer (possibly empty).
  * Errors invalidate the snapshot; never publish partial/provisional proofs.
  * BUFFER_TOO_SMALL fills summary with required root_count, copies no roots. */

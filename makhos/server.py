@@ -37,7 +37,7 @@ from .compact_tb3 import CompactTablebase
 from .tb3_service import TB3Service
 from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
 from .native_endgame import NativeEndgameTablebase
-from .native_endgame_search import NativeEndgameSearch
+from .native_endgame_search import NativeEndgameSearch, ParallelNativeEndgameSearch
 from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from .ranked_tablebase import RankedTablebase
 from .search import Engine, Mode, SearchLimits
@@ -69,6 +69,9 @@ DEFAULT_NATIVE_ENDGAME_C2_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c2"
     "makhos_endgame_search" + (".dll" if sys.platform == "win32" else ".so")
 )
 DEFAULT_NATIVE_ENDGAME_C3_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c3" / (
+    "makhos_endgame_search_nnue" + (".dll" if sys.platform == "win32" else ".so")
+)
+DEFAULT_NATIVE_ENDGAME_C4_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c4" / (
     "makhos_endgame_search_nnue" + (".dll" if sys.platform == "win32" else ".so")
 )
 WEB_ASSET_VERSION = "20260909-1"
@@ -176,10 +179,16 @@ def configured_gui_native_library() -> Path:
 
 
 def configured_gui_native_endgame_library(*, nnue: bool = False) -> Path:
-    """Resolve the isolated C2/C3 library without inferring production state."""
+    """Resolve the isolated C2/C3/C4 library without inferring production state."""
     if GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE is not None:
         return GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE
-    return DEFAULT_NATIVE_ENDGAME_C3_LIBRARY if nnue else DEFAULT_NATIVE_ENDGAME_C2_LIBRARY
+    if nnue:
+        return (
+            DEFAULT_NATIVE_ENDGAME_C4_LIBRARY
+            if DEFAULT_NATIVE_ENDGAME_C4_LIBRARY.is_file()
+            else DEFAULT_NATIVE_ENDGAME_C3_LIBRARY
+        )
+    return DEFAULT_NATIVE_ENDGAME_C2_LIBRARY
 
 
 def _sha256_file(path: Path) -> str:
@@ -247,6 +256,9 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     configured["native_endgame_ready"] = endgame is not None
     configured["native_endgame_evaluator"] = (
         None if endgame is None else getattr(endgame, "evaluator", "hce")
+    )
+    configured["native_endgame_threads"] = (
+        None if endgame is None else getattr(endgame, "threads", 1)
     )
     endgame_enabled = bool(getattr(engine, "native_endgame_enabled", False))
     endgame_library = getattr(engine, "native_endgame_library", None)
@@ -408,13 +420,22 @@ def ensure_native_endgame_ready(engine: Engine) -> bool:
             ranked_paths=ranked_paths,
             no_progress_plies=engine.rules.no_progress_plies,
         )
-        search = NativeEndgameSearch(
-            owner,
-            nnue_model=(
-                getattr(engine.native_search, "nnue_model_path", None)
-                if nnue else None
-            ),
+        nnue_model = (
+            getattr(engine.native_search, "nnue_model_path", None)
+            if nnue else None
         )
+        threads = int(getattr(engine.native_search, "threads", 1))
+        if threads > 1:
+            search = ParallelNativeEndgameSearch(
+                owner,
+                threads=threads,
+                nnue_model=nnue_model,
+            )
+        else:
+            search = NativeEndgameSearch(
+                owner,
+                nnue_model=nnue_model,
+            )
     except Exception as error:
         if owner is not None:
             owner.close()
@@ -1018,7 +1039,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 "native_endgame_ready": bool(provenance.get("native_endgame_ready", False)),
                 "native_endgame_evaluator": provenance.get("native_endgame_evaluator"),
                 "search_thread_capacity": (
-                    1 if provenance.get("search_backend") == "native-endgame"
+                    provenance.get("native_endgame_threads", 1)
+                    if provenance.get("search_backend") == "native-endgame"
                     else worker_count if provenance.get("search_backend") == "native-root-split"
                     else 0 if provenance.get("search_backend") == "forced" else 1
                 ),

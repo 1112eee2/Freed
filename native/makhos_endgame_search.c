@@ -184,10 +184,12 @@ void makhos_endgame_session_destroy(MakhosEndgameSession *s) {
 void makhos_endgame_cancel(MakhosEndgameSession *s) {
     if (s) atomic_store_explicit(&s->cancelled,true,memory_order_relaxed);
 }
-int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition *root,
+int32_t makhos_endgame_run_partition(MakhosEndgameSession *s, const MakhosEndgamePosition *root,
         const MakhosEndgameHistory *history, uint32_t count, uint32_t depth,
-        uint32_t clock, uint32_t repetition, uint32_t time_ms, uint64_t node_limit) {
+        uint32_t clock, uint32_t repetition, uint32_t time_ms, uint64_t node_limit,
+        uint32_t worker_index, uint32_t worker_count) {
     if (!s) return MK_EG_INVALID;
+    if (!worker_count || worker_index >= worker_count) return MK_EG_INVALID;
     memset(&s->summary,0,sizeof(s->summary));
     s->summary.struct_size=sizeof(s->summary); s->summary.version=1;
     s->status=MK_EG_INVALID;
@@ -233,8 +235,11 @@ int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition 
         }
         qsort(s->moves[0].moves,s->moves[0].count,sizeof(Move),eg_compare);
         for (uint32_t d=1;d<=depth && !s->status;d++) {
-            for (uint32_t i=0;i<s->moves[0].count;i++) {
+            for (uint32_t i=worker_index;i<s->moves[0].count;i+=worker_count) {
                 Move *move=&s->moves[0].moves[i];
+                if (!native_search_prepare_child(s->context,move->next,1)) {
+                    s->status=MK_EG_CORRUPT; break;
+                }
                 EGValue value=eg_search(s,move->next,(int)d-1,-MAKHOS_SEARCH_INFINITY,MAKHOS_SEARCH_INFINITY,1,false);
                 if (s->status) break;
                 MakhosEndgameRoot *r=&s->pending[i];
@@ -247,7 +252,9 @@ int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition 
             }
             if (!s->status) {
                 s->summary.completed_depth=d; s->summary.root_count=s->moves[0].count;
-                memcpy(s->completed,s->pending,s->summary.root_count*sizeof(*s->completed));
+                for (uint32_t i=worker_index;i<s->moves[0].count;i+=worker_count) {
+                    s->completed[i]=s->pending[i];
+                }
             }
         }
     }
@@ -257,6 +264,12 @@ int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition 
         s->summary.completed_depth=0; s->summary.root_count=0;
     }
     return s->status;
+}
+int32_t makhos_endgame_run(MakhosEndgameSession *s, const MakhosEndgamePosition *root,
+        const MakhosEndgameHistory *history, uint32_t count, uint32_t depth,
+        uint32_t clock, uint32_t repetition, uint32_t time_ms, uint64_t node_limit) {
+    return makhos_endgame_run_partition(s, root, history, count, depth, clock, repetition,
+                                        time_ms, node_limit, 0, 1);
 }
 int32_t makhos_endgame_results(MakhosEndgameSession *s, MakhosEndgameSummary *out,
                               MakhosEndgameRoot *roots, uint32_t capacity) {
