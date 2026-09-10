@@ -44,6 +44,8 @@ struct MakhosTBSet {
     uint64_t *completions;
     RankedMap ranked[3];
 };
+
+uint32_t makhos_tb_set_horizon(const MakhosTBSet *set) { return set ? set->clock : 0; }
 _Static_assert(sizeof(MakhosEndgamePosition)==20, "position ABI");
 _Static_assert(sizeof(MakhosTBProbe)==24, "probe ABI");
 _Static_assert(sizeof(MakhosRankedInfo)==72, "ranked info ABI");

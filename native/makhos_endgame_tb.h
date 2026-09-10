@@ -17,6 +17,7 @@ typedef struct {
     uint32_t material_count, reserved;
 } MakhosTBProbe;
 MK_TB_API uint32_t makhos_endgame_api_version(void);
+MK_TB_API uint32_t makhos_tb_set_horizon(const MakhosTBSet *set);
 /* Copies a verified decompressed image. No borrowed pointers survive create.
  * The caller verifies artifact provenance; native validates layout/references.
  * The returned set is immutable. Caller owns one reference on success.
