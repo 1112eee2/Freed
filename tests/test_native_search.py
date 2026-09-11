@@ -42,13 +42,15 @@ from makhos.search import Engine, SearchLimits
 
 
 LIBRARY = project_native_library()
-LEGACY_LIBRARY = (
-    Path(__file__).resolve().parent.parent / "build" / "makhos_native.dll"
-)
 ABI4_LIBRARY = (
     Path(__file__).resolve().parent.parent
     / "build"
     / "makhos_native_workspace_candidate.dll"
+)
+LEGACY_LIBRARY = (
+    ABI4_LIBRARY
+    if ABI4_LIBRARY.is_file()
+    else Path(__file__).resolve().parent.parent / "build" / "makhos_native.dll"
 )
 COMPACT_TT_LIBRARY = (
     Path(__file__).resolve().parent.parent
