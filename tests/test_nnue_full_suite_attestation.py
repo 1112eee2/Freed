@@ -7,7 +7,8 @@ import tempfile
 import unittest
 from unittest import mock
 
-from scratch import nnue_full_suite_attestation as runner
+from tools.verification import full_suite_attestation as runner
+from scratch import nnue_full_suite_attestation as legacy_runner
 from scratch import nnue_trainer_contract_gate as contract_gate
 
 
@@ -280,6 +281,25 @@ class FullSuiteAttestationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(
                 [sys.executable, str(Path(runner.__file__).resolve()), "--help"],
+                cwd=directory,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("--final-audit", result.stdout)
+        self.assertIn("--output", result.stdout)
+
+
+    def test_legacy_wrapper_reexports_and_runs_cli(self):
+        self.assertIs(legacy_runner.ExclusiveSuiteLease, runner.ExclusiveSuiteLease)
+        self.assertIs(legacy_runner.execute_suite, runner.execute_suite)
+        self.assertIs(legacy_runner.inventory_sha256, runner.inventory_sha256)
+        self.assertIs(legacy_runner.source_inventory_paths, runner.source_inventory_paths)
+        self.assertIs(legacy_runner.test_inventory_paths, runner.test_inventory_paths)
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, str(Path(legacy_runner.__file__).resolve()), "--help"],
                 cwd=directory,
                 capture_output=True,
                 text=True,
