@@ -19,6 +19,7 @@ from .native import _PackedMove, _unpack_move
 from .native_endgame import NativeEndgameTablebase, Position
 from .search import Engine, Mode, RootCandidate, WDLBound
 from .exact import Outcome
+from .endgame_routing import is_native_endgame_position
 
 DEFAULT_LIBRARY = Path(__file__).resolve().parents[1] / (
     'build/native_endgame_c2/makhos_endgame_search' + ('.dll' if os.name == 'nt' else '.so'))
@@ -201,19 +202,8 @@ class NativeEndgameSearch:
         self.nnue_feature_abi = self._dll.makhos_search_nnue_feature_abi().decode('ascii')
 
     def supports_position(self, state: State) -> bool:
-        """Return whether C3 owns this endgame/transition root.
-
-        Seven-piece positions are admitted only when a legal move crosses into
-        the native TB boundary.  This keeps ordinary midgame routing untouched
-        while allowing the capture transition to retain native speed.
-        """
-        pieces = sum(piece != 0 for piece in state.board)
-        if pieces <= 6:
-            return True
-        if pieces != 7:
-            return False
-        return any(sum(piece != 0 for piece in apply_move(state, move, validate=False).board) <= 6
-                   for move in legal_moves(state))
+        """Use the same capture-transition boundary as server readiness."""
+        return is_native_endgame_position(state)
 
     def clear(self):
         """Reset the transient cancellation bit at a game boundary."""

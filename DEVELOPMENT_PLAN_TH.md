@@ -1,5 +1,23 @@
 # คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
+## คำสั่งล่าสุด 2026-09-11: ปิดรอยต่อ multi-capture เข้า TB6 ก่อน SMP
+
+ผู้ใช้ยุติ Experiment A C4 1000ms ที่ 539 คู่: **INCONCLUSIVE**, คง 12T;
+2000ms deferred และ 27 คู่เดิมเก็บเป็นประวัติศาสตร์ ห้ามใช้ข้อความ launch ด้านล่าง
+หรือในเอกสารรุ่นเก่าเป็นคำสั่ง resume
+
+Candidate `codex/endgame-transition-coverage` ขยาย admission จาก 7→6 เป็นทุก legal
+multi-capture เข้า <=6 และใช้ predicate ร่วมกันใน server/native adapter
+ยังค้นทุก root alternative และใช้ WDL/root policy เดิม Native/rules/model ไม่เปลี่ยน
+Linux: เทสต์ใหม่ 9 PASS/1 SKIP (ไม่มี TB4–6 จริง), Node 16/16; full discovery
+513 พบ/470 run, 8 failures/19 errors/104 skips เทียบฐาน 503 พบ/460 run,
+failure/error IDs เดียวกัน ไม่มี regression ID ใหม่ แต่ **ไม่ใช่ full-suite PASS**
+Runtime TB3-only 32 observations: overshoot p95 2.93 ms/max 3.07 ms; ไม่มี Elo claim
+ขั้นถัดไป: Windows full-suite + real TB6/HTTP smoke ก่อน merge/promote
+รายละเอียด: [Transition acceptance](docs/architecture/ENDGAME_TRANSITION_COVERAGE_TH.md)
+
+ข้อความสถานะก่อนหน้านี้ด้านล่างเป็นหลักฐานประวัติศาสตร์
+
 งาน GUI ตามคำขอผู้ใช้ 2026-09-09: เพิ่ม save เกม, ผลตัดสินโดยผู้ใช้ และ undo 1 ply
 อยู่ใน branch แยก รอ Local smoke/full-suite และประสานแพตช์ rematch ก่อนรวมเข้าระบบ
 รายละเอียดและหลักฐาน: [GUI implementation](work/GUI_GAME_RECORDS_IMPLEMENTATION_TH.md)

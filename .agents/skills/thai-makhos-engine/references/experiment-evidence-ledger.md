@@ -4241,3 +4241,28 @@ Evidence: `benchmarks/results/endgame_c2/summary.json` and
 `docs/architecture/ENDGAME_NATIVE_C2_TH.md`. No latency/Elo promotion claim.
 Next: C2 review and fixed-depth/fixed-time cost measurements before C3
 routing; production NNUE and root split require separate gates.
+
+## 2026-09-11 — TB6 multi-capture transition admission
+
+KEEP_CANDIDATE_PENDING_WINDOWS, base bbdc86c. Shared server/adapter predicate
+admits <=6 roots or any legal root capture into <=6, fixing the 8->6 human-game
+case and 9->6 coverage. C4 searches every root alternative, including children
+still outside TB6; existing BEST/WIN, WDL interval, distance/pressure policy stays
+in charge. No native C, rules, model, accepted DLL or production pointer changes.
+Old 27-pair and user-stopped 539-pair experiments were not opened or resumed.
+
+Linux new tests: 9 PASS, 1 SKIP requiring real TB4-6. C4 with real TB3 only matches
+1T/4T score/bound/PV at depth 2 for both transition roots. Sixteen unaffected/flag-off
+native NNUE results match the base move/score/depth/nodes/PV/bound exactly. Node
+lifecycle/game controls 16/16. Full discovery: candidate 513 found/470 run versus
+base 503/460; same 8 failure and 19 error IDs, skips 104 versus 103. Both NOT_PASS;
+43 tests not run after class setup errors. Source/test/invariant identities stable,
+protected production opens zero. No Windows full-suite claim.
+
+TB3-only C4 runtime: 32 observations, BEST/WIN, 1T/4T, 1s/2s, two repetitions:
+overshoot p95 2.93 ms/max 3.07 ms, observed RSS max 32.93 MiB. Missing ranked files
+mean this is diagnostic only, not proof of the human-game DRAW or production HTTP
+latency. Source-bound raw evidence: benchmarks/results/endgame_transition_v1/summary.json.
+Next: Windows real TB6 root DRAW/all-alternatives gate, full suite and source-bound
+HTTP smoke per docs/architecture/ENDGAME_TRANSITION_COVERAGE_TH.md. No Elo promotion;
+any strength gate needs a new manifest, never resumed historical Experiment A data.
