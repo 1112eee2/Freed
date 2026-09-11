@@ -3,18 +3,18 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt Phase 1B complete (Clusters 1, 2, and 3)
+## Current scope: tech-debt Phase 1 complete (1A, 1B, 1C complete)
 
 PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (roadmap/complexity controls).
 Phase 1A completed and merged as `e8f7e90e3ca05b80b11506be95d3e22d9af023cd` (113 files mapped).
-Phase 1B (Cluster 1: Attestation & Production Smoke) merged as `36cc8afc445d37e7ed534219ab82fa08dee90580`.
-Phase 1B (Cluster 2: SPRT Arena & Telemetry Audit tools) merged as `c80b0c6ea1bf836e540862c510f09ce5032ff601`.
-Phase 1B (Cluster 3: Tooling Tests Migration to tests/tooling/) complete:
-- Canonical tooling tests created at `tests/tooling/`: `test_nnue_gate_c_control.py`, `test_nnue_thread_audit_collect.py`, `test_nnue_thread_audit_report.py`, `test_prepare_nnue_thread_audit.py`, `test_gui_lifecycle.cjs`, `test_gui_game_controls.cjs`, `test_nnue_gate_c_status_terminal.ps1`, and `__init__.py`.
-- Backward-compatibility thin wrappers in place across `work/` preserving CLI commands, imports, and process contracts.
-- Verified on Windows Local: 571/571 tests/ PASS (186.62s), 55/55 work/ tests PASS (18.17s), 16/16 Node tests PASS, PowerShell monitor integration PASS (th-TH/en-US), rules/model/DLL invariants intact.
+Phase 1B (Clusters 1, 2, 3) merged as `36cc8af` (PR #9), `c80b0c6` (PR #10), `3308d4a` (PR #11).
+Phase 1C (Evidence routing & documentation consolidation) complete:
+- Canonical experiment & evidence index created at `docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md`.
+- `README.md` and `DEVELOPMENT_PLAN_TH.md` updated with canonical links.
+- Verified on Windows Local: documentation links valid, invariants intact.
 
-Phase 1B complete. Next implementation slice: Phase 1C (Evidence routing & documentation consolidation) or Phase 2 (Build consolidation).
+Phase 1 complete. Next implementation slice: Phase 2A (Build consolidation).
+
 
 ## Latest accepted correctness change
 
