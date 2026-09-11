@@ -1,10 +1,12 @@
 # Thai Makhos Engine
 
-> Current forward development is governed by `DEVELOPMENT_PLAN_TH.md` and
-> `.agents/skills/thai-makhos-engine/SKILL.md`. The proof/tablebase counts below
-> are historical evidence snapshots; current work is the locked NNUE
-> development-label acquisition, with no model training or sealed-test opening
-> yet.
+> Current forward development is governed by [DEVELOPMENT_PLAN_TH.md](DEVELOPMENT_PLAN_TH.md),
+> [docs/architecture/TECH_DEBT_ROADMAP_TH.md](docs/architecture/TECH_DEBT_ROADMAP_TH.md), and
+> [.agents/skills/thai-makhos-engine/SKILL.md](.agents/skills/thai-makhos-engine/SKILL.md).
+> Active status and single source of truth is maintained in
+> [.agents/skills/thai-makhos-engine/references/current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md).
+> Complete experiment, evidence, and artifact index is in
+> [docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md](docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md).
 
 เอนจิ้นอ้างอิงหมากฮอสไทยที่เน้นความถูกต้องก่อนความเร็ว พร้อมนโยบายเลือกตา 2 แบบบน search core เดียวกัน
 
