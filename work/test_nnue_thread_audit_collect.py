@@ -12,14 +12,14 @@ import sys
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from work.nnue_thread_audit_collect import (
+from tools.verification.nnue_thread_audit_collect import (
     prepare_pilot,
     verify_release,
     AuditCollector,
     PILOT_CASE_IDS,
 )
-from work.prepare_nnue_thread_audit import THREADS, BUDGETS, digest
-from work.nnue_thread_audit_report import ObservationValidator
+from tools.verification.prepare_nnue_thread_audit import THREADS, BUDGETS, digest
+from tools.verification.nnue_thread_audit_report import ObservationValidator
 
 
 class NnueThreadAuditCollectTests(unittest.TestCase):
@@ -79,7 +79,7 @@ class NnueThreadAuditCollectTests(unittest.TestCase):
             self.addCleanup(collector.close)
 
             # Assert GUI activity pauses collection
-            with patch("work.nnue_thread_audit_collect.interactive_session_active", return_value=True):
+            with patch("tools.verification.nnue_thread_audit_collect.interactive_session_active", return_value=True):
                 result = collector.run(limit=5)
                 self.assertEqual(result["status"], "PAUSED_FOR_INTERACTIVE_PLAY")
                 self.assertEqual(result["completed"], 0)
