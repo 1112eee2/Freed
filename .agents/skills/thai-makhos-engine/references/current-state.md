@@ -3,18 +3,18 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt planning and complexity control
+## Current scope: tech-debt Phase 1A complete, preparing Phase 1B
 
-The user requested a concrete tech-debt roadmap, including stronger complexity
-awareness in SKILL.md. The planning branch is `codex/tech-debt-roadmap`.
-Its inventory and documentation changes do not authorize a native rewrite,
-new search heuristic, SMP experiment, model change or arena launch.
+PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b`, establishing the tech-debt
+roadmap and complexity controls in SKILL.md.
+Phase 1A is complete: all 113 tracked files in `work/` and `scratch/` have been mapped,
+classified, and bound to their consumers and evidence in
+[WORK_SCRATCH_CONSUMER_MAP_TH.md](../../../../docs/architecture/WORK_SCRATCH_CONSUMER_MAP_TH.md)
+and [work_scratch_consumer_map_20260911.json](../../../../docs/architecture/work_scratch_consumer_map_20260911.json).
 
-Next implementation slice: Phase 1A of the
-[tech-debt plan](../../../../docs/architecture/TECH_DEBT_ROADMAP_TH.md): classify
-work/scratch consumers and evidence bindings before relocating any live tooling.
-The first slice preserves imports, entrypoints and frozen source snapshots.
-The plan's later refactors are proposals, not already implemented or verified.
+Next implementation slice: Phase 1B (Cluster 1: Attestation & Production Smoke migration).
+Relocate reusable verification tools to `tools/verification/` while retaining
+backwards-compatible stubs in `scratch/` and `work/` to guarantee zero broken imports.
 
 ## Latest accepted correctness change
 
