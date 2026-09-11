@@ -32,15 +32,8 @@
 #include <unistd.h>
 #endif
 
-#if defined(_MSC_VER)
-#include <intrin.h>
-#endif
-
-#define RED 1
-#define BLACK 2
-#define MAX_MOVES 4096
-#define MAKHOS_MAX_PATH 17
-#define MAKHOS_SEARCH_MAX_PLY 96
+#include "makhos_types.h"
+#include "makhos_format.h"
 
 #ifndef MAKHOS_NNUE_SEARCH_CANDIDATE
 #define MAKHOS_NNUE_SEARCH_CANDIDATE 0
@@ -52,14 +45,6 @@
 #if MAKHOS_NNUE_SEARCH_CANDIDATE && !defined(MAKHOS_NNUE_RUNTIME_INCLUDED)
 #error "NNUE search candidate must be built through makhos_native_nnue.c"
 #endif
-
-typedef struct {
-    uint32_t red;
-    uint32_t black;
-    uint32_t kings;
-    uint8_t turn;
-    uint8_t reversible_plies;
-} Position;
 
 #if MAKHOS_NNUE_SEARCH_CANDIDATE
 static MakhosNnueIncrementalModel *native_nnue_model = NULL;
@@ -76,55 +61,6 @@ static const uint8_t native_nnue_binary_sha256[32] = {
     0x33, 0xea, 0x0a, 0x8c, 0x09, 0x14, 0x16, 0x4c
 };
 #endif
-
-typedef struct {
-    Position next;
-    uint8_t path[MAKHOS_MAX_PATH];
-    uint8_t captured[MAKHOS_MAX_PATH - 1];
-    uint8_t path_len;
-    uint8_t capture_count;
-    uint8_t promotes;
-} Move;
-
-typedef struct {
-    Move moves[MAX_MOVES];
-    uint32_t count;
-} MoveList;
-
-typedef struct {
-    Position position;
-    uint16_t distance;
-    int8_t outcome;
-    uint8_t used;
-} ExactEntry;
-
-typedef struct {
-    ExactEntry *entries;
-    size_t capacity;
-    size_t count;
-    MoveList *workspace;
-    size_t workspace_depth;
-    uint8_t no_progress_plies;
-    bool failed;
-} ExactContext;
-
-typedef struct {
-    int8_t outcome;
-    uint16_t distance;
-} ExactValue;
-
-typedef struct {
-    uint64_t roots;
-    uint64_t wins;
-    uint64_t draws;
-    uint64_t losses;
-} ExactCounts;
-
-enum {
-    OUTCOME_LOSS = -1,
-    OUTCOME_DRAW = 0,
-    OUTCOME_WIN = 1
-};
 
 #if defined(MAKHOS_NO_MAIN)
 /*
@@ -203,55 +139,6 @@ static bool makhos_replace_file_atomically(
 }
 #endif
 
-static inline uint32_t bit_at(int square) {
-    return UINT32_C(1) << square;
-}
-
-static inline uint8_t other(uint8_t player) {
-    return player == RED ? BLACK : RED;
-}
-
-static inline uint32_t occupied(Position position) {
-    return position.red | position.black;
-}
-
-static inline uint32_t pieces_for(Position position, uint8_t player) {
-    return player == RED ? position.red : position.black;
-}
-
-static int pop_lsb(uint32_t *bits) {
-#if defined(_MSC_VER)
-    unsigned long index;
-    _BitScanForward(&index, *bits);
-    *bits &= *bits - 1;
-    return (int)index;
-#else
-    int index = __builtin_ctz(*bits);
-    *bits &= *bits - 1;
-    return index;
-#endif
-}
-
-static void index_to_coord(int square, int *row, int *col) {
-    *row = square / 4;
-    int offset = square % 4;
-    *col = offset * 2 + ((*row % 2) == 0 ? 1 : 0);
-}
-
-static int coord_to_index(int row, int col) {
-    if (row < 0 || row >= 8 || col < 0 || col >= 8 || ((row + col) & 1) != 1) {
-        return -1;
-    }
-    return row * 4 + col / 2;
-}
-
-static bool is_promotion_square(uint8_t player, int square) {
-    int row;
-    int col;
-    index_to_coord(square, &row, &col);
-    (void)col;
-    return player == RED ? row == 7 : row == 0;
-}
 
 static Position move_and_capture(
     Position position,
@@ -315,6 +202,7 @@ static void append_move(MoveList *list, const Move *move, Position terminal_posi
     list->moves[list->count++] = stored;
 }
 
+#if MAKHOS_QSEARCH_CAPTURE_ONLY
 /* Experimental fast geometry for qsearch only. The normal generator uses
  * reference_capture_recursive below. */
 static void qsearch_capture_recursive(
@@ -603,7 +491,6 @@ static void qsearch_capture_recursive(
     }
 }
 
-#if MAKHOS_QSEARCH_CAPTURE_ONLY
 /* Quiescence never explores quiet turns; keep its capture path separate from
  * the authoritative full generator used by normal search and the rules tests.
  */
@@ -802,135 +689,7 @@ static Position initial_position(void) {
     return position;
 }
 
-static bool parse_piece_group(Position *position, const char *group) {
-    if (strlen(group) < 3) {
-        return false;
-    }
-    uint8_t player;
-    if (group[0] == 'B') {
-        player = BLACK;
-    } else if (group[0] == 'R') {
-        player = RED;
-    } else {
-        return false;
-    }
-    bool king;
-    if (group[1] == 'K') {
-        king = true;
-    } else if (group[1] == 'M') {
-        king = false;
-    } else {
-        return false;
-    }
-    const char *cursor = group + 2;
-    if (*cursor == '=') {
-        ++cursor;
-    }
-    if (*cursor == '\0') {
-        return true;
-    }
-    while (*cursor != '\0') {
-        char *end = NULL;
-        long number = strtol(cursor, &end, 10);
-        if (end == cursor || number < 1 || number > 32) {
-            return false;
-        }
-        int square = (int)number - 1;
-        uint32_t square_bit = bit_at(square);
-        if ((occupied(*position) & square_bit) != 0) {
-            return false;
-        }
-        if (player == RED) {
-            position->red |= square_bit;
-        } else {
-            position->black |= square_bit;
-        }
-        if (king) {
-            position->kings |= square_bit;
-        }
-        if (*end == '\0') {
-            break;
-        }
-        if (*end != ',') {
-            return false;
-        }
-        cursor = end + 1;
-    }
-    return true;
-}
 
-static bool parse_position(const char *text, Position *position) {
-    size_t length = strlen(text);
-    char *copy = malloc(length + 1);
-    if (copy == NULL) {
-        return false;
-    }
-    memcpy(copy, text, length + 1);
-    memset(position, 0, sizeof(*position));
-
-    if (
-        (copy[0] != 'B' && copy[0] != 'R') ||
-        (copy[1] != '\0' && copy[1] != ':')
-    ) {
-        free(copy);
-        return false;
-    }
-    position->turn = copy[0] == 'B' ? BLACK : RED;
-    char *cursor = copy + 1;
-    while (*cursor != '\0') {
-        if (*cursor != ':') {
-            free(copy);
-            return false;
-        }
-        ++cursor;
-        char *separator = strchr(cursor, ':');
-        if (separator != NULL) {
-            *separator = '\0';
-        }
-        if (*cursor == '\0' || !parse_piece_group(position, cursor)) {
-            free(copy);
-            return false;
-        }
-        if (separator == NULL) {
-            break;
-        }
-        cursor = separator;
-        *cursor = ':';
-    }
-    free(copy);
-
-    /*
-     * A man promotes as soon as it reaches its far rank, so a serialized
-     * position containing an unpromoted man there is not a reachable/rankable
-     * state.  The ranked tablebases exclude exactly these states.
-     */
-    uint32_t black_men = position->black & ~position->kings;
-    uint32_t red_men = position->red & ~position->kings;
-    for (int square = 0; square < 32; ++square) {
-        int row;
-        int col;
-        index_to_coord(square, &row, &col);
-        (void)col;
-        uint32_t bit = bit_at(square);
-        if (
-            ((black_men & bit) != 0 && row == 0) ||
-            ((red_men & bit) != 0 && row == 7)
-        ) {
-            return false;
-        }
-    }
-    return true;
-}
-
-static void print_move_notation(const Move *move) {
-    char separator = move->capture_count > 0 ? 'x' : '-';
-    for (uint8_t path_index = 0; path_index < move->path_len; ++path_index) {
-        if (path_index > 0) {
-            putchar(separator);
-        }
-        printf("%u", (unsigned)move->path[path_index] + 1);
-    }
-}
 
 static int command_moves(const char *position_text) {
     Position position;
@@ -1224,13 +983,6 @@ static void exact_context_destroy(ExactContext *context) {
     memset(context, 0, sizeof(*context));
 }
 
-static bool valid_man_square(uint8_t player, int square) {
-    int row;
-    int col;
-    index_to_coord(square, &row, &col);
-    (void)col;
-    return player == BLACK ? row != 0 : row != 7;
-}
 
 static int count_bits(uint32_t bits) {
     int count = 0;
@@ -1587,44 +1339,6 @@ enum {
     SEARCH_TT_UPPER = 3
 };
 
-typedef struct {
-    uint8_t path[MAKHOS_MAX_PATH];
-    uint8_t captured[MAKHOS_MAX_PATH - 1];
-    uint8_t path_len;
-    uint8_t capture_count;
-    uint8_t promotes;
-} MakhosPackedMove;
-
-typedef struct {
-    uint32_t red;
-    uint32_t black;
-    uint32_t kings;
-    uint8_t turn;
-    uint8_t count;
-    uint8_t reserved[2];
-} MakhosHistoryEntry;
-
-typedef struct {
-    uint64_t key;
-    MakhosHistoryEntry entry;
-} NativeHistoryLookupEntry;
-
-typedef struct {
-    int32_t score;
-    uint32_t depth;
-    uint64_t nodes;
-    uint32_t elapsed_ms;
-    uint32_t pv_len;
-    MakhosPackedMove best_move;
-    MakhosPackedMove pv[MAKHOS_SEARCH_MAX_PLY];
-} MakhosSearchResult;
-
-typedef struct {
-    uint64_t path_low;
-    uint64_t captured_low;
-    uint32_t path_high_meta;
-    uint32_t captured_high_meta;
-} NativeCompactMove;
 
 typedef struct {
     uint64_t key;
@@ -1762,14 +1476,7 @@ typedef MakhosPackedMove NativePVMove;
 typedef Move NativePVMove;
 #endif
 
-_Static_assert(sizeof(MakhosPackedMove) == 36, "packed move layout drifted");
-_Static_assert(
-    offsetof(Move, path) + sizeof(MakhosPackedMove) == sizeof(Move),
-    "Move path metadata is no longer a contiguous packed move"
-);
-
 #if MAKHOS_COMPACT_TT
-_Static_assert(sizeof(NativeCompactMove) == 24, "compact move layout drifted");
 _Static_assert(sizeof(NativeTTEntry) == 40, "TT entry layout drifted");
 #endif
 
