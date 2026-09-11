@@ -3,16 +3,17 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt Phase 1B (Cluster 1 complete)
+## Current scope: tech-debt Phase 1B (Clusters 1 and 2 complete)
 
 PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (roadmap/complexity controls).
 Phase 1A completed and merged as `e8f7e90e3ca05b80b11506be95d3e22d9af023cd` (113 files mapped).
-Phase 1B (Cluster 1: Attestation & Production Smoke) complete:
-- Canonical tools created at `tools/verification/full_suite_attestation.py` and `tools/verification/nnue_production_smoke.py`.
-- Backward-compatibility thin wrappers in place at `scratch/nnue_full_suite_attestation.py` and `work/nnue_production_smoke.py`.
-- Verified on Windows Local: 516/516 Python tests PASS (179.88s), 16/16 Node tests PASS, 0 failures/errors, rules/model/DLL invariants intact.
+Phase 1B (Cluster 1: Attestation & Production Smoke) merged as `36cc8afc445d37e7ed534219ab82fa08dee90580`.
+Phase 1B (Cluster 2: SPRT Arena & Telemetry Audit tools) complete:
+- Canonical tools created at `tools/arena/` (`source_isolated_arena.py`, `nnue_gate_c_control.py`, `run_sprt_step4_1000ms.py`, `nnue_gate_c_status_terminal.ps1`, `nnue_status_terminal.ps1`) and `tools/verification/` (`freeze_nnue_gate_c.py`, `nnue_gate_c_runtime_audit.py`, `verify_nnue_guide_implementation.py`, `prepare_nnue_thread_audit.py`, `nnue_thread_audit_report.py`, `nnue_thread_audit_collect.py`).
+- Backward-compatibility thin wrappers in place across `work/` preserving CLI commands, imports, and process contracts.
+- Verified on Windows Local: 516/516 tests/ PASS (170.90s), 55/55 work/ tests PASS (16.15s), 16/16 Node tests PASS, rules/model/DLL invariants intact.
 
-Next implementation slice: Phase 1B (Cluster 2: SPRT Arena & Telemetry Audit tools migration).
+Next implementation slice: Phase 1B (Cluster 3: Tooling Tests Migration to tests/tooling/).
 
 ## Latest accepted correctness change
 
