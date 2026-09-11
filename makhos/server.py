@@ -38,6 +38,7 @@ from .tb3_service import TB3Service
 from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
 from .native_endgame import NativeEndgameTablebase
 from .native_endgame_search import NativeEndgameSearch, ParallelNativeEndgameSearch
+from .endgame_routing import is_native_endgame_position
 from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from .ranked_tablebase import RankedTablebase
 from .search import Engine, Mode, SearchLimits
@@ -447,19 +448,6 @@ def ensure_native_endgame_ready(engine: Engine) -> bool:
     engine.native_endgame_evaluator = search.evaluator
     engine.last_native_error = None
     return True
-
-
-def is_native_endgame_position(state) -> bool:
-    """Cheap C3 routing predicate, including the seven-piece capture edge."""
-    pieces = sum(piece != EMPTY for piece in state.board)
-    if pieces <= 6:
-        return True
-    if pieces != 7:
-        return False
-    return any(
-        sum(piece != EMPTY for piece in apply_move(state, move, validate=False).board) <= 6
-        for move in legal_moves(state)
-    )
 
 
 def close_global_engine() -> None:

@@ -1,5 +1,23 @@
 # Current ThaiMakhosEngine state
 
+## Latest user directive — 2026-09-11 (supersedes old launch prose below)
+
+User stopped C4 Experiment A 1000ms at 539 pairs for resource allocation.
+Statistical status remains INCONCLUSIVE (LLR -0.3364); keep 12T production.
+2000ms is deferred. The 27-pair pre-fix checkpoint is historical and immutable.
+These counters are user-reported; the Local-only checkpoints were not opened here.
+Do not resume either run from the historical instructions below.
+
+Active work: `codex/endgame-transition-coverage`, based on `bbdc86c`, fixes
+8/9-piece multi-capture admission into TB6 without changing native/rules/root policy.
+KEEP_CANDIDATE_PENDING_WINDOWS; no merge/promotion or strength claim. Linux adds
+9 passing regressions and 1 real-TB6 skip; full suite retains the base's same
+8 failure/19 error IDs. Next: Windows full suite, real TB6 proof and GUI smoke
+using the pinned C4 DLL/model. Then consider a new SMP mechanism, not an unchanged
+retry of rejected Root-PVS. See [acceptance plan](../../../../docs/architecture/ENDGAME_TRANSITION_COVERAGE_TH.md).
+
+The remainder is historical state from 2026-09-08.
+
 Reviewed: 2026-09-08. This is the single current-state routing record, not a
 live counter. Check atomic result files, run manifest and process identity.
 
