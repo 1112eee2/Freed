@@ -3,18 +3,16 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt Phase 1A complete, preparing Phase 1B
+## Current scope: tech-debt Phase 1B (Cluster 1 complete)
 
-PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b`, establishing the tech-debt
-roadmap and complexity controls in SKILL.md.
-Phase 1A is complete: all 113 tracked files in `work/` and `scratch/` have been mapped,
-classified, and bound to their consumers and evidence in
-[WORK_SCRATCH_CONSUMER_MAP_TH.md](../../../../docs/architecture/WORK_SCRATCH_CONSUMER_MAP_TH.md)
-and [work_scratch_consumer_map_20260911.json](../../../../docs/architecture/work_scratch_consumer_map_20260911.json).
+PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (roadmap/complexity controls).
+Phase 1A completed and merged as `e8f7e90e3ca05b80b11506be95d3e22d9af023cd` (113 files mapped).
+Phase 1B (Cluster 1: Attestation & Production Smoke) complete:
+- Canonical tools created at `tools/verification/full_suite_attestation.py` and `tools/verification/nnue_production_smoke.py`.
+- Backward-compatibility thin wrappers in place at `scratch/nnue_full_suite_attestation.py` and `work/nnue_production_smoke.py`.
+- Verified on Windows Local: 516/516 Python tests PASS (179.88s), 16/16 Node tests PASS, 0 failures/errors, rules/model/DLL invariants intact.
 
-Next implementation slice: Phase 1B (Cluster 1: Attestation & Production Smoke migration).
-Relocate reusable verification tools to `tools/verification/` while retaining
-backwards-compatible stubs in `scratch/` and `work/` to guarantee zero broken imports.
+Next implementation slice: Phase 1B (Cluster 2: SPRT Arena & Telemetry Audit tools migration).
 
 ## Latest accepted correctness change
 
