@@ -87,7 +87,7 @@ function Invoke-NativeBuild {
 
     New-Item -ItemType Directory -Force -Path $BuildRoot | Out-Null
 
-    & $Compiler -O3 -march=native -std=c17 -Wall -Wextra -Werror $Source -o $Output
+    & $Compiler -O3 -march=native -std=c17 -Wall -Wextra -Werror -Wno-unused-function $Source -o $Output
     if ($LASTEXITCODE -ne 0) { throw "Native build failed with exit code $LASTEXITCODE" }
 
     & $Compiler -O3 -march=native -std=c17 -Wall -Wextra -Werror -Wno-unused-function -shared -DMAKHOS_NO_MAIN $Source -o $Library
@@ -218,7 +218,7 @@ function Invoke-EndgameBuild {
     }
 
     $ResolvedSources = $Sources | ForEach-Object { Join-Path $ProjectRoot $_ }
-    & $ClangCompiler @Flags @ResolvedSources -o $DllPath
+    & $ClangCompiler @Flags $ResolvedSources -o $DllPath
     if ($LASTEXITCODE -ne 0) {
         throw "Endgame build $Subdir failed with exit code $LASTEXITCODE"
     }
@@ -388,10 +388,10 @@ switch ($Variant) {
         }
     }
     'endgame_c1' {
-        Invoke-EndgameBuild -Subdir 'native_endgame_c1' -DllName 'makhos_endgame_search_hce.dll' -Sources @('native/makhos_endgame_search_hce.c', 'native/makhos_endgame_tb.c')
+        Invoke-EndgameBuild -Subdir 'native_endgame_c1' -DllName 'makhos_endgame_tb.dll' -Sources @('native/makhos_endgame_tb.c')
     }
     'endgame_c2' {
-        Invoke-EndgameBuild -Subdir 'native_endgame_c2' -DllName 'makhos_endgame_search_hce.dll' -Sources @('native/makhos_endgame_search_hce.c', 'native/makhos_endgame_tb.c')
+        Invoke-EndgameBuild -Subdir 'native_endgame_c2' -DllName 'makhos_endgame_search.dll' -Sources @('native/makhos_endgame_search.c', 'native/makhos_endgame_tb.c')
     }
     'endgame_c3' {
         Invoke-EndgameBuild -Subdir 'native_endgame_c3' -DllName 'makhos_endgame_search_nnue.dll' -Sources @('native/makhos_endgame_search_nnue.c', 'native/makhos_endgame_tb.c')

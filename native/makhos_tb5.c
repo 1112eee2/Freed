@@ -1231,7 +1231,8 @@ int main(int argc, char **argv) {
     }
     if (argc == 4 && strcmp(argv[1], "compact-dfpn") == 0) {
         return compact_dfpn_checkpoint(
-            argv[2], argv[3], false, false, 0, false, 0, false, 0
+            argv[2], argv[3], false, false, 0, false, 0, false, 0,
+            false, (Position){0}
         );
     }
     if (argc == 6 && strcmp(argv[1], "build") == 0) {
