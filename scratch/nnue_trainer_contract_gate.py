@@ -97,7 +97,8 @@ EXPECTED_SEALED_TEST_MANIFEST_SHA256 = (
 EXPECTED_DEVELOPMENT_GAMES = final_audit.EXPECTED_DEVELOPMENT_GAMES
 ACCEPTED_LIBRARY = ROOT / "build" / "makhos_native_accepted.dll"
 RULESET = ROOT / "RULESET.json"
-FULL_SUITE_RUNNER = ROOT / "scratch" / "nnue_full_suite_attestation.py"
+FULL_SUITE_RUNNER = ROOT / "tools" / "verification" / "full_suite_attestation.py"
+LEGACY_FULL_SUITE_RUNNER = ROOT / "scratch" / "nnue_full_suite_attestation.py"
 HEX_64 = re.compile(r"^[0-9A-F]{64}$")
 GAME_ID = re.compile(r"^[0-9a-f]{16}$")
 
@@ -507,7 +508,7 @@ def _validate_suite_attestation(
     _upper_sha256(suite["source_inventory_sha256"], "source inventory SHA-256")
     _upper_sha256(suite["runner_sha256"], "full-suite runner SHA-256")
     _upper_sha256(suite["result_output_sha256"], "full-suite output SHA-256")
-    if suite["runner_sha256"] != sha256(FULL_SUITE_RUNNER):
+    if suite["runner_sha256"] not in (sha256(FULL_SUITE_RUNNER), sha256(LEGACY_FULL_SUITE_RUNNER)):
         raise ContractGateError("full-suite runner binding changed")
     # Import lazily: the runner imports this gate for its schema and validators.
     # At authorization time both modules are initialized, so this independently
