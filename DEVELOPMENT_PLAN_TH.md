@@ -8,14 +8,13 @@ NNUE/HCE HTTP smoke PASS ไม่อ้างว่า Elo เพิ่ม แ�
 
 ใช้ [Tech-debt roadmap](docs/architecture/TECH_DEBT_ROADMAP_TH.md) เป็นแผนรายละเอียดจุดเดียว:
 
-1. Phase 0: inventory/แหล่งคำสั่ง/skill complexity guard — เตรียมใน planning PR นี้
-2. Phase 1: consumer/evidence map แล้วค่อยย้าย tooling โดยรักษา imports/commands เดิม
+1. Phase 0: inventory/แหล่งคำสั่ง/skill complexity guard — เสร็จสมบูรณ์ (PR #7)
+2. Phase 1: consumer/evidence map, ย้าย tooling และจัดทำสารบัญหลัก — เสร็จสมบูรณ์ (PR #8-#12)
+   - สารบัญประวัติและหลักฐานการทดลอง: [ดัชนีหลักฐานการทดลอง](docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md)
 3. Phase 2: shared build orchestration → server lifecycle owner → CLI handler boundaries
 4. Phase 3: native/NNUE modularization หลังมี baseline และ acceptance ของ phase ก่อนหน้า
 
-เริ่ม implementation ถัดไปที่ Phase 1A เท่านั้นก่อนขยาย scope; แผนนี้ยังไม่สั่งรัน
-SMP, ancestor delta, trainer หรือ SPRT ใหม่ 12T defaults และ checkpoint ทั้งสองชุดคงเดิม
-รายงานสถานะปัจจุบันอยู่ที่ current-state; เนื้อหาด้านล่างเป็นประวัติการพัฒนา
+รายงานสถานะปัจจุบันอยู่ที่ [.agents/skills/.../references/current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md); เนื้อหาด้านล่างเป็นประวัติการพัฒนา
 
 ## ประวัติ 2026-09-11: ปิดรอยต่อ multi-capture เข้า TB6 ก่อน SMP
 
