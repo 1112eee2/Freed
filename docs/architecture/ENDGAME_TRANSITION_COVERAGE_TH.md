@@ -3,7 +3,15 @@
 วันที่ 2026-09-11 · ฐาน `bbdc86c0853573a66dd3da9334dd56955bc7c2b1`
 Branch: `codex/endgame-transition-coverage`
 
-สถานะ **KEEP_CANDIDATE_PENDING_WINDOWS** — ยังไม่ merge/promote และไม่มีหลักฐาน Elo
+สถานะล่าสุด **CORRECTNESS_MERGED_WITH_EXCEPTION** — [PR #6](https://github.com/1112eee2/ThaiMakhosEngine/pull/6)
+merged ที่ `e975d6843ee23e9fe42a3662f5d802516293796e` หลังผู้ใช้อนุมัติยกเว้น paired strength
+gate เฉพาะแพตช์นี้ ไม่อ้าง Elo เพิ่ม และไม่ยกเว้น gate ของงานอื่น
+
+Windows Local รายงาน 10/10 transition tests, full suite 513/513 (177.122 s, ไม่มี
+failures/errors/skips), Node 16/16, real-TB4–TB6 benchmark 48 observations และ HTTP smoke
+NNUE/HCE ผ่านครบ Overshoot mean 2.12 ms/max 3.70 ms พร้อม invariant/checkpoint hashes เดิม
+Raw Windows artifacts อยู่บน Local; Web ยังไม่ได้ดึงมาคำนวณ hashes อิสระ รายงาน Linux
+และข้อจำกัดเดิมด้านล่างคงไว้เป็นหลักฐาน ไม่เปลี่ยนย้อนหลังให้เป็น Windows PASS
 
 ## สมมติฐานและขอบเขต
 
