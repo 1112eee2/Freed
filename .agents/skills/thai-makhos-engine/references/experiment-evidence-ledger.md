@@ -4266,3 +4266,25 @@ latency. Source-bound raw evidence: benchmarks/results/endgame_transition_v1/sum
 Next: Windows real TB6 root DRAW/all-alternatives gate, full suite and source-bound
 HTTP smoke per docs/architecture/ENDGAME_TRANSITION_COVERAGE_TH.md. No Elo promotion;
 any strength gate needs a new manifest, never resumed historical Experiment A data.
+
+## 2026-09-11 — PR #6 correctness merge and tech-debt planning
+
+CORRECTNESS_MERGED_WITH_EXCEPTION: PR #6 merged as e975d6843ee23e9fe42a3662f5d802516293796e;
+its tree is identical to Windows-tested head 8a9f650ef08890a1e7134bb864b4de1a299fa900.
+The user explicitly authorized omitting the paired strength gate for this PR only.
+No Elo improvement is claimed; future strength gates remain applicable.
+
+Windows Local operator reported 513/513 Python tests PASS in 177.122 s, 16/16 Node
+PASS, 48 real-TB4-TB6 observations with all root alternatives and the exact DRAW
+child, overshoot mean 2.12 ms/max 3.70 ms, and NNUE/HCE HTTP smoke PASS. Invariant
+and checkpoint identities were reported unchanged. Raw Windows artifacts remain
+Local and were not independently retrieved/hashed by Web. The earlier Linux
+NOT_PASS and TB3-only diagnostic records remain unchanged.
+
+The user's next task is tech-debt planning, including complexity controls in the
+repository skill. The planning branch codex/tech-debt-roadmap adds a source-bound
+tracked-file inventory, a phased plan at docs/architecture/TECH_DEBT_ROADMAP_TH.md,
+removes the stale Experiment A launch directive from SKILL.md, and consolidates
+current status with a byte-identical historical snapshot. No engine/native/build
+scripts, defaults, artifacts or checkpoints change. Next implementation slice:
+Phase 1A work/scratch consumer and evidence map; no SMP/arena launch is implied.
