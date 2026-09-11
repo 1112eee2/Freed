@@ -1,6 +1,23 @@
 # คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
-## คำสั่งล่าสุด 2026-09-11: ปิดรอยต่อ multi-capture เข้า TB6 ก่อน SMP
+## งานปัจจุบัน 2026-09-11: ลด Tech Debt ก่อนเพิ่ม Complexity
+
+PR #6 merged เป็น `e975d68` หลังผู้ใช้อนุมัติ correctness-only exception เฉพาะงานนี้
+Windows Local รายงาน full suite 513/513, Node 16/16, real-TB4–TB6 transition และ
+NNUE/HCE HTTP smoke PASS ไม่อ้างว่า Elo เพิ่ม และไม่ใช้ข้อยกเว้นนี้กับงานอื่น
+
+ใช้ [Tech-debt roadmap](docs/architecture/TECH_DEBT_ROADMAP_TH.md) เป็นแผนรายละเอียดจุดเดียว:
+
+1. Phase 0: inventory/แหล่งคำสั่ง/skill complexity guard — เตรียมใน planning PR นี้
+2. Phase 1: consumer/evidence map แล้วค่อยย้าย tooling โดยรักษา imports/commands เดิม
+3. Phase 2: shared build orchestration → server lifecycle owner → CLI handler boundaries
+4. Phase 3: native/NNUE modularization หลังมี baseline และ acceptance ของ phase ก่อนหน้า
+
+เริ่ม implementation ถัดไปที่ Phase 1A เท่านั้นก่อนขยาย scope; แผนนี้ยังไม่สั่งรัน
+SMP, ancestor delta, trainer หรือ SPRT ใหม่ 12T defaults และ checkpoint ทั้งสองชุดคงเดิม
+รายงานสถานะปัจจุบันอยู่ที่ current-state; เนื้อหาด้านล่างเป็นประวัติการพัฒนา
+
+## ประวัติ 2026-09-11: ปิดรอยต่อ multi-capture เข้า TB6 ก่อน SMP
 
 ผู้ใช้ยุติ Experiment A C4 1000ms ที่ 539 คู่: **INCONCLUSIVE**, คง 12T;
 2000ms deferred และ 27 คู่เดิมเก็บเป็นประวัติศาสตร์ ห้ามใช้ข้อความ launch ด้านล่าง
