@@ -3,18 +3,22 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt Phase 2A complete (Build consolidation)
+## Current scope: Tech-Debt Roadmap Complete (Phases 0 through 3)
 
-PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (roadmap/complexity controls).
-Phase 1 (1A, 1B, 1C) completed and merged via PR #8, #9, #10, #11, #12.
-Phase 2A (Build consolidation) complete:
-- Canonical build orchestrator created at `tools/build/build_orchestrator.ps1` consolidating build logic for all 10 engine, NNUE, and tablebase variants (`native`, `nnue_scalar`, `nnue_incremental`, `nnue_avx2`, `nnue_avx2_update`, `nnue_search_candidate`, `endgame_c1`..`c4`).
-- Thin backward-compatibility wrappers in place at root (`build_native.ps1`, `build_nnue_*.ps1`) and `tools/` (`build_endgame_c*.ps1`).
-- Scoped `.gitignore` to `/build/` with `!tools/build/` exception.
-- Unit and regression tests established at `tests/tooling/test_build_orchestrator.py` (3 tests, 10 subtests PASS).
-- Verified on Windows Local: all variant prerequisites, path bounds, compiler detection, A/B reproducible compilation verified, invariants intact.
+- PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (Phase 0: roadmap/complexity controls).
+- Phase 1 (1A, 1B, 1C) completed and merged via PR #8, #9, #10, #11, #12 (tooling, evidence routing, canonical index).
+- Phase 2A (Build consolidation) merged via PR #13 (`b9bebb8`).
+- Phase 2B (Engine manager & server separation) merged via PR #14 (`9caa1ba`): authoritative Engine state in `makhos/engine_manager.py`, `makhos/server.py` as HTTP adapter with 100% facade compatibility.
+- Phase 2C (CLI modularization) merged via PR #15 (`5e6bd3b`): CLI command handlers decomposed into `makhos/cli_handlers/` with thin router in `makhos/cli.py`.
+- Phase 3 (Native leaf modularization & NNUE surface):
+  - Dependency & ABI map documented at `docs/architecture/NATIVE_ABI_AND_DEPENDENCY_MAP_TH.md`.
+  - Extracted leaf types and ABI memory layout assertions to `native/makhos_types.h`.
+  - Extracted board coordinate conversions, move notation, and FEN parsing to `native/makhos_format.h`.
+  - Streamlined `native/makhos_native.c`, eliminating duplicated definitions while keeping bit-exact ABI and inlining.
+  - Hardened build orchestrator and `makhos_tb5.c` checkpoint call.
+  - Verified: all 10 native variants compile cleanly; native perft depth 1..10 bit-exact match (depth 10 = 861,842,812 nodes); Python/native differential verification (204 positions, 1,149 moves PASS); full unittest suite 581/581 tests PASS; tooling suite 58/58 tests PASS; immutable invariant SHA-256 hashes 100% preserved.
 
-Phase 2A complete. Next implementation slice: Phase 2B (Separate server according to owner).
+All roadmap phases in `docs/architecture/TECH_DEBT_ROADMAP_TH.md` are completed.
 
 
 ## Latest accepted correctness change
