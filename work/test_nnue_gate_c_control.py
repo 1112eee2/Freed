@@ -9,7 +9,7 @@ import sys
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
-import nnue_gate_c_control as control
+from tools.arena import nnue_gate_c_control as control
 from makhos.sprt import calculate_pentanomial_sprt
 
 
