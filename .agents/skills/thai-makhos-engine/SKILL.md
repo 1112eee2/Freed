@@ -19,21 +19,19 @@ sacrificing rules correctness, reproducibility, rollback, or user-facing
 stability. “World strongest” requires independent external evidence; self-play
 against an older internal build is not enough.
 
-## Current directive — approved implementation (2026-09-08)
+## Current work
 
 Read [references/current-state.md](references/current-state.md) first for the
-current gate, immutable result identities, run-manifest pointer and next action.
+current scope, immutable result identities, run-manifest pointer and next action.
 It is the single current-state record; live counters come from validated
 append-only pair logs and process creation identity, not prose or a cached PID.
 
-Execute the approved sequence in
-[../../../DEVELOPMENT_PLAN_TH.md](../../../DEVELOPMENT_PLAN_TH.md):
-Gate C controls and NNUE v1 Production Promotion are **complete and verified**.
-Phase 4 (NNUE Thread-Scaling Audit) is **complete and verified** (5,760 observations,
-`build/nnue_thread_scaling_measured_v1/report.json`).
-The active directive is **Phase 5: Experiment A (Direct 6T vs 12T Superiority SPRT)**.
-Test whether NNUE v1 at 6T provides higher Elo than production 12T under fixed
-1000ms and 2000ms time controls, bounded by manifest `build/nnue_sprt_6t_vs_12t/manifest.json`.
+Use the current section of
+[../../../DEVELOPMENT_PLAN_TH.md](../../../DEVELOPMENT_PLAN_TH.md) for sequencing.
+Keep transient experiment status and launch decisions in current-state, rather
+than duplicating them in this entrypoint. Historical launch commands do not
+authorize resuming stopped or completed runs. For maintainability work use the
+[tech-debt plan](../../../docs/architecture/TECH_DEBT_ROADMAP_TH.md).
 
 Optimize measured playing strength on this 6-core/12-logical-thread host.
 Include 6 threads in 1/2/4/6/8/12 comparisons. Recommend the strongest supported
@@ -52,7 +50,7 @@ read it only for historical evidence, never as a launch instruction.
 Use this order when documents conflict:
 
 1. the user's latest request and active goal;
-2. this skill's current directive and invariants;
+2. this skill's invariants and the maintained current-state record;
 3. `DEVELOPMENT_PLAN_TH.md`;
 4. `NNUE_ROADMAP.md` for NNUE details;
 5. the historical evidence ledger;
@@ -60,6 +58,41 @@ Use this order when documents conflict:
 
 Do not treat old test counts, live progress counts, “next” prose, filenames, or
 point estimates as current authority. Re-measure cheap, drift-prone facts.
+
+## Control complexity as the project grows
+
+Complexity grows through interacting backends, flags, state owners and workflows,
+not just file length. Treat maintenance cost as part of the design, especially
+when a local fix would introduce another production path or script variant.
+
+- Before expanding an interface or splitting a module, identify its callers,
+  resource owner and observable contract. Reuse the existing implementation
+  where that preserves the boundary. Independent rules/evaluation oracles used
+  for differential verification must remain independent.
+- For a structural change, briefly record the change in supported profiles,
+  mutable state owners, cross-module dependencies and maintained entrypoints
+  in the PR. Explain an increase and how it will be tested and maintained;
+  do not create a separate report for routine local edits.
+- Prefer one authoritative routing/configuration/lifecycle implementation.
+  Compatibility wrappers delegate; they must not become a second implementation
+  or a second owner of mutable engine state.
+- Add an abstraction, dependency or feature flag for a demonstrated need.
+  Describe supported combinations and fail clearly on unsupported ones;
+  avoid speculative plugin frameworks or multiplying parallel engine variants.
+- Keep refactoring separate from search heuristics, TT/SMP scheduling, model
+  changes and compiler optimization changes. Preserve command names, defaults,
+  artifact formats and provenance until a migration has verified replacements.
+- Treat frozen experiments, manifests, logs and control/candidate snapshots as
+  evidence, not disposable duplication. Trace imports, commands and hash/path
+  bindings before moving files from work/ or scratch/. Remove a compatibility
+  path only after its consumers and reproduction obligations are accounted for.
+- Keep this entrypoint short; maintain current decisions in current-state and
+  detailed evidence in linked records. Use the roadmap's phase-specific gates,
+  not arbitrary LOC limits or a checklist that expands with every incident.
+
+Honor an explicit user-approved gate exception for its recorded scope without
+asking again. Record the affected commit/PR, waived gate and retained evidence;
+do not generalize that exception to later refactors or strength experiments.
 
 ## Immutable identities
 
