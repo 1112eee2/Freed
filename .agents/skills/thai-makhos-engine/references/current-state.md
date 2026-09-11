@@ -3,17 +3,18 @@
 Updated 2026-09-11. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
-## Current scope: tech-debt Phase 1 complete (1A, 1B, 1C complete)
+## Current scope: tech-debt Phase 2A complete (Build consolidation)
 
 PR #7 merged as `738cb7cfc350ed1fd606a45ebe05b22589ad3d5b` (roadmap/complexity controls).
-Phase 1A completed and merged as `e8f7e90e3ca05b80b11506be95d3e22d9af023cd` (113 files mapped).
-Phase 1B (Clusters 1, 2, 3) merged as `36cc8af` (PR #9), `c80b0c6` (PR #10), `3308d4a` (PR #11).
-Phase 1C (Evidence routing & documentation consolidation) complete:
-- Canonical experiment & evidence index created at `docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md`.
-- `README.md` and `DEVELOPMENT_PLAN_TH.md` updated with canonical links.
-- Verified on Windows Local: documentation links valid, invariants intact.
+Phase 1 (1A, 1B, 1C) completed and merged via PR #8, #9, #10, #11, #12.
+Phase 2A (Build consolidation) complete:
+- Canonical build orchestrator created at `tools/build/build_orchestrator.ps1` consolidating build logic for all 10 engine, NNUE, and tablebase variants (`native`, `nnue_scalar`, `nnue_incremental`, `nnue_avx2`, `nnue_avx2_update`, `nnue_search_candidate`, `endgame_c1`..`c4`).
+- Thin backward-compatibility wrappers in place at root (`build_native.ps1`, `build_nnue_*.ps1`) and `tools/` (`build_endgame_c*.ps1`).
+- Scoped `.gitignore` to `/build/` with `!tools/build/` exception.
+- Unit and regression tests established at `tests/tooling/test_build_orchestrator.py` (3 tests, 10 subtests PASS).
+- Verified on Windows Local: all variant prerequisites, path bounds, compiler detection, A/B reproducible compilation verified, invariants intact.
 
-Phase 1 complete. Next implementation slice: Phase 2A (Build consolidation).
+Phase 2A complete. Next implementation slice: Phase 2B (Separate server according to owner).
 
 
 ## Latest accepted correctness change
