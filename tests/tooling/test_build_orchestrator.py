@@ -1,5 +1,6 @@
 """Unit and regression tests for tools/build/build_orchestrator.ps1."""
 import subprocess
+import shutil
 import unittest
 from pathlib import Path
 
@@ -20,6 +21,7 @@ ALL_VARIANTS = (
 )
 
 
+@unittest.skipUnless(shutil.which("powershell.exe"), "Windows PowerShell is required")
 class BuildOrchestratorTests(unittest.TestCase):
     def setUp(self):
         self.assertTrue(ORCHESTRATOR.exists(), f"Orchestrator missing: {ORCHESTRATOR}")
@@ -51,6 +53,23 @@ class BuildOrchestratorTests(unittest.TestCase):
                     f"Variant {variant} failed verification:\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}",
                 )
                 self.assertIn("verified", proc.stdout.lower())
+
+    def test_strict_key_requires_nnue_search_variant(self):
+        proc = self.run_pwsh("-Variant", "native", "-StrictSearchKey", "-VerifyOnly")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("supported only for nnue_search_candidate", proc.stderr + proc.stdout)
+
+    def test_strict_key_requires_separate_output(self):
+        for extra, expected in (
+            ([], "requires an explicit candidate OutputDirectory"),
+            (["-OutputDirectory", str(ROOT / "build" / "nnue_search_v1_r5")],
+             "must not target the production NNUE directory"),
+        ):
+            with self.subTest(extra=extra):
+                proc = self.run_pwsh("-Variant", "nnue_search_candidate",
+                                     "-StrictSearchKey", "-VerifyOnly", *extra)
+                self.assertNotEqual(proc.returncode, 0)
+                self.assertIn(expected, proc.stderr + proc.stdout)
 
     def test_unknown_variant_rejected(self):
         proc = self.run_pwsh("-Variant", "non_existent_variant")

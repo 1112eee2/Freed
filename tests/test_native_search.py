@@ -1,5 +1,9 @@
 import ctypes
 import random
+import os
+import shutil
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -362,33 +366,36 @@ class NativeSearchTests(unittest.TestCase):
         self.assertFalse(native.persistent)
 
 
-@unittest.skipUnless(
-    all(
-        path.is_file()
-        for path in (
-            SEARCH_KEY_CONTROL_LIBRARY,
-            SEARCH_KEY_CANDIDATE_LIBRARY,
-            SEARCH_KEY_LEGACY_INDEX_CANDIDATE_LIBRARY,
-            SEARCH_KEY_LEGACY_INDEX_PGO_CANDIDATE_LIBRARY,
-        )
-    ),
-    "search-key candidate DLLs are absent",
-)
 class NativeSearchPositionKeyCandidateTests(unittest.TestCase):
+    """Compile the key contract from source instead of relying on archived DLLs."""
+
     @classmethod
     def setUpClass(cls):
-        cls.control = ctypes.CDLL(str(SEARCH_KEY_CONTROL_LIBRARY))
-        cls.candidates = tuple(
-            (name, path, ctypes.CDLL(str(path)))
-            for name, path in (
-                ("compat", SEARCH_KEY_CANDIDATE_LIBRARY),
-                ("strict-legacy-index", SEARCH_KEY_LEGACY_INDEX_CANDIDATE_LIBRARY),
-                (
-                    "strict-legacy-index-pgo",
-                    SEARCH_KEY_LEGACY_INDEX_PGO_CANDIDATE_LIBRARY,
-                ),
+        root = Path(__file__).resolve().parents[1]
+        clang = Path(r"C:\Program Files\LLVM\bin\clang.exe")
+        compiler = str(clang) if clang.is_file() else shutil.which("clang") or shutil.which("gcc")
+        if compiler is None:
+            raise unittest.SkipTest("a C compiler is required for TT identity regression")
+        (root / "build").mkdir(exist_ok=True)
+        build = Path(tempfile.mkdtemp(prefix="tt-key-tests-", dir=root / "build"))
+        cls.addClassCleanup(shutil.rmtree, build, ignore_errors=True)
+        flags = ["-O2", "-std=c17", "-shared", "-DMAKHOS_NO_MAIN=1",
+                 "-DMAKHOS_SEARCH_KEY_TEST_API=1"]
+        if os.name != "nt":
+            flags += ["-fPIC", "-D_POSIX_C_SOURCE=200809L"]
+        suffix = ".dll" if os.name == "nt" else ".so"
+        cls.control_path = build / ("control" + suffix)
+        candidate_path = build / ("strict" + suffix)
+        for path, strict in ((cls.control_path, 0), (candidate_path, 1)):
+            proc = subprocess.run(
+                [compiler, *flags, f"-DMAKHOS_STRICT_SEARCH_POSITION_KEY={strict}",
+                 str(root / "native/makhos_native.c"), "-o", str(path)],
+                cwd=root, capture_output=True, text=True, check=False,
             )
-        )
+            if proc.returncode:
+                raise AssertionError(proc.stderr)
+        cls.control = ctypes.CDLL(str(cls.control_path))
+        cls.candidates = (("strict", candidate_path, ctypes.CDLL(str(candidate_path))),)
         signature = [
             ctypes.c_uint32,
             ctypes.c_uint32,
@@ -516,8 +523,8 @@ class NativeSearchPositionKeyCandidateTests(unittest.TestCase):
                 self.assertEqual(snapshot(strict_warmed), snapshot(strict_fresh))
                 self.assertIn(strict_warmed.move, legal_moves(state_b))
 
-        legacy_fresh = fresh_b(SEARCH_KEY_CONTROL_LIBRARY)
-        legacy_warmed = warm_then_b(SEARCH_KEY_CONTROL_LIBRARY)
+        legacy_fresh = fresh_b(self.control_path)
+        legacy_warmed = warm_then_b(self.control_path)
         self.assertNotEqual(snapshot(legacy_warmed), snapshot(legacy_fresh))
 
     def test_strict_key_prevents_clock_alias_near_no_progress_limit(self):
@@ -565,8 +572,8 @@ class NativeSearchPositionKeyCandidateTests(unittest.TestCase):
                 self.assertEqual(snapshot(strict_warmed), snapshot(strict_fresh))
                 self.assertIn(strict_warmed.move, legal_moves(state_b))
 
-        legacy_fresh = fresh_b(SEARCH_KEY_CONTROL_LIBRARY)
-        legacy_warmed = warm_then_b(SEARCH_KEY_CONTROL_LIBRARY)
+        legacy_fresh = fresh_b(self.control_path)
+        legacy_warmed = warm_then_b(self.control_path)
         self.assertNotEqual(snapshot(legacy_warmed), snapshot(legacy_fresh))
 
 
