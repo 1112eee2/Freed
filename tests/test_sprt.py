@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from makhos.cli import (
     _load_sprt_checkpoint,
@@ -466,19 +466,8 @@ class SPRTTests(unittest.TestCase):
 
     def test_command_sprt_attaches_c4_endgame_to_factories(self):
         from makhos.cli import command_sprt, build_parser
-
-        parser = build_parser()
-        args = parser.parse_args([
-            "sprt",
-            "--dev-library", "build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll",
-            "--master-library", "build/nnue_sprt_6t_vs_12t/makhos_native_12t.dll",
-            "--dev-nnue-model", "build/nnue_quantized_v1/model_a.mknnue",
-            "--master-nnue-model", "build/nnue_quantized_v1/model_a.mknnue",
-            "--dev-threads", "6",
-            "--master-threads", "12",
-            "--native-endgame",
-            "--pairs", "1",
-        ])
+        from contextlib import ExitStack, redirect_stdout
+        import io
 
         captured_dev = None
         captured_master = None
@@ -489,8 +478,47 @@ class SPRTTests(unittest.TestCase):
             captured_master = master_factory()
             return SPRTResult("INCONCLUSIVE", 0.0, 0.0, 0.0, 0, 0, 0, 0, (0, 0, 0, 0, 0))
 
-        with patch("makhos.sprt.run_sprt_match", side_effect=fake_run_sprt_match):
-            command_sprt(args)
+        # This is a factory-wiring contract, not a real arena or DLL parity gate.
+        # Keep it usable on a clean checkout and independent of stopped experiments.
+        with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
+            root = Path(directory)
+            for name in ("dev.dll", "master.dll", "endgame.dll", "model.mknnue", "ranked.bin"):
+                (root / name).write_bytes(name.encode("ascii"))
+            args = build_parser().parse_args([
+                "sprt", "--dev-library", str(root / "dev.dll"),
+                "--master-library", str(root / "master.dll"),
+                "--dev-nnue-model", str(root / "model.mknnue"),
+                "--master-nnue-model", str(root / "model.mknnue"),
+                "--dev-threads", "6", "--master-threads", "12",
+                "--native-endgame", "--native-endgame-library", str(root / "endgame.dll"),
+                "--ranked-tablebase", str(root / "ranked.bin"), "--pairs", "1",
+            ])
+            module = "makhos.cli_handlers.sprt_handler."
+            preflight = stack.enter_context(patch(module + "NativeSearch"))
+            preflight.return_value.__enter__.return_value = SimpleNamespace(
+                abi_version=5, supports_fixed_search=True, supports_window_search=True,
+                supports_shared_tt=True, nnue_enabled=True, nnue_model_sha256="a" * 64,
+                nnue_feature_abi="thai-makhos-shared-137-v1",
+            )
+            stack.enter_context(patch(module + "ParallelNativeSearch"))
+            legacy_tb = stack.enter_context(patch(module + "NativeTablebase"))
+            legacy_tb.return_value.no_progress_plies = 80
+            ranked = stack.enter_context(patch(module + "RankedTablebase"))
+            ranked.return_value = SimpleNamespace(path=root / "ranked.bin", piece_count=6,
+                no_progress_plies=80, expected_checksum=0, close=Mock())
+            stack.enter_context(patch("makhos.compact_tb3.CompactTablebase"))
+            tablebase = stack.enter_context(patch("makhos.native_endgame.NativeEndgameTablebase"))
+            def endgame_factory(tb, *, threads, nnue_model):
+                self.assertEqual(nnue_model, root / "model.mknnue")
+                return SimpleNamespace(tablebase=tb, threads=threads, evaluator="nnue", close=Mock())
+            stack.enter_context(patch("makhos.native_endgame_search.ParallelNativeEndgameSearch",
+                                      side_effect=endgame_factory))
+            stack.enter_context(patch(module + "BatchWorkLease"))
+            stack.enter_context(patch(module + "_set_batch_process_priority", return_value="test"))
+            stack.enter_context(patch("makhos.sprt.run_sprt_match", side_effect=fake_run_sprt_match))
+            with redirect_stdout(io.StringIO()):
+                command_sprt(args)
+            tablebase.return_value.close.assert_called_once()
 
         self.assertIsNotNone(captured_dev)
         self.assertIsNotNone(captured_master)
