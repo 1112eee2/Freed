@@ -91,3 +91,11 @@ verification ไม่ใช่ attestation การรับรอง NNUE rel
 
 ทุก phase ใช้ผลวัดกำหนด candidate ถัดไป ห้ามนำ control ที่ตัด TB WIN ผิดเดิม
 มาเป็นเป้าความเร็ว และห้ามลดการตรวจ repetition เพื่อให้ผล benchmark ดีขึ้น.
+
+
+## Phase 2 design review — 2026-09-12
+
+ดู [Native Shared-TT Lazy SMP ฉบับทบทวน](NATIVE_SHARED_TT_LAZY_SMP_DESIGN_TH.md)
+สำหรับ publication/history safety, API/lifecycle contracts และ gates ที่แก้ไขแล้ว.
+สถานะยังเป็น PROPOSAL / CHANGES REQUIRED ไม่ใช่คำสั่งเปิด prototype เดิมหรือ
+เปลี่ยน production; ต้องตรึง profile และ baseline หลังแก้ TT identity ก่อนทดลอง.
