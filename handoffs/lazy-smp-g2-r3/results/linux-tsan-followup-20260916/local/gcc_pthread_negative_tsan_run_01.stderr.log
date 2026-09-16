@@ -1,0 +1,20 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=40)
+  Read of size 4 at 0x5620242c4014 by thread T1:
+    #0 race /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14 (gcc_pthread_negative_tsan+0x135c) (BuildId: c9463834b87d5e850c3de07823cc2ace39a97c81)
+
+  Previous write of size 4 at 0x5620242c4014 by thread T2:
+    #0 race /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14 (gcc_pthread_negative_tsan+0x136d) (BuildId: c9463834b87d5e850c3de07823cc2ace39a97c81)
+
+  Location is global 'counter' of size 4 at 0x5620242c4014 (gcc_pthread_negative_tsan+0x4014)
+
+  Thread T1 (tid=42, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:20 (gcc_pthread_negative_tsan+0x13c5) (BuildId: c9463834b87d5e850c3de07823cc2ace39a97c81)
+
+  Thread T2 (tid=43, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:21 (gcc_pthread_negative_tsan+0x13e8) (BuildId: c9463834b87d5e850c3de07823cc2ace39a97c81)
+
+SUMMARY: ThreadSanitizer: data race /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14 in race
+==================

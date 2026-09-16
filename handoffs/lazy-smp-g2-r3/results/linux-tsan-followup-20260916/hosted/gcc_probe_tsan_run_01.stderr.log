@@ -1,0 +1,6 @@
+ThreadSanitizer:DEADLYSIGNAL
+==3730==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f8ad7eb3f90 bp 0x7f8ad4bfe7b0 sp 0x7f8ad4bfe698 T3731)
+==3730==The signal is caused by a READ memory access.
+==3730==Hint: address points to the zero page.
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer: nested bug in the same thread, aborting.

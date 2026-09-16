@@ -1,0 +1,67 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7f5b571ff6c0 (LWP 3797)]
+[New Thread 0x7f5b561fe6c0 (LWP 3798)]
+
+Thread 2 "gcc_probe_tsan" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7f5b571ff6c0 (LWP 3797)]
+__tsan_func_entry (pc=0x7f5b5a09c95b <start_thread+347>) at ../../../../src/libsanitizer/tsan/tsan_interface.inc:168
+
+Thread 3 (Thread 0x7f5b561fe6c0 (LWP 3798) "gcc_probe_tsan"):
+#0  __sanitizer::atomic_load<__sanitizer::atomic_uintptr_t> (a=0x18, mo=__sanitizer::memory_order_relaxed) at ../../../../src/libsanitizer/sanitizer_common/sanitizer_atomic_clang_x86.h:27
+#1  __sanitizer::atomic_load_relaxed<__sanitizer::atomic_uintptr_t> (a=0x18) at ../../../../src/libsanitizer/sanitizer_common/sanitizer_atomic.h:76
+#2  __tsan::TraceAcquire<__tsan::EventFunc> (thr=0x0, ev=<synthetic pointer>) at ../../../../src/libsanitizer/tsan/tsan_rtl.h:704
+#3  __tsan::TryTraceFunc (thr=0x0, pc=140030329342299) at ../../../../src/libsanitizer/tsan/tsan_rtl.h:751
+#4  __tsan::FuncEntry (thr=0x0, pc=140030329342299) at ../../../../src/libsanitizer/tsan/tsan_rtl.h:782
+#5  __tsan_func_entry (pc=0x7f5b5a09c95b <start_thread+347>) at ../../../../src/libsanitizer/tsan/tsan_interface.inc:168
+#6  0x000056367e5086a2 in collide (argument=0x1) at /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/probe.c:102
+#7  0x00007f5b5a09c95b in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:444
+#8  0x00007f5b5a129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x7f5b571ff6c0 (LWP 3797) "gcc_probe_tsan"):
+#0  __tsan_func_entry (pc=0x7f5b5a09c95b <start_thread+347>) at ../../../../src/libsanitizer/tsan/tsan_interface.inc:168
+#1  0x000056367e5086a2 in collide (argument=0x0) at /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/probe.c:102
+#2  0x00007f5b5a09c95b in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:444
+#3  0x00007f5b5a129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7f5b5b4bcf00 (LWP 3794) "gcc_probe_tsan"):
+#0  clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:62
+#1  0x00007f5b5a129dd5 in __clone3_internal (arg=0x7f5b551fd6c0, func=0x7f5b5a09c800 <start_thread>, cl_args=0x7ffd01023430) at ../sysdeps/unix/sysv/linux/clone-internal.c:82
+#2  __GI___clone_internal (cl_args=cl_args@entry=0x7ffd01023430, func=func@entry=0x7f5b5a09c800 <start_thread>, arg=arg@entry=0x7f5b551fd6c0) at ../sysdeps/unix/sysv/linux/clone-internal.c:100
+#3  0x00007f5b5a09c630 in create_thread (pd=pd@entry=0x7f5b551fd6c0, attr=attr@entry=0x7ffd01023540, stopped_start=stopped_start@entry=0x7ffd01023536, stackaddr=stackaddr@entry=0x7f5b541fd000, stacksize=<optimized out>, thread_ran=thread_ran@entry=0x7ffd01023537) at ./nptl/pthread_create.c:297
+#4  0x00007f5b5a09d285 in __pthread_create_2_1 (newthread=newthread@entry=0x7ffd01023670, attr=attr@entry=0xffffffffffffffff, start_routine=start_routine@entry=0x56367e508673 <collide>, arg=arg@entry=0x2) at ./nptl/pthread_create.c:836
+#5  0x00007f5b5a0a5cfa in __thrd_create (thr=thr@entry=0x7ffd01023670, func=func@entry=0x56367e508673 <collide>, arg=arg@entry=0x2) at ../sysdeps/pthread/thrd_create.c:28
+#6  0x000056367e508b19 in main () at /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/probe.c:140
+From                To                  Syms Read   Shared Object Library
+0x00007f5b5b5bf000  0x00007f5b5b5e9195  Yes         /lib64/ld-linux-x86-64.so.2
+0x00007f5b5a43f8c0  0x00007f5b5a50a950  Yes         /lib/x86_64-linux-gnu/libtsan.so.2
+0x00007f5b5a028800  0x00007f5b5a1b0039  Yes         /lib/x86_64-linux-gnu/libc.so.6
+0x00007f5b5b4d1420  0x00007f5b5b54f3a6  Yes         /lib/x86_64-linux-gnu/libm.so.6
+0x00007f5b5a3d6780  0x00007f5b5a3f9745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+(*): Shared library is missing debugging information.
+rax            0x0                 0
+rbx            0x7f5b571ffcdc      140030280465628
+rcx            0x7f5b5a09c93e      140030329342270
+rdx            0x0                 0
+rsi            0x7f5b571fffb0      140030280466352
+rdi            0x7f5b5a09c95b      140030329342299
+rbp            0x7f5b571fe7b0      0x7f5b571fe7b0
+rsp            0x7f5b571fe698      0x7f5b571fe698
+r8             0x0                 0
+r9             0x7f5b571ff6c0      140030280464064
+r10            0x8                 8
+r11            0x246               582
+r12            0x7f5b571ff6c0      140030280464064
+r13            0xfffffffffffff7c8  -2104
+r14            0x0                 0
+r15            0x7ffd01023430      140724620375088
+rip            0x7f5b5a4b3f90      0x7f5b5a4b3f90 <__tsan_func_entry(void*)+16>
+eflags         0x10246             [ PF ZF IF RF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7f5b571ff6c0      140030280464064
+gs_base        0x0                 0

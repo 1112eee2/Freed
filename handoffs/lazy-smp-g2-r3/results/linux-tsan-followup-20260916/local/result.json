@@ -1,0 +1,404 @@
+{
+  "status": "REVIEW_REQUIRED",
+  "snapshot_commit": "ed89600cdc92944efc158050b71ce5c0f9c881f1",
+  "scope": "publication protocol and separate threading diagnostics only",
+  "input_sha256": {
+    "verify_snapshot.py": "9dab0b71680c62d86bdad93bedfbea774fbbb53a14edf915d9a6d5e53e2287cd",
+    "README.md": "fff76d8b112323d7b32b42e78fabfb38c9d3fe8fdb986eeb2467f0d0a1f53589",
+    "manifest.json": "f6b3d12e21dfaa1384a3a105b8ac9f16f5eb094100d98df25c349dd8494acd9f",
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "windows_smoke.json": "f80d5ec28c5182416b19d56b5d4083049ad3267da2f075581591ac2696625d2d",
+    "probe.c": "67f8b7cf54e25e385a314bfa02b3bd71a153a98ec21e7b3218393e120194a19b",
+    "source/tests/native_lazy_smp_portable.c": "6ae8fe0cf04b58cd5bbfa1c2db59b646e02fa466b97f0ead833ad8893e414dd2",
+    "source/native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+    "source/native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+    "source/tools/verification/prepare_lazy_smp_race_probe.py": "88f4ebc82d03a5837cabf1b82571d12866bf629fc1d488efb5fceefa00ec1d9a"
+  },
+  "inputs_unchanged": true,
+  "prior_PR_18_status": "NOT_RUN (preserved)",
+  "tests": {
+    "gcc": {
+      "gcc_pthread_negative_plain": {
+        "compile": {
+          "name": "gcc_pthread_negative_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_plain",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.468362+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.050006050999968465,
+          "runner_killed": false,
+          "stdout": "gcc_pthread_negative_plain_compile.stdout.log",
+          "stderr": "gcc_pthread_negative_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_pthread_negative_plain_run_01",
+            "command": "timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_plain",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.518692+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.003965092000044024,
+            "runner_killed": false,
+            "stdout": "gcc_pthread_negative_plain_run_01.stdout.log",
+            "stderr": "gcc_pthread_negative_plain_run_01.stderr.log",
+            "stdout_sha256": "a6c95b1a4403e9e0d6e2ae1402872a8b91a4ccf0a57be11c5dd03c1741013ca3",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "6d80ae3e67dafc78427ebf3d265d568c4dd80d40c39aafa1cc0669b24527b4f2",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_plain"
+      },
+      "gcc_pthread_negative_tsan": {
+        "compile": {
+          "name": "gcc_pthread_negative_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.523125+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.05150017200003276,
+          "runner_killed": false,
+          "stdout": "gcc_pthread_negative_tsan_compile.stdout.log",
+          "stderr": "gcc_pthread_negative_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_pthread_negative_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.584387+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.03384659300002113,
+            "runner_killed": false,
+            "stdout": "gcc_pthread_negative_tsan_run_01.stdout.log",
+            "stderr": "gcc_pthread_negative_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "4734e2333839d89b34176fe9cccee4b6ff284a10866f524ba4e6cc8986505570"
+          }
+        ],
+        "binary_sha256": "e09812e7e1ec40e2c50d435da2bccaadd9a19230448773a04c5e6c3460eafe89",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_pthread_negative_tsan"
+      },
+      "gcc_c11_smoke_plain": {
+        "compile": {
+          "name": "gcc_c11_smoke_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_smoke.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_plain",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.618648+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.03722685800005365,
+          "runner_killed": false,
+          "stdout": "gcc_c11_smoke_plain_compile.stdout.log",
+          "stderr": "gcc_c11_smoke_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_c11_smoke_plain_run_01",
+            "command": "timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_plain",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.656266+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.004838778000021193,
+            "runner_killed": false,
+            "stdout": "gcc_c11_smoke_plain_run_01.stdout.log",
+            "stderr": "gcc_c11_smoke_plain_run_01.stderr.log",
+            "stdout_sha256": "0583b052d16970df705912d8a135f184f60a6aff09d2f55901977492e04daaa6",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "7ab9060622b90dade7f541e5ae770f51c371b79409e8863c120af9387d5635b0",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_plain"
+      },
+      "gcc_c11_smoke_tsan": {
+        "compile": {
+          "name": "gcc_c11_smoke_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_smoke.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.661301+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.041406809000022804,
+          "runner_killed": false,
+          "stdout": "gcc_c11_smoke_tsan_compile.stdout.log",
+          "stderr": "gcc_c11_smoke_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_c11_smoke_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.709901+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.01001603999998224,
+            "runner_killed": false,
+            "stdout": "gcc_c11_smoke_tsan_run_01.stdout.log",
+            "stderr": "gcc_c11_smoke_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "480499ed758db686d470133befe0971a84fa3cc66cb8b2301813e17f3d070ae3"
+          }
+        ],
+        "binary_sha256": "c58525500ed23a0a81d738c49a57370ee32fd95c3e614ecf6d3b53295b663404",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_smoke_tsan"
+      },
+      "gcc_c11_negative_plain": {
+        "compile": {
+          "name": "gcc_c11_negative_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_plain",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.724269+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.03867917699994905,
+          "runner_killed": false,
+          "stdout": "gcc_c11_negative_plain_compile.stdout.log",
+          "stderr": "gcc_c11_negative_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_c11_negative_plain_run_01",
+            "command": "timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_plain",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.763451+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.003749412999923152,
+            "runner_killed": false,
+            "stdout": "gcc_c11_negative_plain_run_01.stdout.log",
+            "stderr": "gcc_c11_negative_plain_run_01.stderr.log",
+            "stdout_sha256": "accd9cbbd8e07284aa8c910739e7053b2547f4a4d8762b2b2a1b1bc59a1b90ac",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "978428b378264daef8ab171fe7d5a76c6f762a000086fcfc4b867132fd19ddc7",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_plain"
+      },
+      "gcc_c11_negative_tsan": {
+        "compile": {
+          "name": "gcc_c11_negative_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.767573+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.04792751299999054,
+          "runner_killed": false,
+          "stdout": "gcc_c11_negative_tsan_compile.stdout.log",
+          "stderr": "gcc_c11_negative_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_c11_negative_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.822463+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.009685929999932341,
+            "runner_killed": false,
+            "stdout": "gcc_c11_negative_tsan_run_01.stdout.log",
+            "stderr": "gcc_c11_negative_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "567e50afe6cf36ab144d221508a3b25a91dd6a8055c9fe9a13eb11c9d4196afa"
+          }
+        ],
+        "binary_sha256": "a22e239ccfd3bd4de7b0b8c7113c56ad8dbd730cd699f01690fe24e3247327e9",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_c11_negative_tsan"
+      },
+      "gcc_probe_plain": {
+        "compile": {
+          "name": "gcc_probe_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/probe.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_plain",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.832443+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.059470416999943154,
+          "runner_killed": false,
+          "stdout": "gcc_probe_plain_compile.stdout.log",
+          "stderr": "gcc_probe_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_probe_plain_run_01",
+            "command": "timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_plain",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.892367+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.005325801000026331,
+            "runner_killed": false,
+            "stdout": "gcc_probe_plain_run_01.stdout.log",
+            "stderr": "gcc_probe_plain_run_01.stderr.log",
+            "stdout_sha256": "37792988871ffc56b13e9d69fceb0c64ccad1ca334aa62ac51d24ff6dc7b2604",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "feb805904b338ff7f7c4a31f5ef6b0bd49e96ebf9dca212784eff6e22623b3c2",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_plain"
+      },
+      "gcc_probe_tsan": {
+        "compile": {
+          "name": "gcc_probe_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/probe.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:31.897958+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.07487155100000109,
+          "runner_killed": false,
+          "stdout": "gcc_probe_tsan_compile.stdout.log",
+          "stderr": "gcc_probe_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_probe_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.980144+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.010863322000091102,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_01.stdout.log",
+            "stderr": "gcc_probe_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "8773515cfa1c5b63ca1f9f527986fdf7c589c32ee5bea74c5c13b0bdc5bb32c2"
+          },
+          {
+            "name": "gcc_probe_tsan_run_02",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:31.991329+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.011886545000038495,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_02.stdout.log",
+            "stderr": "gcc_probe_tsan_run_02.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "253a1709a76c31c3376fdef8a02203e8246fbe6a16acb55cc17781034ec5f451"
+          },
+          {
+            "name": "gcc_probe_tsan_run_03",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:32.003554+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.017614260999948783,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_03.stdout.log",
+            "stderr": "gcc_probe_tsan_run_03.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "48d18f2c51ecd074ca8fff60ca017df0b63bd2fec960a9d3affc780dd289632f"
+          },
+          {
+            "name": "gcc_probe_tsan_run_04",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:32.021574+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.012278396000056091,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_04.stdout.log",
+            "stderr": "gcc_probe_tsan_run_04.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "729cb6b0d9ca5fda7a829c0e61a5e5be117460b2743069f533409a0da4bf4d46"
+          },
+          {
+            "name": "gcc_probe_tsan_run_05",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan",
+            "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+            "started_utc": "2026-09-16T11:10:32.034254+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.013557383000033951,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_05.stdout.log",
+            "stderr": "gcc_probe_tsan_run_05.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "f147a03e90533c2c7d241ae4c9f24f764e2d69e68aa24a1cb260f2fcc9860eb7"
+          }
+        ],
+        "binary_sha256": "5f33575f350508d5e14bc75230d057e7c3778f28d92e3a88be26c5000f8f4482",
+        "binary_path": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/gcc_probe_tsan"
+      }
+    },
+    "clang": {
+      "clang_pthread_negative_tsan": {
+        "compile": {
+          "name": "clang_pthread_negative_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/clang_pthread_negative_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:32.052518+00:00",
+          "exit_code": 127,
+          "elapsed_seconds": 0.0020970699999907083,
+          "runner_killed": false,
+          "stdout": "clang_pthread_negative_tsan_compile.stdout.log",
+          "stderr": "clang_pthread_negative_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "384cd44ea4b453f5b96d97f3ff62ca5b6f1f10adbe63a039adc400ac0e1b3c27"
+        },
+        "runs": [],
+        "status": "NOT_RUN"
+      },
+      "clang_c11_smoke_tsan": {
+        "compile": {
+          "name": "clang_c11_smoke_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_smoke.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/clang_c11_smoke_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:32.055003+00:00",
+          "exit_code": 127,
+          "elapsed_seconds": 0.0018376960000523468,
+          "runner_killed": false,
+          "stdout": "clang_c11_smoke_tsan_compile.stdout.log",
+          "stderr": "clang_c11_smoke_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "384cd44ea4b453f5b96d97f3ff62ca5b6f1f10adbe63a039adc400ac0e1b3c27"
+        },
+        "runs": [],
+        "status": "NOT_RUN"
+      },
+      "clang_c11_negative_tsan": {
+        "compile": {
+          "name": "clang_c11_negative_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_negative.c -o /workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/local/binaries/clang_c11_negative_tsan",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:32.057156+00:00",
+          "exit_code": 127,
+          "elapsed_seconds": 0.00154718999999659,
+          "runner_killed": false,
+          "stdout": "clang_c11_negative_tsan_compile.stdout.log",
+          "stderr": "clang_c11_negative_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "384cd44ea4b453f5b96d97f3ff62ca5b6f1f10adbe63a039adc400ac0e1b3c27"
+        },
+        "runs": [],
+        "status": "NOT_RUN"
+      },
+      "clang_probe_tsan": {
+        "compile": {
+          "name": "clang_probe_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o probe",
+          "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+          "started_utc": "2026-09-16T11:10:32.059057+00:00",
+          "exit_code": 127,
+          "elapsed_seconds": 0.0014653439999392504,
+          "runner_killed": false,
+          "stdout": "clang_probe_tsan_compile.stdout.log",
+          "stderr": "clang_probe_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "384cd44ea4b453f5b96d97f3ff62ca5b6f1f10adbe63a039adc400ac0e1b3c27"
+        },
+        "runs": [],
+        "status": "NOT_RUN"
+      }
+    }
+  },
+  "tsan_options": "halt_on_error=1",
+  "suppressions": false,
+  "aslr_modified": false
+}

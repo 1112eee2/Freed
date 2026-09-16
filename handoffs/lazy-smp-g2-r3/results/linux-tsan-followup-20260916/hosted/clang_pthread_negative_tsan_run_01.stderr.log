@@ -1,0 +1,20 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=3814)
+  Write of size 4 at 0x5600c0d976a0 by thread T2:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14:50 (clang_pthread_negative_tsan+0xdedb1) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+
+  Previous write of size 4 at 0x5600c0d976a0 by thread T1:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14:50 (clang_pthread_negative_tsan+0xdedb1) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+
+  Location is global 'counter' of size 4 at 0x5600c0d976a0 (clang_pthread_negative_tsan+0x148a6a0)
+
+  Thread T2 (tid=3817, running) created by main thread at:
+    #0 pthread_create <null> (clang_pthread_negative_tsan+0x605ef) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:21:5 (clang_pthread_negative_tsan+0xdec1e) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+
+  Thread T1 (tid=3816, finished) created by main thread at:
+    #0 pthread_create <null> (clang_pthread_negative_tsan+0x605ef) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:20:5 (clang_pthread_negative_tsan+0xdec03) (BuildId: d62c0e71637047c00d5de653aa95e020fec64e87)
+
+SUMMARY: ThreadSanitizer: data race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/pthread_negative.c:14:50 in race
+==================

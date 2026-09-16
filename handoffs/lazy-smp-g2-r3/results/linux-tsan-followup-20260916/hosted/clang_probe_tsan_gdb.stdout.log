@@ -1,0 +1,62 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fd2c29ff6c0 (LWP 3936)]
+[New Thread 0x7fd2c19fe6c0 (LWP 3937)]
+
+Thread 2 "probe" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fd2c29ff6c0 (LWP 3936)]
+0x0000558cc9659e33 in __tsan_func_entry ()
+
+Thread 3 (Thread 0x7fd2c19fe6c0 (LWP 3937) "probe"):
+#0  0x0000558cc9659e33 in __tsan_func_entry ()
+#1  0x0000558cc96683fb in collide (argument=0x1) at probe.c:103
+#2  0x00007fd2c589c95b in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:444
+#3  0x00007fd2c5929ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x7fd2c29ff6c0 (LWP 3936) "probe"):
+#0  0x0000558cc9659e33 in __tsan_func_entry ()
+#1  0x0000558cc96683fb in collide (argument=0x0) at probe.c:103
+#2  0x00007fd2c589c95b in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:444
+#3  0x00007fd2c5929ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7fd2c5bb7f00 (LWP 3933) "probe"):
+#0  clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:62
+#1  0x00007fd2c5929dd5 in __clone3_internal (arg=0x7fd2c09fd6c0, func=0x7fd2c589c800 <start_thread>, cl_args=0x7fff9f37b020) at ../sysdeps/unix/sysv/linux/clone-internal.c:82
+#2  __GI___clone_internal (cl_args=cl_args@entry=0x7fff9f37b020, func=func@entry=0x7fd2c589c800 <start_thread>, arg=arg@entry=0x7fd2c09fd6c0) at ../sysdeps/unix/sysv/linux/clone-internal.c:100
+#3  0x00007fd2c589c630 in create_thread (pd=pd@entry=0x7fd2c09fd6c0, attr=attr@entry=0x7fff9f37b130, stopped_start=stopped_start@entry=0x7fff9f37b126, stackaddr=stackaddr@entry=0x7fd2bf9fd000, stacksize=<optimized out>, thread_ran=thread_ran@entry=0x7fff9f37b127) at ./nptl/pthread_create.c:297
+#4  0x00007fd2c589d285 in __pthread_create_2_1 (newthread=newthread@entry=0x7fff9f37b240, attr=attr@entry=0xffffffffffffffff, start_routine=start_routine@entry=0x558cc96683e0 <collide>, arg=arg@entry=0x2) at ./nptl/pthread_create.c:836
+#5  0x00007fd2c58a5cfa in __thrd_create (thr=thr@entry=0x7fff9f37b240, func=func@entry=0x558cc96683e0 <collide>, arg=arg@entry=0x2) at ../sysdeps/pthread/thrd_create.c:28
+#6  0x0000558cc96680ce in main () at probe.c:140
+From                To                  Syms Read   Shared Object Library
+0x00007fd2c5cfa000  0x00007fd2c5d24195  Yes         /lib64/ld-linux-x86-64.so.2
+0x00007fd2c5c0c420  0x00007fd2c5c8a3a6  Yes         /lib/x86_64-linux-gnu/libm.so.6
+0x00007fd2c5bed6e0  0x00007fd2c5bf5f19  Yes         /lib/x86_64-linux-gnu/libresolv.so.2
+0x00007fd2c5bc0780  0x00007fd2c5be3745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+0x00007fd2c5828800  0x00007fd2c59b0039  Yes         /lib/x86_64-linux-gnu/libc.so.6
+(*): Shared library is missing debugging information.
+rax            0xfffffffffffff8c0  -1856
+rbx            0x7fd2c29ffcdc      140543185124572
+rcx            0x7fd2c589c93e      140543234001214
+rdx            0x0                 0
+rsi            0x7fd2c589c95b      140543234001243
+rdi            0x0                 0
+rbp            0x7fd2c29fe7b0      0x7fd2c29fe7b0
+rsp            0x7fd2c29fe688      0x7fd2c29fe688
+r8             0x0                 0
+r9             0x7fd2c29ff6c0      140543185123008
+r10            0x8                 8
+r11            0x246               582
+r12            0x7fd2c29ff6c0      140543185123008
+r13            0x0                 0
+r14            0x0                 0
+r15            0x7fff9f37b020      140735864614944
+rip            0x558cc9659e33      0x558cc9659e33 <__tsan_func_entry+19>
+eflags         0x10206             [ PF IF RF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7fd2c29ff6c0      140543185123008
+gs_base        0x0                 0

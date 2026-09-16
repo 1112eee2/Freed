@@ -1,0 +1,6 @@
+/bin/bash: line 5: clang: command not found
+/bin/bash: line 7: gdb: command not found
+dpkg-query: no packages found matching clang
+dpkg-query: no packages found matching clang-18
+dpkg-query: no packages found matching libclang-rt-18-dev
+fatal library error, lookup self
