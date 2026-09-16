@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
-"""Measure the liveness behaviour of the frozen r4 race-detector probe.
+"""Measure the liveness and payload-consistency behaviour of a frozen race probe.
 
 The r4 TSan run aborted on the frozen assertion `assert(atomic_load(&accepted) > 0)`
 in most probe runs while one run passed with accepted=961. This tool quantifies that
 without changing a single byte of the frozen handoff: it re-verifies the snapshot,
 compiles the probe exactly as the handoff README specifies, and runs it many times,
-recording the exit code and the `accepted` count each run reports.
+recording the exit code, the aborting assertion and the `accepted` count each run
+reports.
+
+It accepts any handoff directory that has a manifest.json with a probe_sha256 and a
+verify_snapshot.py, so the same measurement can be run against the frozen r3 probe
+(C11 threads) as a differential control for the r4 pthread revision.
 
 This is a *measurement of an existing artifact*, not gate evidence and not a
-re-run of the gate. It never weakens an assertion and never edits the handoff.
+re-run of the gate. It never weakens an assertion and never edits a handoff.
 
 Usage::
 
     python3 measure_lazy_smp_r4_liveness.py --repeats 20 --output build/r4-liveness
+    python3 measure_lazy_smp_r4_liveness.py --handoff handoffs/lazy-smp-g2-r3 \\
+        --repeats 20 --output build/r3-liveness
 """
 
 from __future__ import annotations
@@ -30,6 +37,7 @@ import sys
 import time
 
 ACCEPTED_RE = re.compile(r"accepted=(\d+)")
+ASSERTION_RE = re.compile(r"Assertion `([^']*)' failed")
 VARIANTS = (
     ("clang_tsan", "clang", "-fsanitize=thread "),
     ("gcc_tsan", "gcc", "-fsanitize=thread "),
@@ -134,12 +142,14 @@ def main() -> int:
             result = run(f"{prefix}timeout {args.timeout}s {resolve_binary(binary).as_posix()}",
                          handoff, timeout=args.timeout + 30)
             match = ACCEPTED_RE.search(result["stdout"])
+            assertion = ASSERTION_RE.search(result["stderr"])
             entry["runs"].append({
                 "index": index + 1,
                 "exit_code": result["exit_code"],
                 "elapsed_seconds": result["elapsed_seconds"],
                 "accepted": int(match.group(1)) if match else None,
-                "assertion_failed": "accepted) > 0' failed" in result["stderr"],
+                "aborting_assertion": assertion.group(1) if assertion else None,
+                "liveness_assertion": bool(assertion and "accepted) > 0" in assertion.group(1)),
                 "stdout": result["stdout"],
                 "stderr_tail": result["stderr"][-400:],
             })
@@ -151,9 +161,20 @@ def main() -> int:
         entry["accepted_values"] = accepted
         entry["accepted_min"] = min(accepted) if accepted else None
         entry["accepted_max"] = max(accepted) if accepted else None
-        entry["assertion_failures"] = sum(1 for r in entry["runs"] if r["assertion_failed"])
-        print(f"{name}: {len(passes)}/{len(entry['runs'])} passed, accepted={accepted}",
-              flush=True)
+        entry["liveness_assertion_failures"] = sum(
+            1 for r in entry["runs"] if r["liveness_assertion"])
+        kinds: dict[str, int] = {}
+        for r in entry["runs"]:
+            if r["exit_code"] == 0:
+                key = "pass"
+            elif r["aborting_assertion"]:
+                key = "assert: " + r["aborting_assertion"]
+            else:
+                key = f"other exit {r['exit_code']}"
+            kinds[key] = kinds.get(key, 0) + 1
+        entry["outcome_breakdown"] = kinds
+        print(f"{name}: {len(passes)}/{len(entry['runs'])} passed, accepted={accepted}, "
+              f"breakdown={kinds}", flush=True)
 
     summary["conclusion"] = (
         "A pass rate strictly between 0 and 1 with a wide accepted spread indicates a "
