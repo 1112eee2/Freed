@@ -1,0 +1,7 @@
+{
+  "exit_code": 0,
+  "stdout": "production publication: 1200000 operations PASS; accepted=3045\n",
+  "stderr": "",
+  "exe_sha256": "e386c16406a79a86dcc26951022c5f84906e16e4048f877f27999105e9b487ad",
+  "scope": "Windows C11 smoke only; NOT TSan"
+}
