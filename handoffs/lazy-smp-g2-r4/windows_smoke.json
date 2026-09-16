@@ -1,0 +1,24 @@
+{
+  "scope": "Windows pthread smoke only; NOT ThreadSanitizer",
+  "compiler": "gcc (Rev13, Built by MSYS2 project) 15.2.0",
+  "host": "Windows 11 x86_64",
+  "command": "gcc -std=c17 -O1 -g -pthread <source> -o <exe>",
+  "binaries": "not committed; hashes below identify the binaries actually executed",
+  "probe": {
+    "exit_code": 0,
+    "stdout": "production publication: 1200000 operations PASS; accepted=4700\n",
+    "exe_sha256": "73fd99ae0874d9a3fd9798ec1738e4e198f250b9d5dd013b11a250524cc942ea"
+  },
+  "smoke": {
+    "exit_code": 0,
+    "stdout": "pthread_create/join smoke PASS\n",
+    "exe_sha256": "9e15013d89e23825e66d2a2f80e2f582e3f58d419a7ebd3fb8238a84b9c6877e"
+  },
+  "negative_without_sanitizer": {
+    "exit_code": 0,
+    "stdout": "pthread negative counter=105344\n",
+    "exe_sha256": "55d23db29787ba83df59f17d234a042278a8a414c2329ae471efe5df4c7aea7b",
+    "note": "the lost update confirms the control is genuinely racy; calibration still requires the TSan report text on Linux"
+  },
+  "gate": "NOT a race-detector result. TSan must run on Linux; ASan and ordinary stress do not replace TSan."
+}
