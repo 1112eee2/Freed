@@ -1,0 +1,13 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "source_sha256": {
+    "native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+    "native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+    "tests/native_lazy_smp_portable.c": "6ae8fe0cf04b58cd5bbfa1c2db59b646e02fa466b97f0ead833ad8893e414dd2"
+  },
+  "probe_sha256": "67f8b7cf54e25e385a314bfa02b3bd71a153a98ec21e7b3218393e120194a19b",
+  "scope": "actual publication functions and types; not Windows worker lifecycle",
+  "linux_build": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o probe",
+  "linux_run": "TSAN_OPTIONS=halt_on_error=1 ./probe",
+  "gate": "require zero exit, zero detector reports, and protocol PASS; unsupported runtime is NOT_RUN"
+}
