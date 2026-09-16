@@ -1,0 +1,55 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fe2e4fff6c0 (LWP 3666)]
+
+Thread 2 "gcc_c11_smoke_t" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7fe2e4fff6c0 (LWP 3666)]
+__tsan_func_entry (pc=0x7fe2e769c95b <start_thread+347>) at ../../../../src/libsanitizer/tsan/tsan_interface.inc:168
+
+Thread 2 (Thread 0x7fe2e4fff6c0 (LWP 3666) "gcc_c11_smoke_t"):
+#0  __tsan_func_entry (pc=0x7fe2e769c95b <start_thread+347>) at ../../../../src/libsanitizer/tsan/tsan_interface.inc:168
+#1  0x000055c0ef8eb29b in worker (p=0x7ffe43812888) at /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_smoke.c:4
+#2  0x00007fe2e769c95b in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:444
+#3  0x00007fe2e7729ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7fe2e8ab3f00 (LWP 3663) "gcc_c11_smoke_t"):
+#0  0x00007fe2e7698e51 in __futex_abstimed_wait_common64 (private=128, cancel=true, abstime=0x0, op=265, expected=3666, futex_word=0x7fe2e4fff990) at ./nptl/futex-internal.c:57
+#1  __futex_abstimed_wait_common (cancel=true, private=128, abstime=0x0, clockid=0, expected=3666, futex_word=0x7fe2e4fff990) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fe2e4fff990, expected=3666, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=128) at ./nptl/futex-internal.c:139
+#3  0x00007fe2e769e883 in __pthread_clockjoin_ex (threadid=140612481316544, thread_return=thread_return@entry=0x7ffe43812850, clockid=clockid@entry=0, abstime=abstime@entry=0x0, block=block@entry=true) at ./nptl/pthread_join_common.c:102
+#4  0x00007fe2e769e723 in ___pthread_join (threadid=<optimized out>, thread_return=thread_return@entry=0x7ffe43812850) at ./nptl/pthread_join.c:24
+#5  0x00007fe2e76a5dc8 in __thrd_join (thr=<optimized out>, res=res@entry=0x7ffe4381288c) at ../sysdeps/pthread/thrd_join.c:26
+#6  0x000055c0ef8eb330 in main () at /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/results/linux-tsan-followup-20260916/c11_smoke.c:8
+From                To                  Syms Read   Shared Object Library
+0x00007fe2e8be4000  0x00007fe2e8c0e195  Yes         /lib64/ld-linux-x86-64.so.2
+0x00007fe2e7a3f8c0  0x00007fe2e7b0a950  Yes         /lib/x86_64-linux-gnu/libtsan.so.2
+0x00007fe2e7628800  0x00007fe2e77b0039  Yes         /lib/x86_64-linux-gnu/libc.so.6
+0x00007fe2e8af6420  0x00007fe2e8b743a6  Yes         /lib/x86_64-linux-gnu/libm.so.6
+0x00007fe2e8abc780  0x00007fe2e8adf745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+(*): Shared library is missing debugging information.
+rax            0x0                 0
+rbx            0x7ffe43812888      140730030958728
+rcx            0x7fe2e769c93e      140612521806142
+rdx            0x0                 0
+rsi            0x7fe2e4ffffb0      140612481318832
+rdi            0x7fe2e769c95b      140612521806171
+rbp            0x7fe2e4ffe7b0      0x7fe2e4ffe7b0
+rsp            0x7fe2e4ffe6f8      0x7fe2e4ffe6f8
+r8             0x0                 0
+r9             0x7fe2e4fff6c0      140612481316544
+r10            0x8                 8
+r11            0x246               582
+r12            0x7fe2e4fff6c0      140612481316544
+r13            0xfffffffffffff7c8  -2104
+r14            0x0                 0
+r15            0x7ffe43812680      140730030958208
+rip            0x7fe2e7ab3f90      0x7fe2e7ab3f90 <__tsan_func_entry(void*)+16>
+eflags         0x10202             [ IF RF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7fe2e4fff6c0      140612481316544
+gs_base        0x0                 0

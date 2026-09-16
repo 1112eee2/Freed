@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Wed, 16 Sep 2026 11:13:05 GMT
+
+HTTP/2 200 
+date: Wed, 16 Sep 2026 11:12:45 GMT
+server: Apache/2.4.58 (Ubuntu)
+content-type: text/html;charset=UTF-8
+
