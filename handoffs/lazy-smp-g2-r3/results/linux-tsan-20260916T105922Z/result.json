@@ -1,0 +1,229 @@
+{
+  "schema": "thai-makhos-linux-tsan-result-v1",
+  "status": "NOT_RUN",
+  "scope": "Snapshot publication functions/types only; not Windows lifecycle or full G2-G6 acceptance",
+  "repository": "1112eee2/ThaiMakhosEngine",
+  "base_commit": "ed89600cdc92944efc158050b71ce5c0f9c881f1",
+  "target_branch": "codex/astra-g2-race-handoff",
+  "run_id": "linux-tsan-20260916T105922Z",
+  "snapshot_verification": {
+    "before": 0,
+    "after": 0,
+    "inputs_unchanged": true,
+    "sha256": {
+      "verify_snapshot.py": "9dab0b71680c62d86bdad93bedfbea774fbbb53a14edf915d9a6d5e53e2287cd",
+      "README.md": "fff76d8b112323d7b32b42e78fabfb38c9d3fe8fdb986eeb2467f0d0a1f53589",
+      "manifest.json": "f6b3d12e21dfaa1384a3a105b8ac9f16f5eb094100d98df25c349dd8494acd9f",
+      ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+      "windows_smoke.json": "f80d5ec28c5182416b19d56b5d4083049ad3267da2f075581591ac2696625d2d",
+      "probe.c": "67f8b7cf54e25e385a314bfa02b3bd71a153a98ec21e7b3218393e120194a19b",
+      "source/tests/native_lazy_smp_portable.c": "6ae8fe0cf04b58cd5bbfa1c2db59b646e02fa466b97f0ead833ad8893e414dd2",
+      "source/native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+      "source/native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+      "source/tools/verification/prepare_lazy_smp_race_probe.py": "88f4ebc82d03a5837cabf1b82571d12866bf629fc1d488efb5fceefa00ec1d9a"
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "details": "environment.stdout.log",
+    "tsan_options": "halt_on_error=1",
+    "suppressions_added": false,
+    "runtime_path": "/usr/lib/x86_64-linux-gnu/libtsan.so.2.0.0",
+    "runtime_sha256": "91c5ff35dc6f180a0f0d82bcff5f6d74b1af0cd7e6cdafb36ae69ea7b6fcfa8c"
+  },
+  "negative_control": {
+    "compiler": "gcc (supplemental; required clang unavailable)",
+    "compile": {
+      "label": "negative_gcc_compile",
+      "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread results/linux-tsan-20260916T105922Z/negative_control.c -o .tsan-run-binaries/negative-gcc-tsan",
+      "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+      "started_utc": "2026-09-16T11:00:54.376259+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 0.10428204900000537,
+      "runner_timeout": false,
+      "stdout": "negative_gcc_compile.stdout.log",
+      "stderr": "negative_gcc_compile.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run": {
+      "label": "negative_gcc_run",
+      "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/negative-gcc-tsan",
+      "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+      "started_utc": "2026-09-16T11:00:54.481133+00:00",
+      "exit_code": 66,
+      "elapsed_seconds": 0.03868290800005525,
+      "runner_timeout": false,
+      "stdout": "negative_gcc_run.stdout.log",
+      "stderr": "negative_gcc_run.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "842459d4c18fd6f35a24171d8452c39aab32f9f281bda779890374c42b094108"
+    },
+    "real_data_race_report_observed": true,
+    "status": "PASS_DETECTOR_CALIBRATION_GCC_PTHREAD_ONLY"
+  },
+  "readme_clang_gate": {
+    "compile": {
+      "label": "probe_clang_compile",
+      "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o probe",
+      "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+      "started_utc": "2026-09-16T11:00:54.520317+00:00",
+      "exit_code": 127,
+      "elapsed_seconds": 0.0017352940000137096,
+      "runner_timeout": false,
+      "stdout": "probe_clang_compile.stdout.log",
+      "stderr": "probe_clang_compile.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "384cd44ea4b453f5b96d97f3ff62ca5b6f1f10adbe63a039adc400ac0e1b3c27"
+    },
+    "runs": [
+      {
+        "index": 1,
+        "status": "NOT_RUN",
+        "reason": "Clang compilation could not execute; no Clang-built probe exists",
+        "planned_command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+        "exit_code": null,
+        "elapsed_seconds": null
+      },
+      {
+        "index": 2,
+        "status": "NOT_RUN",
+        "reason": "Clang compilation could not execute; no Clang-built probe exists",
+        "planned_command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+        "exit_code": null,
+        "elapsed_seconds": null
+      },
+      {
+        "index": 3,
+        "status": "NOT_RUN",
+        "reason": "Clang compilation could not execute; no Clang-built probe exists",
+        "planned_command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+        "exit_code": null,
+        "elapsed_seconds": null
+      },
+      {
+        "index": 4,
+        "status": "NOT_RUN",
+        "reason": "Clang compilation could not execute; no Clang-built probe exists",
+        "planned_command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+        "exit_code": null,
+        "elapsed_seconds": null
+      },
+      {
+        "index": 5,
+        "status": "NOT_RUN",
+        "reason": "Clang compilation could not execute; no Clang-built probe exists",
+        "planned_command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+        "exit_code": null,
+        "elapsed_seconds": null
+      }
+    ]
+  },
+  "supplemental_gcc_tsan": {
+    "compile": {
+      "label": "probe_gcc_compile",
+      "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o .tsan-run-binaries/probe-gcc-tsan",
+      "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+      "started_utc": "2026-09-16T11:00:54.522532+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 0.07103245000001834,
+      "runner_timeout": false,
+      "stdout": "probe_gcc_compile.stdout.log",
+      "stderr": "probe_gcc_compile.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs": [
+      {
+        "label": "probe_gcc_run_01",
+        "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/probe-gcc-tsan",
+        "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+        "started_utc": "2026-09-16T11:00:54.608789+00:00",
+        "exit_code": 66,
+        "elapsed_seconds": 0.010457190000010996,
+        "runner_timeout": false,
+        "stdout": "probe_gcc_run_01.stdout.log",
+        "stderr": "probe_gcc_run_01.stderr.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "153abb8233828c7fd2fe937258e6d3a42ad6234efa9b6170d98dc20d37f82885",
+        "status": "FAIL_EXECUTION",
+        "binary_sha256": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+      },
+      {
+        "label": "probe_gcc_run_02",
+        "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/probe-gcc-tsan",
+        "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+        "started_utc": "2026-09-16T11:00:54.619765+00:00",
+        "exit_code": 66,
+        "elapsed_seconds": 0.012553200000013476,
+        "runner_timeout": false,
+        "stdout": "probe_gcc_run_02.stdout.log",
+        "stderr": "probe_gcc_run_02.stderr.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "772fc5ca56ae8559189a6dd9b4726df47d3d26257ea96d0372d3892d9b60b0b3",
+        "status": "FAIL_EXECUTION",
+        "binary_sha256": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+      },
+      {
+        "label": "probe_gcc_run_03",
+        "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/probe-gcc-tsan",
+        "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+        "started_utc": "2026-09-16T11:00:54.632835+00:00",
+        "exit_code": 66,
+        "elapsed_seconds": 0.013633365999965008,
+        "runner_timeout": false,
+        "stdout": "probe_gcc_run_03.stdout.log",
+        "stderr": "probe_gcc_run_03.stderr.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2f930cba83d62913ce9f8d3341b0eeb326c28482273e876df302bde88876cd64",
+        "status": "FAIL_EXECUTION",
+        "binary_sha256": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+      },
+      {
+        "label": "probe_gcc_run_04",
+        "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/probe-gcc-tsan",
+        "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+        "started_utc": "2026-09-16T11:00:54.646996+00:00",
+        "exit_code": 66,
+        "elapsed_seconds": 0.011462241999993239,
+        "runner_timeout": false,
+        "stdout": "probe_gcc_run_04.stdout.log",
+        "stderr": "probe_gcc_run_04.stderr.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "bed1f71c5baa863024deb0439d494e71a4c87cf450be0e11f5965f04276408cd",
+        "status": "FAIL_EXECUTION",
+        "binary_sha256": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+      },
+      {
+        "label": "probe_gcc_run_05",
+        "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./.tsan-run-binaries/probe-gcc-tsan",
+        "cwd": "/workspace/scratch/0fc74b904e26/tsan-r3-review/handoffs/lazy-smp-g2-r3",
+        "started_utc": "2026-09-16T11:00:54.658972+00:00",
+        "exit_code": 66,
+        "elapsed_seconds": 0.013017232999970929,
+        "runner_timeout": false,
+        "stdout": "probe_gcc_run_05.stdout.log",
+        "stderr": "probe_gcc_run_05.stderr.log",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "0ddb3967cc975b3efdde10510102f58ae30c7486f61b51c75f63746d7a095ec3",
+        "status": "FAIL_EXECUTION",
+        "binary_sha256": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+      }
+    ],
+    "does_not_replace_readme_clang_gate": true,
+    "status": "FAIL_EXECUTION_NO_PROTOCOL_VERDICT",
+    "clean_protocol_passes": 0
+  },
+  "binary_sha256_not_committed": {
+    ".tsan-run-binaries/negative-gcc-tsan": "adc5c166646566f5886001d051d6bd97bbbc7a665bf3a79457661a2ecc261b82",
+    ".tsan-run-binaries/probe-gcc-tsan": "b8c834ada782be4ac522d78c58e5cc3f3f5a3f96fac6ff409c91926bbaf65937"
+  },
+  "promotion": false,
+  "notes": [
+    "Only source files inside the requested handoff were used.",
+    "GCC/TSan diagnostics are explicitly additional attempts; no compiler or atomic substitutions hidden as README compliance.",
+    "Read raw stderr for runtime failure; nonzero negative-control exit is not proof of race detection."
+  ],
+  "reason": "Required Clang toolchain unavailable (exit 127). Supplemental GCC/TSan detects the pthread negative-control race, but all five unmodified protocol probe attempts abort with TSan SEGV/DEADLYSIGNAL and exit 66; no protocol PASS. Root cause of probe aborts not established."
+}

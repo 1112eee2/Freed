@@ -1,0 +1,49 @@
+Linux localhost 6.18.44 #1 SMP Sat Sep 12 15:35:21 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+PRETTY_NAME="Ubuntu 24.04.3 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.3 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+glibc 2.39
+Python 3.12.14
+timeout (GNU coreutils) 9.4
+Copyright (C) 2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Pádraig Brady.
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+gcc-13	13.3.0-6ubuntu2~24.04
+libc6:amd64	2.39-0ubuntu8.6
+libtsan2:amd64	14.2.0-4ubuntu2~24.04.1
+28
+    PID COMMAND
+      1 supervisord
+      2 rsync
+      3 sync_share.sh
+      4 sync_share.sh
+      5 caas-prefix-tra
+      6 sites-preview
+     80 inotifywait
+    160 codex
+    509 codex
+   4284 sleep
+   4317 bwrap
+   4318 codex-linux-san
+   4319 codex-linux-san
+   4324 codex
+   4325 python3
+   4329 ps
