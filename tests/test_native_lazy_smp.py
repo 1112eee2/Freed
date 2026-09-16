@@ -7,7 +7,17 @@ import time
 import unittest
 from pathlib import Path
 
-from makhos.core import apply_move, initial_state, legal_moves, parse_position, terminal_status
+from makhos.core import (
+    BLACK,
+    BLACK_MAN,
+    RED_MAN,
+    apply_move,
+    initial_state,
+    legal_moves,
+    parse_position,
+    state_from_pieces,
+    terminal_status,
+)
 from makhos.native import NativeLazySmpSearch, NativeSearch
 
 
@@ -273,6 +283,145 @@ class NativeLazySmpTests(unittest.TestCase):
                     NativeLazySmpSearch(
                         CANDIDATE, threads=threads, hash_mb=1, nnue_model=NNUE_MODEL,
                     )
+
+    def test_terminal_root_rejected_for_all_three_terminal_reasons(self):
+        # Only the repetition reason was covered at the root. Terminal proof
+        # precedence requires the native search to refuse *any* terminal root
+        # before it refreshes NNUE, so cover the other two reasons explicitly
+        # against the independent Python rules oracle.
+        blocked = state_from_pieces({(1, 0): BLACK_MAN, (0, 1): RED_MAN}, BLACK)
+        self.assertEqual(legal_moves(blocked), ())
+        oracle = terminal_status(blocked)
+        self.assertTrue(oracle.terminal)
+        self.assertEqual(oracle.reason, "no_legal_move")
+
+        clock80 = parse_position(
+            "B:BM21,22,25,27:BK30:RM5,7,8,10:RK2", reversible_plies=80
+        )
+        clock_oracle = terminal_status(clock80)
+        self.assertEqual(clock_oracle.reason, "no_progress")
+
+        # A clock-79 root is one ply short of the boundary and must still search.
+        clock79 = parse_position(
+            "B:BM21,22,25,27:BK30:RM5,7,8,10:RK2", reversible_plies=79
+        )
+        self.assertFalse(terminal_status(clock79).terminal)
+
+        for threads in (1, 2, 4, 6, 8, 12):
+            with self.subTest(threads=threads):
+                with NativeLazySmpSearch(CANDIDATE, threads=threads, hash_mb=64,
+                                         nnue_model=NNUE_MODEL) as engine:
+                    for label, state in (("no_legal_move", blocked), ("no_progress", clock80)):
+                        with self.subTest(threads=threads, reason=label):
+                            with self.assertRaisesRegex(RuntimeError, "terminal"):
+                                engine.search(state, depth=4, time_ms=None,
+                                              no_progress_plies=80, repetition_limit=3)
+                    # A refused terminal root must not poison the handle.
+                    result = engine.search(clock79, depth=4, time_ms=None,
+                                           no_progress_plies=80, repetition_limit=3)
+                    self.assertIn(result.move, legal_moves(clock79))
+
+    def test_stopped_search_leaves_handle_reusable_and_clearable(self):
+        # A search cancelled from another thread must leave `running` cleared:
+        # clear() and a fresh search have to keep working afterwards. Without
+        # this, one user stop would permanently brick the handle.
+        blocked_entry = parse_position("B:BM23,26:BK15:RM13,14,19,21,27")
+        for threads in (1, 2, 4, 12):
+            with self.subTest(threads=threads):
+                with NativeLazySmpSearch(CANDIDATE, threads=threads, hash_mb=64,
+                                         nnue_model=NNUE_MODEL) as engine:
+                    outcome = {}
+                    returned = [0.0]
+
+                    def worker():
+                        try:
+                            outcome["result"] = engine.search(
+                                initial_state(), depth=30, time_ms=10000,
+                                no_progress_plies=80, repetition_limit=3,
+                            )
+                        except BaseException as exc:  # noqa: BLE001 - surfaced below
+                            outcome["error"] = exc
+                        returned[0] = time.perf_counter()
+
+                    thread = threading.Thread(target=worker)
+                    thread.start()
+                    time.sleep(0.060)
+                    engine.stop()
+                    thread.join(timeout=3.0)
+                    self.assertFalse(thread.is_alive())
+                    self.assertNotIn("error", outcome)
+
+                    # The stop must have released the native running flag.
+                    engine.clear()
+
+                    follow_up = engine.search(blocked_entry, depth=4, time_ms=None,
+                                              no_progress_plies=80, repetition_limit=3)
+                    self.assertGreaterEqual(len(follow_up.move.captures), 2)
+                    self.assertIn(follow_up.move, legal_moves(blocked_entry))
+
+    def test_clear_serializes_behind_active_search_instead_of_mutating_shared_tt(self):
+        # The wrapper holds _search_lock for the whole native run, so a concurrent
+        # clear() blocks until the run completes rather than mutating a table a
+        # worker is reading. The native refusal (status 1) is therefore
+        # unreachable through the public API and is defence-in-depth only.
+        # Pin the observable contract: clear() neither interleaves with an active
+        # search nor loses the completed result.
+        for threads in (1, 4, 12):
+            with self.subTest(threads=threads):
+                engine = NativeLazySmpSearch(CANDIDATE, threads=threads, hash_mb=64,
+                                             nnue_model=NNUE_MODEL)
+                try:
+                    outcome = {}
+                    cleared_at = [0.0]
+                    search_finished = [0.0]
+
+                    def worker():
+                        try:
+                            outcome["result"] = engine.search(
+                                initial_state(), depth=30, time_ms=1200,
+                                no_progress_plies=80, repetition_limit=3,
+                            )
+                        except BaseException as exc:  # noqa: BLE001 - asserted below
+                            outcome["error"] = exc
+                        search_finished[0] = time.perf_counter()
+
+                    thread = threading.Thread(target=worker)
+                    thread.start()
+
+                    # Wait until the native layer actually reports the run active.
+                    active = False
+                    deadline = time.perf_counter() + 2.0
+                    while time.perf_counter() < deadline and thread.is_alive():
+                        if int(engine._library.makhos_lazy_smp_clear(
+                                engine._handle)) != 0:
+                            active = True
+                            break
+                        time.sleep(0.001)
+                    self.assertTrue(active, "never observed an active search")
+
+                    engine.clear()  # blocks until the run releases the lock
+                    cleared_at[0] = time.perf_counter()
+
+                    thread.join(timeout=10.0)
+                    self.assertFalse(thread.is_alive())
+                    self.assertNotIn("error", outcome)
+                    self.assertIsNotNone(outcome.get("result"))
+
+                    # clear() must not have returned before the search finished.
+                    self.assertGreaterEqual(
+                        cleared_at[0], search_finished[0] - 0.02,
+                        "clear() returned while the search was still in flight",
+                    )
+
+                    # Handle stays usable after the serialized clear.
+                    follow_up = engine.search(
+                        parse_position("B:BM23,26:BK15:RM13,14,19,21,27"),
+                        depth=4, time_ms=None, no_progress_plies=80,
+                        repetition_limit=3,
+                    )
+                    self.assertGreaterEqual(len(follow_up.move.captures), 2)
+                finally:
+                    engine.close()
 
     def test_external_cancellation_from_separate_thread(self):
         state1 = initial_state()
