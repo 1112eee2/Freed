@@ -1,0 +1,19 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7f43d8fff6c0 (LWP 3931)]
+[New Thread 0x7f43d75ff6c0 (LWP 3932)]
+[New Thread 0x7f43d65fe6c0 (LWP 3933)]
+[Thread 0x7f43d75ff6c0 (LWP 3932) exited]
+[Thread 0x7f43d8fff6c0 (LWP 3931) exited]
+[Thread 0x7f43dcb06f00 (LWP 3928) exited]
+[Thread 0x7f43d65fe6c0 (LWP 3933) exited]
+[New process 3928]
+[Inferior 1 (process 3928) exited with code 0102]
+From                To                  Syms Read   Shared Object Library
+0x00007f43dcb4e000  0x00007f43dcb78195  Yes         /lib64/ld-linux-x86-64.so.2
+0x00007f43dba3f8c0  0x00007f43dbb0a950  Yes         /lib/x86_64-linux-gnu/libtsan.so.2
+0x00007f43db628800  0x00007f43db7b0039  Yes         /lib/x86_64-linux-gnu/libc.so.6
+0x00007f43db927420  0x00007f43db9a53a6  Yes         /lib/x86_64-linux-gnu/libm.so.6
+0x00007f43dcb0f780  0x00007f43dcb32745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+                                        No          linux-vdso.so.1
+(*): Shared library is missing debugging information.

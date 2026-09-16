@@ -1,0 +1,38 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7f95343ff6c0 (LWP 4116)]
+[New Thread 0x7f95333fe6c0 (LWP 4117)]
+[New Thread 0x7f95323fd6c0 (LWP 4118)]
+[New Thread 0x7f95313fc6c0 (LWP 4119)]
+[New Thread 0x7f95303fb6c0 (LWP 4120)]
+[New Thread 0x7f952f3fa6c0 (LWP 4121)]
+[New Thread 0x7f952e3f96c0 (LWP 4122)]
+[New Thread 0x7f952d3f86c0 (LWP 4123)]
+[New Thread 0x7f952c3f76c0 (LWP 4124)]
+[New Thread 0x7f952afff6c0 (LWP 4125)]
+[New Thread 0x7f9529ffe6c0 (LWP 4126)]
+[New Thread 0x7f9528ffd6c0 (LWP 4127)]
+[New Thread 0x7f9527ffc6c0 (LWP 4128)]
+[Thread 0x7f95333fe6c0 (LWP 4117) exited]
+[Thread 0x7f9528ffd6c0 (LWP 4127) exited]
+[Thread 0x7f9527ffc6c0 (LWP 4128) exited]
+[Thread 0x7f952afff6c0 (LWP 4125) exited]
+[Thread 0x7f952c3f76c0 (LWP 4124) exited]
+[Thread 0x7f9529ffe6c0 (LWP 4126) exited]
+[Thread 0x7f95303fb6c0 (LWP 4120) exited]
+[Thread 0x7f952d3f86c0 (LWP 4123) exited]
+[Thread 0x7f95323fd6c0 (LWP 4118) exited]
+[Thread 0x7f95313fc6c0 (LWP 4119) exited]
+[Thread 0x7f952e3f96c0 (LWP 4122) exited]
+production publication: 1200000 operations PASS; accepted=16813
+[Thread 0x7f952f3fa6c0 (LWP 4121) exited]
+[Thread 0x7f95343ff6c0 (LWP 4116) exited]
+[Inferior 1 (process 4113) exited normally]
+From                To                  Syms Read   Shared Object Library
+0x00007f953867b000  0x00007f95386a5195  Yes         /lib64/ld-linux-x86-64.so.2
+0x00007f953743f8c0  0x00007f953750a950  Yes         /lib/x86_64-linux-gnu/libtsan.so.2
+0x00007f9537028800  0x00007f95371b0039  Yes         /lib/x86_64-linux-gnu/libc.so.6
+0x00007f953858d420  0x00007f953860b3a6  Yes         /lib/x86_64-linux-gnu/libm.so.6
+0x00007f9538553780  0x00007f9538576745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+                                        No          linux-vdso.so.1
+(*): Shared library is missing debugging information.
