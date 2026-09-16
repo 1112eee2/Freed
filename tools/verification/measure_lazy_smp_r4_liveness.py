@@ -37,7 +37,20 @@ import sys
 import time
 
 ACCEPTED_RE = re.compile(r"accepted=(\d+)")
-ASSERTION_RE = re.compile(r"Assertion `([^']*)' failed")
+# glibc style:  probe.c:125: collide: Assertion `x == y' failed.
+# mingw style:  Assertion failed: x == y, file probe.c, line 125
+ASSERTION_PATTERNS = (
+    re.compile(r"Assertion `([^']*)' failed"),
+    re.compile(r"Assertion failed: ([^,]+), file "),
+)
+
+
+def find_assertion(text: str) -> str | None:
+    for pattern in ASSERTION_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            return match.group(1).strip()
+    return None
 VARIANTS = (
     ("clang_tsan", "clang", "-fsanitize=thread "),
     ("gcc_tsan", "gcc", "-fsanitize=thread "),
@@ -142,14 +155,14 @@ def main() -> int:
             result = run(f"{prefix}timeout {args.timeout}s {resolve_binary(binary).as_posix()}",
                          handoff, timeout=args.timeout + 30)
             match = ACCEPTED_RE.search(result["stdout"])
-            assertion = ASSERTION_RE.search(result["stderr"])
+            assertion = find_assertion(result["stderr"])
             entry["runs"].append({
                 "index": index + 1,
                 "exit_code": result["exit_code"],
                 "elapsed_seconds": result["elapsed_seconds"],
                 "accepted": int(match.group(1)) if match else None,
-                "aborting_assertion": assertion.group(1) if assertion else None,
-                "liveness_assertion": bool(assertion and "accepted) > 0" in assertion.group(1)),
+                "aborting_assertion": assertion,
+                "liveness_assertion": bool(assertion and "accepted) > 0" in assertion),
                 "stdout": result["stdout"],
                 "stderr_tail": result["stderr"][-400:],
             })
