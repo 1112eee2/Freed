@@ -1,0 +1,698 @@
+{
+  "measured_at": "2026-09-16T17:02:00Z",
+  "scope": "measurement of the frozen r4 probe; NOT gate evidence, NOT a re-run of the gate",
+  "handoff_probe_sha256": "2c1c6fa494941bb8b2411cd4c41d3ca5160a382013d3fa32d78c9dadd6db3be9",
+  "snapshot_verification": "PASS: source hashes, probe hash and exact production extraction (r4 pthread)",
+  "repeats": 20,
+  "environment": "Linux runnervmlun5p 6.17.0-1022-azure #22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux\n2\n2\nUbuntu clang version 18.1.3 (1ubuntu1)\ngcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nPython 3.12.3\nlibc6:amd64\t2.39-0ubuntu8.9\n",
+  "variants": {
+    "clang_tsan": {
+      "compiler": "clang",
+      "compile": {
+        "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r4-liveness/clang_tsan",
+        "exit_code": 0,
+        "elapsed_seconds": 9.185,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": -6,
+          "elapsed_seconds": 0.864,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 2,
+          "exit_code": 0,
+          "elapsed_seconds": 0.111,
+          "accepted": 60,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=60\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 3,
+          "exit_code": 0,
+          "elapsed_seconds": 0.12,
+          "accepted": 83,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=83\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 4,
+          "exit_code": 0,
+          "elapsed_seconds": 0.119,
+          "accepted": 2,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=2\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 5,
+          "exit_code": -6,
+          "elapsed_seconds": 0.379,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 6,
+          "exit_code": -6,
+          "elapsed_seconds": 0.42,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 7,
+          "exit_code": -6,
+          "elapsed_seconds": 0.416,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 8,
+          "exit_code": -6,
+          "elapsed_seconds": 0.57,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 9,
+          "exit_code": -6,
+          "elapsed_seconds": 0.458,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 10,
+          "exit_code": -6,
+          "elapsed_seconds": 0.411,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 11,
+          "exit_code": -6,
+          "elapsed_seconds": 0.475,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 12,
+          "exit_code": -6,
+          "elapsed_seconds": 0.423,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 13,
+          "exit_code": -6,
+          "elapsed_seconds": 0.62,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 14,
+          "exit_code": -6,
+          "elapsed_seconds": 0.589,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 15,
+          "exit_code": -6,
+          "elapsed_seconds": 0.449,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 16,
+          "exit_code": -6,
+          "elapsed_seconds": 0.471,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 17,
+          "exit_code": -6,
+          "elapsed_seconds": 0.532,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 18,
+          "exit_code": -6,
+          "elapsed_seconds": 0.507,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 19,
+          "exit_code": -6,
+          "elapsed_seconds": 0.533,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 20,
+          "exit_code": -6,
+          "elapsed_seconds": 0.46,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_tsan: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        }
+      ],
+      "binary_sha256": "f60b4bae5f4ac4fb6d91887f8f99ba1a14ca82405a4fd20a39d9328b2da98a98",
+      "status": "MEASURED",
+      "pass_count": 3,
+      "pass_rate": 0.15,
+      "accepted_values": [
+        60,
+        83,
+        2
+      ],
+      "accepted_min": 2,
+      "accepted_max": 83,
+      "liveness_assertion_failures": 8,
+      "outcome_breakdown": {
+        "assert: move.captured_low == ~move.path_low": 9,
+        "pass": 3,
+        "assert: atomic_load(&accepted) > 0": 8
+      }
+    },
+    "gcc_tsan": {
+      "compiler": "gcc",
+      "compile": {
+        "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r4-liveness/gcc_tsan",
+        "exit_code": 0,
+        "elapsed_seconds": 1.663,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": 0,
+          "elapsed_seconds": 0.292,
+          "accepted": 43,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=43\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 2,
+          "exit_code": -6,
+          "elapsed_seconds": 0.431,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 3,
+          "exit_code": -6,
+          "elapsed_seconds": 0.509,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 4,
+          "exit_code": -6,
+          "elapsed_seconds": 0.562,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 5,
+          "exit_code": -6,
+          "elapsed_seconds": 0.474,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 6,
+          "exit_code": -6,
+          "elapsed_seconds": 0.479,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 7,
+          "exit_code": -6,
+          "elapsed_seconds": 0.522,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 8,
+          "exit_code": -6,
+          "elapsed_seconds": 0.65,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 9,
+          "exit_code": -6,
+          "elapsed_seconds": 0.495,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 10,
+          "exit_code": 0,
+          "elapsed_seconds": 0.195,
+          "accepted": 32,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=32\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 11,
+          "exit_code": 0,
+          "elapsed_seconds": 0.159,
+          "accepted": 6,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=6\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 12,
+          "exit_code": 0,
+          "elapsed_seconds": 0.121,
+          "accepted": 7,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=7\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 13,
+          "exit_code": -6,
+          "elapsed_seconds": 0.764,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 14,
+          "exit_code": -6,
+          "elapsed_seconds": 0.447,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 15,
+          "exit_code": -6,
+          "elapsed_seconds": 0.444,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 16,
+          "exit_code": -6,
+          "elapsed_seconds": 0.427,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 17,
+          "exit_code": 0,
+          "elapsed_seconds": 0.146,
+          "accepted": 49,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=49\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 18,
+          "exit_code": -6,
+          "elapsed_seconds": 0.752,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 19,
+          "exit_code": -6,
+          "elapsed_seconds": 0.505,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 20,
+          "exit_code": -6,
+          "elapsed_seconds": 0.473,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "gcc_tsan: probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        }
+      ],
+      "binary_sha256": "4bbca3006b6576d1c0682a040e8ccbe3b0df63fa99556791ca4b0193f023c051",
+      "status": "MEASURED",
+      "pass_count": 5,
+      "pass_rate": 0.25,
+      "accepted_values": [
+        43,
+        32,
+        6,
+        7,
+        49
+      ],
+      "accepted_min": 6,
+      "accepted_max": 49,
+      "liveness_assertion_failures": 7,
+      "outcome_breakdown": {
+        "pass": 5,
+        "assert: move.captured_low == ~move.path_low": 8,
+        "assert: atomic_load(&accepted) > 0": 7
+      }
+    },
+    "clang_plain": {
+      "compiler": "clang",
+      "compile": {
+        "command": "clang -std=c17 -O1 -g -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r4-liveness/clang_plain",
+        "exit_code": 0,
+        "elapsed_seconds": 0.113,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": -6,
+          "elapsed_seconds": 0.328,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 2,
+          "exit_code": -6,
+          "elapsed_seconds": 0.408,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 3,
+          "exit_code": -6,
+          "elapsed_seconds": 0.177,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 4,
+          "exit_code": -6,
+          "elapsed_seconds": 0.208,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 5,
+          "exit_code": 0,
+          "elapsed_seconds": 0.013,
+          "accepted": 1956,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=1956\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 6,
+          "exit_code": -6,
+          "elapsed_seconds": 0.325,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 7,
+          "exit_code": -6,
+          "elapsed_seconds": 0.48,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 8,
+          "exit_code": -6,
+          "elapsed_seconds": 0.361,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 9,
+          "exit_code": 0,
+          "elapsed_seconds": 0.015,
+          "accepted": 249,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=249\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 10,
+          "exit_code": -6,
+          "elapsed_seconds": 0.195,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 11,
+          "exit_code": -6,
+          "elapsed_seconds": 0.359,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 12,
+          "exit_code": -6,
+          "elapsed_seconds": 0.347,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 13,
+          "exit_code": -6,
+          "elapsed_seconds": 0.495,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 14,
+          "exit_code": 0,
+          "elapsed_seconds": 0.016,
+          "accepted": 918,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=918\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 15,
+          "exit_code": 0,
+          "elapsed_seconds": 0.011,
+          "accepted": 13679,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=13679\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 16,
+          "exit_code": -6,
+          "elapsed_seconds": 0.194,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 17,
+          "exit_code": -6,
+          "elapsed_seconds": 0.374,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 18,
+          "exit_code": -6,
+          "elapsed_seconds": 0.276,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 19,
+          "exit_code": -6,
+          "elapsed_seconds": 0.385,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:125: void *collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 20,
+          "exit_code": -6,
+          "elapsed_seconds": 0.222,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:158: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        }
+      ],
+      "binary_sha256": "0cf004b21185a9acf60a9ed9bb43cc3a1ac6e346e57662494dae4349763df5a6",
+      "status": "MEASURED",
+      "pass_count": 4,
+      "pass_rate": 0.2,
+      "accepted_values": [
+        1956,
+        249,
+        918,
+        13679
+      ],
+      "accepted_min": 249,
+      "accepted_max": 13679,
+      "liveness_assertion_failures": 6,
+      "outcome_breakdown": {
+        "assert: move.captured_low == ~move.path_low": 10,
+        "assert: atomic_load(&accepted) > 0": 6,
+        "pass": 4
+      }
+    }
+  },
+  "conclusion": "A pass rate strictly between 0 and 1 with a wide accepted spread indicates a timing-dependent liveness property rather than a deterministic protocol failure. A rate of exactly 0 across every variant would point at something systematic and would need a different explanation."
+}
