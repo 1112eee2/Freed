@@ -1,0 +1,2 @@
+gcc_probe_tsan: /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c:158: main: Assertion `atomic_load(&accepted) > 0' failed.
+timeout: the monitored command dumped core

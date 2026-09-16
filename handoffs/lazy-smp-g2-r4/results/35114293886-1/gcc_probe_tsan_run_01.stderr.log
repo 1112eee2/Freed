@@ -1,0 +1,2 @@
+gcc_probe_tsan: /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c:125: collide: Assertion `move.captured_low == ~move.path_low' failed.
+timeout: the monitored command dumped core

@@ -1,0 +1,23 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=3655)
+  Write of size 4 at 0x55ffd0a676a0 by thread T2:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c:22:50 (clang_negative_pthread_tsan+0xdee01) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+
+  Previous write of size 4 at 0x55ffd0a676a0 by thread T1:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c:22:50 (clang_negative_pthread_tsan+0xdee01) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+
+  Location is global 'counter' of size 4 at 0x55ffd0a676a0 (clang_negative_pthread_tsan+0x148a6a0)
+
+  Thread T2 (tid=3660, running) created by main thread at:
+    #0 pthread_create <null> (clang_negative_pthread_tsan+0x605ef) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c:29:5 (clang_negative_pthread_tsan+0xdec1e) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+
+  Thread T1 (tid=3659, running) created by main thread at:
+    #0 pthread_create <null> (clang_negative_pthread_tsan+0x605ef) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c:28:5 (clang_negative_pthread_tsan+0xdec03) (BuildId: d5f4bb3330474646fa6e236aa50d144b95256730)
+
+SUMMARY: ThreadSanitizer: data race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c:22:50 in race
+==================
+warning: Could not load shared library symbols for linux-vdso.so.1.
+Do you need "set solib-search-path" or "set sysroot"?
+The program has no registers now.

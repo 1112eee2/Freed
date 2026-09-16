@@ -1,0 +1,73 @@
+{
+  "handoff": "lazy-smp-g2-r4",
+  "reviewed_result": true,
+  "reviewed_on": "2026-09-16",
+  "review_scope": "classification of the collected r4 evidence only; no gate closed, no promotion, no SPRT, no production change",
+  "handoff_commit": "117c22aa3cf47d1175e1758c70f9af1ab8daa709",
+  "workflow_run": "https://github.com/1112eee2/ThaiMakhosEngine/actions/runs/35114293886",
+  "raw_evidence": "results/35114293886-1/",
+  "raw_collector_status": "REVIEW_REQUIRED",
+  "inputs_unchanged": true,
+  "snapshot_verified_before_and_after": true,
+  "r3_preserved": "PR #18 and handoffs/lazy-smp-g2-r3 are byte-for-byte untouched; no r3 result was read or transferred",
+
+  "sanitizer_path": {
+    "verdict": "WORKING",
+    "evidence": "clang_smoke_pthread_tsan exit 0 and gcc_smoke_pthread_tsan exit 0, zero detector reports",
+    "significance": "r3 could not run any C11-thread binary under TSan: the smoke SEGV'd in __tsan_func_entry with a null thread state. The r4 pthread revision removes that blocker; TSan now instruments this thread path."
+  },
+
+  "negative_control": {
+    "verdict": "CALIBRATED",
+    "evidence": "clang_negative_pthread_tsan exit 66 and gcc_negative_pthread_tsan exit 66, both with 'WARNING: ThreadSanitizer: data race' on negative_pthread.c:22 (global 'counter', two threads)",
+    "significance": "r3's C11 negative control never produced a usable race report, so r3 had no calibration. r4 does. Exit 66 alone was not used as the signal; the report text was checked."
+  },
+
+  "protocol_run": {
+    "verdict": "NOT_COMPLETED",
+    "clean_protocol_pass_runs": 1,
+    "probe_runs_attempted": 6,
+    "detail": {
+      "clang_probe_plain": {"exit_codes": [-6], "note": "abort"},
+      "gcc_probe_plain": {"exit_codes": [-6], "note": "abort"},
+      "clang_probe_tsan": {"exit_codes": [-6, -6, -6, -6, -6]},
+      "gcc_probe_tsan": {"exit_codes": [-6, -6, -6, -6, 0], "only_pass": "run_05, accepted=961"}
+    },
+    "blocker": "probe.c:158: Assertion `atomic_load(&accepted) > 0' failed (SIGABRT)",
+    "no_data_race_was_reported_by_any_probe_run": true,
+    "classification": "harness liveness calibration, not a publication defect",
+    "reasoning": "shared_move_hint_read returns true only when the seqlock sequence is even and unchanged across its six loads and the key matches. shared_move_hint_write is explicitly a bounded store-skip that returns false on contention, and the reader has no retry loop by design. Zero accepted reads is therefore a legitimate outcome of the documented contract under an 8-writer : 4-reader ratio, not a protocol violation. No probe run reached a detector report or an assertion inside the publication functions.",
+    "runner": {
+      "image": "ubuntu-24.04.5, kernel 6.17.0-1022-azure",
+      "vCPU": 2,
+      "clang": "18.1.3",
+      "gcc": "13.3.0",
+      "glibc": "2.39"
+    },
+    "measured_probability": "1 of 6 probe runs satisfied the liveness assertion; the one success (gcc TSan run 05, accepted=961) confirms the assertion is timing-dependent rather than impossible",
+    "assertion_was_not_weakened": "no assertion, atomic, memory order, workload or sanitizer option was changed, and no suppression was added, to obtain a pass"
+  },
+
+  "gate_status": "NOT_PASSED",
+  "gate_reason": "the r4 gate requires a calibrated negative control plus five clean protocol PASS runs. The negative control is now calibrated, but zero probe runs produced a clean PASS.",
+  "what_r4_established": [
+    "the r3 C11-thread sanitizer abort is reproduced as a C11 thrd_create integration problem, not a publication problem",
+    "pthread adapters let TSan execute and instrument this code path",
+    "a genuinely racy pthread control now yields a real data-race report on this runner"
+  ],
+  "what_r4_did_not_establish": [
+    "publication race-freedom",
+    "Windows worker lifecycle behaviour",
+    "any G2-G6 closure, Elo claim or production change"
+  ],
+  "next_action_proposal": {
+    "id": "r5 (NOT implemented, requires owner authorisation)",
+    "hypothesis": "the frozen `accepted > 0` liveness assertion is not guaranteed by the documented bounded-skip/miss contract at an 8:4 writer:reader ratio on a 2-vCPU runner",
+    "options": [
+      "run r4 unchanged on a runner with more vCPUs and record whether the assertion then holds reproducibly (no code change)",
+      "separate the publication race test from the liveness expectation: keep the concurrent protocol run, but assert on a dedicated single-writer/single-reader handshake that the contract does guarantee, and report the concurrent accepted count as an observation",
+      "lower the writer:reader ratio or add a bounded drain phase"
+    ],
+    "constraint": "any change to the frozen assertion or workload needs explicit owner acceptance; it must not be done to manufacture a PASS"
+  }
+}
