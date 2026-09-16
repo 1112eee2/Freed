@@ -85,8 +85,29 @@ commands and counters are evidence, not launch instructions.
   (`build/lazy_smp_acceptance_20260916_g3_budget/full/result.json`); retained red
   `non_power_of_two_red_on_prefix.txt`, record `result.json` in the same dir.
   This is a KEEP-only coverage gain, not a strength or promotion result.
-- Next: finish actual race-detector coverage and the remaining G3 cases, then
-  G4 scaling, fresh G5 paired
+- G3 terminal-proof and lifecycle coverage extended (same r3 DLLs, no engine
+  change). Three tests added. (F1) All three terminal reasons are now verified
+  rejected at the Lazy SMP root across 1/2/4/6/8/12T against the Python
+  `terminal_status`/`legal_moves` oracle: `repetition`, `no_progress`
+  (reversible_plies=80) and `no_legal_move`
+  (`state_from_pieces({(1,0):BLACK_MAN,(0,1):RED_MAN},BLACK)`); a clock-79 root
+  still searches. The pre-fix g0 candidate also rejects all three, so this is
+  **coverage, not a defect repair** — do not report it as a fix. (F2) An
+  externally stopped search clears the native running flag; `clear()` and a
+  fresh search keep working afterwards at 1/2/4/12T. (F3) contract
+  clarification: native `makhos_lazy_smp_clear` returns 1 (refused) while a run
+  is active, but that refusal is **unreachable through
+  `NativeLazySmpSearch.clear()`**, because the wrapper holds `_search_lock` for
+  the whole native run. Measured: `clear()` blocked 2902 ms for a 2900 ms
+  search. The native refusal is defence-in-depth only; the observable contract
+  is that `clear()` serializes behind an active search. A first draft asserting
+  `clear()` raises during an active search was wrong about the contract and was
+  replaced, not loosened. Full suite **609/609 Python + 16/16 Node PASS**,
+  218.202 s, zero failures/errors/skips/protected reads
+  (`build/lazy_smp_acceptance_20260916_g3_lifecycle/full/result.json`); record
+  `result.json` in the same dir. KEEP-only coverage gain.
+- Next: finish actual race-detector coverage (still blocked on a Linux/TSan
+  runtime) and the remaining G3 cases, then G4 scaling, fresh G5 paired
   strength and G6 production/rollback. Status remains NOT_PROMOTED; no SPRT
   launch or checkpoint mutation has occurred in these correctness gates.
 - G2 Linux handoff: user assigned race-detector execution to Astra Web; Local
