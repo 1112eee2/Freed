@@ -1,0 +1,17 @@
+ThreadSanitizerThreadSanitizer:DEADLYSIGNAL
+:DEADLYSIGNAL
+==63==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fc5992ecf90 bp 0x7fc594ffc7b0 sp 0x7fc594ffc698 T66)
+==63==The signal is caused by a READ memory access.
+==63==Hint: address points to the zero page.
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer:DEADLYSIGNAL
+ThreadSanitizer: nested bug in the same thread, aborting.

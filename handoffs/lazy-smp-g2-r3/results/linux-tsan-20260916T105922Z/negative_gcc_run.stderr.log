@@ -1,0 +1,20 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=24)
+  Read of size 4 at 0x559d01647014 by thread T1:
+    #0 race results/linux-tsan-20260916T105922Z/negative_control.c:14 (negative-gcc-tsan+0x135c) (BuildId: cf9b29bf6191edac490e9deddfd8c7e9b6b86745)
+
+  Previous write of size 4 at 0x559d01647014 by thread T2:
+    #0 race results/linux-tsan-20260916T105922Z/negative_control.c:14 (negative-gcc-tsan+0x136d) (BuildId: cf9b29bf6191edac490e9deddfd8c7e9b6b86745)
+
+  Location is global 'counter' of size 4 at 0x559d01647014 (negative-gcc-tsan+0x4014)
+
+  Thread T1 (tid=26, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main results/linux-tsan-20260916T105922Z/negative_control.c:20 (negative-gcc-tsan+0x13c5) (BuildId: cf9b29bf6191edac490e9deddfd8c7e9b6b86745)
+
+  Thread T2 (tid=27, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main results/linux-tsan-20260916T105922Z/negative_control.c:21 (negative-gcc-tsan+0x13e8) (BuildId: cf9b29bf6191edac490e9deddfd8c7e9b6b86745)
+
+SUMMARY: ThreadSanitizer: data race results/linux-tsan-20260916T105922Z/negative_control.c:14 in race
+==================
