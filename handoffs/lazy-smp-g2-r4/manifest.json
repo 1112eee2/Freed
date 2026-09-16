@@ -1,0 +1,24 @@
+{
+  "handoff": "lazy-smp-g2-r4",
+  "status": "PREPARED_NOT_RUN",
+  "supersedes": null,
+  "revision_of": "handoffs/lazy-smp-g2-r3",
+  "harness_change": "thread launch/join/yield adapters only: pthread instead of C11 thrd_*; workload, assertions, atomic types and memory orders unchanged",
+  "source_sha256": {
+    "native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+    "native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+    "tests/native_lazy_smp_portable_pthread.c": "d70d02292db9e61304ee99138e14d049d61c8edb3631e6355381ff332b7c9623",
+    "tests/native_lazy_smp_smoke_pthread.c": "d16f263d300c9ea67f0d02f2a333633d02c298d48448a1d9d615ccda673a170f",
+    "tests/native_lazy_smp_negative_pthread.c": "cb2125e5982e4ad650da4fb4d94acb897df494a6319b3b47beb4a111f0dab454",
+    "tools/verification/prepare_lazy_smp_race_probe_r4.py": "b508a60546d205202bb7d993e4ce0de238e9ba4598b75d43852a04e7fb70ddd8"
+  },
+  "probe_sha256": "2c1c6fa494941bb8b2411cd4c41d3ca5160a382013d3fa32d78c9dadd6db3be9",
+  "scope": "actual publication functions and types; not Windows worker lifecycle",
+  "linux_build": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o probe",
+  "linux_run": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./probe",
+  "negative_control_build": "clang -std=c17 -O1 -g -fsanitize=thread -pthread negative_pthread.c -o negative",
+  "negative_control_run": "TSAN_OPTIONS=halt_on_error=1 timeout 120s ./negative",
+  "smoke_build": "clang -std=c17 -O1 -g -fsanitize=thread -pthread smoke_pthread.c -o smoke",
+  "smoke_run": "timeout 120s ./smoke",
+  "gate": "require a genuine pthread data-race report from the negative control, then five clean protocol PASS runs with zero exit, zero detector reports, no assertion failure and no timeout; an unsupported sanitizer runtime is NOT_RUN"
+}
