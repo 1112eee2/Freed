@@ -1,0 +1,81 @@
+name: Lazy SMP r4 liveness measurement
+
+# Measures the liveness behaviour of the FROZEN r4 probe. This is a measurement of an
+# existing artifact, not gate evidence and not a re-run of the gate. It never edits the
+# handoff and never weakens an assertion.
+#
+# Two questions:
+#   1. On the 2-vCPU hosted runner, what is the actual pass rate of the frozen probe,
+#      and what accepted counts do the passing runs report?
+#   2. Does the same unchanged probe pass on a runner with more vCPUs? That is the
+#      cheapest falsification of the "liveness is a scheduling/oversubscription effect"
+#      classification, and it is the r5 option 1 proposal.
+#
+# The second job is allowed to fail: larger runners are not available on every plan, and
+# an unavailable label must not block the measurement.
+
+on:
+  push:
+    branches: [codex/astra-g2-r4-liveness-measurement]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Frozen probe liveness / ubuntu-24.04
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install Clang TSan, GCC and debugger
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang libclang-rt-18-dev gcc gdb
+      - name: Measure the frozen probe
+        run: |
+          python3 tools/verification/measure_lazy_smp_r4_liveness.py \
+            --repeats 20 --output build/r4-liveness
+      - name: Show the summary
+        if: always()
+        run: |
+          cat build/r4-liveness/summary.json 2>/dev/null || echo "no summary produced"
+      - name: Upload the measurement
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: r4-liveness-2vcpu
+          path: build/r4-liveness/summary.json
+          if-no-files-found: warn
+
+  measure-larger:
+    name: Frozen probe liveness / larger runner
+    runs-on: ubuntu-24.04-4-core
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install Clang TSan, GCC and debugger
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang libclang-rt-18-dev gcc gdb
+      - name: Measure the frozen probe unchanged
+        run: |
+          python3 tools/verification/measure_lazy_smp_r4_liveness.py \
+            --repeats 20 --output build/r4-liveness-larger
+      - name: Show the summary
+        if: always()
+        run: |
+          cat build/r4-liveness-larger/summary.json 2>/dev/null || echo "no summary produced"
+      - name: Upload the measurement
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: r4-liveness-larger
+          path: build/r4-liveness-larger/summary.json
+          if-no-files-found: warn
