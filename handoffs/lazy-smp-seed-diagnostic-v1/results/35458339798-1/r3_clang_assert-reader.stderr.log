@@ -1,0 +1,1 @@
+r3_clang: /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r3/probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.
