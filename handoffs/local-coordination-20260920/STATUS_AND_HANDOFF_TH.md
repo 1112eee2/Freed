@@ -46,7 +46,11 @@
 
 ## แผนหลังตรวจรับ Web
 
-Ethan กำหนดเป้าหมายรุ่น **Invincible 2** เพื่อเพิ่ม practical playing strength:
-อ่าน [Invincible 2 roadmap](../../docs/architecture/INVINCIBLE_2_ROADMAP_TH.md).
+**แก้ความเข้าใจ 2026-09-20:** Invincible 2 เป็นโปรแกรมของอาจารย์ทศพล ธนะทิพานนท์
+ที่ใช้เป็นคู่เทียบภายนอก ไม่ใช่ชื่อรุ่นของเรา เป้าหมายคือ ThaiMakhosEngine:
+Phase 1 ลดจุดอ่อน → Phase 2 ขั้นต่ำเสมอ/ไม่แพ้ Invincible 2 ทุกเกมในขอบเขต →
+Phase 3 ชนะหรือ hold จากตำแหน่งเดียวกันได้ดีกว่าคู่เทียบ โดยไม่ลดความปลอดภัย
+ผลไร้พ่ายในชุดทดลองไม่ใช่ข้อพิสูจน์ universal 100%; การชนะ baseline เราเองยังไม่จบเป้าหมาย
+อ่าน [roadmap เทียบ Invincible 2](../../docs/architecture/INVINCIBLE_2_ROADMAP_TH.md).
 ไม่ผูก release กับความสำเร็จของ Lazy SMP; หากต้องพัก candidate ที่ถูก reject ให้ใช้ฐาน
 ที่ตรวจรับแล้วทำ strength work ต่อ การผ่าน TSan ไม่ใช่ performance/strength promotion

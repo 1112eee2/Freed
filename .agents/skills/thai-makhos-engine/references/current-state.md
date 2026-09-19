@@ -3,6 +3,15 @@
 Updated 2026-09-16. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
+### User target clarification (2026-09-20)
+
+Invincible 2 is the external engine by อาจารย์ทศพล ธนะทิพานนท์, not our release name.
+The target is ThaiMakhosEngine: improve practical strength, then non-loss against
+Invincible 2, then superior conversion/holding on matched complex positions.
+For phase definitions and empirical versus universal 100% evidence, read
+[the corrected comparison roadmap](../../../../docs/architecture/INVINCIBLE_2_ROADMAP_TH.md).
+This does not start a proof builder, resume checkpoints, or close pending gates.
+
 ## Current scope: readiness evidence before Lazy SMP gates
 
 - Inspected Local HEAD `ef42064` on `local/strict-key-acceptance-a0f7964`.

@@ -1,32 +1,83 @@
-# Invincible 2 — Practical Play Roadmap
+# ThaiMakhosEngine — Roadmap เทียบ Invincible 2 ของอาจารย์ทศพล ธนะทิพานนท์
 
 วันที่ 2026-09-20 · แผนตามคำขอ Ethan · ยังไม่ใช่ผลทดลองหรือการอนุมัติ production
 
 ## เป้าหมายและเส้นทางหลัก
 
-ออกเวอร์ชัน **Invincible 2** ที่เล่นจริงแข็งกว่ารุ่นใช้งานปัจจุบัน ภายใต้เวลา
-และทรัพยากรเท่ากัน โดยเน้น 1s/2s ต่อตา: พลาดแท็กติกน้อยลง เปลี่ยนความได้เปรียบ
-เป็นชัยชนะได้ดีขึ้น และ GUI ไม่เสียเวลา/เสียผลค้นหาเมื่อหยุดหรือเริ่มเกมใหม่
-ชื่อรุ่นไม่ใช่การอ้างว่าเล่นสมบูรณ์แบบหรือไม่มีวันแพ้ และไม่กำหนดตัวเลข Elo ที่ยังไม่มีหลักฐาน
+**แก้ความเข้าใจจากแผนฉบับแรก:** Invincible 2 เป็นคู่เทียบภายนอกของอาจารย์
+ทศพล ธนะทิพานนท์ ไม่ใช่ชื่อรุ่นของ ThaiMakhosEngine เป้าหมายไม่จบเพียงชนะรุ่นเก่าของเรา
+แต่ต้องไปถึงการไม่แพ้คู่เทียบนี้ แล้วเหนือกว่าใน practical play จากตำแหน่งซับซ้อน
 
-**ไม่ผูกการออกรุ่นกับ Lazy SMP หรือ NNUE รุ่นใหม่** ใช้ backend ที่ตรวจรับแล้วเป็นฐาน
-และปรับทีละแนวคิด ส่วนกลไกที่ถูก reject จะไม่กลับมาทดลองแบบเดิม
+[หน้า Invincible II ของผู้พัฒนา](https://hosbase.com/invincible2/) ระบุผู้จัดทำตรงกับเป้าหมาย
+[ประวัติโดยผู้พัฒนา](https://www.aimechatron.com/future) อธิบาย Invincible 2 ว่ารักษาคุณสมบัติ
+ไม่แพ้และเพิ่มการเอาชนะคู่แข่งที่พลาด ส่วน Future เป็นอีกรุ่น ห้ามนำมาแทนโดยไม่ระบุ
+นี่เป็นคำอธิบายจากผู้พัฒนา ไม่ใช่การตรวจ certificate หรือกติกาของบริการนั้นโดยโครงการเราแล้ว
 
-## 0. หลังรับ PR จาก Astra Web: จบข้อสงสัย ไม่ขยายงานไม่รู้จบ
+## เป้าหมายสาม Phase ตามคำชี้แจง Ethan
+
+| Phase | เป้าหมาย | หลักฐานที่ต้องมี |
+|---|---|---|
+| **1 — ยกระดับจากจุดที่ยังแพ้ได้** | ลดการพลาดและเข้าใกล้ระดับไม่แพ้ | baseline ภายนอก, replay เกมแพ้, regression ของสาเหตุจริง และผลพัฒนาบนชุดใหม่ |
+| **2 — ขั้นต่ำเสมอ Invincible 2 ได้ทุกเกม** | เป้าหมายระยะยาวคือ non-loss 100% จากตำแหน่งเริ่มต้นที่อยู่ในขอบเขต ทั้งสองสี | แยกผลทดสอบไร้พ่ายกับข้อพิสูจน์ครอบคลุมทุกทางตอบอย่างชัดเจน |
+| **3 — เหนือกว่าใน practical play** | ตำแหน่งเดียวกัน เราชนะได้ในกรณีคู่เทียบทำได้แค่เสมอ หรือเรารักษาเสมอได้ในกรณีคู่เทียบแพ้ | paired comparison ทั้ง win conversion และ defensive hold, ผลซ้ำได้ และไม่แลกความปลอดภัย Phase 2 |
+
+### Phase 2: คงเป้า 100% แต่ไม่อ้างว่าแข่งครบจำนวนหนึ่งเท่ากับพิสูจน์แล้ว
+
+- เป้าหมายคือขั้นต่ำไม่แพ้ ไม่ได้บังคับให้ทิ้งตาชนะเพื่อจบเสมอ หากพบชัยชนะเหนือคู่เทียบ
+  ให้ตรวจ version/rules/บันทึกและสาเหตุ ไม่สรุปว่าเป็นไปไม่ได้หรือถือว่าเป็นความสำเร็จทันที
+- **Empirical gate:** ไม่มีแพ้ในชุดเกมที่ freeze ล่วงหน้า ครบสองสี/หลายการเปิดเกม/หลาย seed
+  พร้อมจำนวน W/D/L และการกระจายรูปหมาก ต้องรายงานว่าไม่แพ้เฉพาะชุดที่ทดสอบ ไม่เรียกไร้พ่ายทุกเกม
+- **Universal target:** ถ้าจะรับรอง 100% ต้องมี non-losing strategy ที่ตรวจได้ ครอบคลุมทุก legal
+  reply ของคู่แข่งในขอบเขต และ implementation เลือกตาม strategy นั้นจริง ไม่ใช่แค่ NNUE score
+  หรือหนังสือเปิดเกมที่ครอบคลุมเฉพาะ main line อ้างอิง [proof roadmap](../../PROOF_ROADMAP.md)
+  เพื่อออกแบบเท่านั้น ตัวเลข/สถานะในเอกสารเก่าต้องตรวจใหม่ก่อนนำมาใช้
+- ขอบเขตต้องรวม side-to-move, repetition history และ 80-ply clock ไม่ใช้กระดานเปล่าแทน state
+  และไม่ตั้งข้อกำหนดให้รักษาเสมอจากตำแหน่งที่พิสูจน์ว่า LOSS ต่อผู้เล่นสมบูรณ์แบบ
+- การรับเป้าหมายนี้ยังไม่ใช่คำสั่ง resume DFPN/checkpoints หรือสร้าง TB ใหญ่ทันที ต้องประเมิน
+  ขอบเขต proof ต้นทุน และเสนอแผนแยกก่อน ไม่ลดเป้า 100% ให้เหลือเพียง win rate ที่ดูดี
+
+### Phase 3: วัดผลเหนือกว่า ไม่ใช่หวังบังคับชนะตำแหน่งเสมอที่อีกฝ่ายเล่นสมบูรณ์แบบ
+
+- ใช้ตำแหน่งเริ่มเดียวกัน ฝั่งเดียวกัน history/clock เดียวกัน และ defense/opponent policy
+  เดียวกันที่ตอบตามสถานะจริง ไม่ replay ตายตัวที่อาจผิดกติกาหลัง engine เลือกต่างกัน
+- แยก head-to-head จาก standard start ออกจาก matched task: เอ็นจิ้นทั้งสองรับบทเดียวกัน
+  พบคู่ต่อสู้/defender ชุดเดียวกัน แล้วเทียบว่าใครรักษา W/D/L ได้ดีกว่า
+- ตัวชี้วัดหลัก: cases ที่เรา WIN/คู่เทียบ DRAW หรือเรา DRAW/คู่เทียบ LOSS พร้อมกรณีกลับด้าน
+  จำนวนทดสอบทั้งหมดและ uncertainty ไม่เลือกแสดงเฉพาะตัวอย่างชนะของเรา
+- ถ้ามี independent history-aware proof/TB ให้ตรวจการรักษา WDL; ถ้ามีเพียงผลต่อคู่แข่งที่
+  เล่นจริงหรือ long search ให้ระบุว่าเป็น empirical ไม่ใช่ forced win/forced draw
+- การไร้พ่ายจาก standard start ไม่เท่ากับ optimal conversion ทุกตำแหน่ง arbitrary; อย่างไรก็ตาม
+  หากตำแหน่งเป็น exact DRAW และอีกฝ่ายเดินถูกทุกตา เราไม่สามารถบังคับ WIN ได้
+
+**ไม่ผูกเป้าหมายกับ Lazy SMP หรือ NNUE รุ่นใหม่** ใช้ฐานที่ตรวจรับแล้ว ปรับทีละแนวคิด
+และไม่ลองกลไกที่ถูก reject ซ้ำแบบเดิม การชนะ internal baseline เป็นขั้นสนับสนุน ไม่ใช่จุดจบ
+
+## A. หลังรับ PR จาก Astra Web: จบข้อสงสัย ไม่ขยายงานไม่รู้จบ
 
 - ตรวจ commit/diff/source hashes, raw logs, negative control และขอบเขตคำกล่าวอ้าง
   ของ seed-state diagnostic/TSan ก่อนรับผล ไม่ auto-merge จากคำว่า PASS
 - รับเฉพาะขอบเขตที่พิสูจน์: harness defect ไม่เท่ากับ production defect;
   sanitizer pass ไม่เท่ากับ strength gain หรือปิด G2–G6 ทั้งหมด
 - ถ้า protocol ผ่านแต่ candidate ยังแพ้ G4 ให้คง `REJECT_FOR_PERFORMANCE / NOT_PROMOTED`
-  และย้าย Lazy SMP ออกจาก critical path ของ Invincible 2
+  และย้าย Lazy SMP ออกจากเส้นทางหลักของการเทียบ Invincible 2
 - ถ้ายังมีปัญหา ให้แยก/ปิด candidate และตรวจว่าปัญหาไม่กระทบ backend ฐาน
   งาน strength ที่ไม่ใช้ส่วนที่มีปัญหาทำต่อได้ ไม่ต้องรอให้ Lazy SMP ทุก gate ผ่าน
   แต่ถ้าข้อผิดพลาดอยู่ในฐานที่จะนำไปใช้จริง ต้องแก้และตรวจรับก่อน
 
 **จบขั้นนี้เมื่อ:** มี verdict ที่มีขอบเขตชัดเจนและเลือกฐานปลอดภัยได้ ไม่จำเป็นต้อง promote Lazy SMP
 
-## 1. Freeze baseline และสนามทดสอบ Practical Play
+## B. Freeze baseline ภายในและสนามทดสอบกับคู่เทียบภายนอก
+
+- ตรวจช่องทางใช้งาน Invincible 2 ว่าสามารถระบุสี, ตั้งตำแหน่ง, ส่ง history/clock และบันทึก
+  เกมได้หรือไม่ อย่าสมมติว่ามี API หรือ position editor; ถ้าเข้าได้เฉพาะ standard start
+  ให้ใช้เกม/replay ที่ทำได้จริง และรายงานข้อจำกัดของ Phase 3
+- ตรวจ rules parity ก่อนจับคู่ โดยเฉพาะ repetition/no-progress/adjudication; ถ้ากติกาต่าง
+  ให้รายงาน non-comparable ไม่เปลี่ยน RULESET.json/core.py เพื่อให้ผลดูตรงกัน
+- freeze รุ่นคู่เทียบหรือบันทึก URL/วันเวลา/identifier ที่เข้าถึงได้ หาก backend/version/เวลา
+  คำนวณ/ฮาร์ดแวร์ไม่ทราบ ให้รายงานว่าเป็น black-box service benchmark ไม่อ้าง equal-compute
+  แยก think time ออกจาก network latency และไม่ตี timeout/network error เป็นผลเสมอ
+- ใช้งานภายในข้อกำหนดบริการ ไม่ bulk scrape ฐานข้อมูลหรือรันโหลดหนักบนเว็บคู่เทียบ
+- 1s/2s ของเราเป็น profile เริ่มต้น ไม่ใช่ข้อกำหนดว่า Invincible 2 ใช้เวลา/ทรัพยากรเท่ากัน
 
 - ตรวจ runtime provenance ของรุ่นใช้งานจริง แล้ว freeze source/DLL/model/compiler,
   backend, mode, Threads, total Hash, เวลา, seeds และ openings ไม่อนุมานรุ่นจากชื่อไฟล์
@@ -45,9 +96,9 @@
 **จบขั้นนี้เมื่อ:** ทำ baseline ซ้ำได้, corpus/config มี hash, full discovered suite ผ่าน
 พร้อม DLL bindings ชัดเจน ไม่มี fail/error/skip ที่ซ่อนอยู่ ไม่ใช่ยึดจำนวน 618 เป็นข้อกำหนดตายตัว
 
-## 2. เลือกการเพิ่มความแข็งแกร่งรอบแรกจากหลักฐาน
+## C. งานพัฒนาใน Phase 1: เลือกการเพิ่มความแข็งแกร่งจากหลักฐาน
 
-### 2A — วัดต้นทุนและข้อผิดพลาดจริง
+### C1 — วัดต้นทุนและข้อผิดพลาดจริง
 
 ทำ Round2 แบบ diagnostic-only ที่ 1T ก่อน: แยก elapsed/CPU และ inclusive/exclusive
 ของ move generation/order, TT, NNUE incremental update/eval, qsearch และ setup/stop
@@ -55,7 +106,7 @@
 ข้อมูล qsearch 51–65% ของ nodes เดิมไม่ใช่สัดส่วน CPU และไม่พิสูจน์ว่างานสูญเปล่า
 หาก profiler ทำให้ต้นทุนบิดเบือน ให้แก้การวัดก่อน ไม่ใช้ตัวเลขนั้นเลือก optimization
 
-### 2B — ทดลองทีละหนึ่งแนวคิด ตามผล 2A
+### C2 — ทดลองทีละหนึ่งแนวคิด ตามผล C1 และเกมเทียบภายนอก
 
 | สิ่งที่พบ | Candidate ที่ควรพิจารณา | สิ่งที่ต้องพิสูจน์ |
 |---|---|---|
@@ -68,7 +119,7 @@
 และจบด้วย KEEP/REJECT/INCONCLUSIVE/PROMOTE ห้ามเปลี่ยน search+model+Threads พร้อมกัน
 เกิน cap แล้วยังไม่ชัดให้ INCONCLUSIVE ไม่รันซ้ำ seed ใหม่จนผ่าน
 
-## 3. Practical conversion และเล่นกับมนุษย์ — หลังฐาน search ดีขึ้น
+## D. นโยบาย practical conversion — รองรับ Phase 3 โดยไม่ลดความปลอดภัย
 
 - รักษา `RootCandidate`, `_choose`, `_safety_rank` และ BEST/WIN เป็น policy จุดเดียว
   ไม่สร้าง human mode/backend อีกชุดโดยไม่จำเป็น
@@ -81,9 +132,10 @@
 - ใช้หลาย opponents/รูปแบบความผิดพลาด, openings สลับสี และ blind positions ใหม่
   เกมมนุษย์วิเคราะห์ย้อนหลังเป็นหลักฐานประกอบ ไม่ใช้เกมเดียวประกาศ Elo
 
-ขั้นนี้เป็น optional candidate ไม่ใช่เงื่อนไขบังคับให้เพิ่ม heuristic ในรุ่น 2
+ไม่จำเป็นต้องเพิ่ม heuristic ใหม่ถ้า search/conversion ที่ดีขึ้นทำให้ชนะ matched tasks อยู่แล้ว
+อย่าใช้การปรับ human pressure เพียงอย่างเดียวแทนการพิสูจน์เป้าหมาย Phase 2
 
-## 4. Strength acceptance และ release
+## E. Internal strength acceptance และ release — ไม่ใช่ gate ทดแทน Phase 2/3
 
 1. Correctness ปัจจุบันครบ; หากแตะ native move/state ต้อง perft ถึง depth 10 และ randomized
    differential; repetition/80-ply/TB precedence/root policy ต้องไม่ถอย
@@ -99,9 +151,11 @@
 6. ประกอบ release ที่ระบุ version/hash/config พร้อม rollback ไป baseline ได้จริง
    คงค่า 12T เดิมจนมีหลักฐานเปลี่ยน; ถ้าเปลี่ยน profile ต้อง rebaseline
 
-**Definition of Done:** Invincible 2 ผ่าน correctness/runtime และหลักฐานความแข็งแกร่ง
-เหนือ baseline ตาม contract ที่ประกาศไว้ทั้งช่วงสั้นและยาวที่กำหนด พร้อม reproducible report
-และ rollback; หากไม่ผ่านยังคงรุ่นเดิม ไม่เปลี่ยนชื่อรุ่นแล้วเรียกว่าพัฒนาแรงขึ้น
+**Definition of Done สำหรับเป้าหมายผู้ใช้:** ThaiMakhosEngine บรรลุขอบเขต non-loss ของ
+Phase 2 ด้วยหลักฐานตามระดับที่อ้าง และมี practical superiority ตาม Phase 3 ต่อ **Invincible 2**
+ไม่ใช่เพียงชนะรุ่นก่อนของเรา ต้องรายงาน milestone เชิงทดลองแยกจาก universal 100% guarantee
+หากยังมีเฉพาะ empirical no-loss ห้ามปิดเป้าหมายไร้พ่ายแบบพิสูจน์แล้ว ส่วนการปล่อยรุ่นย่อย
+ที่ดีขึ้นระหว่าง Phase 1 ทำได้ตาม internal release gates และ rollback โดยไม่อ้างว่าเป้าหมายจบ
 
 ## ขอบเขตและการแบ่งงาน
 
@@ -111,13 +165,14 @@
 - GitHub เป็นจุดส่งงานผ่าน branch/PR; ไม่ sync ทับ WIP, ไม่ force-push หรือ auto-merge
 - คง RULESET.json, makhos/core.py, accepted DLL และ stopped checkpoints; งานหนักใช้ workload
   lease/BelowNormal และให้ GUI มี priority; ไม่เริ่ม automation จากเอกสารนี้
-- ยังไม่รวม shared-score TT, SMP redesign, training ใหญ่, tablebase >6 หรือ DFPN
-  จนกว่าจะมีหลักฐานและอนุมัติขอบเขตใหม่ ไม่มีข้อกำหนดให้ทำ NNUE v2 ก่อนออกรุ่น
+- ยังไม่เริ่ม shared-score TT, SMP redesign, training ใหญ่, tablebase >6 หรือ DFPN
+  จากเอกสารนี้; proof/strategy สำหรับ Phase 2 เป็น planning scope ที่ต้องประเมินเพิ่ม
+  ไม่มีข้อกำหนดให้ทำ NNUE v2 ก่อนเพิ่มความแข็งแกร่ง
 
 ## งานแรกเมื่อ PR จบ
 
-**เลือกและ freeze baseline ที่ตรวจรับได้ → ทำ corpus/contract practical-play →
-เก็บ Round2 timing + error classification → เลือก candidate เดียว**
+**เลือกฐานที่ตรวจรับได้ → ตรวจช่องทางและกติกา Invincible 2 → ทำ external baseline/corpus →
+แยกสาเหตุแพ้และ Round2 timing → เลือก candidate เดียว**
 นี่คือการกลับสู่ strength track ไม่ใช่การเริ่มรอบ refactor หรือเอกสารยาวอีกชุด
 
 อ้างอิงใน repo: [project skill](../../.agents/skills/thai-makhos-engine/SKILL.md),
