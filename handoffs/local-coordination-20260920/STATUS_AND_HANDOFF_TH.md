@@ -43,3 +43,10 @@
 3. ถ้าผ่านตาม contract ใหม่ ค่อยตรวจ current-state ให้ตรง แล้วจึงทำ Round2 profiling แบบ diagnostic-only (elapsed/CPU, overhead, fixed-depth parity) ก่อนเลือก candidate ใหม่
 
 เอกสารนี้ไม่อัปโหลด binary, tablebase, model, checkpoint หรือ secret ใด ๆ
+
+## แผนหลังตรวจรับ Web
+
+Ethan กำหนดเป้าหมายรุ่น **Invincible 2** เพื่อเพิ่ม practical playing strength:
+อ่าน [Invincible 2 roadmap](../../docs/architecture/INVINCIBLE_2_ROADMAP_TH.md).
+ไม่ผูก release กับความสำเร็จของ Lazy SMP; หากต้องพัก candidate ที่ถูก reject ให้ใช้ฐาน
+ที่ตรวจรับแล้วทำ strength work ต่อ การผ่าน TSan ไม่ใช่ performance/strength promotion
