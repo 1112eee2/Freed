@@ -1,0 +1,10 @@
+    NativeCompactMove move = {1, 2, 3, 4};
+    assert(shared_move_hint_write(&slot, 123, UINT64_C(7) << 32, &move));
+    assert(!shared_move_hint_read(&slot, 124, 7, NULL, NULL));
+    assert(!shared_move_hint_read(&slot, 123, 8, NULL, NULL));
+    atomic_store(&slot.sequence, 3);
+    assert(!shared_move_hint_write(&slot, 123, 0, &move));
+    assert(!shared_move_hint_read(&slot, 123, 7, NULL, NULL));
+    atomic_store(&slot.sequence, UINT64_MAX - 1);
+    assert(!shared_move_hint_write(&slot, 123, 0, &move));
+    atomic_store(&slot.sequence, 0);
