@@ -1,0 +1,189 @@
+[
+  {
+    "argv": [
+      "C:\\Python314\\python.exe",
+      "verify_snapshot.py"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.10678090003784746,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "verify_before",
+    "started_utc": "2026-09-20T05:13:39.133110+00:00",
+    "stderr": "verify_before.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "verify_before.stdout.log",
+    "stdout_sha256": "4b6cbf31c2dd6b35a64eb84bcf9d702f3f6b2f842110998de407d3bb4aa015a8",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\msys64\\mingw64\\bin\\gcc.exe",
+      "--version"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.014252000022679567,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_compiler_version",
+    "started_utc": "2026-09-20T05:13:39.248246+00:00",
+    "stderr": "windows_compiler_version.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_compiler_version.stdout.log",
+    "stdout_sha256": "a5254b47dc292b166b7a05d6777f330238d518f536182158181200fee6b33ce9",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\msys64\\mingw64\\bin\\gcc.exe",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-pthread",
+      "probe.c",
+      "-o",
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe"
+    ],
+    "binary_sha256": "392c70775e4fe69c85a4c8e6fccaf22d16480f70e38a6d8f17d4eebbfff70caa",
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.3293134000268765,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_probe_compile",
+    "started_utc": "2026-09-20T05:13:39.264296+00:00",
+    "stderr": "windows_probe_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_probe_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "directed"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.06188699998892844,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_directed_01",
+    "started_utc": "2026-09-20T05:13:39.625105+00:00",
+    "stderr": "windows_directed_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_directed_01.stdout.log",
+    "stdout_sha256": "f0be05d6efb499ab5aa039274f7042e6c39c6f83c8dff31c217b8ab4940d9f41",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "protocol"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.020759600040037185,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_protocol_01",
+    "started_utc": "2026-09-20T05:13:39.691924+00:00",
+    "stderr": "windows_protocol_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_protocol_01.stdout.log",
+    "stdout_sha256": "3f5b8581fdc2490cbc96c8b72025221aad285a84299c52aa2620595279af971e",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "protocol"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.021657700010109693,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_protocol_02",
+    "started_utc": "2026-09-20T05:13:39.723515+00:00",
+    "stderr": "windows_protocol_02.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_protocol_02.stdout.log",
+    "stdout_sha256": "ba724615d1c1efd7e715a157b1efdd2e7dcf023b3553d53727ffa26e00402a84",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "protocol"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.023493299959227443,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_protocol_03",
+    "started_utc": "2026-09-20T05:13:39.756960+00:00",
+    "stderr": "windows_protocol_03.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_protocol_03.stdout.log",
+    "stdout_sha256": "1044304f6517ee009cf4ff4b6ea5a1ed44eee4bc720671d322c1c75b482ea261",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "protocol"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.01997510000364855,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "windows_protocol_04",
+    "started_utc": "2026-09-20T05:13:39.791451+00:00",
+    "stderr": "windows_protocol_04.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_protocol_04.stdout.log",
+    "stdout_sha256": "2ddc1d0317b1efd05876657c2a6aa6d87d994f2ab7dbd8fac8111c27edbc2177",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Users\\Pinggo\\AppData\\Local\\Temp\\makhos-r5-v27q7enj\\probe.exe",
+      "protocol"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.018849999993108213,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "windows_protocol_05",
+    "started_utc": "2026-09-20T05:13:39.823967+00:00",
+    "stderr": "windows_protocol_05.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "windows_protocol_05.stdout.log",
+    "stdout_sha256": "612a691ef23246dd904a85dedfa614d234378e67f26838e766bdd97a873152b0",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "C:\\Python314\\python.exe",
+      "verify_snapshot.py"
+    ],
+    "cwd": "D:\\ThaiMakhosEngine\\build\\lazy_smp_r5_impl_worktree\\handoffs\\lazy-smp-g2-r5",
+    "elapsed_seconds": 0.0949090999783948,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "verify_after",
+    "started_utc": "2026-09-20T05:13:39.853049+00:00",
+    "stderr": "verify_after.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "verify_after.stdout.log",
+    "stdout_sha256": "4b6cbf31c2dd6b35a64eb84bcf9d702f3f6b2f842110998de407d3bb4aa015a8",
+    "timed_out": false,
+    "timeout_seconds": 30
+  }
+]

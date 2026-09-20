@@ -1,0 +1,95 @@
+{
+  "format": "thai-makhos-lazy-smp-g2-r5-design-v1",
+  "status": "PROPOSED_NOT_APPROVED_NOT_IMPLEMENTED",
+  "base_diagnostic_head": "f5a2f3fee1b04c0af10f74f802095ee0ce66f807",
+  "workload": {
+    "spsc_publications_per_process": 256,
+    "spsc_writer_id": 0,
+    "spsc_publication_id_min": 1,
+    "spsc_publication_id_max": 256,
+    "spsc_counting_unit": "distinct acknowledged publication ids; duplicate reads do not increment progress",
+    "spsc_ready_ordering": "reader initial miss, then reader_ready release-store; writer acquire-load before first publication",
+    "spsc_ack_ordering": "reader release-stores publication id; writer acquire-loads before publishing the next id",
+    "concurrent_writers": 8,
+    "concurrent_readers": 4,
+    "concurrent_writer_id_min": 0,
+    "concurrent_writer_id_max": 7,
+    "concurrent_iteration_min": 1,
+    "concurrent_iteration_max": 100000,
+    "attempts_per_concurrent_participant": 100000,
+    "counter_design": "per-participant thread-local non-atomic 64-bit records; owner-only writes; aggregate after join; no shared counter operations in the hot loop"
+  },
+  "windows_plain": {
+    "compiler": "GCC C17 pthread",
+    "directed_processes": 1,
+    "protocol_processes": 5,
+    "timeout_seconds_per_protocol_process": 30,
+    "role": "readiness only; not a TSan substitute"
+  },
+  "linux_tsan": {
+    "runner": "ubuntu-24.04",
+    "compilers": ["Clang 18", "GCC 13"],
+    "per_compiler": {
+      "smoke_processes": 1,
+      "negative_control_processes": 1,
+      "protocol_processes": 5,
+      "smoke_timeout_seconds": 30,
+      "negative_timeout_seconds": 30,
+      "protocol_timeout_seconds": 120
+    },
+    "total_required_clean_protocol_processes": 10
+  },
+  "participant_coverage": {
+    "each_writer_attempts": 100000,
+    "each_writer_successful_minimum": 1,
+    "each_reader_attempts": 100000,
+    "each_reader_accepted_minimum": 1,
+    "spsc_writer_successful": 256,
+    "spsc_reader_distinct_accepted": 256,
+    "spsc_raw_accepted_minimum": 256,
+    "spsc_duplicate_reads": "recorded separately and never counted as distinct progress",
+    "spsc_acknowledged": 256
+  },
+  "result_dimensions": {
+    "correctness_liveness_status": ["PASS", "FAIL", "INCOMPLETE_COVERAGE", "NOT_RUN"],
+    "tsan_calibration_status_per_compiler": ["PASS", "NOT_RUN"],
+    "rule": "A real correctness/liveness FAIL from plain or sanitized execution is retained regardless of TSan calibration; it is not automatically attributed to production"
+  },
+  "classification": {
+    "PASS": [
+      "all frozen-input and before/after verifiers pass",
+      "both compiler lanes have calibrated negative controls and clean smokes",
+      "directed initialization/safety and bounded SPSC pass",
+      "all 10 Linux TSan protocol processes are clean",
+      "every concurrent participant meets the frozen coverage requirement"
+    ],
+    "FAIL": [
+      "accepted tuple or depth violates writer encoding",
+      "decoded concurrent writer id is outside 0..7 or iteration is outside 1..100000",
+      "after reader-ready, SPSC observes a wrong/future tuple, fails to acknowledge all 256 distinct publications, deadlocks or times out",
+      "plain execution detects a correctness/liveness failure, regardless of TSan calibration",
+      "TSan reports a race in a calibrated protocol lane",
+      "assertion or unexpected exit from an executing protocol",
+      "r5 source fails to compile on an otherwise supported toolchain"
+    ],
+    "INCOMPLETE_COVERAGE": [
+      "concurrent stress only: no safety violation but one or more writers have zero successful publications",
+      "concurrent stress only: no safety violation but one or more readers have zero accepted reads"
+    ],
+    "NOT_RUN": [
+      "frozen input or verifier drift",
+      "required compiler/sanitizer/runtime is unavailable",
+      "pthread smoke fails before the tested body",
+      "known-racy negative control does not emit a genuine TSan data-race report",
+      "SPSC cannot reach reader-ready because compile, launch or thread-creation infrastructure failed",
+      "required raw evidence is missing"
+    ]
+  },
+  "fixed_run_completion_policy": {
+    "on_process_fail_or_incomplete_coverage": "record it and continue every remaining predeclared fresh process slot; no replacement or retry",
+    "on_shared_input_or_runtime_blocker": "stop unsafe/impossible execution and emit a NOT_RUN entry with the reason for every remaining predeclared slot",
+    "denominator_rule": "no planned slot may disappear from the aggregate result"
+  },
+  "aggregate_precedence": ["FAIL", "NOT_RUN", "INCOMPLETE_COVERAGE", "PASS"],
+  "gate_effect": "Only overall PASS can satisfy the G2 publication-race clause; it does not promote the Lazy SMP candidate or close other gates"
+}
