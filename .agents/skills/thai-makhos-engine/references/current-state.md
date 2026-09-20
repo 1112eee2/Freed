@@ -3,6 +3,19 @@
 Updated 2026-09-16. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
 
+### G2 diagnostic review and r5 boundary (2026-09-20)
+
+- PR #23 head `f5a2f3fee1b04c0af10f74f802095ee0ce66f807` was reviewed in an
+  isolated worktree. Both frozen snapshot verifiers, all 75 evidence hashes
+  and all 12 planned observations matched. Accept only its diagnostic scope:
+  the frozen r3/r4 harness has an initialization defect; historical failures,
+  publication safety and liveness remain unproved.
+- G2 remains `NOT_PASSED`; the candidate remains `REJECT_FOR_PERFORMANCE /
+  NOT_PROMOTED`. No PR merge, production change or SPRT was performed locally.
+- The proposed r5 acceptance contract is under review at
+  `handoffs/lazy-smp-g2-r5-design/PLAN_TH.md`. It separates initialization,
+  safety and liveness/coverage. It is not authorization to implement or run r5.
+
 ### User target clarification (2026-09-20)
 
 Invincible 2 is the external engine by อาจารย์ทศพล ธนะทิพานนท์, not our release name.

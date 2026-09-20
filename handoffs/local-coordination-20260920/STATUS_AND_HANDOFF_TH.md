@@ -54,3 +54,10 @@ Phase 3 ชนะหรือ hold จากตำแหน่งเดียว
 อ่าน [roadmap เทียบ Invincible 2](../../docs/architecture/INVINCIBLE_2_ROADMAP_TH.md).
 ไม่ผูก release กับความสำเร็จของ Lazy SMP; หากต้องพัก candidate ที่ถูก reject ให้ใช้ฐาน
 ที่ตรวจรับแล้วทำ strength work ต่อ การผ่าน TSan ไม่ใช่ performance/strength promotion
+
+## PR #23 และ r5 design
+
+Local ตรวจ PR #23 head `f5a2f3fee1b04c0af10f74f802095ee0ce66f807` แบบ read-only แล้ว
+รับเฉพาะ initialization-defect diagnosis; G2 ยัง `NOT_PASSED` และไม่ได้ merge PR
+แผน acceptance revision อยู่ที่ [r5 design](../lazy-smp-g2-r5-design/PLAN_TH.md)
+สถานะ `PROPOSED_NOT_APPROVED_NOT_IMPLEMENTED`: ต้อง review contract ก่อนสร้าง workload ใหม่
