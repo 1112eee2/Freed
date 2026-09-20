@@ -63,10 +63,18 @@ slot นั้นเป็น workload
 - writer encoding:
   `value=(writer_id<<32)|iteration`, move=`{value,~value,(uint32)value,~(uint32)value}`,
   key=123, epoch=7, depth=42
+- freeze namespace ของ concurrent stress เป็น `writer_id` **0..7** และ `iteration`
+  **1..100,000**; reader ต้อง decode high/low 32 bits แล้ว assert ว่าทั้งสองค่าอยู่ในช่วงนี้
+  นอกเหนือจาก complement/meta/depth checks การ decode นอกช่วงเป็น FAIL แม้ algebraic
+  complement จะยังตรง
 - ทุก accepted read คง assertions ครบ: low complement, high=value low32,
   captured-high complement, depth=42 และ namespace ตรง
-- counters แยก participant เป็น atomic 64-bit:
-  writer attempts/successful/skipped และ reader attempts/accepted/rejected
+- counters แยก participant เป็น **thread-local non-atomic 64-bit** records:
+  writer attempts/successful/skipped และ reader attempts/accepted/rejected แต่ละ worker
+  เขียนเฉพาะ record ของตนเอง main อ่าน/รวมหลัง successful `pthread_join` เท่านั้น ไม่มี
+  per-iteration shared counter, atomic increment หรือ counter read ข้าม worker ใน hot loop
+  จึงไม่เพิ่ม synchronization ที่เปลี่ยนลักษณะ contention; start barrier ใช้ release/acquire
+  เฉพาะการเริ่มงาน ส่วน failure path อาจ serialize accepted locals ไป stderr แล้ว abort ได้
 - invariants หลัง join:
   - writer success + skipped = 100,000 ทุก writer
   - reader accepted + rejected = 100,000 ทุก reader
@@ -77,15 +85,29 @@ slot นั้นเป็น workload
 
 ## 6. Bounded liveness แยกต่างหาก
 
-SPSC handshake ใช้ 1 writer/1 reader จำนวน **256 publications**:
+SPSC handshake ใช้ 1 writer/1 reader จำนวน **256 distinct publications** โดย freeze
+`writer_id=0`, `publication_id/iteration=1..256`:
 
-1. reader ยืนยัน initial miss
-2. writer publish tuple `n` แล้วรอ atomic acknowledgment ของ `n`
-3. reader อ่านจนรับ tuple `n` ถูกต้อง จากนั้น ack; writer จึงไป `n+1`
-4. process timeout เป็นขอบเขตภายนอก ห้าม retry process
+1. reader ยืนยัน initial miss จาก `liveness_slot` แล้ว
+   `atomic_store_explicit(reader_ready,true,memory_order_release)`
+2. writer ห้าม publish จน
+   `atomic_load_explicit(reader_ready,memory_order_acquire)` เป็น true จึงไม่มี first-write/
+   initial-miss race รอบใหม่
+3. writer publish tuple `n` ผ่าน production function แล้วรอ
+   `atomic_load_explicit(ack,memory_order_acquire)==n`
+4. reader validate/decode tuple; เฉพาะ `publication_id==next_expected` จึงนับ distinct และ
+   `atomic_store_explicit(ack,n,memory_order_release)` ค่าเดิมที่อ่านซ้ำให้นับเป็น duplicate
+   แต่ห้ามเพิ่ม distinct; ค่าอนาคต/ผิด writer/range/payload/depth เป็น FAIL
+5. publication function และ sequence atomics คง `seq_cst` จาก frozen production verbatim;
+   ready/ack ใช้ release/acquire เพื่อ ordering ของ harness เท่านั้น
+6. process timeout เป็นขอบเขตภายนอก ห้าม retry process
 
-PASS ของ stage นี้ต้องมี writer successful=256, reader accepted=256, acknowledgments=256,
-tuple ถูกทั้งหมดและจบในเวลา ไม่อนุมานว่า contention stress ต้อง accepted>0 จาก stage นี้
+PASS ของ stage นี้ต้องมี writer successful=256, reader distinct accepted=256,
+acknowledgments=256, tuple ถูกทั้งหมดและจบในเวลา จำนวน raw successful reads อาจมากกว่า
+256 เพราะ duplicate แต่ใช้แทน distinct publications ไม่ได้ เมื่อ reader-ready เกิดแล้ว
+wrong tuple, จบไม่ครบ 256 distinct/acks หรือ timeout เป็น **FAIL ของ liveness test** เสมอ
+ไม่ใช่ INCOMPLETE_COVERAGE ส่วน compile/launch/thread-creation หรือ prerequisite failure
+ก่อน reader-ready แยกเป็น infrastructure `NOT_RUN`
 
 ## 7. Frozen run matrix
 
@@ -109,20 +131,35 @@ tuple ถูกทั้งหมดและจบในเวลา ไม่�
 รวม 10 sanitized protocol processes; full r5 PASS ต้อง 5/5 ทั้งสอง compiler lanes
 และ snapshot verifierก่อน/หลังผ่าน งาน GitHub ใช้ time limit 30 นาทีและเก็บทุกผล
 
-## 8. Classification
+## 8. Classification และมิติผลที่แยกกัน
 
 - **PASS:** inputs/verifiers/build/calibration ผ่าน; directed+SPSC ผ่าน; ทุก protocol process
   ไม่มี race/assertion/timeout และทุก participant ผ่าน coverage; Linux ทั้งสอง lane 5/5
-- **FAIL:** บน runtime ที่ calibrate แล้วพบ invalid accepted tuple, TSan race ใน protocol,
-  assertion/unexpected exit, deadlock/timeout หรือ source r5 compile error ที่ไม่ใช่ missing runtime
+- **FAIL:** correctness/liveness failure ไม่ขึ้นกับ TSan calibration: invalid accepted tuple/range,
+  assertion/unexpected exit หรือ SPSC ที่เริ่มหลัง reader-ready แล้วผิด tuple จบไม่ครบ 256
+  distinct publications/acks, deadlock หรือ timeout เป็น FAIL แม้เกิดใน Windows plain
+  ส่วน TSan race ใน protocol เป็น FAIL ของ sanitizer lane เมื่อ lane นั้น calibrate แล้ว
+  ทั้งสองกรณีเป็น failure ที่ harness สังเกตได้ ไม่ถูกเหมารวมเป็น production defect โดยอัตโนมัติ
 - **INCOMPLETE_COVERAGE:** ไม่มี safety violation แต่ participant coverage ต่ำกว่าเกณฑ์ที่ freeze;
-  เก็บผลและหยุด ห้าม retry เพื่อหา schedule ที่ดี
+  ใช้ **เฉพาะ concurrent 8W/4R stress** เท่านั้น ไม่ใช้กับ SPSC
 - **NOT_RUN:** input drift, verifier/prerequisite ขาด, compiler/TSan/runtime unavailable,
-  smoke ล้มก่อนเข้า body หรือ negative control ไม่รายงาน race จริง จึงไม่มี calibrated gate
+  smoke ล้มก่อนเข้า body, negative control ไม่รายงาน race จริง หรือ SPSC ไปไม่ถึง
+  reader-ready เพราะ compile/launch/thread-creation infrastructure failure
 
-Aggregate precedence: executed calibrated FAIL มาก่อนทั้งหมด; หากไม่มี FAIL แต่ required lane
-NOT_RUN ให้ overall NOT_RUN; ถ้าทุก lane รันได้แต่ coverage ไม่ครบ ให้ INCOMPLETE_COVERAGE;
-จึงจะ PASS ดูรายละเอียดใน [acceptance_matrix.json](acceptance_matrix.json)
+Collector บันทึกอย่างน้อยสองมิติแยกกัน: `correctness_liveness_status` จาก plain/TSan
+protocol observations และ `tsan_calibration_status` ต่อ compiler หาก TSan ใช้ไม่ได้ lane นั้น
+เป็น NOT_RUN แต่ต้องไม่กลบ FAIL ที่ Windows/plain หรือ lane อื่นตรวจพบจริง
+
+จำนวน process ที่ freeze คือจำนวน **slots ในผลรวม**: เมื่อ process หนึ่งเป็น
+INCOMPLETE_COVERAGE หรือ FAIL ให้เก็บผลแล้วดำเนิน fresh process slots ที่เหลือตาม matrix เดิม
+โดยไม่ replacement/retry/cherry-pick หากต้องยุติเพราะ inputs drift หรือ runtime/toolchain
+ใช้ต่อไม่ได้ ให้สร้าง result entry ของทุก slot ที่เหลือเป็น NOT_RUN พร้อมเหตุผลเดียวกัน ห้าม
+ละรายการออกจาก denominator
+
+Aggregate precedence: correctness/liveness FAIL ที่สังเกตจริงหรือ calibrated protocol TSan
+FAIL มาก่อนทั้งหมด; หากไม่มี FAIL แต่ required lane NOT_RUN ให้ overall NOT_RUN; ถ้าทุก lane
+รันได้แต่ concurrent coverage ไม่ครบ ให้ INCOMPLETE_COVERAGE; จึงจะ PASS ดูรายละเอียดใน
+[acceptance_matrix.json](acceptance_matrix.json)
 
 ## 9. Unknowns ที่ r5 ไม่อ้างว่าปิด
 

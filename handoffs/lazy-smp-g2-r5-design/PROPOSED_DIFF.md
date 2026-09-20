@@ -46,10 +46,12 @@ NO CHANGE  handoffs/lazy-smp-g2-r4/** and all prior results
 static SharedMoveHintEntry preflight_slot;
 static SharedMoveHintEntry workload_slot; /* invalid key/epoch before workers */
 static SharedMoveHintEntry liveness_slot; /* independent SPSC */
+static atomic_bool reader_ready;          /* release store / acquire load */
+static atomic_uint_fast64_t ack;           /* release store / acquire load */
 
 directed_preflight_tests(&preflight_slot);      /* includes PR #23 regression */
 assert_initial_namespace_miss(&workload_slot);  /* before any valid publication */
-run_bounded_spsc(&liveness_slot, 256);          /* progress contract */
+run_bounded_spsc(&liveness_slot, 256);          /* 256 distinct ids, not raw reads */
 run_concurrent_safety(&workload_slot, 8, 4, 100000);
 emit_one_json_result_and_exit_by_classification();
 ```
@@ -57,6 +59,10 @@ emit_one_json_result_and_exit_by_classification();
 Failure output must serialize the accepted local move/depth plus reader/writer/iteration encoding
 before returning FAIL. It must not reread the slot and call that reread the original observation.
 The exact JSON schema and exit mapping are frozen in `manifest.json` before any acceptance run.
+Concurrent writer ids are 0..7 and iterations 1..100000; SPSC uses writer id 0 and distinct
+publication ids 1..256. Per-participant stress counters are thread-local non-atomic records,
+written only by their owner and aggregated after join, so normal-loop counters add no synchronization.
+Reader-ready is published before the first SPSC write; acknowledgments order each successive id.
 
 ## Explicit non-diff
 
