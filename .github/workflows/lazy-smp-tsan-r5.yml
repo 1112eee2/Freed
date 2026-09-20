@@ -1,0 +1,54 @@
+name: Lazy SMP r5 pthread ThreadSanitizer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lazy-smp-r5-tsan-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publication:
+    if: github.ref_name == 'codex/lazy-smp-g2-r5-implementation'
+    name: Frozen r5 / Clang 18 and GCC 13
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install exact compiler lanes
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-18 libclang-rt-18-dev gcc-13
+      - name: Verify the frozen bundle before execution
+        working-directory: handoffs/lazy-smp-g2-r5
+        run: python3 verify_snapshot.py
+      - name: Run the fixed Linux TSan matrix
+        working-directory: handoffs/lazy-smp-g2-r5
+        run: python3 collect.py "linux-${{ github.run_id }}-${{ github.run_attempt }}" --lane linux-tsan
+      - name: Archive the workflow actually executed
+        if: always()
+        working-directory: handoffs/lazy-smp-g2-r5
+        run: |
+          for d in results/linux-${{ github.run_id }}-${{ github.run_attempt }}/; do
+            if test -d "$d"; then
+              cp ../../.github/workflows/lazy-smp-tsan-r5.yml "$d/executed_workflow.yml"
+              sha256sum "$d/executed_workflow.yml" > "$d/executed_workflow.sha256"
+            fi
+          done
+      - name: Show the collected classification
+        if: always()
+        working-directory: handoffs/lazy-smp-g2-r5
+        run: |
+          find results -name result.json -print -exec cat {} \;
+      - name: Upload text evidence only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lazy-smp-r5-tsan-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: handoffs/lazy-smp-g2-r5/results/**
+          if-no-files-found: error

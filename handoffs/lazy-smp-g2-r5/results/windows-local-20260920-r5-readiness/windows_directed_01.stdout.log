@@ -1,0 +1,1 @@
+{"schema":"thai-makhos-lazy-smp-g2-r5-process-v1","mode":"directed","status":"PASS","seed_counterexample_reproduced":true,"key_mismatch_rejected":true,"epoch_mismatch_rejected":true,"paused_writer_rejected":true,"sequence_exhaustion_rejected":true}

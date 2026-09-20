@@ -1,0 +1,127 @@
+{
+  "artifact_sha256": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "README.md": "fe2bdad37bc050a342c1c6a31e6a5cf0b93e54410cf515307f1213002bb74d34",
+    "collect.py": "66791e991769be680672811ddf0feadbd5a6701c1e389b1c244c5197b26e72dc",
+    "negative_pthread.c": "cb2125e5982e4ad650da4fb4d94acb897df494a6319b3b47beb4a111f0dab454",
+    "probe.c": "301b79a76c842f437a314391ed5f574a746ecabab0bee84a6a57d3c5bae7f011",
+    "smoke_pthread.c": "d16f263d300c9ea67f0d02f2a333633d02c298d48448a1d9d615ccda673a170f",
+    "verify_snapshot.py": "c939494785f4ed363f50cf28c2bfbe9f56a59ff1b906f983014ff039e2602f7c"
+  },
+  "classification": {
+    "compile_error_supported_toolchain": "FAIL",
+    "executing_protocol_timeout_or_deadlock": "FAIL",
+    "fixed_slot_policy": "continue all remaining slots after FAIL/INCOMPLETE; shared blocker emits NOT_RUN for every remaining slot",
+    "incomplete_coverage_scope": "concurrent stress only",
+    "missing_compiler_or_runtime": "NOT_RUN",
+    "precedence": [
+      "FAIL",
+      "NOT_RUN",
+      "INCOMPLETE_COVERAGE",
+      "PASS"
+    ]
+  },
+  "design_commit": "8f575a568fd258aa98c9bf918528f75a2bd7753f",
+  "diagnostic_head": "f5a2f3fee1b04c0af10f74f802095ee0ce66f807",
+  "exit_mapping": {
+    "0": "PASS",
+    "2": "FAIL",
+    "3": "INCOMPLETE_COVERAGE",
+    "4": "NOT_RUN"
+  },
+  "format": "thai-makhos-lazy-smp-g2-r5-manifest-v1",
+  "frozen_r4_probe_sha256": "2c1c6fa494941bb8b2411cd4c41d3ca5160a382013d3fa32d78c9dadd6db3be9",
+  "handoff": "lazy-smp-g2-r5",
+  "probe_sha256": "301b79a76c842f437a314391ed5f574a746ecabab0bee84a6a57d3c5bae7f011",
+  "process_json_required_fields": [
+    "schema",
+    "mode",
+    "status"
+  ],
+  "process_json_schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+  "production_reuse": "verbatim types/functions from frozen r4 snapshot; top-level native source excluded",
+  "protocol_json_required_fields": [
+    "spsc",
+    "writers",
+    "readers"
+  ],
+  "repository_sha256": {
+    ".github/workflows/lazy-smp-tsan-r5.yml": "7d320d7c248d909db94b1e3042e722d89c04084605c5d318b09715b3700093df"
+  },
+  "run_matrix": {
+    "linux_tsan": {
+      "compilers": [
+        {
+          "display": "Clang 18",
+          "executable": "clang-18",
+          "id": "clang18"
+        },
+        {
+          "display": "GCC 13",
+          "executable": "gcc-13",
+          "id": "gcc13"
+        }
+      ],
+      "job_timeout_minutes": 30,
+      "per_compiler": {
+        "negative_control_processes": 1,
+        "negative_timeout_seconds": 30,
+        "protocol_processes": 5,
+        "protocol_timeout_seconds": 120,
+        "smoke_processes": 1,
+        "smoke_timeout_seconds": 30
+      },
+      "runner": "ubuntu-24.04",
+      "total_required_clean_protocol_processes": 10
+    },
+    "windows_plain": {
+      "compiler": "GCC C17 pthread",
+      "directed_processes": 1,
+      "directed_timeout_seconds": 30,
+      "protocol_processes": 5,
+      "protocol_timeout_seconds": 30,
+      "role": "readiness only; not a TSan substitute"
+    }
+  },
+  "scope": "publication protocol only; no production change, promotion, SPRT, or automatic G2 closure",
+  "source_sha256": {
+    "native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+    "native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+    "tests/native_lazy_smp_negative_pthread.c": "cb2125e5982e4ad650da4fb4d94acb897df494a6319b3b47beb4a111f0dab454",
+    "tests/native_lazy_smp_portable_pthread_r5.c": "ce2eb0affa09cdc69b56bf6c6bf5f0aaa6a29cbf055a3857c24383fc39693a95",
+    "tests/native_lazy_smp_smoke_pthread.c": "d16f263d300c9ea67f0d02f2a333633d02c298d48448a1d9d615ccda673a170f",
+    "tools/verification/lazy_smp_r5_collect.py": "66791e991769be680672811ddf0feadbd5a6701c1e389b1c244c5197b26e72dc",
+    "tools/verification/prepare_lazy_smp_race_probe_r5.py": "0ea603ee9f84fa11c940406f4bf4c672ca3a7df910f9e61b813e9376b47ff24d"
+  },
+  "status": "FROZEN_AWAITING_ACCEPTANCE",
+  "workload": {
+    "attempts_per_participant": 100000,
+    "concurrent_iteration_range": [
+      1,
+      100000
+    ],
+    "concurrent_readers": 4,
+    "concurrent_writer_id_range": [
+      0,
+      7
+    ],
+    "concurrent_writers": 8,
+    "counter_design": "owner-only thread-local non-atomic uint64 records; aggregate only after join",
+    "slots": [
+      "preflight_slot",
+      "liveness_slot",
+      "workload_slot"
+    ],
+    "spsc_ack_ordering": "reader release-store publication id; writer acquire-load before next publication",
+    "spsc_publication_id_range": [
+      1,
+      256
+    ],
+    "spsc_publications": 256,
+    "spsc_ready_ordering": "reader initial miss then release-store ready; writer acquire-load before first publication",
+    "spsc_writer_id_range": [
+      0,
+      0
+    ]
+  }
+}

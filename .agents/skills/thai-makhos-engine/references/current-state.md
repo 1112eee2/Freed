@@ -1,7 +1,27 @@
 # Current ThaiMakhosEngine state
 
-Updated 2026-09-16. This file owns the current scope and next action. Historical
+Updated 2026-09-20. This file owns the current scope and next action. Historical
 commands and counters are evidence, not launch instructions.
+
+### Lazy SMP G2 r5 implementation handoff (2026-09-20)
+
+- The user approved the reviewed r5 design at commit
+  `8f575a568fd258aa98c9bf918528f75a2bd7753f` for implementation only.
+- Branch `codex/lazy-smp-g2-r5-implementation` carries a new frozen r5 pthread
+  harness/bundle. It reuses the production publication types/functions from the
+  frozen r4 snapshot verbatim and does not change production code, r3/r4,
+  rules, the accepted DLL, checkpoints, promotion state, or SPRT state.
+- Windows readiness completed all fixed slots without retry: the directed run
+  and four protocol processes PASS; protocol process 5 is
+  `INCOMPLETE_COVERAGE` because reader 2 accepted zero concurrent reads. SPSC
+  completed 256 distinct publications in every process, accounting and snapshot
+  checks passed, and no safety violation was observed. Preserve this result;
+  do not replace or retry it. Windows is not a race-detector result and does
+  not close G2.
+- Next: run and review the frozen GitHub Linux TSan matrix (Clang 18 and GCC 13,
+  five fresh protocol processes per compiler). G2 remains `NOT_PASSED`; the
+  candidate remains `REJECT_FOR_PERFORMANCE / NOT_PROMOTED`; do not
+  merge/promote or open SPRT from Windows readiness.
 
 ## Current scope: readiness evidence before Lazy SMP gates
 
