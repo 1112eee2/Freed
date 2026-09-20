@@ -1,0 +1,18 @@
+{
+  "workflow_run": 35458339798,
+  "attempt": 1,
+  "job_id": 105937525409,
+  "source_commit": "d499a2d9a6cfe7e2b6ebb6de15fb9fb01a2bbd69",
+  "artifact": {
+    "id": 10589475561,
+    "name": "seed-diagnostic-35458339798-1",
+    "reported_archive_sha256": "1adaee259df4b45aa5dea1082aec50ef883f16b16b90fa367ad8e35404f29214",
+    "archive_digest_independently_verified": false
+  },
+  "retrieval": "GitHub job-log SEED_EVIDENCE_FILE JSON records; original UTF-8 contents preserved",
+  "runner_produced_file_count": 76,
+  "runner_manifest_entry_count": 75,
+  "all_manifest_hashes_matched_after_retrieval": true,
+  "manifest_sha256": "c831baf92b1119a2fb2b951497e3ceea76680a596e65e1c71f3ef69fc3367c3b",
+  "note": "This metadata is added after collection; it is not part of the original runner evidence manifest. No binary archive was downloaded or committed."
+}

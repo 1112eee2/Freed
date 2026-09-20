@@ -1,0 +1,35 @@
+name: Lazy SMP deterministic seed diagnostic
+
+on:
+  push:
+    branches: [codex/astra-seed-diagnostic-20260919]
+    paths:
+      - 'handoffs/lazy-smp-seed-diagnostic-v1/reproduce.c'
+      - 'handoffs/lazy-smp-seed-diagnostic-v1/collect.py'
+      - '.github/workflows/lazy-smp-seed-diagnostic.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seed-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Bounded deterministic reproduction (not a sanitizer gate)
+        run: python3 -B handoffs/lazy-smp-seed-diagnostic-v1/collect.py
+      - name: Upload every diagnostic result and raw log (no binaries)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: seed-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: handoffs/lazy-smp-seed-diagnostic-v1/results/
+          if-no-files-found: error
