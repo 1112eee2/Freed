@@ -1,0 +1,47 @@
+{
+  "format": "thai-makhos-pr23-local-review-v1",
+  "reviewed_on": "2026-09-20",
+  "scope": "Read-only evidence review; no merge, production change, acceptance revision, promotion or SPRT",
+  "base_commit": "117c22aa3cf47d1175e1758c70f9af1ab8daa709",
+  "head_commit": "f5a2f3fee1b04c0af10f74f802095ee0ce66f807",
+  "base_is_ancestor": true,
+  "review_worktree": "build/pr23_review_20260920 (detached, ignored local review area)",
+  "changed_paths": 82,
+  "changed_path_scope": [
+    ".github/workflows/lazy-smp-seed-diagnostic.yml",
+    "handoffs/lazy-smp-seed-diagnostic-v1/**"
+  ],
+  "snapshot_verifiers": {
+    "r3": "PASS: source hashes, probe hash and exact production extraction",
+    "r4": "PASS: source hashes, probe hash and exact production extraction (r4 pthread)"
+  },
+  "frozen_probe_sha256": {
+    "r3": "67f8b7cf54e25e385a314bfa02b3bd71a153a98ec21e7b3218393e120194a19b",
+    "r4": "2c1c6fa494941bb8b2411cd4c41d3ca5160a382013d3fa32d78c9dadd6db3be9"
+  },
+  "diagnostic_result": {
+    "status": "CONFIRMED_HARNESS_INITIALIZATION_DEFECT",
+    "g2": "NOT_PASSED",
+    "tsan_gate_run": false,
+    "planned_cases": 12,
+    "expected_observation_cases": 12,
+    "assert_reader_aborts": 4,
+    "valid_control_passes": 4
+  },
+  "evidence": {
+    "manifest_entries_rehashed": 75,
+    "manifest_sha256": "c831baf92b1119a2fb2b951497e3ceea76680a596e65e1c71f3ef69fc3367c3b",
+    "all_manifest_entries_match": true
+  },
+  "invariants": {
+    "RULESET.json": "77528addc0e08b17217346c511c7c4084bad4af48789955c3ec85ef76a64871f",
+    "makhos/core.py": "03152e513bd360e6c2c97ecdf08dc58a290dca0ae6e28889ae70585a381292ab"
+  },
+  "review_verdict": "ACCEPT_DIAGNOSTIC_SCOPE_ONLY",
+  "limits": [
+    "The seed counterexample does not attribute every historical concurrent failure",
+    "General publication safety and accepted==0 liveness remain unproved",
+    "G2 remains NOT_PASSED",
+    "The old candidate remains REJECT_FOR_PERFORMANCE / NOT_PROMOTED"
+  ]
+}

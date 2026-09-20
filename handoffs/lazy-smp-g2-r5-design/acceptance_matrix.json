@@ -1,0 +1,69 @@
+{
+  "format": "thai-makhos-lazy-smp-g2-r5-design-v1",
+  "status": "PROPOSED_NOT_APPROVED_NOT_IMPLEMENTED",
+  "base_diagnostic_head": "f5a2f3fee1b04c0af10f74f802095ee0ce66f807",
+  "workload": {
+    "spsc_publications_per_process": 256,
+    "concurrent_writers": 8,
+    "concurrent_readers": 4,
+    "attempts_per_concurrent_participant": 100000
+  },
+  "windows_plain": {
+    "compiler": "GCC C17 pthread",
+    "directed_processes": 1,
+    "protocol_processes": 5,
+    "timeout_seconds_per_protocol_process": 30,
+    "role": "readiness only; not a TSan substitute"
+  },
+  "linux_tsan": {
+    "runner": "ubuntu-24.04",
+    "compilers": ["Clang 18", "GCC 13"],
+    "per_compiler": {
+      "smoke_processes": 1,
+      "negative_control_processes": 1,
+      "protocol_processes": 5,
+      "smoke_timeout_seconds": 30,
+      "negative_timeout_seconds": 30,
+      "protocol_timeout_seconds": 120
+    },
+    "total_required_clean_protocol_processes": 10
+  },
+  "participant_coverage": {
+    "each_writer_attempts": 100000,
+    "each_writer_successful_minimum": 1,
+    "each_reader_attempts": 100000,
+    "each_reader_accepted_minimum": 1,
+    "spsc_writer_successful": 256,
+    "spsc_reader_accepted": 256,
+    "spsc_acknowledged": 256
+  },
+  "classification": {
+    "PASS": [
+      "all frozen-input and before/after verifiers pass",
+      "both compiler lanes have calibrated negative controls and clean smokes",
+      "directed initialization/safety and bounded SPSC pass",
+      "all 10 Linux TSan protocol processes are clean",
+      "every concurrent participant meets the frozen coverage requirement"
+    ],
+    "FAIL": [
+      "accepted tuple or depth violates writer encoding",
+      "TSan reports a race in a calibrated protocol lane",
+      "assertion, unexpected exit, deadlock or timeout after calibration",
+      "r5 source fails to compile on an otherwise supported toolchain"
+    ],
+    "INCOMPLETE_COVERAGE": [
+      "no safety violation but one or more writers have zero successful publications",
+      "no safety violation but one or more readers have zero accepted reads",
+      "bounded SPSC executes but does not complete all 256 publication acknowledgments without another classified failure"
+    ],
+    "NOT_RUN": [
+      "frozen input or verifier drift",
+      "required compiler/sanitizer/runtime is unavailable",
+      "pthread smoke fails before the tested body",
+      "known-racy negative control does not emit a genuine TSan data-race report",
+      "required raw evidence is missing"
+    ]
+  },
+  "aggregate_precedence": ["FAIL", "NOT_RUN", "INCOMPLETE_COVERAGE", "PASS"],
+  "gate_effect": "Only overall PASS can satisfy the G2 publication-race clause; it does not promote the Lazy SMP candidate or close other gates"
+}
