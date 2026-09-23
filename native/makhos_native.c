@@ -1482,6 +1482,7 @@ _Static_assert(sizeof(NativeTTEntry) == 40, "TT entry layout drifted");
 
 #if MAKHOS_NATIVE_LAZY_SMP
 typedef struct NativeLazySmpControl NativeLazySmpControl;
+typedef struct SharedMoveHintTable SharedMoveHintTable;
 #endif
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
 typedef struct NativeRootPvsControl NativeRootPvsControl;
@@ -1520,6 +1521,9 @@ typedef struct {
     bool allocation_failed;
 #if MAKHOS_NATIVE_LAZY_SMP
     NativeLazySmpControl *lazy_smp_control;
+    SharedMoveHintTable *shared_hint_table;
+    uint32_t worker_id;
+    uint32_t root_perturbation_seed;
 #endif
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
     NativeRootPvsControl *root_pvs_control;
@@ -1971,15 +1975,103 @@ struct NativeRootPvsHandle {
 #endif
 
 #if MAKHOS_NATIVE_LAZY_SMP
+#define MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS 12
+
+struct SharedMoveHintTable {
+    SharedMoveHintEntry *entries;
+    size_t count;
+    size_t mask;
+    size_t allocated_bytes;
+};
+
+/*
+ * C11 seq_cst atomic publication protocol for shared move hints.
+ * Writers acquire sequence odd (cur_seq + 1) via CAS, write payload, and release even (cur_seq + 2).
+ * On contention, writer immediately skips store without spinning or blocking.
+ */
+static inline bool shared_move_hint_write(
+    SharedMoveHintEntry *entry,
+    uint64_t key,
+    uint64_t data,
+    const NativeCompactMove *move
+) {
+    uint64_t cur_seq = atomic_load_explicit(&entry->sequence, memory_order_seq_cst);
+    if ((cur_seq & 1) != 0 || cur_seq >= UINT64_MAX - 4) {
+        return false; /* writer active or sequence near exhaustion: bounded store-skip */
+    }
+    uint64_t expected = cur_seq;
+    if (!atomic_compare_exchange_strong_explicit(
+        &entry->sequence,
+        &expected,
+        cur_seq + 1,
+        memory_order_seq_cst,
+        memory_order_seq_cst
+    )) {
+        return false; /* CAS lost to another writer: skip store without lock wait */
+    }
+    uint64_t w0 = move->path_low;
+    uint64_t w1 = move->captured_low;
+    uint64_t w2 = (uint64_t)move->path_high_meta | ((uint64_t)move->captured_high_meta << 32);
+
+    atomic_store_explicit(&entry->key, key, memory_order_seq_cst);
+    atomic_store_explicit(&entry->data, data, memory_order_seq_cst);
+    atomic_store_explicit(&entry->move_w0, w0, memory_order_seq_cst);
+    atomic_store_explicit(&entry->move_w1, w1, memory_order_seq_cst);
+    atomic_store_explicit(&entry->move_w2, w2, memory_order_seq_cst);
+    atomic_store_explicit(&entry->sequence, cur_seq + 2, memory_order_seq_cst);
+    return true;
+}
+
+/*
+ * Reader protocol: reads sequence once, checks even/odd, reads payload, checks sequence unchanged.
+ * On write in progress or sequence mismatch, immediately yields a TT miss without retry loop.
+ */
+static inline bool shared_move_hint_read(
+    const SharedMoveHintEntry *entry,
+    uint64_t expected_key,
+    uint32_t expected_epoch,
+    NativeCompactMove *out_move,
+    uint32_t *out_depth
+) {
+    uint64_t seq1 = atomic_load_explicit(&entry->sequence, memory_order_seq_cst);
+    if ((seq1 & 1) != 0) {
+        return false; /* write in progress: miss */
+    }
+    uint64_t k = atomic_load_explicit(&entry->key, memory_order_seq_cst);
+    if (k != expected_key) {
+        return false; /* key mismatch */
+    }
+    uint64_t d = atomic_load_explicit(&entry->data, memory_order_seq_cst);
+    uint64_t w0 = atomic_load_explicit(&entry->move_w0, memory_order_seq_cst);
+    uint64_t w1 = atomic_load_explicit(&entry->move_w1, memory_order_seq_cst);
+    uint64_t w2 = atomic_load_explicit(&entry->move_w2, memory_order_seq_cst);
+
+    uint64_t seq2 = atomic_load_explicit(&entry->sequence, memory_order_seq_cst);
+    if (seq1 != seq2) {
+        return false; /* torn read detected: miss */
+    }
+    uint32_t epoch = (uint32_t)(d >> 32);
+    if (expected_epoch != 0 && epoch != expected_epoch) {
+        return false; /* stale epoch hint */
+    }
+    if (out_depth != NULL) {
+        *out_depth = (uint32_t)(d & 0xFFFF);
+    }
+    if (out_move != NULL) {
+        out_move->path_low = w0;
+        out_move->captured_low = w1;
+        out_move->path_high_meta = (uint32_t)(w2 & 0xFFFFFFFF);
+        out_move->captured_high_meta = (uint32_t)(w2 >> 32);
+    }
+    return true;
+}
+
 struct NativeLazySmpControl {
     atomic_bool stop;
+    _Atomic uint64_t request_epoch;
     double deadline;
     bool has_deadline;
 };
-#endif
-
-#if MAKHOS_NATIVE_LAZY_SMP
-#define MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS 12
 
 typedef struct {
     uint32_t requested_threads;
@@ -1989,15 +2081,50 @@ typedef struct {
     uint32_t leader_depth;
     uint64_t worker_nodes[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
     uint32_t worker_depth[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    uint64_t shared_hint_allocated_bytes;
+    uint64_t shared_hint_entries;
+    uint64_t private_tt_allocated_bytes;
 } MakhosLazySmpStats;
 
+typedef struct NativeLazySmpHandle NativeLazySmpHandle;
+
 typedef struct {
+    NativeLazySmpHandle *owner;
+    uint32_t worker_id;
+    NativeSearchContext *context;
+    Position root;
+    int max_depth;
+    uint32_t root_seed;
+    MakhosSearchResult result;
+    int status;
+} NativeLazySmpWorkerState;
+
+struct NativeLazySmpHandle {
     NativeLazySmpControl control;
     NativeSearchContext workers[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    SharedMoveHintTable shared_hints;
+    NativeLazySmpWorkerState worker_states[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    HANDLE worker_threads[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    HANDLE start_events[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    HANDLE done_events[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
     MakhosLazySmpStats stats;
     uint32_t threads;
+    uint32_t base_hash_power;
+    uint32_t worker_hash_power;
+    atomic_bool shutdown;
     bool running;
-} NativeLazySmpHandle;
+};
+
+static inline int compute_worker_hash_power(int threads, size_t total_private_budget_bytes) {
+    size_t worker_budget = total_private_budget_bytes / (size_t)threads;
+    size_t max_entries = worker_budget / sizeof(NativeTTEntry);
+    if (max_entries < ((size_t)1 << 12)) return -1;
+    int p = 12;
+    while (p < 24 && ((size_t)1 << (p + 1)) <= max_entries) {
+        p++;
+    }
+    return p;
+}
 #endif
 
 #if MAKHOS_SEARCH_TELEMETRY
@@ -3246,6 +3373,7 @@ static int move_order_weight(
     Position position,
     const Move *move,
     const Move *tt_move,
+    const Move *shared_hint_move,
     int ply
 ) {
     if (tt_move != NULL && same_move(move, tt_move)) return 10000000;
@@ -3256,7 +3384,11 @@ static int move_order_weight(
                 ++king_captures;
             }
         }
-        return 1000000 + move->capture_count * 10000 + king_captures * 100;
+        int capture_weight = 1000000 + move->capture_count * 10000 + king_captures * 100;
+        if (shared_hint_move != NULL && same_move(move, shared_hint_move)) {
+            capture_weight += 5000;
+        }
+        return capture_weight;
     }
     if (move->promotes) return 500000;
     if (ply < MAKHOS_SEARCH_MAX_PLY) {
@@ -3270,6 +3402,9 @@ static int move_order_weight(
             }
         }
     }
+    if (shared_hint_move != NULL && same_move(move, shared_hint_move)) {
+        return 25000;
+    }
     return context->history[position.turn][move->path[0]][move->path[move->path_len - 1]];
 }
 
@@ -3279,6 +3414,7 @@ static void order_search_moves(
     Move *moves,
     uint32_t move_count,
     const Move *tt_move,
+    const Move *shared_hint_move,
     int ply
 ) {
     SEARCH_TELEMETRY_INC(context, ordering_calls);
@@ -3286,7 +3422,7 @@ static void order_search_moves(
 #if MAKHOS_PRECOMPUTED_ORDERING
     for (uint32_t index = 0; index < move_count; ++index) {
         context->order_scores[index] = move_order_weight(
-            context, position, &moves[index], tt_move, ply
+            context, position, &moves[index], tt_move, shared_hint_move, ply
         );
     }
     for (uint32_t index = 1; index < move_count; ++index) {
@@ -3309,12 +3445,12 @@ static void order_search_moves(
     for (uint32_t index = 1; index < move_count; ++index) {
         Move candidate = moves[index];
         int candidate_weight = move_order_weight(
-            context, position, &candidate, tt_move, ply
+            context, position, &candidate, tt_move, shared_hint_move, ply
         );
         uint32_t cursor = index;
         while (cursor > 0) {
             int previous_weight = move_order_weight(
-                context, position, &moves[cursor - 1], tt_move, ply
+                context, position, &moves[cursor - 1], tt_move, shared_hint_move, ply
             );
             if (previous_weight >= candidate_weight) break;
             moves[cursor] = moves[cursor - 1];
@@ -3639,12 +3775,34 @@ static int native_negamax(
     }
 #endif
 
+#if MAKHOS_NATIVE_LAZY_SMP
+    Move shared_hint_storage;
+    const Move *shared_hint_move = NULL;
+    if (context->shared_hint_table != NULL) {
+        size_t slot = (size_t)(key & context->shared_hint_table->mask);
+        NativeCompactMove hint_compact;
+        uint32_t hint_depth = 0;
+        uint32_t epoch = context->lazy_smp_control != NULL
+            ? (uint32_t)atomic_load_explicit(&context->lazy_smp_control->request_epoch, memory_order_relaxed)
+            : 0;
+        if (shared_move_hint_read(&context->shared_hint_table->entries[slot], key, epoch, &hint_compact, &hint_depth)) {
+            expand_compact_tt_move(&shared_hint_storage, &hint_compact);
+            if (tt_move == NULL || !same_move(&shared_hint_storage, tt_move)) {
+                shared_hint_move = &shared_hint_storage;
+            }
+        }
+    }
+#else
+    const Move *shared_hint_move = NULL;
+#endif
+
     order_search_moves(
         context,
         position,
         moves->moves,
         moves->count,
         tt_move,
+        shared_hint_move,
         ply
     );
     int original_alpha = alpha;
@@ -3772,6 +3930,18 @@ static int native_negamax(
 #else
         entry->best_move = best_move;
 #endif
+        }
+#endif
+#if MAKHOS_NATIVE_LAZY_SMP
+        if (context->shared_hint_table != NULL && best_move.path_len > 0) {
+            uint32_t epoch = context->lazy_smp_control != NULL
+                ? (uint32_t)atomic_load_explicit(&context->lazy_smp_control->request_epoch, memory_order_relaxed)
+                : 0;
+            uint64_t data = ((uint64_t)(uint16_t)depth) | (((uint64_t)epoch) << 32);
+            NativeCompactMove hint_compact;
+            compact_tt_move(&hint_compact, &best_move);
+            size_t slot = (size_t)(key & context->shared_hint_table->mask);
+            shared_move_hint_write(&context->shared_hint_table->entries[slot], key, data, &hint_compact);
         }
 #endif
     }
@@ -3903,6 +4073,7 @@ static int native_quiescence(
             moves->moves,
             moves->count,
             NULL,
+            NULL,
             ply
         );
     }
@@ -3912,6 +4083,7 @@ static int native_quiescence(
         position,
         moves->moves,
         moves->count,
+        NULL,
         NULL,
         ply
     );
@@ -4473,6 +4645,13 @@ static int execute_native_search_impl(
     MakhosSearchResult *result
 ) {
     context->line[0] = root;
+    /* A root with three occurrences is terminal even before NNUE refresh. */
+    if (context->repetition_limit > 0 &&
+        search_repetition_count(context, root, 0
+#if MAKHOS_REPETITION_CENSUS
+            , false
+#endif
+        ) >= context->repetition_limit) return 4;
     if (!native_search_refresh_root(context, root)) return 2;
     MoveList *root_moves;
     if (!generate_search_moves(context, root, 0, &root_moves)) {
@@ -4518,27 +4697,45 @@ static int execute_native_search_impl(
             root_moves->moves,
             root_moves->count,
             has_previous_best ? &previous_best : NULL,
+            NULL,
             0
         );
 #if MAKHOS_NATIVE_LAZY_SMP
-        /* Worker zero retains the ordinary root order.  Helpers use a small,
-         * deterministic rotation only at the root to diversify TT discovery
-         * without sharing mutable history, PV, or move lists. */
-        if (root_order_rotation != 0 && root_moves->count > 1) {
-            uint32_t rotation = root_order_rotation % root_moves->count;
-            while (rotation-- > 0) {
-                Move first = root_moves->moves[0];
-                memmove(
-                    &root_moves->moves[0],
-                    &root_moves->moves[1],
-                    (size_t)(root_moves->count - 1) * sizeof(root_moves->moves[0])
-                );
-                root_moves->moves[root_moves->count - 1] = first;
+        /* Worker zero retains the ordinary root order (zero perturbation).
+         * Helpers use deterministic tie-break perturbation applied only to root moves
+         * with equal ordering scores to diversify exploration. */
+        if (context->worker_id > 0 && root_moves->count > 1) {
+            uint32_t seed = context->root_perturbation_seed ^ (context->worker_id * 1337U);
+            for (uint32_t i = 1; i < root_moves->count; ++i) {
+                Move cand = root_moves->moves[i];
+                int32_t cand_score = context->order_scores[i];
+                uint32_t cand_hash = (uint32_t)(cand.path[0] | ((uint32_t)cand.path[cand.path_len - 1] << 8)) ^ seed;
+                uint32_t j = i;
+                while (j > 0) {
+                    if (context->order_scores[j - 1] < cand_score) {
+                        root_moves->moves[j] = root_moves->moves[j - 1];
+                        context->order_scores[j] = context->order_scores[j - 1];
+                        --j;
+                    } else if (context->order_scores[j - 1] == cand_score) {
+                        Move prev = root_moves->moves[j - 1];
+                        uint32_t prev_hash = (uint32_t)(prev.path[0] | ((uint32_t)prev.path[prev.path_len - 1] << 8)) ^ seed;
+                        if (cand_hash > prev_hash) {
+                            root_moves->moves[j] = root_moves->moves[j - 1];
+                            context->order_scores[j] = context->order_scores[j - 1];
+                            --j;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                root_moves->moves[j] = cand;
+                context->order_scores[j] = cand_score;
             }
         }
-#else
-        (void)root_order_rotation;
 #endif
+        (void)root_order_rotation;
 
         int alpha = -MAKHOS_SEARCH_INFINITY;
         int iteration_score = -MAKHOS_SEARCH_INFINITY;
@@ -4681,60 +4878,32 @@ static int execute_native_search(
 }
 
 #if MAKHOS_NATIVE_LAZY_SMP
-typedef struct {
-    NativeSearchContext *context;
-    Position root;
-    int max_depth;
-    uint32_t root_order_rotation;
-    HANDLE start_event;
-    MakhosSearchResult result;
-    int status;
-} NativeLazySmpJob;
+static DWORD WINAPI run_native_lazy_smp_persistent_worker(void *argument) {
+    NativeLazySmpWorkerState *state = argument;
+    NativeLazySmpHandle *lazy = state->owner;
+    uint32_t id = state->worker_id;
 
-static DWORD WINAPI run_native_lazy_smp_worker(void *argument) {
-    NativeLazySmpJob *job = argument;
     for (;;) {
-        DWORD start_wait = WaitForSingleObject(job->start_event, 25);
-        if (start_wait == WAIT_OBJECT_0) break;
-        if (start_wait == WAIT_TIMEOUT) {
-            if (atomic_load_explicit(
-                &job->context->lazy_smp_control->stop,
-                memory_order_acquire
-            )) {
-                job->status = 0;
-                return 0;
-            }
-            continue;
+        DWORD wait_res = WaitForSingleObject(lazy->start_events[id], INFINITE);
+        if (wait_res != WAIT_OBJECT_0) break;
+        if (atomic_load_explicit(&lazy->shutdown, memory_order_acquire)) {
+            break;
         }
-        job->status = 2;
-        atomic_store_explicit(
-            &job->context->lazy_smp_control->stop,
-            true,
-            memory_order_release
-        );
-        return 0;
-    }
-    if (atomic_load_explicit(
-        &job->context->lazy_smp_control->stop,
-        memory_order_acquire
-    )) {
-        job->status = 0;
-        return 0;
-    }
-    job->status = execute_native_search(
-        job->context,
-        job->root,
-        1,
-        job->max_depth,
-        job->root_order_rotation,
-        &job->result
-    );
-    if (job->status == 2) {
-        atomic_store_explicit(
-            &job->context->lazy_smp_control->stop,
-            true,
-            memory_order_release
-        );
+        if (!atomic_load_explicit(&lazy->control.stop, memory_order_acquire)) {
+            state->context->worker_id = id;
+            state->context->root_perturbation_seed = state->root_seed;
+            state->status = execute_native_search(
+                state->context,
+                state->root,
+                1,
+                state->max_depth,
+                0,
+                &state->result
+            );
+        } else {
+            state->status = 0;
+        }
+        SetEvent(lazy->done_events[id]);
     }
     return 0;
 }
@@ -5822,62 +5991,220 @@ MAKHOS_API uint64_t makhos_root_pvs_shadow_memory_bytes(void *opaque) {
 #endif
 
 #if MAKHOS_NATIVE_LAZY_SMP
+MAKHOS_API int makhos_lazy_smp_available(void);
+MAKHOS_API void *makhos_lazy_smp_create_budgeted(int threads, int hash_power, uint64_t total_tt_bytes);
+MAKHOS_API void makhos_lazy_smp_destroy(void *handle);
+MAKHOS_API int makhos_lazy_smp_stop(void *handle);
+
 MAKHOS_API int makhos_lazy_smp_available(void) {
     return 1;
 }
 
 MAKHOS_API void *makhos_lazy_smp_create(int threads, int hash_power) {
+    if (hash_power < 12 || hash_power > 24) return NULL;
+    /* Legacy ABI lacks requested MiB: use its single-TT capacity as a safe cap. */
+    return makhos_lazy_smp_create_budgeted(
+        threads, hash_power, ((uint64_t)1 << hash_power) * sizeof(NativeTTEntry)
+    );
+}
+
+MAKHOS_API void *makhos_lazy_smp_create_budgeted(int threads, int hash_power, uint64_t total_tt_bytes) {
     if (
         threads < 1 || threads > MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS ||
         hash_power < 12 || hash_power > 24
     ) {
         return NULL;
     }
+    if (total_tt_bytes > SIZE_MAX ||
+        total_tt_bytes < ((uint64_t)1 << hash_power) * sizeof(NativeTTEntry)) return NULL;
+#if MAKHOS_NNUE_SEARCH_CANDIDATE
+    if (native_nnue_model == NULL || !avx2_supported_cached()) return NULL;
+#endif
+
     NativeLazySmpHandle *handle = calloc(1, sizeof(*handle));
     if (handle == NULL) return NULL;
-    if (!allocate_native_search(&handle->workers[0], hash_power)) {
+
+    atomic_init(&handle->control.stop, false);
+    atomic_init(&handle->control.request_epoch, 0);
+    atomic_init(&handle->shutdown, false);
+    handle->threads = (uint32_t)threads;
+    handle->base_hash_power = (uint32_t)hash_power;
+
+    if (threads == 1) {
+        /* 1T Bypass: Allocate single full-budget private TT, no shared table, no threads */
+        handle->worker_hash_power = (uint32_t)hash_power;
+        if (!allocate_native_search(&handle->workers[0], hash_power)) {
+            free(handle);
+            return NULL;
+        }
+        handle->workers[0].shared_hint_table = NULL;
+        handle->workers[0].worker_id = 0;
+        handle->workers[0].lazy_smp_control = &handle->control;
+        handle->stats.requested_threads = 1;
+        handle->stats.private_tt_allocated_bytes =
+            ((uint64_t)1 << hash_power) * (uint64_t)sizeof(NativeTTEntry);
+        return handle;
+    }
+
+    /* Reserve at most one eighth of Hash for hints, capped at 2^20 entries.
+       Hints OFF retains the same allocation for controlled ON/OFF comparisons. */
+    bool disable_hints = false;
+    const char *env = getenv("MAKHOS_LAZY_SMP_DISABLE_HINTS");
+    if (env != NULL && strcmp(env, "1") == 0) {
+        disable_hints = true;
+    }
+
+    size_t hint_budget = (size_t)total_tt_bytes / 8;
+    size_t hint_count = 1;
+    while (hint_count < ((size_t)1 << 20) &&
+           hint_count * 2 <= hint_budget / sizeof(SharedMoveHintEntry)) hint_count *= 2;
+    if (hint_budget >= sizeof(SharedMoveHintEntry)) {
+        handle->shared_hints.entries = calloc(hint_count, sizeof(SharedMoveHintEntry));
+        if (handle->shared_hints.entries == NULL) {
+            free(handle);
+            return NULL;
+        }
+        handle->shared_hints.count = hint_count;
+        handle->shared_hints.mask = hint_count - 1;
+        handle->shared_hints.allocated_bytes = hint_count * sizeof(SharedMoveHintEntry);
+    }
+
+    int worker_power = compute_worker_hash_power(
+        threads, (size_t)total_tt_bytes - handle->shared_hints.allocated_bytes
+    );
+    if (worker_power < 0) {
+        free(handle->shared_hints.entries);
         free(handle);
         return NULL;
     }
-    uint32_t allocated = 1;
-    for (uint32_t index = 1; index < (uint32_t)threads; ++index) {
-        if (!allocate_native_search_shared(
-            &handle->workers[index],
-            &handle->workers[0]
-        )) {
-            while (allocated > 0) {
-                --allocated;
-                destroy_native_search(&handle->workers[allocated]);
+    handle->worker_hash_power = (uint32_t)worker_power;
+
+    /* Allocate private TT for each worker */
+    for (uint32_t index = 0; index < (uint32_t)threads; ++index) {
+        if (!allocate_native_search(&handle->workers[index], worker_power)) {
+            for (uint32_t cleanup = 0; cleanup < index; ++cleanup) {
+                destroy_native_search(&handle->workers[cleanup]);
+            }
+            if (handle->shared_hints.entries != NULL) {
+                free(handle->shared_hints.entries);
             }
             free(handle);
             return NULL;
         }
-        ++allocated;
+        handle->workers[index].shared_hint_table = disable_hints ? NULL : &handle->shared_hints;
+        handle->workers[index].worker_id = index;
+        handle->workers[index].lazy_smp_control = &handle->control;
     }
-    atomic_init(&handle->control.stop, false);
-    handle->threads = (uint32_t)threads;
+
+    /* Initialize persistent Win32 worker thread pool for helpers (1..threads-1) */
+    for (uint32_t index = 1; index < (uint32_t)threads; ++index) {
+        handle->worker_states[index].owner = handle;
+        handle->worker_states[index].worker_id = index;
+        handle->worker_states[index].context = &handle->workers[index];
+
+        handle->start_events[index] = CreateEventA(NULL, FALSE, FALSE, NULL);
+        handle->done_events[index] = CreateEventA(NULL, FALSE, FALSE, NULL);
+        if (handle->start_events[index] == NULL || handle->done_events[index] == NULL) {
+            makhos_lazy_smp_destroy(handle);
+            return NULL;
+        }
+        handle->worker_threads[index] = CreateThread(
+            NULL,
+            0,
+            run_native_lazy_smp_persistent_worker,
+            &handle->worker_states[index],
+            0,
+            NULL
+        );
+        if (handle->worker_threads[index] == NULL) {
+            makhos_lazy_smp_destroy(handle);
+            return NULL;
+        }
+    }
+
+    handle->stats.requested_threads = (uint32_t)threads;
+    handle->stats.shared_hint_allocated_bytes = handle->shared_hints.allocated_bytes;
+    handle->stats.shared_hint_entries = handle->shared_hints.count;
+    handle->stats.private_tt_allocated_bytes =
+        (uint64_t)threads * (((uint64_t)1 << worker_power) * (uint64_t)sizeof(NativeTTEntry));
+
     return handle;
 }
 
 MAKHOS_API void makhos_lazy_smp_destroy(void *handle) {
     if (handle == NULL) return;
     NativeLazySmpHandle *lazy = handle;
-    for (uint32_t index = lazy->threads; index > 0; --index) {
-        destroy_native_search(&lazy->workers[index - 1]);
+
+    /* Signal shutdown to all workers */
+    atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
+    atomic_store_explicit(&lazy->shutdown, true, memory_order_release);
+
+    /* Wake all persistent helpers to terminate cleanly */
+    for (uint32_t index = 1; index < lazy->threads; ++index) {
+        if (lazy->start_events[index] != NULL) {
+            SetEvent(lazy->start_events[index]);
+        }
     }
+
+    /* Drain and join all helper threads */
+    for (uint32_t index = 1; index < lazy->threads; ++index) {
+        if (lazy->worker_threads[index] != NULL) {
+            WaitForSingleObject(lazy->worker_threads[index], INFINITE);
+            CloseHandle(lazy->worker_threads[index]);
+            lazy->worker_threads[index] = NULL;
+        }
+        if (lazy->start_events[index] != NULL) {
+            CloseHandle(lazy->start_events[index]);
+            lazy->start_events[index] = NULL;
+        }
+        if (lazy->done_events[index] != NULL) {
+            CloseHandle(lazy->done_events[index]);
+            lazy->done_events[index] = NULL;
+        }
+    }
+
+    /* Destroy private TTs and resources for all workers */
+    for (uint32_t index = 0; index < lazy->threads; ++index) {
+        destroy_native_search(&lazy->workers[index]);
+    }
+
+    /* Free shared move-hint table */
+    if (lazy->shared_hints.entries != NULL) {
+        free(lazy->shared_hints.entries);
+        lazy->shared_hints.entries = NULL;
+    }
+
     free(lazy);
+}
+
+MAKHOS_API int makhos_lazy_smp_stop(void *handle) {
+    if (handle == NULL) return 1;
+    NativeLazySmpHandle *lazy = handle;
+    atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
+    return 0;
 }
 
 MAKHOS_API int makhos_lazy_smp_clear(void *handle) {
     if (handle == NULL) return 1;
     NativeLazySmpHandle *lazy = handle;
     if (lazy->running) return 1;
-    if (clear_native_search(&lazy->workers[0], true) != 0) return 1;
-    for (uint32_t index = 1; index < lazy->threads; ++index) {
-        if (clear_native_search(&lazy->workers[index], false) != 0) return 1;
+
+    for (uint32_t index = 0; index < lazy->threads; ++index) {
+        if (clear_native_search(&lazy->workers[index], true) != 0) return 1;
+    }
+    if (lazy->shared_hints.entries != NULL) {
+        memset(lazy->shared_hints.entries, 0, lazy->shared_hints.allocated_bytes);
     }
     atomic_store_explicit(&lazy->control.stop, false, memory_order_release);
+    uint32_t req_threads = lazy->stats.requested_threads;
+    uint64_t hint_bytes = lazy->stats.shared_hint_allocated_bytes;
+    uint64_t hint_count = lazy->stats.shared_hint_entries;
+    uint64_t priv_bytes = lazy->stats.private_tt_allocated_bytes;
     memset(&lazy->stats, 0, sizeof(lazy->stats));
+    lazy->stats.requested_threads = req_threads;
+    lazy->stats.shared_hint_allocated_bytes = hint_bytes;
+    lazy->stats.shared_hint_entries = hint_count;
+    lazy->stats.private_tt_allocated_bytes = priv_bytes;
     return 0;
 }
 
@@ -5899,6 +6226,7 @@ MAKHOS_API int makhos_lazy_smp_run(
     if (handle == NULL) return 1;
     NativeLazySmpHandle *lazy = handle;
     if (lazy->running) return 1;
+
     Position root;
     int status = validate_native_search_inputs(
         red,
@@ -5918,8 +6246,30 @@ MAKHOS_API int makhos_lazy_smp_run(
     if (status != 0) return status;
 
     lazy->running = true;
+    uint32_t req_threads = lazy->stats.requested_threads;
+    uint64_t hint_bytes = lazy->stats.shared_hint_allocated_bytes;
+    uint64_t hint_count = lazy->stats.shared_hint_entries;
+    uint64_t priv_bytes = lazy->stats.private_tt_allocated_bytes;
     memset(&lazy->stats, 0, sizeof(lazy->stats));
-    lazy->stats.requested_threads = lazy->threads;
+    lazy->stats.requested_threads = req_threads;
+    lazy->stats.shared_hint_allocated_bytes = hint_bytes;
+    lazy->stats.shared_hint_entries = hint_count;
+    lazy->stats.private_tt_allocated_bytes = priv_bytes;
+
+    uint64_t epoch = atomic_fetch_add_explicit(
+        &lazy->control.request_epoch,
+        1,
+        memory_order_seq_cst
+    ) + 1;
+    if (epoch >= (uint64_t)UINT32_MAX - 10ULL) {
+        /* Request epoch near 32-bit exhaustion: clear shared table and reset epoch to 1 */
+        if (lazy->shared_hints.entries != NULL) {
+            memset(lazy->shared_hints.entries, 0, lazy->shared_hints.allocated_bytes);
+        }
+        atomic_store_explicit(&lazy->control.request_epoch, 1, memory_order_seq_cst);
+        epoch = 1;
+    }
+
     atomic_store_explicit(&lazy->control.stop, false, memory_order_release);
     lazy->control.has_deadline = time_ms > 0;
     double common_start = search_now_seconds();
@@ -5927,13 +6277,48 @@ MAKHOS_API int makhos_lazy_smp_run(
         ? common_start + (double)time_ms / 1000.0
         : 0.0;
 
+    /* 1T Direct Bypass: Exact node-for-node and bit-exact parity with standalone 1T search */
+    if (lazy->threads <= 1) {
+        NativeSearchContext *ctx0 = &lazy->workers[0];
+        prepare_native_search(
+            ctx0,
+            no_progress_plies,
+            repetition_limit,
+            time_ms,
+            history,
+            history_count
+        );
+        ctx0->start = common_start;
+        ctx0->has_deadline = lazy->control.has_deadline;
+        ctx0->deadline = lazy->control.deadline;
+
+        status = execute_native_search(
+            ctx0,
+            root,
+            1,
+            max_depth,
+            0,
+            result
+        );
+
+        lazy->stats.completed_threads = (status == 0) ? 1 : 0;
+        lazy->stats.aggregate_nodes = ctx0->nodes;
+        lazy->stats.leader_nodes = ctx0->nodes;
+        lazy->stats.leader_depth = result->depth;
+        lazy->stats.worker_nodes[0] = ctx0->nodes;
+        lazy->stats.worker_depth[0] = result->depth;
+        lazy->running = false;
+        return status;
+    }
+
+    /* Multi-thread path: Prepare all workers */
     for (uint32_t index = 0; index < lazy->threads; ++index) {
         NativeSearchContext *context = &lazy->workers[index];
         prepare_native_search(
             context,
             no_progress_plies,
             repetition_limit,
-            0,
+            time_ms,
             history,
             history_count
         );
@@ -5943,83 +6328,61 @@ MAKHOS_API int makhos_lazy_smp_run(
         context->lazy_smp_control = &lazy->control;
     }
 
-    NativeLazySmpJob jobs[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
-    HANDLE threads[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
-    memset(jobs, 0, sizeof(jobs));
-    memset(threads, 0, sizeof(threads));
-    HANDLE start_event = CreateEventA(NULL, TRUE, FALSE, NULL);
-    if (start_event == NULL) {
-        status = 2;
-        goto lazy_smp_cleanup;
+    /* Launch helpers (1..threads-1) */
+    uint32_t helpers = lazy->threads - 1;
+    for (uint32_t index = 1; index < lazy->threads; ++index) {
+        lazy->worker_states[index].root = root;
+        lazy->worker_states[index].max_depth = max_depth;
+        lazy->worker_states[index].root_seed = (uint32_t)(epoch ^ (index * 1337U));
+        lazy->worker_states[index].status = 0;
+        memset(&lazy->worker_states[index].result, 0, sizeof(MakhosSearchResult));
+        SetEvent(lazy->start_events[index]);
     }
 
-    uint32_t created = 0;
-    for (uint32_t index = 0; index < lazy->threads; ++index) {
-        jobs[index].context = &lazy->workers[index];
-        jobs[index].root = root;
-        jobs[index].max_depth = max_depth;
-        jobs[index].root_order_rotation =
-            MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION ? index : 0;
-        jobs[index].start_event = start_event;
-        threads[index] = CreateThread(
-            NULL,
-            0,
-            run_native_lazy_smp_worker,
-            &jobs[index],
-            0,
-            NULL
-        );
-        if (threads[index] == NULL) {
-            status = 2;
-            atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
-            break;
+    /* Thread 0 (Authoritative Main) runs on calling thread with zero perturbation */
+    MakhosSearchResult main_result;
+    memset(&main_result, 0, sizeof(main_result));
+    status = execute_native_search(
+        &lazy->workers[0],
+        root,
+        1,
+        max_depth,
+        0,
+        &main_result
+    );
+
+    /* Main search has finished: Signal stop to all helpers */
+    atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
+
+    /* Drain all helper threads before reading results */
+    if (helpers > 0) {
+        HANDLE done_handles[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+        for (uint32_t i = 0; i < helpers; ++i) {
+            done_handles[i] = lazy->done_events[i + 1];
         }
-        ++created;
+        WaitForMultipleObjects(helpers, done_handles, TRUE, INFINITE);
     }
 
-    if (SetEvent(start_event) == 0) {
-        status = 2;
-        atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
-    }
-    if (created > 0) {
-        DWORD waited = WaitForMultipleObjects(created, threads, TRUE, INFINITE);
-        if (waited != WAIT_OBJECT_0) {
-            status = 2;
-            atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
-            /* Keep jobs and the shared control alive until every worker exits. */
-            for (uint32_t index = 0; index < created; ++index) {
-                if (WaitForSingleObject(threads[index], INFINITE) != WAIT_OBJECT_0) {
-                    status = 2;
-                }
-            }
-        }
-    }
-    for (uint32_t index = 0; index < created; ++index) {
-        CloseHandle(threads[index]);
-    }
-    CloseHandle(start_event);
+    /* Authoritative Main alone populates final output */
+    *result = main_result;
 
-    if (created != lazy->threads) {
-        status = 2;
-    }
-    for (uint32_t index = 0; index < created; ++index) {
-        lazy->stats.worker_nodes[index] = lazy->workers[index].nodes;
-        lazy->stats.worker_depth[index] = jobs[index].result.depth;
-        lazy->stats.aggregate_nodes += lazy->workers[index].nodes;
-        if (jobs[index].status == 0) ++lazy->stats.completed_threads;
-        if (jobs[index].status == 2) status = 2;
-    }
+    /* Aggregate telemetry */
+    lazy->stats.completed_threads = (status == 0) ? 1 : 0;
     lazy->stats.leader_nodes = lazy->workers[0].nodes;
-    lazy->stats.leader_depth = jobs[0].result.depth;
-    if (status == 0) {
-        status = jobs[0].status;
-        if (status == 0) *result = jobs[0].result;
+    lazy->stats.leader_depth = main_result.depth;
+    lazy->stats.aggregate_nodes = lazy->workers[0].nodes;
+    lazy->stats.worker_nodes[0] = lazy->workers[0].nodes;
+    lazy->stats.worker_depth[0] = main_result.depth;
+
+    for (uint32_t index = 1; index < lazy->threads; ++index) {
+        lazy->stats.worker_nodes[index] = lazy->workers[index].nodes;
+        lazy->stats.worker_depth[index] = lazy->worker_states[index].result.depth;
+        lazy->stats.aggregate_nodes += lazy->workers[index].nodes;
+        if (lazy->worker_states[index].status == 0) {
+            ++lazy->stats.completed_threads;
+        }
     }
 
-lazy_smp_cleanup:
-    for (uint32_t index = 0; index < lazy->threads; ++index) {
-        lazy->workers[index].lazy_smp_control = NULL;
-    }
     lazy->running = false;
     return status;
 }
@@ -6120,6 +6483,7 @@ MAKHOS_API uint64_t makhos_lazy_smp_memory_bytes(void *handle) {
     for (uint32_t index = 0; index < lazy->threads; ++index) {
         bytes += makhos_search_memory_bytes((void *)&lazy->workers[index]);
     }
+    bytes += (uint64_t)lazy->shared_hints.allocated_bytes;
     return bytes;
 }
 

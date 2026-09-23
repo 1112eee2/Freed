@@ -1,0 +1,650 @@
+{
+  "host": {
+    "cores": 6,
+    "logical": 12
+  },
+  "binaries": {
+    "native": "D:\\ThaiMakhosEngine\\build\\makhos_native.dll",
+    "c4": "D:\\ThaiMakhosEngine\\build\\native_endgame_c4\\makhos_endgame_search_nnue.dll"
+  },
+  "middlegame_fixed_depth": {
+    "initial_position": {
+      "legal_moves": 7,
+      "target_depth": 14,
+      "threads": {
+        "1T": {
+          "wall_ms": 125.7,
+          "cpu_ms": 125.0,
+          "cpu_utilization": 0.99,
+          "nodes": 470344,
+          "nps": 3741896,
+          "speedup": 1.0,
+          "efficiency": 1.0,
+          "move": "25-22",
+          "score": -1
+        },
+        "2T": {
+          "wall_ms": 13.08,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 1.19,
+          "nodes": 7986,
+          "nps": 610690,
+          "speedup": 9.61,
+          "efficiency": 4.81,
+          "move": "26-22",
+          "score": 8
+        },
+        "4T": {
+          "wall_ms": 15.34,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 2.04,
+          "nodes": 6217,
+          "nps": 405222,
+          "speedup": 8.19,
+          "efficiency": 2.05,
+          "move": "26-22",
+          "score": 5
+        },
+        "6T": {
+          "wall_ms": 15.31,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 1.02,
+          "nodes": 5753,
+          "nps": 375765,
+          "speedup": 8.21,
+          "efficiency": 1.37,
+          "move": "26-22",
+          "score": 8
+        },
+        "8T": {
+          "wall_ms": 15.9,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.98,
+          "nodes": 6584,
+          "nps": 414088,
+          "speedup": 7.91,
+          "efficiency": 0.99,
+          "move": "26-23",
+          "score": 7
+        },
+        "12T": {
+          "wall_ms": 16.63,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.94,
+          "nodes": 6584,
+          "nps": 396003,
+          "speedup": 7.56,
+          "efficiency": 0.63,
+          "move": "26-23",
+          "score": 7
+        }
+      }
+    },
+    "middlegame_ply8": {
+      "legal_moves": 11,
+      "target_depth": 14,
+      "threads": {
+        "1T": {
+          "wall_ms": 42.37,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 0.74,
+          "nodes": 149695,
+          "nps": 3533434,
+          "speedup": 1.0,
+          "efficiency": 1.0,
+          "move": "29-25",
+          "score": -11
+        },
+        "2T": {
+          "wall_ms": 18.59,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.84,
+          "nodes": 10439,
+          "nps": 561641,
+          "speedup": 2.28,
+          "efficiency": 1.14,
+          "move": "29-25",
+          "score": -11
+        },
+        "4T": {
+          "wall_ms": 21.41,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 1.46,
+          "nodes": 11844,
+          "nps": 553279,
+          "speedup": 1.98,
+          "efficiency": 0.49,
+          "move": "17-13",
+          "score": -9
+        },
+        "6T": {
+          "wall_ms": 23.76,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.66,
+          "nodes": 26598,
+          "nps": 1119680,
+          "speedup": 1.78,
+          "efficiency": 0.3,
+          "move": "30-25",
+          "score": -7
+        },
+        "8T": {
+          "wall_ms": 23.86,
+          "cpu_ms": 0.0,
+          "cpu_utilization": 0.0,
+          "nodes": 9051,
+          "nps": 379280,
+          "speedup": 1.78,
+          "efficiency": 0.22,
+          "move": "32-27",
+          "score": -9
+        },
+        "12T": {
+          "wall_ms": 25.58,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.61,
+          "nodes": 8575,
+          "nps": 335188,
+          "speedup": 1.66,
+          "efficiency": 0.14,
+          "move": "30-25",
+          "score": -7
+        }
+      }
+    },
+    "middlegame_ply16": {
+      "legal_moves": 8,
+      "target_depth": 14,
+      "threads": {
+        "1T": {
+          "wall_ms": 41.31,
+          "cpu_ms": 46.88,
+          "cpu_utilization": 1.13,
+          "nodes": 168240,
+          "nps": 4072887,
+          "speedup": 1.0,
+          "efficiency": 1.0,
+          "move": "28-24",
+          "score": 394
+        },
+        "2T": {
+          "wall_ms": 19.27,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 1.62,
+          "nodes": 65039,
+          "nps": 3374809,
+          "speedup": 2.14,
+          "efficiency": 1.07,
+          "move": "28-24",
+          "score": 330
+        },
+        "4T": {
+          "wall_ms": 18.91,
+          "cpu_ms": 15.62,
+          "cpu_utilization": 0.83,
+          "nodes": 65584,
+          "nps": 3468071,
+          "speedup": 2.18,
+          "efficiency": 0.55,
+          "move": "28-24",
+          "score": 394
+        },
+        "6T": {
+          "wall_ms": 19.56,
+          "cpu_ms": 46.88,
+          "cpu_utilization": 2.4,
+          "nodes": 69887,
+          "nps": 3573247,
+          "speedup": 2.11,
+          "efficiency": 0.35,
+          "move": "28-24",
+          "score": 394
+        },
+        "8T": {
+          "wall_ms": 18.84,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 1.66,
+          "nodes": 48746,
+          "nps": 2587284,
+          "speedup": 2.19,
+          "efficiency": 0.27,
+          "move": "28-24",
+          "score": 394
+        },
+        "12T": {
+          "wall_ms": 17.91,
+          "cpu_ms": 31.25,
+          "cpu_utilization": 1.74,
+          "nodes": 48746,
+          "nps": 2721826,
+          "speedup": 2.31,
+          "efficiency": 0.19,
+          "move": "28-24",
+          "score": 394
+        }
+      }
+    }
+  },
+  "middlegame_fixed_time": {
+    "initial_position": {
+      "legal_moves": 7,
+      "budget_ms": 1000,
+      "threads": {
+        "1T": {
+          "depth": 18,
+          "nodes": 3818496,
+          "wall_ms": 1003.17,
+          "cpu_utilization": 1.0,
+          "nps": 3806442,
+          "move": "25-22",
+          "score": -1
+        },
+        "2T": {
+          "depth": 16,
+          "nodes": 5008720,
+          "wall_ms": 1000.96,
+          "cpu_utilization": 1.56,
+          "nps": 5003897,
+          "move": "27-23",
+          "score": 1
+        },
+        "4T": {
+          "depth": 17,
+          "nodes": 8762076,
+          "wall_ms": 1003.3,
+          "cpu_utilization": 2.9,
+          "nps": 8733268,
+          "move": "26-22",
+          "score": 3
+        },
+        "6T": {
+          "depth": 17,
+          "nodes": 9643531,
+          "wall_ms": 1002.77,
+          "cpu_utilization": 3.09,
+          "nps": 9616897,
+          "move": "25-22",
+          "score": 1
+        },
+        "8T": {
+          "depth": 17,
+          "nodes": 10488501,
+          "wall_ms": 1000.85,
+          "cpu_utilization": 3.89,
+          "nps": 10479628,
+          "move": "25-22",
+          "score": -1
+        },
+        "12T": {
+          "depth": 17,
+          "nodes": 10925454,
+          "wall_ms": 1002.56,
+          "cpu_utilization": 3.71,
+          "nps": 10897532,
+          "move": "25-22",
+          "score": -1
+        }
+      }
+    },
+    "middlegame_ply8": {
+      "legal_moves": 11,
+      "budget_ms": 1000,
+      "threads": {
+        "1T": {
+          "depth": 20,
+          "nodes": 3994624,
+          "wall_ms": 1003.15,
+          "cpu_utilization": 1.0,
+          "nps": 3982080,
+          "move": "17-13",
+          "score": -7
+        },
+        "2T": {
+          "depth": 18,
+          "nodes": 6307942,
+          "wall_ms": 1000.43,
+          "cpu_utilization": 1.83,
+          "nps": 6305211,
+          "move": "17-13",
+          "score": -12
+        },
+        "4T": {
+          "depth": 19,
+          "nodes": 9857029,
+          "wall_ms": 1000.79,
+          "cpu_utilization": 3.04,
+          "nps": 9849230,
+          "move": "17-13",
+          "score": -9
+        },
+        "6T": {
+          "depth": 19,
+          "nodes": 9806907,
+          "wall_ms": 1003.44,
+          "cpu_utilization": 3.35,
+          "nps": 9773304,
+          "move": "17-13",
+          "score": -10
+        },
+        "8T": {
+          "depth": 19,
+          "nodes": 12167415,
+          "wall_ms": 1001.0,
+          "cpu_utilization": 4.0,
+          "nps": 12155281,
+          "move": "17-13",
+          "score": -6
+        },
+        "12T": {
+          "depth": 19,
+          "nodes": 12618418,
+          "wall_ms": 1003.15,
+          "cpu_utilization": 4.52,
+          "nps": 12578757,
+          "move": "17-13",
+          "score": -6
+        }
+      }
+    }
+  },
+  "endgame_c4": {
+    "candidate": "D:\\ThaiMakhosEngine\\build\\native_endgame_c4\\makhos_endgame_search_nnue.dll",
+    "model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+    "positions": {
+      "repetition_win": {
+        "depth_2": {
+          "1T": {
+            "ms": 0.231,
+            "nodes": 67,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 1.019,
+            "nodes": 67,
+            "speedup": 0.23
+          },
+          "4T": {
+            "ms": 1.411,
+            "nodes": 67,
+            "speedup": 0.16
+          },
+          "6T": {
+            "ms": 2.062,
+            "nodes": 67,
+            "speedup": 0.11
+          },
+          "8T": {
+            "ms": 2.074,
+            "nodes": 67,
+            "speedup": 0.11
+          },
+          "12T": {
+            "ms": 3.494,
+            "nodes": 67,
+            "speedup": 0.07
+          }
+        },
+        "depth_4": {
+          "1T": {
+            "ms": 0.759,
+            "nodes": 764,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 1.298,
+            "nodes": 764,
+            "speedup": 0.58
+          },
+          "4T": {
+            "ms": 2.062,
+            "nodes": 764,
+            "speedup": 0.37
+          },
+          "6T": {
+            "ms": 2.355,
+            "nodes": 764,
+            "speedup": 0.32
+          },
+          "8T": {
+            "ms": 2.735,
+            "nodes": 764,
+            "speedup": 0.28
+          },
+          "12T": {
+            "ms": 3.37,
+            "nodes": 764,
+            "speedup": 0.23
+          }
+        },
+        "depth_6": {
+          "1T": {
+            "ms": 17.325,
+            "nodes": 9941,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 12.166,
+            "nodes": 9941,
+            "speedup": 1.42
+          },
+          "4T": {
+            "ms": 11.917,
+            "nodes": 9941,
+            "speedup": 1.45
+          },
+          "6T": {
+            "ms": 12.963,
+            "nodes": 9941,
+            "speedup": 1.34
+          },
+          "8T": {
+            "ms": 12.492,
+            "nodes": 9941,
+            "speedup": 1.39
+          },
+          "12T": {
+            "ms": 12.966,
+            "nodes": 9941,
+            "speedup": 1.34
+          }
+        }
+      },
+      "4_pieces_kings": {
+        "depth_2": {
+          "1T": {
+            "ms": 0.292,
+            "nodes": 267,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 1.104,
+            "nodes": 267,
+            "speedup": 0.26
+          },
+          "4T": {
+            "ms": 1.548,
+            "nodes": 267,
+            "speedup": 0.19
+          },
+          "6T": {
+            "ms": 1.602,
+            "nodes": 267,
+            "speedup": 0.18
+          },
+          "8T": {
+            "ms": 2.23,
+            "nodes": 267,
+            "speedup": 0.13
+          },
+          "12T": {
+            "ms": 3.04,
+            "nodes": 267,
+            "speedup": 0.1
+          }
+        },
+        "depth_4": {
+          "1T": {
+            "ms": 4.557,
+            "nodes": 4090,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 3.341,
+            "nodes": 4090,
+            "speedup": 1.36
+          },
+          "4T": {
+            "ms": 2.507,
+            "nodes": 4090,
+            "speedup": 1.82
+          },
+          "6T": {
+            "ms": 2.93,
+            "nodes": 4090,
+            "speedup": 1.56
+          },
+          "8T": {
+            "ms": 3.376,
+            "nodes": 4090,
+            "speedup": 1.35
+          },
+          "12T": {
+            "ms": 3.639,
+            "nodes": 4090,
+            "speedup": 1.25
+          }
+        },
+        "depth_6": {
+          "1T": {
+            "ms": 74.559,
+            "nodes": 46770,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 46.31,
+            "nodes": 46770,
+            "speedup": 1.61
+          },
+          "4T": {
+            "ms": 25.546,
+            "nodes": 46770,
+            "speedup": 2.92
+          },
+          "6T": {
+            "ms": 27.038,
+            "nodes": 46770,
+            "speedup": 2.76
+          },
+          "8T": {
+            "ms": 21.239,
+            "nodes": 46770,
+            "speedup": 3.51
+          },
+          "12T": {
+            "ms": 20.757,
+            "nodes": 46770,
+            "speedup": 3.59
+          }
+        }
+      },
+      "5_pieces_pawns": {
+        "depth_2": {
+          "1T": {
+            "ms": 0.075,
+            "nodes": 6,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 0.112,
+            "nodes": 6,
+            "speedup": 0.67
+          },
+          "4T": {
+            "ms": 0.095,
+            "nodes": 6,
+            "speedup": 0.79
+          },
+          "6T": {
+            "ms": 0.1,
+            "nodes": 6,
+            "speedup": 0.75
+          },
+          "8T": {
+            "ms": 0.097,
+            "nodes": 6,
+            "speedup": 0.78
+          },
+          "12T": {
+            "ms": 0.097,
+            "nodes": 6,
+            "speedup": 0.78
+          }
+        },
+        "depth_4": {
+          "1T": {
+            "ms": 0.106,
+            "nodes": 25,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 0.189,
+            "nodes": 25,
+            "speedup": 0.56
+          },
+          "4T": {
+            "ms": 0.114,
+            "nodes": 25,
+            "speedup": 0.93
+          },
+          "6T": {
+            "ms": 0.116,
+            "nodes": 25,
+            "speedup": 0.92
+          },
+          "8T": {
+            "ms": 0.139,
+            "nodes": 25,
+            "speedup": 0.76
+          },
+          "12T": {
+            "ms": 0.118,
+            "nodes": 25,
+            "speedup": 0.89
+          }
+        },
+        "depth_6": {
+          "1T": {
+            "ms": 0.089,
+            "nodes": 63,
+            "speedup": 1.0
+          },
+          "2T": {
+            "ms": 0.131,
+            "nodes": 63,
+            "speedup": 0.68
+          },
+          "4T": {
+            "ms": 0.134,
+            "nodes": 63,
+            "speedup": 0.66
+          },
+          "6T": {
+            "ms": 0.137,
+            "nodes": 63,
+            "speedup": 0.65
+          },
+          "8T": {
+            "ms": 0.136,
+            "nodes": 63,
+            "speedup": 0.65
+          },
+          "12T": {
+            "ms": 0.134,
+            "nodes": 63,
+            "speedup": 0.66
+          }
+        }
+      }
+    }
+  }
+}

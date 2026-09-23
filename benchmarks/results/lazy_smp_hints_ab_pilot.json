@@ -1,0 +1,364 @@
+{
+  "format": "makhos-lazy-smp-ab-pilot-v1",
+  "timestamp_utc": "2026-09-23T13:49:57Z",
+  "threads": 12,
+  "time_limit_ms": 1000,
+  "candidate_dll": "D:\\ThaiMakhosEngine\\build\\lazy_smp_candidate_v1\\makhos_native_lazy_smp_candidate_v1.dll",
+  "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+  "trials": [
+    {
+      "position": "initial",
+      "order": [
+        "ON",
+        "OFF"
+      ],
+      "measurements": {
+        "ON": {
+          "move_str": "Move(path=(24, 21), captures=(), promotes=False)",
+          "score": 5,
+          "depth": 18,
+          "main_nodes": 812676,
+          "aggregate_nodes": 11029764,
+          "worker_nodes": [
+            812676,
+            801747,
+            983110,
+            978720,
+            793952,
+            1039018,
+            1016631,
+            763904,
+            1044354,
+            780348,
+            976587,
+            1038717
+          ],
+          "nps": 11024198,
+          "elapsed_ms": 1000.5,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "OFF": {
+          "move_str": "Move(path=(24, 21), captures=(), promotes=False)",
+          "score": 7,
+          "depth": 18,
+          "main_nodes": 911265,
+          "aggregate_nodes": 10982576,
+          "worker_nodes": [
+            911265,
+            922446,
+            899916,
+            806427,
+            1049275,
+            772439,
+            920998,
+            1040194,
+            1037002,
+            804772,
+            783360,
+            1034482
+          ],
+          "nps": 10977830,
+          "elapsed_ms": 1000.43,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    },
+    {
+      "position": "tactical",
+      "order": [
+        "OFF",
+        "ON"
+      ],
+      "measurements": {
+        "OFF": {
+          "move_str": "Move(path=(29, 11), captures=(), promotes=False)",
+          "score": -77,
+          "depth": 16,
+          "main_nodes": 1067709,
+          "aggregate_nodes": 11550233,
+          "worker_nodes": [
+            1067709,
+            1036288,
+            746592,
+            1094696,
+            1143778,
+            988660,
+            1071355,
+            750615,
+            752348,
+            737315,
+            1091721,
+            1069156
+          ],
+          "nps": 11545747,
+          "elapsed_ms": 1000.39,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "ON": {
+          "move_str": "Move(path=(29, 11), captures=(), promotes=False)",
+          "score": -108,
+          "depth": 16,
+          "main_nodes": 774670,
+          "aggregate_nodes": 11242305,
+          "worker_nodes": [
+            774670,
+            979446,
+            965029,
+            982319,
+            920205,
+            729471,
+            1132329,
+            1108992,
+            948252,
+            825105,
+            700918,
+            1175569
+          ],
+          "nps": 11234012,
+          "elapsed_ms": 1000.74,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    },
+    {
+      "position": "middlegame",
+      "order": [
+        "ON",
+        "OFF"
+      ],
+      "measurements": {
+        "ON": {
+          "move_str": "Move(path=(26, 23), captures=(), promotes=False)",
+          "score": -97,
+          "depth": 20,
+          "main_nodes": 994862,
+          "aggregate_nodes": 11945462,
+          "worker_nodes": [
+            994862,
+            871657,
+            1056469,
+            1130130,
+            858280,
+            843544,
+            1033478,
+            847988,
+            1039171,
+            1120064,
+            1033659,
+            1116160
+          ],
+          "nps": 11940464,
+          "elapsed_ms": 1000.42,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "OFF": {
+          "move_str": "Move(path=(26, 23), captures=(), promotes=False)",
+          "score": -115,
+          "depth": 19,
+          "main_nodes": 1012911,
+          "aggregate_nodes": 11865694,
+          "worker_nodes": [
+            1012911,
+            816393,
+            1067222,
+            1111441,
+            803840,
+            1051395,
+            1054023,
+            832830,
+            810402,
+            1116492,
+            1096889,
+            1091856
+          ],
+          "nps": 11858952,
+          "elapsed_ms": 1000.57,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    },
+    {
+      "position": "multi_capture",
+      "order": [
+        "OFF",
+        "ON"
+      ],
+      "measurements": {
+        "OFF": {
+          "move_str": "Move(path=(14, 23, 30), captures=(18, 26), promotes=False)",
+          "score": 295,
+          "depth": 19,
+          "main_nodes": 922888,
+          "aggregate_nodes": 13762619,
+          "worker_nodes": [
+            922888,
+            1216312,
+            1317407,
+            903833,
+            885760,
+            1302930,
+            1313114,
+            1231602,
+            1254738,
+            1218664,
+            889329,
+            1306042
+          ],
+          "nps": 13756310,
+          "elapsed_ms": 1000.46,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "ON": {
+          "move_str": "Move(path=(14, 23, 30), captures=(18, 26), promotes=False)",
+          "score": 210,
+          "depth": 19,
+          "main_nodes": 920705,
+          "aggregate_nodes": 13213727,
+          "worker_nodes": [
+            920705,
+            1225091,
+            1287257,
+            1161022,
+            1181333,
+            891029,
+            876677,
+            1233952,
+            1253585,
+            1205218,
+            1149952,
+            827906
+          ],
+          "nps": 13207375,
+          "elapsed_ms": 1000.48,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    },
+    {
+      "position": "endgame_promo",
+      "order": [
+        "ON",
+        "OFF"
+      ],
+      "measurements": {
+        "ON": {
+          "move_str": "Move(path=(4, 0), captures=(), promotes=True)",
+          "score": 0,
+          "depth": 28,
+          "main_nodes": 1534404,
+          "aggregate_nodes": 22792624,
+          "worker_nodes": [
+            1534404,
+            1758741,
+            1806537,
+            1990162,
+            2154087,
+            1864586,
+            2105857,
+            1814344,
+            2146304,
+            1726915,
+            1850849,
+            2039838
+          ],
+          "nps": 22776038,
+          "elapsed_ms": 1000.73,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "OFF": {
+          "move_str": "Move(path=(4, 0), captures=(), promotes=True)",
+          "score": 0,
+          "depth": 32,
+          "main_nodes": 2209750,
+          "aggregate_nodes": 23942204,
+          "worker_nodes": [
+            2209750,
+            2148791,
+            2289386,
+            1435936,
+            2146173,
+            2383872,
+            1677263,
+            2117947,
+            2219425,
+            1545894,
+            1689393,
+            2078374
+          ],
+          "nps": 23922441,
+          "elapsed_ms": 1000.83,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    },
+    {
+      "position": "dense_tactical",
+      "order": [
+        "OFF",
+        "ON"
+      ],
+      "measurements": {
+        "OFF": {
+          "move_str": "Move(path=(16, 12), captures=(), promotes=False)",
+          "score": -52,
+          "depth": 18,
+          "main_nodes": 1069702,
+          "aggregate_nodes": 11314840,
+          "worker_nodes": [
+            1069702,
+            1066708,
+            988160,
+            1001026,
+            1045120,
+            734807,
+            778605,
+            1026456,
+            1017756,
+            806161,
+            994059,
+            786280
+          ],
+          "nps": 11308849,
+          "elapsed_ms": 1000.53,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        },
+        "ON": {
+          "move_str": "Move(path=(16, 12), captures=(), promotes=False)",
+          "score": -65,
+          "depth": 18,
+          "main_nodes": 1023242,
+          "aggregate_nodes": 11350007,
+          "worker_nodes": [
+            1023242,
+            984559,
+            808796,
+            1044467,
+            823988,
+            1033470,
+            995178,
+            806165,
+            820851,
+            998358,
+            1018677,
+            992256
+          ],
+          "nps": 11344562,
+          "elapsed_ms": 1000.48,
+          "shared_hint_entries": 1048576,
+          "shared_hint_allocated_bytes": 50331648
+        }
+      }
+    }
+  ]
+}

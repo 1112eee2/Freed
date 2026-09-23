@@ -61,6 +61,35 @@ class EngineManagerTests(unittest.TestCase):
         self.assertIsNot(em.TB3_SERVICE, mock_service)
         self.assertIs(server.TB3_SERVICE, em.TB3_SERVICE)
 
+    def test_lazy_smp_backend_is_opt_in_and_off_by_default(self) -> None:
+        """Without the opt-in the production backend objects must be unchanged."""
+
+        from makhos.native import NativeLazySmpSearch, NativeSearch
+        from makhos.parallel_native import ParallelNativeSearch
+
+        em.close_global_engine()
+        em.configure_gui_native_search()
+        self.assertIsNone(em.GUI_LAZY_SMP_OVERRIDE)
+
+        production = em.production_native_library()
+        self.assertTrue(production.is_file(), "production native library missing")
+        with em._create_native_search(production, threads=1, hash_mb=16) as single:
+            self.assertIsInstance(single, NativeSearch)
+        with em._create_native_search(production, threads=4, hash_mb=64) as parallel:
+            self.assertIsInstance(parallel, ParallelNativeSearch)
+            self.assertNotIsInstance(parallel, NativeLazySmpSearch)
+
+    def test_engine_config_records_the_lazy_smp_flag_as_the_eighth_field(self) -> None:
+        em.close_global_engine()
+        em.configure_gui_native_search()
+        try:
+            em.get_default_engine(threads=1, hash_mb=16)
+            self.assertEqual(len(em.GLOBAL_ENGINE_CONFIG), 8)
+            self.assertIs(em.GLOBAL_ENGINE_CONFIG[7], False)
+        finally:
+            em.close_global_engine()
+            em.configure_gui_native_search()
+
 
 if __name__ == "__main__":
     unittest.main()

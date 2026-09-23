@@ -1,0 +1,685 @@
+{
+  "measured_at": "2026-09-16T17:02:44Z",
+  "scope": "measurement of the frozen r4 probe; NOT gate evidence, NOT a re-run of the gate",
+  "handoff_probe_sha256": "67f8b7cf54e25e385a314bfa02b3bd71a153a98ec21e7b3218393e120194a19b",
+  "snapshot_verification": "PASS: source hashes, probe hash and exact production extraction",
+  "repeats": 20,
+  "environment": "Linux runnervmlun5p 6.17.0-1022-azure #22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux\n2\n2\nUbuntu clang version 18.1.3 (1ubuntu1)\ngcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nPython 3.12.3\nlibc6:amd64\t2.39-0ubuntu8.9\n",
+  "variants": {
+    "clang_tsan": {
+      "compiler": "clang",
+      "compile": {
+        "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r3-liveness/clang_tsan",
+        "exit_code": 0,
+        "elapsed_seconds": 0.17,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5049==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x5573a1545e33 bp 0x7fc05e7fe7b0 sp 0x7fc05e7fe688 T5050)\n==5049==The signal is caused by a READ memory access.\n==5049==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 2,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5052==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55e591ba7e33 bp 0x7f06d4bfe7b0 sp 0x7f06d4bfe688 T5053)\n==5052==The signal is caused by a READ memory access.\n==5052==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 3,
+          "exit_code": 66,
+          "elapsed_seconds": 0.012,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5055==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x5607f6076e33 bp 0x7fc9bc5fe7b0 sp 0x7fc9bc5fe688 T5056)\n==5055==The signal is caused by a READ memory access.\n==5055==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 4,
+          "exit_code": 66,
+          "elapsed_seconds": 0.012,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "nitizer:DEADLYSIGNAL\n==5059==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55d08a189e33 bp 0x7fc6a63fe7b0 sp 0x7fc6a63fe688 T5060)\n==5059==The signal is caused by a READ memory access.\n==5059==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 5,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5064==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55637f642e33 bp 0x7f4665dfe7b0 sp 0x7f4665dfe688 T5065)\n==5064==The signal is caused by a READ memory access.\n==5064==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 6,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "nitizer:DEADLYSIGNAL\n==5067==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55e127b48e33 bp 0x7f2dab7fe7b0 sp 0x7f2dab7fe688 T5068)\n==5067==The signal is caused by a READ memory access.\n==5067==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 7,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizerThreadSanitizer:DEADLYSIGNAL\n==5081==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55ef3a444e33 bp 0x7fe7d13fc7b0 sp 0x7fe7d13fc688 T5084)\n==5081==The signal is caused by a READ memory access.\n==5081==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 8,
+          "exit_code": 66,
+          "elapsed_seconds": 0.015,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "IGNAL\n==5095==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55dea29b4e33 bp 0x7f7d8d7fe7b0 sp 0x7f7d8d7fe688 T5096)\n==5095==The signal is caused by a READ memory access.\n==5095==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizerThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 9,
+          "exit_code": 66,
+          "elapsed_seconds": 0.017,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ro page.\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 10,
+          "exit_code": 66,
+          "elapsed_seconds": 0.02,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "nitizer:DEADLYSIGNAL\n==5123==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x561917bcee33 bp 0x7fcda63fe7b0 sp 0x7fcda63fe688 T5124)\n==5123==The signal is caused by a READ memory access.\n==5123==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 11,
+          "exit_code": 66,
+          "elapsed_seconds": 0.017,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5128==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x5568f6a39e33 bp 0x7f66ecdfe7b0 sp 0x7f66ecdfe688 T5129)\n==5128==The signal is caused by a READ memory access.\n==5128==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 12,
+          "exit_code": 66,
+          "elapsed_seconds": 0.017,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizerThreadSanitizer:DEADLYSIGNAL\n==5142==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x56410c4d6e33 bp 0x7fdd1cbfd7b0 sp 0x7fdd1cbfd688 T5144)\n==5142==The signal is caused by a READ memory access.\n==5142==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 13,
+          "exit_code": 66,
+          "elapsed_seconds": 0.021,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5156==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x563af511fe33 bp 0x7f5d0d1fe7b0 sp 0x7f5d0d1fe688 T5157)\n==5156==The signal is caused by a READ memory access.\n==5156==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 14,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizerThreadSanitizer:DEADLYSIGNAL\n==5164==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x5624e4f2be33 bp 0x7fda51ffd7b0 sp 0x7fda51ffd688 T5166)\n==5164==The signal is caused by a READ memory access.\n==5164==Hint: address points to the zero page.\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 15,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5168==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x556f5bda6e33 bp 0x7f7d391fe7b0 sp 0x7f7d391fe688 T5169)\n==5168==The signal is caused by a READ memory access.\n==5168==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 16,
+          "exit_code": 66,
+          "elapsed_seconds": 0.017,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "on unknown address 0x000000000018 (pc 0x55bd74ffde33 bp 0x7f4ec4bfb7b0 sp 0x7f4ec4bfb688 T5176)\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\n==5172==The signal is caused by a READ memory access.\n==5172==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 17,
+          "exit_code": 66,
+          "elapsed_seconds": 0.015,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5186==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x558018be3e33 bp 0x7fb986ffb7b0 sp 0x7fb986ffb688 T5190)\n==5186==The signal is caused by a READ memory access.\n==5186==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 18,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "SIGNAL\n:DEADLYSIGNAL\n==5200==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x563542d52e33 bp 0x7fe0ca5fe7b0 sp 0x7fe0ca5fe688 T5201)\n==5200==The signal is caused by a READ memory access.\n==5200==Hint: address points to the zero page.\nThreadSanitizerThreadSanitizer:DEADLYSIGNAL\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 19,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5206==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55f2e3633e33 bp 0x7f7c75dfe7b0 sp 0x7f7c75dfe688 T5207)\n==5206==The signal is caused by a READ memory access.\n==5206==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 20,
+          "exit_code": 66,
+          "elapsed_seconds": 0.016,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5220==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x55c6524e0e33 bp 0x7f2e795fc7b0 sp 0x7f2e795fc688 T5223)\n==5220==The signal is caused by a READ memory access.\n==5220==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        }
+      ],
+      "binary_sha256": "88bc6ab2450abc65d476f90cb6db448d6a4299767df88dbe8343d373c863c8f0",
+      "status": "MEASURED",
+      "pass_count": 0,
+      "pass_rate": 0.0,
+      "accepted_values": [],
+      "accepted_min": null,
+      "accepted_max": null,
+      "liveness_assertion_failures": 0,
+      "outcome_breakdown": {
+        "other exit 66": 20
+      }
+    },
+    "gcc_tsan": {
+      "compiler": "gcc",
+      "compile": {
+        "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r3-liveness/gcc_tsan",
+        "exit_code": 0,
+        "elapsed_seconds": 0.075,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": 66,
+          "elapsed_seconds": 0.012,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5239==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fcfb02b3f90 bp 0x7fcfacffe7b0 sp 0x7fcfacffe698 T5240)\n==5239==The signal is caused by a READ memory access.\n==5239==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 2,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5242==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fc45dcb3f90 bp 0x7fc45a9fe7b0 sp 0x7fc45a9fe698 T5243)\n==5242==The signal is caused by a READ memory access.\n==5242==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 3,
+          "exit_code": 66,
+          "elapsed_seconds": 0.012,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "nitizerThreadSanitizer:DEADLYSIGNAL\n==5245==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7ff0e82b3f90 bp 0x7ff0e2ffc7b0 sp 0x7ff0e2ffc698 T5248)\n==5245==The signal is caused by a READ memory access.\n==5245==Hint: address points to the zero page.\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 4,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5259==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f3415eb3f90 bp 0x7f3412bfe7b0 sp 0x7f3412bfe698 T5260)\n==5259==The signal is caused by a READ memory access.\n==5259==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 5,
+          "exit_code": 66,
+          "elapsed_seconds": 0.015,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "Sanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 6,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5277==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f2af44b3f90 bp 0x7f2af11fe7b0 sp 0x7f2af11fe698 T5278)\n==5277==The signal is caused by a READ memory access.\n==5277==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 7,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ess.\n==5280==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 8,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5294==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f3d91eb3f90 bp 0x7f3d8ebfe7b0 sp 0x7f3d8ebfe698 T5295)\n==5294==The signal is caused by a READ memory access.\n==5294==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 9,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fcb0fcb3f90 bp 0x7fcb0c9fe7b0 sp 0x7fcb0c9fe698 T5298)\n==5297==The signal is caused by a READ memory access.\n==5297==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 10,
+          "exit_code": 66,
+          "elapsed_seconds": 0.011,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5311==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f0027cb3f90 bp 0x7f00249fe7b0 sp 0x7f00249fe698 T5312)\n==5311==The signal is caused by a READ memory access.\n==5311==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 11,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5314==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f04d7eb3f90 bp 0x7f04d4bfe7b0 sp 0x7f04d4bfe698 T5315)\n==5314==The signal is caused by a READ memory access.\n==5314==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 12,
+          "exit_code": 66,
+          "elapsed_seconds": 0.014,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5317==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fddee6b3f90 bp 0x7fddeb3fe7b0 sp 0x7fddeb3fe698 T5318)\n==5317==The signal is caused by a READ memory access.\n==5317==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 13,
+          "exit_code": 66,
+          "elapsed_seconds": 0.016,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ess.\n==5321==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizerThreadSanitizer:DEADLYSIGNAL\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizerThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\n:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 14,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5335==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7fa264eb3f90 bp 0x7fa261bfe7b0 sp 0x7fa261bfe698 T5336)\n==5335==The signal is caused by a READ memory access.\n==5335==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 15,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "Sanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 16,
+          "exit_code": 66,
+          "elapsed_seconds": 0.01,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5363==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f2678ab3f90 bp 0x7f26757fe7b0 sp 0x7f26757fe698 T5364)\n==5363==The signal is caused by a READ memory access.\n==5363==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 17,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "nitizer:DEADLYSIGNAL\n==5366==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f03e1ab3f90 bp 0x7f03db7fb7b0 sp 0x7f03db7fb698 T5370)\n==5366==The signal is caused by a READ memory access.\n==5366==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 18,
+          "exit_code": 66,
+          "elapsed_seconds": 0.012,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "ThreadSanitizer:DEADLYSIGNAL\n==5372==ERROR: ThreadSanitizer: SEGV on unknown address 0x000000000018 (pc 0x7f6a52eb3f90 bp 0x7f6a4fbfe7b0 sp 0x7f6a4fbfe698 T5373)\n==5372==The signal is caused by a READ memory access.\n==5372==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 19,
+          "exit_code": 66,
+          "elapsed_seconds": 0.013,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "5==The signal is caused by a READ memory access.\n==5375==Hint: address points to the zero page.\n:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizerThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\n:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        },
+        {
+          "index": 20,
+          "exit_code": 66,
+          "elapsed_seconds": 0.015,
+          "accepted": null,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "7f051b5fe7b0 sp 0x7f051b5fe698 T5390)\n==5389==The signal is caused by a READ memory access.\n==5389==Hint: address points to the zero page.\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer:DEADLYSIGNAL\nThreadSanitizer: nested bug in the same thread, aborting.\n"
+        }
+      ],
+      "binary_sha256": "c3f43d1f47d54d5d141cac1005ada97fb800d71a0bed1416b825d497fc08bd2d",
+      "status": "MEASURED",
+      "pass_count": 0,
+      "pass_rate": 0.0,
+      "accepted_values": [],
+      "accepted_min": null,
+      "accepted_max": null,
+      "liveness_assertion_failures": 0,
+      "outcome_breakdown": {
+        "other exit 66": 20
+      }
+    },
+    "clang_plain": {
+      "compiler": "clang",
+      "compile": {
+        "command": "clang -std=c17 -O1 -g -pthread probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/build/r3-liveness/clang_plain",
+        "exit_code": 0,
+        "elapsed_seconds": 0.078,
+        "stderr": ""
+      },
+      "runs": [
+        {
+          "index": 1,
+          "exit_code": -6,
+          "elapsed_seconds": 0.176,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 2,
+          "exit_code": -6,
+          "elapsed_seconds": 0.311,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 3,
+          "exit_code": 0,
+          "elapsed_seconds": 0.018,
+          "accepted": 185367,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=185367\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 4,
+          "exit_code": -6,
+          "elapsed_seconds": 0.175,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 5,
+          "exit_code": -6,
+          "elapsed_seconds": 0.44,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 6,
+          "exit_code": 0,
+          "elapsed_seconds": 0.013,
+          "accepted": 1029,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=1029\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 7,
+          "exit_code": -6,
+          "elapsed_seconds": 0.253,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 8,
+          "exit_code": -6,
+          "elapsed_seconds": 0.376,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 9,
+          "exit_code": -6,
+          "elapsed_seconds": 0.412,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 10,
+          "exit_code": -6,
+          "elapsed_seconds": 0.468,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 11,
+          "exit_code": -6,
+          "elapsed_seconds": 0.391,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 12,
+          "exit_code": 0,
+          "elapsed_seconds": 0.018,
+          "accepted": 309906,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=309906\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 13,
+          "exit_code": -6,
+          "elapsed_seconds": 0.21,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 14,
+          "exit_code": -6,
+          "elapsed_seconds": 0.357,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 15,
+          "exit_code": -6,
+          "elapsed_seconds": 0.35,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 16,
+          "exit_code": -6,
+          "elapsed_seconds": 0.338,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 17,
+          "exit_code": -6,
+          "elapsed_seconds": 0.334,
+          "accepted": null,
+          "aborting_assertion": "move.captured_low == ~move.path_low",
+          "liveness_assertion": false,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:114: int collide(void *): Assertion `move.captured_low == ~move.path_low' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 18,
+          "exit_code": -6,
+          "elapsed_seconds": 0.266,
+          "accepted": null,
+          "aborting_assertion": "atomic_load(&accepted) > 0",
+          "liveness_assertion": true,
+          "stdout": "",
+          "stderr_tail": "clang_plain: probe.c:147: int main(void): Assertion `atomic_load(&accepted) > 0' failed.\ntimeout: the monitored command dumped core\n"
+        },
+        {
+          "index": 19,
+          "exit_code": 0,
+          "elapsed_seconds": 0.013,
+          "accepted": 521,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=521\n",
+          "stderr_tail": ""
+        },
+        {
+          "index": 20,
+          "exit_code": 0,
+          "elapsed_seconds": 0.011,
+          "accepted": 15274,
+          "aborting_assertion": null,
+          "liveness_assertion": false,
+          "stdout": "production publication: 1200000 operations PASS; accepted=15274\n",
+          "stderr_tail": ""
+        }
+      ],
+      "binary_sha256": "5bb665c29735a7febb274c0b8522d73f894bcc27fe6852a550360aff773fa1ca",
+      "status": "MEASURED",
+      "pass_count": 5,
+      "pass_rate": 0.25,
+      "accepted_values": [
+        185367,
+        1029,
+        309906,
+        521,
+        15274
+      ],
+      "accepted_min": 521,
+      "accepted_max": 309906,
+      "liveness_assertion_failures": 6,
+      "outcome_breakdown": {
+        "assert: atomic_load(&accepted) > 0": 6,
+        "pass": 5,
+        "assert: move.captured_low == ~move.path_low": 9
+      }
+    }
+  },
+  "conclusion": "A pass rate strictly between 0 and 1 with a wide accepted spread indicates a timing-dependent liveness property rather than a deterministic protocol failure. A rate of exactly 0 across every variant would point at something systematic and would need a different explanation."
+}

@@ -54,6 +54,22 @@ class BuildOrchestratorTests(unittest.TestCase):
                 )
                 self.assertIn("verified", proc.stdout.lower())
 
+    def test_verify_only_loads_hash_cmdlet_without_module_autoload(self):
+        quoted_path = str(ORCHESTRATOR).replace("'", "''")
+        script = (
+            "$ErrorActionPreference = 'Stop'; "
+            "$PSModuleAutoLoadingPreference = 'None'; "
+            "Import-Module Microsoft.PowerShell.Management; "
+            f"& '{quoted_path}' "
+            "-Variant nnue_scalar -VerifyOnly; exit $LASTEXITCODE"
+        )
+        proc = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
+            capture_output=True, text=True, cwd=str(ROOT), timeout=60,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assertIn("verified", proc.stdout.lower())
+
     def test_strict_key_requires_nnue_search_variant(self):
         proc = self.run_pwsh("-Variant", "native", "-StrictSearchKey", "-VerifyOnly")
         self.assertNotEqual(proc.returncode, 0)

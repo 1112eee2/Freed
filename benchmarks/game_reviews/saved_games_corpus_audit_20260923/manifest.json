@@ -1,0 +1,79 @@
+{
+  "format": "thai-makhos-saved-game-replay-audit-v1",
+  "audit_date": "2026-09-23",
+  "verification": {
+    "api": "makhos.game_analysis.load_game_record + replay_game",
+    "rules_profile": "project / DEFAULT_RULES",
+    "legal_replay": "PASS",
+    "position_history_matches_replay": true,
+    "final_position_matches_replay": true,
+    "final_reversible_plies_matches_replay": true,
+    "games": 3,
+    "plies": 197,
+    "history_positions": 200,
+    "mismatches": 0,
+    "engine_search_run": false
+  },
+  "engine_identity_rechecked": {
+    "native_library_sha256": "32c323026a7f78ccd9c4013fc3067422a564ee3d0a6ade4f1ce5c62356747e79",
+    "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+    "accepted_dll_sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd",
+    "candidate_is_accepted_dll": false
+  },
+  "games": [
+    {
+      "game_id": "e26872d254ea0041",
+      "file": "../../../saved_games/game_20260910T100622444604Z_d8152e3d548846bb91d963c3559c152f.json",
+      "sha256": "57dbeb7b304ade200de8889f2d70db062ba0d4605d546fb3ecd57bf27f7f4c29",
+      "plies": 81,
+      "history_positions": 82,
+      "engine_side": "black",
+      "engine_plies": 41,
+      "human_plies": 40,
+      "result": {"source": "rules", "winner": "black", "reason": "no_legal_move"},
+      "rules_result": {"terminal": true, "winner": "black", "reason": "no_legal_move"},
+      "final_reversible_plies": 0,
+      "search_backends": {"native-root-split": 23, "forced": 6, "native-endgame": 12},
+      "triage": "completed engine win; detailed review already exists"
+    },
+    {
+      "game_id": "6ef62f9998d12db4",
+      "file": "../../../saved_games/game_20260912T171858412589Z_b1154bad339246e7b40645405267ce23.json",
+      "sha256": "c29c19722c258bf4420e3d203b1562ab578251d46e7581bbc1e9572521f2efee",
+      "plies": 62,
+      "history_positions": 63,
+      "engine_side": "red",
+      "engine_plies": 31,
+      "human_plies": 31,
+      "result": {"source": "user", "winner": "black", "reason": "user_adjudication"},
+      "rules_result": {"terminal": false, "winner": null, "reason": "ongoing"},
+      "final_reversible_plies": 3,
+      "search_backends": {"native-root-split": 13, "forced": 5, "native-endgame": 13},
+      "last_engine_decision": {"ply": 62, "move": "23-5", "score": -271, "wdl": "LOSS..DRAW", "depth": 9, "nodes": 5769794, "tablebase_hits": 5735498, "elapsed_ms": 5021, "interpretation": "recorded pre-move root result only"},
+      "triage": "highest-priority development review; adjudicated loss, not a rules loss"
+    },
+    {
+      "game_id": "f65be3eb5558f9af",
+      "file": "../../../saved_games/game_20260917T151144328433Z_6a0e5e9f491c4ef0b857a7016e643ada.json",
+      "sha256": "0e6d37fab9379ae1aee127d3b66837113467ef937a402599f90e99482de60096",
+      "plies": 54,
+      "history_positions": 55,
+      "engine_side": "red",
+      "engine_plies": 27,
+      "human_plies": 27,
+      "result": {"source": "user", "winner": null, "reason": "user_adjudication"},
+      "rules_result": {"terminal": false, "winner": null, "reason": "ongoing"},
+      "final_reversible_plies": 4,
+      "search_backends": {"native-root-split": 19, "forced": 5, "native-endgame": 3},
+      "last_engine_decision": {"ply": 54, "move": "9-5", "score": 0, "wdl": "DRAW", "depth": 9, "nodes": 189208, "tablebase_hits": 174932, "elapsed_ms": 1011, "interpretation": "recorded pre-move root result only"},
+      "triage": "hold/control review; adjudicated draw, not a rules draw"
+    }
+  ],
+  "scope_limitations": [
+    "Replay verification establishes legal recorded transitions, not move quality.",
+    "User adjudications are annotations and are not proof of a win/loss/draw.",
+    "Search WDL/score is bound to the recorded pre-move root and is not a solved game result.",
+    "These previously observed games are development/regression material, not held-out acceptance evidence.",
+    "No paired strength test, promotion, or external comparison was run."
+  ]
+}

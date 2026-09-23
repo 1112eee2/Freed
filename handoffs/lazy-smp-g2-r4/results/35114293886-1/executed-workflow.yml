@@ -1,0 +1,62 @@
+name: Lazy SMP r4 pthread ThreadSanitizer
+
+# Temporary evidence-collection workflow for the r4 pthread race-detector handoff.
+# Archive this file as handoffs/lazy-smp-g2-r4/results/<run-id>/executed-workflow.yml
+# and remove it from the branch tree once the evidence is returned, so the final
+# r4 diff contains only the handoff and its results.
+#
+# The GitHub job succeeding is NOT a TSan PASS. It only means the evidence was
+# collected. The reviewed classification is decided by Windows Local.
+
+on:
+  push:
+    branches: [codex/astra-g2-r4-pthread-handoff]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r4-tsan-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publication:
+    name: Clang/GCC TSan / ubuntu-24.04
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install Clang TSan, GCC and debugger
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang libclang-rt-18-dev gcc gdb
+      - name: Run the frozen r4 handoff collector
+        working-directory: handoffs/lazy-smp-g2-r4
+        run: python3 collect.py "${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Show the raw reviewed summary
+        if: always()
+        working-directory: handoffs/lazy-smp-g2-r4
+        run: |
+          for f in results/*/result.json; do
+            echo "== $f"
+            cat "$f"
+          done
+      - name: Archive the workflow actually used
+        if: always()
+        working-directory: handoffs/lazy-smp-g2-r4
+        run: |
+          for d in results/*/; do
+            cp ../../.github/workflows/lazy-smp-tsan-r4.yml "$d/executed-workflow.yml"
+          done
+      - name: Upload evidence only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: r4-tsan-evidence
+          path: |
+            handoffs/lazy-smp-g2-r4/results/**
+            !handoffs/lazy-smp-g2-r4/results/**/binaries/**
+          if-no-files-found: error

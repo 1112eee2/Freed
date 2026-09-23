@@ -36,7 +36,7 @@ from .workload_isolation import InteractiveSessionLease
 from .game_records import MAX_RECORD_BYTES, save_game_record
 from .search_profile import RequestProfiler
 from .endgame_routing import is_native_endgame_position
-from .native import NativeSearch
+from .native import NativeLazySmpSearch, NativeSearch
 from .gui_release import DEFAULT_POINTER, load_release
 
 # Import authoritative engine manager
@@ -153,7 +153,11 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                     native = engine.native_search
                     self.send_json({
                         **engine_manager.engine_search_provenance(engine),
-                        "configured_backend": "native-root-split" if isinstance(native, ParallelNativeSearch) else "native-single" if native else "unavailable",
+                        "configured_backend": (
+                            "native-lazy-smp" if isinstance(native, NativeLazySmpSearch)
+                            else "native-root-split" if isinstance(native, ParallelNativeSearch)
+                            else "native-single" if native else "unavailable"
+                        ),
                         "threads": engine_manager.GLOBAL_ENGINE_CONFIG[0], "hash_mb": engine_manager.GLOBAL_ENGINE_CONFIG[1],
                         "hash_allocated_mb": getattr(native, "allocated_hash_mb", 0),
                         "ranked_tablebase_pieces": sorted(engine.ranked_tablebases),
@@ -476,6 +480,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             worker_count = (
                 len(engine.native_search._workers)
                 if isinstance(engine.native_search, ParallelNativeSearch)
+                else int(getattr(engine.native_search, "threads", 1) or 1)
+                if isinstance(engine.native_search, NativeLazySmpSearch)
                 else (1 if engine.native_search else 0)
             )
             resource_snapshot = {
@@ -490,7 +496,8 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 "search_thread_capacity": (
                     provenance.get("native_endgame_threads", 1)
                     if provenance.get("search_backend") == "native-endgame"
-                    else worker_count if provenance.get("search_backend") == "native-root-split"
+                    else worker_count
+                    if provenance.get("search_backend") in ("native-root-split", "native-lazy-smp")
                     else 0 if provenance.get("search_backend") == "forced" else 1
                 ),
             }
@@ -564,6 +571,7 @@ def run_server(
     nnue_model: str | Path | None = None,
     native_endgame: bool = DEFAULT_NATIVE_ENDGAME_ENABLED,
     native_endgame_library: str | Path | None = None,
+    lazy_smp: bool | None = None,
     release_pointer: str | Path | None = None,
     release_profile: str | None = None,
 ) -> None:
@@ -580,6 +588,7 @@ def run_server(
         nnue_model,
         native_endgame=native_endgame,
         native_endgame_library=native_endgame_library,
+        lazy_smp=lazy_smp,
     )
     engine_manager.GUI_RELEASE = release
     if release is not None:

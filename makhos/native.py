@@ -135,6 +135,9 @@ class _LazySmpStats(ctypes.Structure):
         ("leader_depth", ctypes.c_uint32),
         ("worker_nodes", ctypes.c_uint64 * _NATIVE_LAZY_SMP_MAX_THREADS),
         ("worker_depth", ctypes.c_uint32 * _NATIVE_LAZY_SMP_MAX_THREADS),
+        ("shared_hint_allocated_bytes", ctypes.c_uint64),
+        ("shared_hint_entries", ctypes.c_uint64),
+        ("private_tt_allocated_bytes", ctypes.c_uint64),
     ]
 
 
@@ -344,6 +347,9 @@ class NativeLazySmpStats:
     leader_depth: int
     worker_nodes: tuple[int, ...]
     worker_depth: tuple[int, ...]
+    shared_hint_allocated_bytes: int = 0
+    shared_hint_entries: int = 0
+    private_tt_allocated_bytes: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -380,6 +386,9 @@ def _unpack_lazy_smp_stats(raw: _LazySmpStats) -> NativeLazySmpStats:
         leader_depth=int(raw.leader_depth),
         worker_nodes=tuple(int(raw.worker_nodes[index]) for index in range(threads)),
         worker_depth=tuple(int(raw.worker_depth[index]) for index in range(threads)),
+        shared_hint_allocated_bytes=int(raw.shared_hint_allocated_bytes),
+        shared_hint_entries=int(raw.shared_hint_entries),
+        private_tt_allocated_bytes=int(raw.private_tt_allocated_bytes),
     )
 
 
@@ -1525,6 +1534,7 @@ class NativeLazySmpSearch:
         *,
         threads: int,
         hash_mb: int,
+        nnue_model: str | Path | None = None,
     ) -> None:
         if not 1 <= threads <= _NATIVE_LAZY_SMP_MAX_THREADS:
             raise ValueError("lazy SMP threads must be in 1..12")
@@ -1534,9 +1544,15 @@ class NativeLazySmpSearch:
         self.threads = threads
         self.requested_hash_mb = hash_mb
         self._library = ctypes.CDLL(str(self.path.resolve()))
-        self._lock = threading.RLock()
+        self._search_lock = threading.Lock()
+        self._lifecycle_lock = threading.Lock()
         self._handle: int | None = None
         self._closed = False
+        self.nnue_enabled = False
+        self.nnue_model_path: Path | None = None
+        self.nnue_model_sha256: str | None = None
+        self.nnue_source_model_sha256: str | None = None
+        self.nnue_feature_abi: str | None = None
         required = (
             "makhos_lazy_smp_available",
             "makhos_lazy_smp_create",
@@ -1556,6 +1572,7 @@ class NativeLazySmpSearch:
                 "native search ABI mismatch: expected "
                 f"{MIN_SEARCH_ABI_VERSION}..{SEARCH_ABI_VERSION}, got {self.abi_version}"
             )
+        self._configure_nnue_candidate(nnue_model)
         self.tt_entry_bytes = native_tt_entry_bytes(self.path)
         self.hash_power = hash_power_for_megabytes(
             hash_mb,
@@ -1570,13 +1587,80 @@ class NativeLazySmpSearch:
         self._configure_signatures()
         if not self._library.makhos_lazy_smp_available():
             raise RuntimeError("native Lazy-SMP is unavailable in this DLL")
-        handle = self._library.makhos_lazy_smp_create(
-            self.threads,
-            self.hash_power,
-        )
+        if hasattr(self._library, "makhos_lazy_smp_create_budgeted"):
+            handle = self._library.makhos_lazy_smp_create_budgeted(
+                self.threads, self.hash_power, int(hash_mb * 1024 * 1024),
+            )
+        else:
+            handle = self._library.makhos_lazy_smp_create(self.threads, self.hash_power)
         if not handle:
             raise RuntimeError("native Lazy-SMP allocation failed")
         self._handle = int(handle)
+        stats = self.stats
+        tt_bytes = stats.private_tt_allocated_bytes + stats.shared_hint_allocated_bytes
+        if tt_bytes > hash_mb * 1024 * 1024:
+            self.close()
+            raise RuntimeError("native Lazy-SMP allocation exceeds requested Hash; rebuild candidate")
+        self.allocated_hash_mb = tt_bytes / (1024 * 1024)
+
+    def _configure_nnue_candidate(self, model: str | Path | None) -> None:
+        library = self._library
+        candidate = all(
+            hasattr(library, name)
+            for name in (
+                "makhos_search_nnue_load_model",
+                "makhos_search_nnue_ready",
+                "makhos_search_nnue_feature_abi",
+                "makhos_search_nnue_model_sha256",
+                "makhos_search_nnue_source_model_sha256",
+                "makhos_search_nnue_last_error",
+            )
+        )
+        if not candidate:
+            if model is not None:
+                raise ValueError("nnue_model requires an NNUE candidate DLL")
+            return
+        if model is None:
+            raise ValueError("NNUE candidate DLL requires an explicit nnue_model")
+        path = Path(model)
+        if not path.is_file():
+            raise FileNotFoundError(f"NNUE model not found: {path}")
+        library.makhos_search_nnue_load_model.argtypes = [ctypes.c_char_p]
+        library.makhos_search_nnue_load_model.restype = ctypes.c_int
+        library.makhos_search_nnue_ready.argtypes = []
+        library.makhos_search_nnue_ready.restype = ctypes.c_int
+        for name in (
+            "makhos_search_nnue_feature_abi",
+            "makhos_search_nnue_model_sha256",
+            "makhos_search_nnue_source_model_sha256",
+            "makhos_search_nnue_last_error",
+        ):
+            function = getattr(library, name)
+            function.argtypes = []
+            function.restype = ctypes.c_char_p
+        status = int(
+            library.makhos_search_nnue_load_model(
+                str(path.resolve()).encode("utf-8")
+            )
+        )
+        if status != 0 or not library.makhos_search_nnue_ready():
+            encoded = library.makhos_search_nnue_last_error()
+            detail = encoded.decode("utf-8", errors="replace") if encoded else ""
+            raise RuntimeError(
+                f"NNUE candidate model load failed ({status})"
+                + (f": {detail}" if detail else "")
+            )
+        self.nnue_enabled = True
+        self.nnue_model_path = path.resolve()
+        self.nnue_model_sha256 = (
+            library.makhos_search_nnue_model_sha256().decode("ascii")
+        )
+        self.nnue_source_model_sha256 = (
+            library.makhos_search_nnue_source_model_sha256().decode("ascii")
+        )
+        self.nnue_feature_abi = (
+            library.makhos_search_nnue_feature_abi().decode("ascii")
+        )
 
     def _configure_signatures(self) -> None:
         library = self._library
@@ -1584,6 +1668,11 @@ class NativeLazySmpSearch:
         library.makhos_lazy_smp_available.restype = ctypes.c_int
         library.makhos_lazy_smp_create.argtypes = [ctypes.c_int, ctypes.c_int]
         library.makhos_lazy_smp_create.restype = ctypes.c_void_p
+        if hasattr(library, "makhos_lazy_smp_create_budgeted"):
+            library.makhos_lazy_smp_create_budgeted.argtypes = [
+                ctypes.c_int, ctypes.c_int, ctypes.c_uint64,
+            ]
+            library.makhos_lazy_smp_create_budgeted.restype = ctypes.c_void_p
         library.makhos_lazy_smp_destroy.argtypes = [ctypes.c_void_p]
         library.makhos_lazy_smp_destroy.restype = None
         library.makhos_lazy_smp_clear.argtypes = [ctypes.c_void_p]
@@ -1611,6 +1700,16 @@ class NativeLazySmpSearch:
             ctypes.POINTER(_LazySmpStats),
         ]
         library.makhos_lazy_smp_stats.restype = ctypes.c_int
+        if hasattr(library, "makhos_lazy_smp_stop"):
+            library.makhos_lazy_smp_stop.argtypes = [ctypes.c_void_p]
+            library.makhos_lazy_smp_stop.restype = ctypes.c_int
+
+    def stop(self) -> None:
+        with self._lifecycle_lock:
+            if self._closed or self._handle is None:
+                return
+            if hasattr(self._library, "makhos_lazy_smp_stop"):
+                self._library.makhos_lazy_smp_stop(self._handle)
 
     def _require_open(self) -> None:
         if self._closed or self._handle is None:
@@ -1623,19 +1722,21 @@ class NativeLazySmpSearch:
 
     @property
     def memory_bytes(self) -> int:
-        with self._lock:
+        with self._search_lock:
+            with self._lifecycle_lock:
+                handle = self._require_handle()
             return int(
-                self._library.makhos_lazy_smp_memory_bytes(
-                    self._require_handle()
-                )
+                self._library.makhos_lazy_smp_memory_bytes(handle)
             )
 
     @property
     def stats(self) -> NativeLazySmpStats:
         raw = _LazySmpStats()
-        with self._lock:
+        with self._search_lock:
+            with self._lifecycle_lock:
+                handle = self._require_handle()
             status = self._library.makhos_lazy_smp_stats(
-                self._require_handle(),
+                handle,
                 ctypes.byref(raw),
             )
         if status != 0:
@@ -1643,19 +1744,23 @@ class NativeLazySmpSearch:
         return _unpack_lazy_smp_stats(raw)
 
     def clear(self) -> None:
-        with self._lock:
-            status = self._library.makhos_lazy_smp_clear(self._require_handle())
+        with self._search_lock:
+            with self._lifecycle_lock:
+                handle = self._require_handle()
+            status = self._library.makhos_lazy_smp_clear(handle)
         if status != 0:
             raise RuntimeError(f"native Lazy-SMP clear failed ({status})")
 
     def close(self) -> None:
-        with self._lock:
-            if self._closed:
-                return
-            if self._handle is not None:
-                self._library.makhos_lazy_smp_destroy(self._handle)
-                self._handle = None
-            self._closed = True
+        self.stop()
+        with self._search_lock:
+            with self._lifecycle_lock:
+                if self._closed:
+                    return
+                if self._handle is not None:
+                    self._library.makhos_lazy_smp_destroy(self._handle)
+                    self._handle = None
+                self._closed = True
 
     def __enter__(self) -> "NativeLazySmpSearch":
         return self
@@ -1697,9 +1802,11 @@ class NativeLazySmpSearch:
                 (ctypes.c_uint8 * 2)(0, 0),
             )
         result = _SearchResult()
-        with self._lock:
+        with self._search_lock:
+            with self._lifecycle_lock:
+                handle = self._require_handle()
             status = self._library.makhos_lazy_smp_run(
-                self._require_handle(),
+                handle,
                 red,
                 black,
                 kings,
