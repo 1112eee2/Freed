@@ -1,0 +1,113 @@
+{
+  "format": "thai-makhos-strength-loop-review-v1",
+  "goal": "เพิ่มความแข็งแกร่งจาก baseline ด้วยหลักฐาน",
+  "review_date": "2026-09-23",
+  "main_base_commit": "a0f79645d9803680a6aa42ae910d49dee1d89f52",
+  "source_evidence": {
+    "commit": "7cca706377f5e963431fc0f251b91add8673a136",
+    "path": "benchmarks/game_reviews/saved_games_corpus_audit_20260923/analysis_6ef_ply8_10_12_12t.json",
+    "git_blob_sha": "095ae834508de7b2de824a08f568e3fcd856024b"
+  },
+  "status": "DIAGNOSTIC_SIGNAL_ONLY",
+  "engine_executed_this_review": false,
+  "elo_gain_established": false,
+  "game_id": "6ef62f9998d12db4",
+  "library_sha256": "32c323026a7f78ccd9c4013fc3067422a564ee3d0a6ade4f1ce5c62356747e79",
+  "model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+  "signals": [
+    {
+      "ply": 8,
+      "played_move": "7-10",
+      "source_classification": "stable",
+      "provenance_issues": [],
+      "provenance_mismatches": [],
+      "observations": [
+        {
+          "budget_ms": 5000,
+          "depth": 22,
+          "chosen_move": "7-10",
+          "chosen_score": -16,
+          "played_score": -16,
+          "within_search_score_gap": 0
+        },
+        {
+          "budget_ms": 10000,
+          "depth": 23,
+          "chosen_move": "7-10",
+          "chosen_score": -17,
+          "played_score": -17,
+          "within_search_score_gap": 0
+        }
+      ]
+    },
+    {
+      "ply": 10,
+      "played_move": "3-7",
+      "source_classification": "settings-or-version-mismatch",
+      "provenance_issues": [],
+      "provenance_mismatches": [],
+      "observations": [
+        {
+          "budget_ms": 5000,
+          "depth": 23,
+          "chosen_move": "5-9",
+          "chosen_score": -59,
+          "played_score": -119,
+          "within_search_score_gap": 60
+        },
+        {
+          "budget_ms": 10000,
+          "depth": 24,
+          "chosen_move": "4-8",
+          "chosen_score": -65,
+          "played_score": -134,
+          "within_search_score_gap": 69
+        }
+      ]
+    },
+    {
+      "ply": 12,
+      "played_move": "5-9",
+      "source_classification": "long-horizon-divergence",
+      "provenance_issues": [],
+      "provenance_mismatches": [],
+      "observations": [
+        {
+          "budget_ms": 5000,
+          "depth": 24,
+          "chosen_move": "5-9",
+          "chosen_score": -157,
+          "played_score": -157,
+          "within_search_score_gap": 0
+        },
+        {
+          "budget_ms": 10000,
+          "depth": 25,
+          "chosen_move": "1-6",
+          "chosen_score": -172,
+          "played_score": -291,
+          "within_search_score_gap": 119
+        }
+      ]
+    }
+  ],
+  "conclusions": {
+    "confirmed": [
+      "Stored fresh searches and root alternatives already exist; do not rerun merely because README still says pending.",
+      "At ply 10 the recorded move scores 60 and 69 engine-score units below the selected move within the two stored fresh searches.",
+      "At ply 12 the selected move changes between 5 and 10 seconds; the recorded move is 119 units below the selected move at 10 seconds.",
+      "The JSON reports no provenance mismatches in these three positions."
+    ],
+    "not_established": [
+      "Solved outcome, optimal move, causal source of the game result or Elo change.",
+      "That the heuristic settings-or-version-mismatch classification at ply 10 proves an identity mismatch.",
+      "That nodes in qsearch equal CPU time or justify reviving an unchanged rejected optimization.",
+      "Repeatability, warm-state influence, search selectivity cause, or evaluation defect."
+    ]
+  },
+  "next_action_id": "BASELINE_HORIZON_01",
+  "next_action_status": "READY_FOR_LOCAL_EXECUTION",
+  "web_execution_status": "BLOCKED_ON_LOCAL_DLL_MODEL_AND_WINDOWS",
+  "g2": "NOT_PASSED",
+  "lazy_smp_candidate": "REJECT_FOR_PERFORMANCE / NOT_PROMOTED"
+}
