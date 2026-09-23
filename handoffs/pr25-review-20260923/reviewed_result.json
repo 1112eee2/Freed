@@ -1,0 +1,278 @@
+{
+  "format": "thai-makhos-pr25-r5-reviewed-v1",
+  "reviewed_pr": 25,
+  "reviewed_commit": "7cca706377f5e963431fc0f251b91add8673a136",
+  "verdict": "CHANGES_REQUIRED_DO_NOT_MERGE",
+  "frozen_r5_commit": "0ced9eb2759ccd0dbe2541b07b0609301c80e317",
+  "executed_commit": "3be0dc96505571f0d7d08c2f20d923dd2721d925",
+  "workflow_run": 35870928227,
+  "attempt": 1,
+  "workflow_url": "https://github.com/1112eee2/ThaiMakhosEngine/actions/runs/35870928227",
+  "raw_result": "../../lazy-smp-g2-r5/results/linux-35870928227-1/result.json",
+  "linux_status": "INCOMPLETE_COVERAGE",
+  "windows_frozen_status": "INCOMPLETE_COVERAGE",
+  "g2": "NOT_PASSED",
+  "candidate": "REJECT_FOR_PERFORMANCE / NOT_PROMOTED",
+  "source_binding": {
+    "native/makhos_native.c": {
+      "pr25_sha256": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+      "r5_frozen_sha256": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f"
+    },
+    "native/makhos_types.h": {
+      "pr25_sha256": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+      "r5_frozen_sha256": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf"
+    }
+  },
+  "transport_validation": {
+    "files": 82,
+    "manifests": [
+      {
+        "path": "handoffs/lazy-smp-g2-r5/results/linux-35870928227-1/evidence_sha256.json",
+        "count": 51
+      },
+      {
+        "path": "handoffs/pr25-review-20260923/results/linux-35870928227-1/evidence_sha256.json",
+        "count": 29
+      }
+    ],
+    "pr25_fragments": {
+      "shared_move_hint_write": {
+        "identical": true,
+        "sha256": "64f9294a24c99b0d278b2af3dfefbf4b7a2d4159c77af11f63d152747c0ab0d5"
+      },
+      "shared_move_hint_read": {
+        "identical": true,
+        "sha256": "dc53e9a8c0d60dd8b07430d198ddd938934f951f8a46006d15ce14b6f9153691"
+      },
+      "NativeCompactMove": {
+        "identical": true,
+        "sha256": "dce98557027bae66ad7e73b02aa3788ff1ab0a0f2acd6e906064e02f3a5590a4"
+      },
+      "SharedMoveHintEntry": {
+        "identical": true,
+        "sha256": "9d242f8889ad44fbbf9f81009203eb300578249c86107de80f3d9dd8acffecaf"
+      }
+    }
+  },
+  "process_count": 10,
+  "protocol_passes": 0,
+  "incomplete_processes": 10,
+  "protocol_payload_failures_observed": 0,
+  "protocol_tsan_race_reports_observed": 0,
+  "spsc_distinct_publications_each": 256,
+  "accepted_stress_reads_total": 1245,
+  "processes_with_zero_accepted_stress_reads": 3,
+  "per_process": [
+    {
+      "compiler": "clang18",
+      "slot": "clang18_protocol_01",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 0,
+      "zero_readers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "zero_writers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "compiler": "clang18",
+      "slot": "clang18_protocol_02",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 347,
+      "zero_readers": [
+        0,
+        2
+      ],
+      "zero_writers": [
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "compiler": "clang18",
+      "slot": "clang18_protocol_03",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 0,
+      "zero_readers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "zero_writers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "compiler": "clang18",
+      "slot": "clang18_protocol_04",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 0,
+      "zero_readers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "zero_writers": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "compiler": "clang18",
+      "slot": "clang18_protocol_05",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 90,
+      "zero_readers": [
+        0,
+        2
+      ],
+      "zero_writers": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "compiler": "gcc13",
+      "slot": "gcc13_protocol_01",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 153,
+      "zero_readers": [
+        0,
+        3
+      ],
+      "zero_writers": [
+        3,
+        5,
+        6
+      ]
+    },
+    {
+      "compiler": "gcc13",
+      "slot": "gcc13_protocol_02",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 81,
+      "zero_readers": [
+        0,
+        2,
+        3
+      ],
+      "zero_writers": [
+        0,
+        3,
+        6
+      ]
+    },
+    {
+      "compiler": "gcc13",
+      "slot": "gcc13_protocol_03",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 194,
+      "zero_readers": [
+        2,
+        3
+      ],
+      "zero_writers": [
+        0,
+        1,
+        6,
+        7
+      ]
+    },
+    {
+      "compiler": "gcc13",
+      "slot": "gcc13_protocol_04",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 226,
+      "zero_readers": [
+        0,
+        1
+      ],
+      "zero_writers": [
+        0,
+        3,
+        5
+      ]
+    },
+    {
+      "compiler": "gcc13",
+      "slot": "gcc13_protocol_05",
+      "status": "INCOMPLETE_COVERAGE",
+      "spsc": 256,
+      "accepted": 154,
+      "zero_readers": [
+        2,
+        3
+      ],
+      "zero_writers": [
+        1,
+        3,
+        4,
+        5,
+        7
+      ]
+    }
+  ],
+  "negative_controls": {
+    "clang18": {
+      "smoke": "PASS",
+      "negative": "RACE_DETECTED",
+      "exit_code": 66
+    },
+    "gcc13": {
+      "smoke": "PASS",
+      "negative": "RACE_DETECTED",
+      "exit_code": 66
+    }
+  },
+  "scope": "Publication functions only. Zero protocol reports with incomplete coverage is not safety certification.",
+  "limitations": [
+    "Linux frozen collector runs protocol mode only; directed mode is preserved Windows evidence, not rerun on Linux.",
+    "PR25 ABI and shutdown findings are source-derived; Windows candidate DLL was not executed in this review.",
+    "Historical payload failures are not all attributed to seed initialization.",
+    "G2-G6 closure, production changes, merge/promotion and SPRT are not authorized by this result."
+  ],
+  "retrieval": {
+    "artifact_id": 10755086736,
+    "archive_sha256_reported_by_github": "b8e08ae330395f085eada588a994eac3b0934056a629738bbc2bbc774cc6e420",
+    "archive_independently_downloaded": false,
+    "method": "Exact UTF-8 evidence records recovered from GitHub job log; all per-file SHA-256 and both manifests verified."
+  }
+}

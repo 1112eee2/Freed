@@ -1,0 +1,15 @@
+{
+  "attempt": "1",
+  "execution_commit": "3be0dc96505571f0d7d08c2f20d923dd2721d925",
+  "frozen_r5_commit": "0ced9eb2759ccd0dbe2541b07b0609301c80e317",
+  "inherited_tsan_options": null,
+  "note": "Wrapper records environment and transports evidence. Frozen probe/collector/workflow are untouched.",
+  "repeated_gate_processes": false,
+  "reviewed_pr25_commit": "7cca706377f5e963431fc0f251b91add8673a136",
+  "run_url": "https://github.com/1112eee2/ThaiMakhosEngine/actions/runs/35870928227",
+  "runner_image": "ubuntu24",
+  "runner_image_version": "20260907.300.1",
+  "suppression_added": false,
+  "tsan_options": "halt_on_error=1 (set by frozen collector)",
+  "workflow_run": "35870928227"
+}

@@ -1,0 +1,12 @@
+{
+  "captured_utc": "2026-09-23T13:59:35.807829+00:00",
+  "cpu_count": 2,
+  "lane": "linux-tsan",
+  "machine": "x86_64",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+  "python_executable": "/usr/bin/python3",
+  "release": "6.17.0-1022-azure",
+  "system": "Linux"
+}
