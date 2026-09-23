@@ -1,0 +1,39 @@
+name: Astra frozen r5 evidence collection
+on:
+  push:
+    branches: [codex/astra-r5-review-results-20260923]
+    paths:
+      - '.github/workflows/astra-r5-review-run.yml'
+      - 'handoffs/pr25-review-20260923/run_frozen_r5.py'
+permissions:
+  contents: read
+concurrency:
+  group: astra-r5-review-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Install compiler lanes if needed
+        continue-on-error: true
+        run: |
+          if ! command -v clang-18 || ! command -v gcc-13 || ! dpkg-query -W libclang-rt-18-dev; then
+            sudo apt-get update
+            sudo apt-get install -y clang-18 libclang-rt-18-dev gcc-13
+          fi
+      - name: Execute the frozen collector once and preserve every outcome
+        run: python3 -B handoffs/pr25-review-20260923/run_frozen_r5.py
+      - name: Upload text evidence (no binaries)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: astra-r5-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            handoffs/lazy-smp-g2-r5/results/linux-${{ github.run_id }}-${{ github.run_attempt }}/
+            handoffs/pr25-review-20260923/results/linux-${{ github.run_id }}-${{ github.run_attempt }}/
+          if-no-files-found: error
