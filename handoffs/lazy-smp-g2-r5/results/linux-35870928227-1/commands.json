@@ -1,0 +1,478 @@
+[
+  {
+    "argv": [
+      "/usr/bin/python3",
+      "verify_snapshot.py"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.05642595599999822,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "verify_before",
+    "started_utc": "2026-09-23T13:59:35.809907+00:00",
+    "stderr": "verify_before.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "verify_before.stdout.log",
+    "stdout_sha256": "0d1e2642e3c3b6116683ccb5c7afffdce8a004cbc7cbbe4eae51ff80d67d181f",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "clang-18",
+      "--version"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.027862194000000784,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang18_version",
+    "started_utc": "2026-09-23T13:59:35.867072+00:00",
+    "stderr": "clang18_version.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_version.stdout.log",
+    "stdout_sha256": "3635b8631d4ebcd8ed7586f4e01e7a6b44407de9d38db6e01daca9c242ed7a53",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "clang-18",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "smoke_pthread.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/clang18_smoke"
+    ],
+    "binary_sha256": "0669c002b12f30c6afde6581d3d08e0054faa0c66b44b0330d9bc1fe6a522c2b",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.7315055240000063,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang18_smoke_compile",
+    "started_utc": "2026-09-23T13:59:35.895654+00:00",
+    "stderr": "clang18_smoke_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_smoke_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "clang-18",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "negative_pthread.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/clang18_negative"
+    ],
+    "binary_sha256": "6e90e8c92996b9d767d71bec7b973a967a9b20586f1ad41915372ca5a1a35ed4",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.18446759699999404,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang18_negative_compile",
+    "started_utc": "2026-09-23T13:59:36.631333+00:00",
+    "stderr": "clang18_negative_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_negative_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "clang-18",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "probe.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe"
+    ],
+    "binary_sha256": "cd58e8a61bca26b08eb3b76d79c155cfc7cacdc7e66d4308312ee463ff5669aa",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.30388504199999744,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang18_probe_compile",
+    "started_utc": "2026-09-23T13:59:36.818765+00:00",
+    "stderr": "clang18_probe_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_probe_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_smoke"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.009293940999995698,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang18_smoke_run_01",
+    "started_utc": "2026-09-23T13:59:37.125707+00:00",
+    "stderr": "clang18_smoke_run_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_smoke_run_01.stdout.log",
+    "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_negative"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.19902353799999872,
+    "exit_code": 66,
+    "launch_error": null,
+    "name": "clang18_negative_run_01",
+    "started_utc": "2026-09-23T13:59:37.135905+00:00",
+    "stderr": "clang18_negative_run_01.stderr.log",
+    "stderr_sha256": "ab6a3be49ad020c0353ad78287f5826a1c16b2a99cf22c6b4c477d5293cebc6f",
+    "stdout": "clang18_negative_run_01.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.13385172200000284,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "clang18_protocol_01",
+    "started_utc": "2026-09-23T13:59:37.335681+00:00",
+    "stderr": "clang18_protocol_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_protocol_01.stdout.log",
+    "stdout_sha256": "a65057b950446717928272b17c286bb32f00b3575ee7c67a2a1fdba588ea4184",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.137661738999995,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "clang18_protocol_02",
+    "started_utc": "2026-09-23T13:59:37.470350+00:00",
+    "stderr": "clang18_protocol_02.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_protocol_02.stdout.log",
+    "stdout_sha256": "3fd77d09761a7c487abb38e240242a2e44c9bf211ec72acc121c51c455600737",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.12226370700000189,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "clang18_protocol_03",
+    "started_utc": "2026-09-23T13:59:37.608822+00:00",
+    "stderr": "clang18_protocol_03.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_protocol_03.stdout.log",
+    "stdout_sha256": "a8bb35930b4e23a728bd66bd2dbee742c00b28c7318e516c3bbc58cf54ac84f3",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.13355681299999844,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "clang18_protocol_04",
+    "started_utc": "2026-09-23T13:59:37.731938+00:00",
+    "stderr": "clang18_protocol_04.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_protocol_04.stdout.log",
+    "stdout_sha256": "cef6296ca6eecf9c92d592c72694366800313a8649db2bae53e47c2b1e365a34",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/clang18_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.13599759699999936,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "clang18_protocol_05",
+    "started_utc": "2026-09-23T13:59:37.866346+00:00",
+    "stderr": "clang18_protocol_05.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang18_protocol_05.stdout.log",
+    "stdout_sha256": "a53c5f0f158484f93ffba810a35435bfc8feecd8d9242452892eaf3fda7e261e",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "gcc-13",
+      "--version"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.002031797999997309,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc13_version",
+    "started_utc": "2026-09-23T13:59:38.003326+00:00",
+    "stderr": "gcc13_version.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_version.stdout.log",
+    "stdout_sha256": "5698ba2bce15103316282b418bf772fd5ce99fbe60fd5ba2987d69fa39f61e58",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "gcc-13",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "smoke_pthread.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/gcc13_smoke"
+    ],
+    "binary_sha256": "f93b7279f4ff7301c0118905d591bd25f533e87f9b3ca09c57d41165603fe3d2",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.16202547299999992,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc13_smoke_compile",
+    "started_utc": "2026-09-23T13:59:38.005856+00:00",
+    "stderr": "gcc13_smoke_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_smoke_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "gcc-13",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "negative_pthread.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/gcc13_negative"
+    ],
+    "binary_sha256": "947c76848c0bf0edecff9d68761d03cd4c603d1158e3b0daf4e3947fece70b65",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.05424852299999827,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc13_negative_compile",
+    "started_utc": "2026-09-23T13:59:38.169018+00:00",
+    "stderr": "gcc13_negative_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_negative_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "gcc-13",
+      "-std=c17",
+      "-O1",
+      "-g",
+      "-fsanitize=thread",
+      "-pthread",
+      "probe.c",
+      "-o",
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe"
+    ],
+    "binary_sha256": "533bbf6f406742e068ba2df7f25bf0d64910d7305046650db2f1ad38299c1ab7",
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.16906177399999933,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc13_probe_compile",
+    "started_utc": "2026-09-23T13:59:38.224398+00:00",
+    "stderr": "gcc13_probe_compile.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_probe_compile.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_smoke"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.010558756999998309,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc13_smoke_run_01",
+    "started_utc": "2026-09-23T13:59:38.394672+00:00",
+    "stderr": "gcc13_smoke_run_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_smoke_run_01.stdout.log",
+    "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_negative"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.061117023000001325,
+    "exit_code": 66,
+    "launch_error": null,
+    "name": "gcc13_negative_run_01",
+    "started_utc": "2026-09-23T13:59:38.406284+00:00",
+    "stderr": "gcc13_negative_run_01.stderr.log",
+    "stderr_sha256": "b58ad446b27a24f532f58f7359867a2ebf64921b22ec16cae4dfd8b4b01ccdf0",
+    "stdout": "gcc13_negative_run_01.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.25554732699999505,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "gcc13_protocol_01",
+    "started_utc": "2026-09-23T13:59:38.468662+00:00",
+    "stderr": "gcc13_protocol_01.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_protocol_01.stdout.log",
+    "stdout_sha256": "b71c6c6cb49d736b1c9cb950ceb8e3bc63d48b774490ef47e5a6acabc868aead",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.12605464600000005,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "gcc13_protocol_02",
+    "started_utc": "2026-09-23T13:59:38.725191+00:00",
+    "stderr": "gcc13_protocol_02.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_protocol_02.stdout.log",
+    "stdout_sha256": "7d7ae77ae73e0b1a5df1bd9f803dcac61b1946a438696e58d611bf796ad3ebcf",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.12162364399999603,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "gcc13_protocol_03",
+    "started_utc": "2026-09-23T13:59:38.852284+00:00",
+    "stderr": "gcc13_protocol_03.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_protocol_03.stdout.log",
+    "stdout_sha256": "01aa701cd90498404125da767c0a5d2907f7be398424d9f2a21b6115dd80cf07",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.1327716760000044,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "gcc13_protocol_04",
+    "started_utc": "2026-09-23T13:59:38.974927+00:00",
+    "stderr": "gcc13_protocol_04.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_protocol_04.stdout.log",
+    "stdout_sha256": "03889cf3b528370ec1c2c6685c178e29fa919592f444d9ee82b2f35433f37f41",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/tmp/makhos-r5-7mllfbjw/gcc13_probe",
+      "protocol"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.16367084299999846,
+    "exit_code": 3,
+    "launch_error": null,
+    "name": "gcc13_protocol_05",
+    "started_utc": "2026-09-23T13:59:39.108700+00:00",
+    "stderr": "gcc13_protocol_05.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc13_protocol_05.stdout.log",
+    "stdout_sha256": "2b36d51cb49210b55c42408c9eda66e2992c43063c4f5800f16a3e99de55eb70",
+    "timed_out": false,
+    "timeout_seconds": 120
+  },
+  {
+    "argv": [
+      "/usr/bin/python3",
+      "verify_snapshot.py"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5",
+    "elapsed_seconds": 0.03673949699999923,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "verify_after",
+    "started_utc": "2026-09-23T13:59:39.273440+00:00",
+    "stderr": "verify_after.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "verify_after.stdout.log",
+    "stdout_sha256": "0d1e2642e3c3b6116683ccb5c7afffdce8a004cbc7cbbe4eae51ff80d67d181f",
+    "timed_out": false,
+    "timeout_seconds": 30
+  }
+]

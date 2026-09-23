@@ -1,0 +1,20 @@
+==================
+WARNING: ThreadSanitizer: data race (pid=2234)
+  Read of size 4 at 0x555bc445f014 by thread T2:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/negative_pthread.c:22 (gcc13_negative+0x1383) (BuildId: 63e3eebfa679c7e9400dfb1957543a12358f0111)
+
+  Previous write of size 4 at 0x555bc445f014 by thread T1:
+    #0 race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/negative_pthread.c:22 (gcc13_negative+0x1394) (BuildId: 63e3eebfa679c7e9400dfb1957543a12358f0111)
+
+  Location is global 'counter' of size 4 at 0x555bc445f014 (gcc13_negative+0x4014)
+
+  Thread T2 (tid=2237, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/negative_pthread.c:29 (gcc13_negative+0x140b) (BuildId: 63e3eebfa679c7e9400dfb1957543a12358f0111)
+
+  Thread T1 (tid=2236, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 main /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/negative_pthread.c:28 (gcc13_negative+0x13ec) (BuildId: 63e3eebfa679c7e9400dfb1957543a12358f0111)
+
+SUMMARY: ThreadSanitizer: data race /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/negative_pthread.c:22 in race
+==================

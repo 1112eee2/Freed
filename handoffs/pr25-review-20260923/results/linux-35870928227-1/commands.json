@@ -1,0 +1,213 @@
+[
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.002012883000006127,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "git_head",
+    "started_utc": "2026-09-23T13:59:34.979475+00:00",
+    "stderr": "git_head.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "git_head.stdout.log",
+    "stdout_sha256": "586470d88145972b87fa025d655d46821461a844a14818af52f105232aaba6a4",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "git",
+      "merge-base",
+      "--is-ancestor",
+      "0ced9eb2759ccd0dbe2541b07b0609301c80e317",
+      "HEAD"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.0018394400000047995,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "base_ancestor",
+    "started_utc": "2026-09-23T13:59:34.981640+00:00",
+    "stderr": "base_ancestor.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "base_ancestor.stdout.log",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.0021546860000043466,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "uname",
+    "started_utc": "2026-09-23T13:59:34.983684+00:00",
+    "stderr": "uname.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "uname.stdout.log",
+    "stdout_sha256": "304b2da1acb50873067f72c7ff2aa0940963426a8b023c07c072675b28aab35d",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "cat",
+      "/etc/os-release"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.002237830999995083,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "os_release",
+    "started_utc": "2026-09-23T13:59:34.986027+00:00",
+    "stderr": "os_release.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "os_release.stdout.log",
+    "stdout_sha256": "87458b3b1f1ca0e5c693ade771de7007c3783bdc692fa6b39eb6414bf2af2763",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "lscpu"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.015362707000001308,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "cpu",
+    "started_utc": "2026-09-23T13:59:34.988467+00:00",
+    "stderr": "cpu.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "cpu.stdout.log",
+    "stdout_sha256": "629a28777801bcec4aaeb935abc691c8164ae43ba3342736035a29aee5426852",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "ldd",
+      "--version"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.0025578560000028006,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "libc",
+    "started_utc": "2026-09-23T13:59:35.004128+00:00",
+    "stderr": "libc.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "libc.stdout.log",
+    "stdout_sha256": "6513e05931915b34e4fed9713f540659e914cbc508a9bdf1687482c10cb01cd0",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "dpkg-query",
+      "-W",
+      "clang-18",
+      "libclang-rt-18-dev",
+      "gcc-13",
+      "libtsan2",
+      "libc6"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.010754327999997315,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "packages",
+    "started_utc": "2026-09-23T13:59:35.006922+00:00",
+    "stderr": "packages.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "packages.stdout.log",
+    "stdout_sha256": "476ba976249cd515ac86355210ec8d1e8bc74b36175427b08108d65890e461fb",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "clang-18",
+      "--print-runtime-dir"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.3272483199999954,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "clang_runtime_path",
+    "started_utc": "2026-09-23T13:59:35.017955+00:00",
+    "stderr": "clang_runtime_path.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "clang_runtime_path.stdout.log",
+    "stdout_sha256": "0e352fcafe054cb3a3e2ae5f91cea51b93bc2ad3bf7a3a1c15bd25057870d999",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "gcc-13",
+      "-print-file-name=libtsan.so"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.007621612000001221,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "gcc_runtime_path",
+    "started_utc": "2026-09-23T13:59:35.345515+00:00",
+    "stderr": "gcc_runtime_path.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "gcc_runtime_path.stdout.log",
+    "stdout_sha256": "49840509cd30796b71d362bb322e5dc9c45191f6ed463b7a98311bbe93bc16c0",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "ps",
+      "-eo",
+      "pid,comm"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 0.01269755299999531,
+    "exit_code": 0,
+    "launch_error": null,
+    "name": "processes_before",
+    "started_utc": "2026-09-23T13:59:35.353470+00:00",
+    "stderr": "processes_before.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "processes_before.stdout.log",
+    "stdout_sha256": "b60bc7942e0af8c457511bd19b2d336455480e68943fc6cdab077dbade53a053",
+    "timed_out": false,
+    "timeout_seconds": 30
+  },
+  {
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r5/collect.py",
+      "linux-35870928227-1",
+      "--lane",
+      "linux-tsan"
+    ],
+    "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine",
+    "elapsed_seconds": 3.5794998699999994,
+    "exit_code": 1,
+    "launch_error": null,
+    "name": "frozen_collector",
+    "started_utc": "2026-09-23T13:59:35.745860+00:00",
+    "stderr": "frozen_collector.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "frozen_collector.stdout.log",
+    "stdout_sha256": "276c85bccd40ec20a10da9309188a78dffc5def37e52b18f4c4b8902483b8a93",
+    "timed_out": false,
+    "timeout_seconds": 1500
+  }
+]

@@ -1,0 +1,1057 @@
+{
+  "commands_file": "commands.json",
+  "compiled_binaries_committed": false,
+  "environment": {
+    "captured_utc": "2026-09-23T13:59:35.807829+00:00",
+    "cpu_count": 2,
+    "lane": "linux-tsan",
+    "machine": "x86_64",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "python_executable": "/usr/bin/python3",
+    "release": "6.17.0-1022-azure",
+    "system": "Linux"
+  },
+  "format": "thai-makhos-lazy-smp-g2-r5-result-v1",
+  "gate_effect": "readiness/evidence only; G2 remains NOT_PASSED until reviewed full matrix PASS",
+  "handoff": "lazy-smp-g2-r5",
+  "lane": "linux-tsan",
+  "lane_result": {
+    "compilers": {
+      "clang18": {
+        "builds": {
+          "negative": {
+            "binary_sha256": "6e90e8c92996b9d767d71bec7b973a967a9b20586f1ad41915372ca5a1a35ed4",
+            "command": "clang18_negative_compile",
+            "status": "PASS"
+          },
+          "probe": {
+            "binary_sha256": "cd58e8a61bca26b08eb3b76d79c155cfc7cacdc7e66d4308312ee463ff5669aa",
+            "command": "clang18_probe_compile",
+            "status": "PASS"
+          },
+          "smoke": {
+            "binary_sha256": "0669c002b12f30c6afde6581d3d08e0054faa0c66b44b0330d9bc1fe6a522c2b",
+            "command": "clang18_smoke_compile",
+            "status": "PASS"
+          }
+        },
+        "compiler": "clang-18",
+        "compiler_version_command": "clang18_version",
+        "correctness_liveness_status": "INCOMPLETE_COVERAGE",
+        "negative": {
+          "command": "clang18_negative_run_01",
+          "reason": "genuine TSan data-race report",
+          "status": "PASS"
+        },
+        "protocol": [
+          {
+            "command": "clang18_protocol_01",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 255,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 511,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 0,
+                  "successful": 100000
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 100000,
+                  "successful": 0
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "clang18_protocol_01",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "clang18_protocol_02",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 307,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99693
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 40,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 99960
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 180,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 436,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 44495,
+                  "successful": 55505
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 98269,
+                  "successful": 1731
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 97998,
+                  "successful": 2002
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 97591,
+                  "successful": 2409
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "clang18_protocol_02",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "clang18_protocol_03",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 28783,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 29039,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 75711,
+                  "successful": 24289
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 89811,
+                  "successful": 10189
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "clang18_protocol_03",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "clang18_protocol_04",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 256,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 512,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 0,
+                  "successful": 100000
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 100000,
+                  "successful": 0
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "clang18_protocol_04",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "clang18_protocol_05",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 10,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99990
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 80,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 99920
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 255,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 511,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 0,
+                  "successful": 100000
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 100000,
+                  "successful": 0
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "clang18_protocol_05",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          }
+        ],
+        "smoke": {
+          "command": "clang18_smoke_run_01",
+          "reason": "clean smoke reached body",
+          "status": "PASS"
+        },
+        "tsan_calibration_status": "PASS"
+      },
+      "gcc13": {
+        "builds": {
+          "negative": {
+            "binary_sha256": "947c76848c0bf0edecff9d68761d03cd4c603d1158e3b0daf4e3947fece70b65",
+            "command": "gcc13_negative_compile",
+            "status": "PASS"
+          },
+          "probe": {
+            "binary_sha256": "533bbf6f406742e068ba2df7f25bf0d64910d7305046650db2f1ad38299c1ab7",
+            "command": "gcc13_probe_compile",
+            "status": "PASS"
+          },
+          "smoke": {
+            "binary_sha256": "f93b7279f4ff7301c0118905d591bd25f533e87f9b3ca09c57d41165603fe3d2",
+            "command": "gcc13_smoke_compile",
+            "status": "PASS"
+          }
+        },
+        "compiler": "gcc-13",
+        "compiler_version_command": "gcc13_version",
+        "correctness_liveness_status": "INCOMPLETE_COVERAGE",
+        "negative": {
+          "command": "gcc13_negative_run_01",
+          "reason": "genuine TSan data-race report",
+          "status": "PASS"
+        },
+        "protocol": [
+          {
+            "command": "gcc13_protocol_01",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 141,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99859
+                },
+                {
+                  "accepted": 12,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 99988
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 103838,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 104094,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 98890,
+                  "successful": 1110
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 96754,
+                  "successful": 3246
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 68593,
+                  "successful": 31407
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 98805,
+                  "successful": 1195
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 99448,
+                  "successful": 552
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "gcc13_protocol_01",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "gcc13_protocol_02",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 81,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99919
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 257,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 513,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 98820,
+                  "successful": 1180
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 74382,
+                  "successful": 25618
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 85456,
+                  "successful": 14544
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 99432,
+                  "successful": 568
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 97861,
+                  "successful": 2139
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "gcc13_protocol_02",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "gcc13_protocol_03",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 64,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 99936
+                },
+                {
+                  "accepted": 130,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99870
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 255,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 511,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 82042,
+                  "successful": 17958
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 96952,
+                  "successful": 3048
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 87493,
+                  "successful": 12507
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 98551,
+                  "successful": 1449
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 100000,
+                  "successful": 0
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "gcc13_protocol_03",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "gcc13_protocol_04",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 211,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 99789
+                },
+                {
+                  "accepted": 15,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 99985
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 256,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 512,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 99570,
+                  "successful": 430
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 40333,
+                  "successful": 59667
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 98555,
+                  "successful": 1445
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 98851,
+                  "successful": 1149
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 98279,
+                  "successful": 1721
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "gcc13_protocol_04",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          },
+          {
+            "command": "gcc13_protocol_05",
+            "payload": {
+              "mode": "protocol",
+              "readers": [
+                {
+                  "accepted": 4,
+                  "attempts": 100000,
+                  "id": 0,
+                  "rejected": 99996
+                },
+                {
+                  "accepted": 150,
+                  "attempts": 100000,
+                  "id": 1,
+                  "rejected": 99850
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 2,
+                  "rejected": 100000
+                },
+                {
+                  "accepted": 0,
+                  "attempts": 100000,
+                  "id": 3,
+                  "rejected": 100000
+                }
+              ],
+              "schema": "thai-makhos-lazy-smp-g2-r5-process-v1",
+              "spsc": {
+                "acknowledgments": 256,
+                "duplicate_reads": 24061,
+                "reader_distinct_accepted": 256,
+                "reader_raw_accepted": 24317,
+                "writer_successful": 256
+              },
+              "status": "INCOMPLETE_COVERAGE",
+              "writers": [
+                {
+                  "attempts": 100000,
+                  "id": 0,
+                  "skipped": 99554,
+                  "successful": 446
+                },
+                {
+                  "attempts": 100000,
+                  "id": 1,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 2,
+                  "skipped": 15258,
+                  "successful": 84742
+                },
+                {
+                  "attempts": 100000,
+                  "id": 3,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 4,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 5,
+                  "skipped": 100000,
+                  "successful": 0
+                },
+                {
+                  "attempts": 100000,
+                  "id": 6,
+                  "skipped": 97765,
+                  "successful": 2235
+                },
+                {
+                  "attempts": 100000,
+                  "id": 7,
+                  "skipped": 100000,
+                  "successful": 0
+                }
+              ]
+            },
+            "reason": "harness classification",
+            "slot": "gcc13_protocol_05",
+            "status": "INCOMPLETE_COVERAGE",
+            "tsan_data_race": false
+          }
+        ],
+        "smoke": {
+          "command": "gcc13_smoke_run_01",
+          "reason": "clean smoke reached body",
+          "status": "PASS"
+        },
+        "tsan_calibration_status": "PASS"
+      }
+    },
+    "correctness_liveness_status": "INCOMPLETE_COVERAGE",
+    "overall_status": "INCOMPLETE_COVERAGE"
+  },
+  "manifest_sha256": "3738baf2c5aa0d94213f03394178357a2e87ffe66d080754fc76894146d3f4d0",
+  "no_retry_or_replacement": true,
+  "snapshot_after": {
+    "command": "verify_after",
+    "status": "PASS"
+  },
+  "snapshot_before": {
+    "command": "verify_before",
+    "status": "PASS"
+  },
+  "status": "INCOMPLETE_COVERAGE"
+}
