@@ -299,6 +299,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(project_native_library()),
     )
     analyze_game_parser.add_argument(
+        "--nnue-model",
+        help="explicit NNUE model for an NNUE candidate search library",
+    )
+    analyze_game_parser.add_argument(
         "--side",
         choices=("engine", "black", "red", "both"),
         default="engine",
@@ -453,6 +457,11 @@ def build_parser() -> argparse.ArgumentParser:
     gui_parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
     gui_parser.add_argument("--release-pointer", help="GUI release selection JSON")
     gui_parser.add_argument("--release-profile", choices=["nnue", "hce"])
+    gui_parser.add_argument(
+        "--lazy-smp",
+        action="store_true",
+        help="opt-in Native Lazy SMP backend for GUI Threads > 1 (default: off)",
+    )
     gui_parser.set_defaults(func=command_gui)
 
     sprt_parser = subparsers.add_parser(
@@ -611,6 +620,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--native-endgame-library",
         default=None,
         help="isolated C2/C3/C4 endgame DLL",
+    )
+    sprt_parser.add_argument(
+        "--lazy-smp",
+        action="store_true",
+        help=(
+            "candidate-only opt-in Native Lazy SMP backend; the baseline keeps "
+            "the production root-split backend"
+        ),
     )
     sprt_parser.set_defaults(func=command_sprt)
 

@@ -33,5 +33,7 @@ work/skill_validator_dependencies/
 # IDE and OS
 .vscode/
 .idea/
+.workbuddy-ai/
+scratch/
 Thumbs.db
 [Dd]esktop.ini

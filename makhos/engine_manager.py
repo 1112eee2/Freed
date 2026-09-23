@@ -21,7 +21,12 @@ from .core import (
 )
 from .compact_tb3 import CompactTablebase
 from .tb3_service import TB3Service
-from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
+from .native import (
+    NativeLazySmpSearch,
+    NativeSearch,
+    hash_power_for_megabytes,
+    native_tt_entry_bytes,
+)
 from .native_endgame import NativeEndgameTablebase
 from .native_endgame_search import NativeEndgameSearch, ParallelNativeEndgameSearch
 from .parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
@@ -105,12 +110,14 @@ def _sha256_file(path: Path) -> str:
 
 # Authoritative state owned by engine_manager
 GLOBAL_ENGINE: Engine | None = None
-GLOBAL_ENGINE_CONFIG: tuple[int, int, str, str, str | None, bool, str | None] | None = None
+GLOBAL_ENGINE_CONFIG: tuple[int, int, str, str, str | None, bool, str | None, bool] | None = None
 GLOBAL_ENGINE_PROVENANCE: dict[str, object] | None = None
 GUI_NATIVE_LIBRARY_OVERRIDE: Path | None = None
 GUI_NNUE_MODEL_OVERRIDE: Path | None = None
 GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE: bool | None = None
 GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE: Path | None = None
+# Opt-in Lazy SMP backend. None keeps the production default (root-split/single).
+GUI_LAZY_SMP_OVERRIDE: bool | None = None
 GUI_RELEASE: dict | None = None
 TB3_SERVICE = TB3Service()
 ENGINE_SEARCH_LOCK = threading.RLock()
@@ -122,16 +129,20 @@ def configure_gui_native_search(
     *,
     native_endgame: bool = DEFAULT_NATIVE_ENDGAME_ENABLED,
     native_endgame_library: str | Path | None = None,
+    lazy_smp: bool | None = None,
 ) -> None:
     """Select explicit GUI candidates without changing the production default.
 
     The endgame capability is deliberately default-off. Its DLL is a
     separate artifact and is validated lazily after TB3 is warm, so startup
     never maps multi-gigabyte TB4--TB6 files on the ordinary production path.
+    Lazy SMP is likewise opt-in; leaving it unset keeps the production
+    root-split/single backend.
     """
 
     global GUI_NATIVE_LIBRARY_OVERRIDE, GUI_NNUE_MODEL_OVERRIDE
     global GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE, GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE
+    global GUI_LAZY_SMP_OVERRIDE
     global GUI_RELEASE
     if native_library is None and nnue_model is not None:
         raise ValueError("--nnue-model requires an explicit --native-library")
@@ -162,6 +173,7 @@ def configure_gui_native_search(
     GUI_NNUE_MODEL_OVERRIDE = model
     GUI_NATIVE_ENDGAME_ENABLED_OVERRIDE = bool(native_endgame)
     GUI_NATIVE_ENDGAME_LIBRARY_OVERRIDE = endgame_library
+    GUI_LAZY_SMP_OVERRIDE = None if lazy_smp is None else bool(lazy_smp)
     GUI_RELEASE = None
 
 
@@ -198,11 +210,12 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     backend = engine.last_search_backend
     endgame = getattr(engine, "native_endgame_search", None)
     if backend == "native":
-        backend = (
-            "native-root-split"
-            if isinstance(native_search, ParallelNativeSearch)
-            else "native-single"
-        )
+        if isinstance(native_search, NativeLazySmpSearch):
+            backend = "native-lazy-smp"
+        elif isinstance(native_search, ParallelNativeSearch):
+            backend = "native-root-split"
+        else:
+            backend = "native-single"
     elif backend == "native-endgame":
         backend = "native-endgame"
     elif backend == "python-fallback":
@@ -277,9 +290,22 @@ def _create_native_search(
     threads: int,
     hash_mb: int,
     nnue_model: Path | None = None,
+    lazy_smp: bool = False,
 ):
-    """Create only the search resource for one GUI Threads/Hash setting."""
+    """Create only the search resource for one GUI Threads/Hash setting.
 
+    ``lazy_smp`` selects the opt-in Native Lazy SMP backend. It owns its own
+    total-Hash and worker budgeting, so it bypasses the root-split hash-power
+    split. The default path is byte-for-byte the production behaviour.
+    """
+
+    if lazy_smp:
+        return NativeLazySmpSearch(
+            native_dll,
+            threads=threads,
+            hash_mb=hash_mb,
+            nnue_model=nnue_model,
+        )
     tt_entry_bytes = native_tt_entry_bytes(native_dll)
     hash_power = hash_power_for_megabytes(
         hash_mb,
@@ -299,6 +325,13 @@ def _create_native_search(
         hash_mb=hash_mb,
         nnue_model=nnue_model,
     )
+
+
+def _coerced_thread_count(native_search) -> int:
+    """Report a usable thread count even for stubs that expose no real int."""
+
+    threads = getattr(native_search, "threads", 1)
+    return threads if isinstance(threads, int) and threads >= 1 else 1
 
 
 def _native_search_provenance(
@@ -324,6 +357,16 @@ def _native_search_provenance(
         "native_library": str(resolved),
         "native_library_sha256": digest,
         "native_search_abi": getattr(native_search, "abi_version", None),
+        "native_search_threads": _coerced_thread_count(native_search),
+        "configured_search_backend": (
+            "unavailable"
+            if native_search is None
+            else "native-lazy-smp"
+            if isinstance(native_search, NativeLazySmpSearch)
+            else "native-root-split"
+            if isinstance(native_search, ParallelNativeSearch)
+            else "native-single"
+        ),
         "nnue_enabled": bool(getattr(native_search, "nnue_enabled", False)),
         "nnue_feature_abi": getattr(native_search, "nnue_feature_abi", None),
         "nnue_model": (
@@ -452,6 +495,7 @@ def get_default_engine(
     rules_profile: str = "project",
     native_endgame: bool | None = None,
     native_endgame_library: str | Path | None = None,
+    lazy_smp: bool | None = None,
 ) -> Engine:
     """Return the GUI engine configured with real Threads and total Hash."""
 
@@ -482,6 +526,10 @@ def get_default_engine(
     )
     if nnue_model is not None and not native_dll.is_file():
         raise RuntimeError(f"NNUE library unavailable: {native_dll}")
+    if lazy_smp is None:
+        lazy_smp_enabled = bool(GUI_LAZY_SMP_OVERRIDE)
+    else:
+        lazy_smp_enabled = bool(lazy_smp)
     config = (
         threads,
         hash_mb,
@@ -490,6 +538,7 @@ def get_default_engine(
         None if nnue_model is None else str(nnue_model.resolve()),
         bool(endgame_enabled),
         endgame_library,
+        lazy_smp_enabled,
     )
     if GLOBAL_ENGINE is None:
         ranked = []
@@ -514,6 +563,7 @@ def get_default_engine(
                     threads=threads,
                     hash_mb=hash_mb,
                     nnue_model=nnue_model,
+                    lazy_smp=lazy_smp_enabled,
                 )
             except Exception as err:
                 if nnue_model is not None:
@@ -545,14 +595,21 @@ def get_default_engine(
             GLOBAL_ENGINE.last_native_error = native_search_error
     elif GLOBAL_ENGINE_CONFIG != config:
         old_threads, old_hash_mb, old_rules_profile, old_native_dll, old_nnue_model, \
-            old_endgame_enabled, old_endgame_library = GLOBAL_ENGINE_CONFIG
+            old_endgame_enabled, old_endgame_library, old_lazy_smp_enabled = GLOBAL_ENGINE_CONFIG
         native_search_error = None
         if (
             threads,
             hash_mb,
             str(native_dll.resolve()),
             None if nnue_model is None else str(nnue_model.resolve()),
-        ) != (old_threads, old_hash_mb, old_native_dll, old_nnue_model):
+            lazy_smp_enabled,
+        ) != (
+            old_threads,
+            old_hash_mb,
+            old_native_dll,
+            old_nnue_model,
+            old_lazy_smp_enabled,
+        ):
             replacement = None
             if native_dll.exists():
                 try:
@@ -561,6 +618,7 @@ def get_default_engine(
                         threads=threads,
                         hash_mb=hash_mb,
                         nnue_model=nnue_model,
+                        lazy_smp=lazy_smp_enabled,
                     )
                 except Exception as err:
                     if nnue_model is not None:

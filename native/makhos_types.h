@@ -2,6 +2,7 @@
 #define MAKHOS_TYPES_H
 
 #include <inttypes.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -112,6 +113,15 @@ typedef struct {
     uint32_t captured_high_meta;
 } NativeCompactMove;
 
+typedef struct {
+    _Atomic uint64_t sequence; /* bit 0 = writer active; bits 1..63 = version */
+    _Atomic uint64_t key;      /* strict XOR position key */
+    _Atomic uint64_t data;     /* depth (16b), flags (16b), epoch (32b) */
+    _Atomic uint64_t move_w0;  /* compact move word 0 (path_low) */
+    _Atomic uint64_t move_w1;  /* compact move word 1 (captured_low) */
+    _Atomic uint64_t move_w2;  /* compact move word 2 (meta) */
+} SharedMoveHintEntry;
+
 /* Memory layout assertions protecting the C/ctypes ABI */
 _Static_assert(sizeof(Position) == 16, "Position layout drifted");
 _Static_assert(sizeof(MakhosPackedMove) == 36, "packed move layout drifted");
@@ -121,6 +131,8 @@ _Static_assert(
 );
 _Static_assert(sizeof(MakhosHistoryEntry) == 16, "history entry layout drifted");
 _Static_assert(sizeof(NativeCompactMove) == 24, "compact move layout drifted");
+_Static_assert(sizeof(SharedMoveHintEntry) == 48, "SharedMoveHintEntry layout drifted");
+_Static_assert(sizeof(SharedMoveHintEntry) % 8 == 0, "SharedMoveHintEntry must be 64-bit aligned");
 
 /* Core bitboard operations */
 static inline uint32_t bit_at(int square) {

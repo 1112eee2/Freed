@@ -1,6 +1,100 @@
 # คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
-## งานปัจจุบัน 2026-09-11: ลด Tech Debt ก่อนเพิ่ม Complexity
+## งานปัจจุบัน 2026-09-14: ปิด Readiness P0 ก่อนพิสูจน์ Lazy SMP
+
+สถานะและ next action มีจุดเดียวที่
+[current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md)
+โครงสร้าง Tech-Debt Phase 0–3 เสร็จแล้ว ไม่เริ่ม refactor ชุดเดิมซ้ำ
+
+1. **P0 — หลักฐานและทางเข้าพัฒนา:** แยก tooling/docs จาก native/SMP WIP,
+   ครอบคลุม source inventory ของเครื่องมือที่ย้ายแล้ว, CI, Node tests และ runtime
+   entrypoints; ผ่าน focused/reference/full checks โดยรักษา workload lease
+2. **G0–G3 — ฐานและความถูกต้อง:** ตรึง control/candidate จากซอร์สเดียวกันและ DLL/model
+   hashes, ทดสอบ 1T parity, publication/history isolation และ lifecycle
+3. **G4 — ความคุ้มค่า:** held-out positions, 1/2/4/6/8/12T, 1s/2s, cold/warm,
+   repeats, hints ON/OFF ที่งบหน่วยความจำเท่ากัน และเทียบ root-split control
+4. **G5–G6 — ความแข็งแกร่งและ production:** paired SPRT ชุดใหม่ตามเกณฑ์ที่ตรึงล่วงหน้า
+   แล้วจึง full suite, GUI NNUE/HCE/TB smoke และ rollback; INCONCLUSIVE ไม่ promote
+
+ใช้ [Lazy SMP ฉบับหลัก](docs/architecture/NATIVE_SHARED_TT_LAZY_SMP_DESIGN_TH.md)
+สำหรับรายละเอียด gates: แชร์เฉพาะ move hints, ไม่แชร์ score cutoff, thread หลัก
+เป็นผู้ตัดสิน คง C4 endgame/root policy และ production เดิมจนผ่านเกณฑ์
+ไม่ resume Experiment A ที่หยุดไว้ และไม่เปลี่ยน NNUE model พร้อมกับ SMP
+
+หลังปิดการทดลองนี้ ใช้เกมจากมนุษย์สร้าง benchmark ที่เก็บ full history/clock
+แยกชุดวิเคราะห์ออกจากชุดตรวจรับ แล้วใช้ผล error analysis เลือกงาน search/data ถัดไป
+
+## Gate matrix Native Lazy SMP (ตรวจสด 2026-09-16)
+
+ข้อกำหนด gate ฉบับเต็มอยู่ที่
+[NATIVE_SHARED_TT_LAZY_SMP_DESIGN_TH.md §7](docs/architecture/NATIVE_SHARED_TT_LAZY_SMP_DESIGN_TH.md)
+ตารางนี้ระบุว่ามีหลักฐานอะไรแล้ว ช่องว่างจริงคืออะไร และเงื่อนไขผ่านคืออะไร
+ตัวเลข/identity ทั้งหมดวัดสดในรอบนี้ ไม่ได้คัดลอกจากข้อความเก่า
+
+**ฐานที่ตรึงไว้ (r3-terminal-root):**
+candidate `0BFA505D67B52CE899F01639ED57E9A651D19E6FD85CB54CE3C2B67057B05E6B`
+control `8BAF2F31E4C0311030568014DE9F8F0FFA84C475C73D0A3C8D259A41D5706BED`
+compiler clang 22.1.6 `F168B58C…C07239A` · model `07B9AB0F…C0914164C`
+invariants `77528add…` / `03152e51…` / `FEEDD39C…` (ตรวจตรงทั้งสาม)
+production NNUE profile `build/nnue_search_v1_r5/…` `32c32302…` **ไม่ถูกแทนที่**
+
+| Gate | เงื่อนไขผ่าน | หลักฐานที่มี (path + identity) | Verdict | ช่องว่าง / งานที่เหลือ |
+|---|---|---|---|---|
+| **G0 Freeze** | profile ต้นฉบับ + ตรึง strict-key control, compiler/model/config/corpus SHA, protocol, tolerance ก่อนเปิด candidate | `r3/contract.json` (19 source SHA + invariants + NOT_PROMOTED); `r3/{candidate,control}/build_manifest.json` (verdict PASS, reproducible ×2, byte_identical); model + quantization contract SHA; `config/gui_release.json` → `releases/nnue-v1-20260908/manifest.json` `8A8F15B0…` | **PARTIAL** | ตรวจสด: **18/18 engine source ตรง worktree เป๊ะ**; ต่างเฉพาะ `tests/test_native_lazy_smp.py` (`55db36f6`→`874e6fae`) และเป็นการ**เพิ่มเทสเท่านั้น** ไม่มี engine change → r3 DLL ยังเป็น same-source build ที่ใช้ได้ **corpus SHA + คำประกาศ tolerance ไม่มีในบันทึก G0** โดย `contract.json` เองระบุ `later_gates` ให้ไปตรึงตอน workload freeze (G4/G5) — ไม่ต้อง freeze ใหม่ที่ G0 |
+| **G1 1T parity** | ไม่ปลุก helpers; move/score/PV/nodes/depth ตรง same-source strict 1T ที่ fixed depth + history/TT เดียวกัน | `tests/test_native_lazy_smp.py::test_gate_g1_comprehensive_parity_against_strict_control_binary` — threads=1, depth=6, hash_power 23 ทั้งสองฝั่ง, 7 เคส (initial/tactical/middlegame/multi_capture/promotion/clock_79/repetition_history) assert move+score+nodes+pv+depth ตรง, warm-TT parity, clock-80 terminal rejection parity | **CLOSED (parity)** | เงื่อนไข "วัด overhead แยก" ยังไม่มีตัวเลข → ยกไปวัดรวมใน G4 ไม่ต้องสร้าง gate ใหม่ |
+| **G2 TT correctness** | key aliases, forced multi-writer interleavings, partial publication, writer paused, ABA/generation, clear/resize; race detector + Windows target tests; ปิด score-admissibility P0 | `build/lazy_smp_acceptance_20260915_g2/protocol_result.json` (normal+ASan PASS, `race_detector: NOT_RUN`); `build/lazy_smp_race_portable_20260916/` probe `67f8b7cf…`, zip `5b090c64…`, `windows_smoke.json` 1,200,000 ops PASS | **PARTIAL** | **ASan ไม่ใช่ race detector** TSan ยัง NOT_RUN — bundle ส่ง Astra Web แล้วและ**ตรวจสดว่ายัง byte-current** กับ worktree+r3 (source 3 ไฟล์ตรงเป๊ะ) รอผล Linux: negative control + sanitized probe 5 runs + logs/exit codes, ไม่มี suppressions ปิดได้เฉพาะ publication race-detector scope |
+| **G3 Search/lifecycle** | legal moves/PV, independent low-depth oracle, history H1→H2→H1/long cycles, clock 79/80, multi-capture/promotion, terminal/proof precedence, timeout/cancel/restart, **repeated games**, allocation failure, **leaked handles/memory** | 22 เทสใน `tests/test_native_lazy_smp.py` + 2 เทส wiring · full suite `build/deepseek_handoff_full_003/result.json` **618/618 Python + 16/16 Node PASS** · **และ behavioural audit `build/lazy_smp_r4_integration_audit_20260916/audit.json` (A1–A6)** | **CLOSED (native) + integration ยืนยันด้วยพฤติกรรม** | ยืนยันด้วยการรันจริง ไม่ใช่จำนวนเทส: **default-off** คืน production backend เดิม · **C4 admission** exact endgame ไป `python`/tablebase path ไม่ใช้ lazy · **terminal precedence** ถูกปฏิเสธก่อนถึง backend (`ValueError: cannot search a terminal position`) · **cancellation** engine ใช้ `clear()` ไม่เคยเรียก `stop()` (grep ยืนยัน) · **fallback** DLL ที่ไม่มี Lazy SMP → degrade อย่างปลอดภัยพร้อม `last_native_error` ⚠️ **ช่องว่างที่ยังไม่ครอบ:** C4 exact-outcome agreement ใต้ lazy backend (TB3 ไม่พร้อมใน process ทดสอบ) และ GUI HTTP smoke/perft อยู่ใน G6 |
+| **G4 Runtime/scaling** | held-out diverse suite 1/2/4/**6**/8/12T, 1s/2s, repeats, cold/warm, BelowNormal/isolation; main depth, nodes, CPU, TT contribution, memory, deadline/stop latency | `build/lazy_smp_scaling_20260916_g4_003/result.json` (798 cells) · `..._g4_007_interleaved/` (12T 5 repeats) · `..._g4_008_hints_control/` (**freeze.json + result.json, 352 cells, 0 errors** — negative control) · `..._g4_002_hash{512,256}/` · `..._g4_004_f8/`, `..._g4_006_worker0/` · **corrections: `build/lazy_smp_g4_corrections_20260916/corrections.json` (C1–C8)** | **MEASURED (ผลลบ แต่แคบกว่าที่เคยรายงาน)** | ✅ **ทนต่อ noise:** stop latency 0.176–0.270 ms · overshoot median 0.5–0.8 ms · pv_legal 792/792 · ทั้งสอง backend อยู่ในงบ Hash · aggregate scaling **5.96x vs root-split 1.35x** · worker 0 nodes ลดตาม ~1/T (1T 2,894,848 → 12T 1,067,286 เกิน noise ±14% มาก) · **paired 12T vs root-split: median −1 ply, ตื้นกว่า 37/55 คู่, เท่า 11, ลึกกว่า 7** และ **calibrated แล้ว** เทียบกับ noise floor ที่วัดจริง (`..._g4_010_depth_noise_control/` — ใช้ DLL เดียวกันทั้งสอง role, 110 cells: noise median 0.00, range [−1,+1], เท่า 47/55) ขณะที่ real มีเท่าแค่ 11/55 และหางลบถึง −4 ply · worker-0 node diff **ลบทั้ง 55/55 คู่** (median −2.9M เทียบ noise ที่ ±ล้าน) → **ส่วนต่างนี้อยู่เหนือ noise floor จริง** · **ไม่มี thread count ใดที่ candidate ชนะ root-split** ❌ **ถอนแล้ว (C1):** "hints เป็นลบทุก thread count" — **negative control ที่ 1T พิสูจน์ว่า hints ON/OFF เหมือนกันทุกไบต์** (1T bypass: `shared_hint_table=NULL`, env var ไม่อ่าน) และที่ 12T fixed depth **score/PV เหมือนกัน 12/12 โดย hints ใช้ nodes เท่าหรือน้อยกว่า** → hints ช่วย ordering ไม่ทำลายผลลัพธ์ ⚠️ **แคบลง (C2):** "พิสูจน์ว่าเพิ่ม depth ไม่ได้" ใช้ได้เฉพาะ candidate/config/corpus/runtime ชุดนี้ ไม่ใช่ข้อสรุปสากล ⚠️ **สถานะจริง (C5/C6):** overshoot 328.92 ms และ "worker-0 collapse" = **NOT REPRODUCED / CAUSE UNKNOWN** ไม่ใช่ "พิสูจน์ว่า environmental" และไม่ใช่ defect ⚠️ ข้อจำกัด: node share ≠ CPU share · correlation ≠ causation · 11 positions เครื่องเดียว |
+| **G5 Strength** | fresh paired color-swapped pentanomial; intrinsic 1T ตามโครงการ แล้ว 12T production 1s/2s แยก seed/output; ตรึง H0/H1/alpha/beta/cap ก่อน launch | ยังไม่มี (ไม่ resume Experiment A) | **NOT_RUN** | **ยังไม่ launch และไม่ใช่ "พิธีการ"** — G4 ให้ข้อสังเกตด้านประสิทธิภาพ (node/depth) ซึ่ง**ไม่ใช่ strength** จึงยังไม่มีข้อสรุป Elo ใด ๆ การจะเดินหน้า G5 ต้องผ่าน prerequisite ที่เกี่ยวข้องก่อน (รวม race-detector gate) และต้อง freeze protocol/seeds/H0/H1/alpha/beta/cap ล่วงหน้า · ถ้าผู้ใช้อนุมัติให้ยุติ candidate รุ่นนี้ด้วยหลักฐาน G4 ต้องบันทึก G5/G6 เป็น NOT_RUN พร้อมเหตุผล ไม่ใช่เปลี่ยนเป็น PASS |
+| **G6 Production** | full current suite, perft/differential เมื่อ native state เปลี่ยน, NNUE parity, TB4–6, NNUE/HCE GUI smoke/rollback | ยังไม่มี | **NOT_STARTED** | ต้องรอ G5; ยังไม่มีการแทนที่ production DLL/profile ใด ๆ |
+
+**สถานะรวม: NOT_PROMOTED** — G3 ปิด (native) + integration ยืนยันด้วยพฤติกรรม, G4 วัดครบด้วยผลลบที่แคบกว่าที่เคยรายงาน, G0/G1/G2 ยัง PARTIAL
+ผล 618/618 เป็น**ผลทดสอบ ไม่ใช่ promotion attestation และไม่ใช่ผล SPRT**
+**ยังไม่มี gate ใดที่ให้สิทธิ์ promote** และ**ยังไม่มีข้อสรุป Elo ใด ๆ**
+ข้อสรุป G4 ใช้ได้เฉพาะ candidate/config/corpus/runtime ชุดนี้ · **ห้ามใช้ผลลบนี้เป็นเหตุเปิด shared-score cutoff หรือ redesign กลไกเอง**
+
+## รอบ 1 (2026-09-16): Diagnostic — วัดว่า production ใช้แรงตรงไหน แล้วจัดลำดับ avenue
+
+**ขอบเขตที่ประกาศก่อนรัน:** profile production เท่านั้น ไม่มี candidate ไม่เปลี่ยนพฤติกรรม ไม่ promote
+**เกณฑ์ตัดสิน:** avenue จะ "มี headroom" ต่อเมื่อ **precondition ที่แผน §4 ระบุไว้ ถูกวัดและผ่าน** · avenue ที่วัดไม่ได้ให้บันทึกเป็น BLOCKED ON INSTRUMENTATION ห้ามเดา · **node count ไม่ใช่เวลา**
+
+**สิ่งที่ต้องยืนยันก่อน (ทำแล้ว):** ไม่มี process งานหนักค้าง · GUI ไม่ได้ assert priority · **toolchain deterministic** (build ที่ชื่อ output เดิมซ้ำ → byte-identical)
+
+**ข้อค้นพบด้านสถานะ (สำคัญ):** worktree native source **ไม่ใช่** source ที่ build production (`.text` 155648 vs 158720, `.pdata/.rdata/.reloc` ต่างกัน) **แต่ให้พฤติกรรมเหมือนกันเป๊ะ** บน default path — 1T fixed-depth parity 33/33 (11 ตำแหน่ง × depth 6/8/10) move/score/nodes/depth/PV ตรงทั้งหมด → โค้ดที่เกินมาเป็น inert จนกว่าจะเปิด opt-in · worktree ยังมี native delta ที่ยังไม่ commit (539+/163−) ซึ่ง**ไม่ revert ในรอบนี้** และการมี **baseline ที่นิยามชัด** เป็น prerequisite ของงาน candidate
+
+**Instrumentation:** `makhos_search_nnue_telemetry` ใช้ได้ทุก DLL · **`makhos_search_telemetry` ถูก compile ออกทุก DLL** → รอบนี้สร้าง **diagnostic build** `-DMAKHOS_SEARCH_TELEMETRY=1` (`build/round1_profile_20260916/telemetry/`, sha `56753BFD…`) และ **พิสูจน์ว่าไม่รบกวนพฤติกรรม** (parity 33/33 กับ production) → ใช้ profile พฤติกรรม production ได้ · มี **ablation defines** ครบ (`MAKHOS_NULL_MOVE`, `MAKHOS_LMR_SECOND_REDUCTION`, `MAKHOS_EARLY_TT_CUTOFF`, `MAKHOS_PRECOMPUTED_ORDERING`) → วัด time attribution ได้โดยไม่แก้ source
+
+**ผลวัด (1T, production behavior):**
+
+| metric | depth 10 | 1000 ms |
+|---|---|---|
+| qsearch share ของ nodes | **64.7%** | **51.4%** |
+| ordering efficiency (cutoff ตั้งแต่ตาแรก) | 86.9% | **89.1%** |
+| avg cutoff index | 0.27 | 0.24 |
+| TT hit rate | 48.4% | 66.5% |
+| null cutoff rate | 44.8% | 61.1% |
+| LMR / PVS researches ต่อ node | 0.0025 / 0.031 | 0.0031 / 0.023 |
+| **refreshes ต่อ evaluation (NNUE)** | **0.022%** | **0.0002%** |
+| overshoot | — | 0.049% (1T) / 0.151% (12T) |
+| NPS | 1.26M | 1.53M (12T: 2.40M = **1.57x**) |
+
+**จัดลำดับ avenue (ใช้เกณฑ์ที่ประกาศไว้):**
+
+| ลำดับ | avenue | precondition | ผล | สรุป |
+|---|---|---|---|---|
+| **1** | งานค้นหาสิ้นเปลือง (movegen/qsearch ซ้ำ) | มี hotspot | qsearch 51–65% ของ nodes, q_beta_cutoffs เพียง 18–20% ของ qnodes | **CANDIDATE — บล็อกใหญ่สุดที่วัดได้ (แต่ยังไม่ใช่เวลาจนกว่าจะทำ ablation)** |
+| 2 | NNUE cost (`ancestor delta`) | profile ยืนยันว่าต้นทุนสำคัญ | refresh 0.0002–0.022% ของ evaluation | **ไม่ผ่าน precondition → ตัดออกจากคิว** |
+| 3 | single-thread search quality (move ordering) | ตำแหน่งหลากหลายชี้ว่าค้นผิดทิศ | ordering efficiency 86.9–89.1% | **ไม่ผ่าน precondition (ordering อิ่มตัวแล้ว)** · history/horizon ยังไม่ได้วัด |
+| 4 | time management | มีเวลาสูญเปล่า/ถอยเมื่อ deadline | overshoot 0.049–0.151% ของงบ | **ไม่ผ่าน precondition → ลดความสำคัญ** |
+| 5 | NNUE รุ่นถัดไป | error analysis + learning curve | ยังไม่ทำ | **workstream แยก** ต้องมี data + sealed split |
+
+**แก้ข้อผิดพลาดการวัดของตัวเอง 2 จุด (บันทึกใน `round1.json`):** (R1-C1) ตัวเลข NNUE ที่ 12T **ถอน** — counter reset ต่อ search call และ root-split เรียก search ต่อ root move → อ่านได้แค่ subtree สุดท้าย · (R1-C2) qsearch share เดิม 34–39% **แก้เป็น 51–64.7%** เพราะ `qnodes` ถูกนับที่เดียวกับ `nodes` (บรรทัด 3962-3963)
+
+**รอบ 2 ที่เสนอ:** ablation-based time attribution สำหรับบล็อก qsearch/movegen (ใช้ define ล้วน ไม่แก้ source) พร้อมเกณฑ์ที่ประกาศล่วงหน้า: feature ใดที่ถอดออกแล้ว NPS เพิ่มเกิน noise floor = บล็อกต้นทุนจริงที่ควรปรับ · feature ใดที่ถอดออกแล้ว nodes เพิ่มมากกว่า NPS = เป็นบวกสุทธิ ต้องเก็บไว้ · **ผล ablation ทุกรายการเป็น diagnostic ห้ามอ้างเป็น strength และห้าม promote**
+
+**สถานะรอบนี้: NOT_PROMOTED · ไม่มี strength claim ใด ๆ · ไม่มีการเปลี่ยน production** · หลักฐาน: `build/round1_profile_20260916/round1.json`
+
+## ประวัติ 2026-09-11: ลด Tech Debt ก่อนเพิ่ม Complexity
 
 PR #6 merged เป็น `e975d68` หลังผู้ใช้อนุมัติ correctness-only exception เฉพาะงานนี้
 Windows Local รายงาน full suite 513/513, Node 16/16, real-TB4–TB6 transition และ
@@ -11,8 +105,8 @@ NNUE/HCE HTTP smoke PASS ไม่อ้างว่า Elo เพิ่ม แ�
 1. Phase 0: inventory/แหล่งคำสั่ง/skill complexity guard — เสร็จสมบูรณ์ (PR #7)
 2. Phase 1: consumer/evidence map, ย้าย tooling และจัดทำสารบัญหลัก — เสร็จสมบูรณ์ (PR #8-#12)
    - สารบัญประวัติและหลักฐานการทดลอง: [ดัชนีหลักฐานการทดลอง](docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md)
-3. Phase 2: shared build orchestration → server lifecycle owner → CLI handler boundaries
-4. Phase 3: native/NNUE modularization หลังมี baseline และ acceptance ของ phase ก่อนหน้า
+3. Phase 2: shared build orchestration → server lifecycle owner → CLI handler boundaries — เสร็จสมบูรณ์ (PR #13–#15)
+4. Phase 3: native/NNUE leaf modularization — เสร็จสมบูรณ์ (PR #16)
 
 รายงานสถานะปัจจุบันอยู่ที่ [.agents/skills/.../references/current-state.md](.agents/skills/thai-makhos-engine/references/current-state.md); เนื้อหาด้านล่างเป็นประวัติการพัฒนา
 

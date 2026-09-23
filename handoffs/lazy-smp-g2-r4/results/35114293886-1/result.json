@@ -1,0 +1,528 @@
+{
+  "status": "REVIEW_REQUIRED",
+  "handoff": "lazy-smp-g2-r4",
+  "scope": "publication protocol only; not Windows worker lifecycle or full G2/G3",
+  "prior_results": "r3 (PR #18 and the C11 follow-up) preserved, not reused",
+  "input_sha256": {
+    "collect.py": "1dfc077d5cf3ed9a04b7689779145bcd70042a005560505a70e0e1528b9ba0ae",
+    "manifest.json": "9da1dab702ffb432e960f91953da11f502800bfc33ae2e2b9e1f16e885b513e2",
+    "probe.c": "2c1c6fa494941bb8b2411cd4c41d3ca5160a382013d3fa32d78c9dadd6db3be9",
+    "smoke_pthread.c": "d16f263d300c9ea67f0d02f2a333633d02c298d48448a1d9d615ccda673a170f",
+    "negative_pthread.c": "cb2125e5982e4ad650da4fb4d94acb897df494a6319b3b47beb4a111f0dab454",
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "verify_snapshot.py": "67354f600832aa20775b165a0d059587ae0b98d4ce6665ccdfd607edd0d24db1",
+    "README.md": "6ea0b0dfafdd6b4987f19c74683d97850d6db589c9bc03e9021b909306596156",
+    "windows_smoke.json": "7a94db5a5da4051cbd15d8a5a176aafd6c533071b7a019536d402d34e2477737",
+    "source/tests/native_lazy_smp_smoke_pthread.c": "d16f263d300c9ea67f0d02f2a333633d02c298d48448a1d9d615ccda673a170f",
+    "source/tests/native_lazy_smp_negative_pthread.c": "cb2125e5982e4ad650da4fb4d94acb897df494a6319b3b47beb4a111f0dab454",
+    "source/tests/native_lazy_smp_portable_pthread.c": "d70d02292db9e61304ee99138e14d049d61c8edb3631e6355381ff332b7c9623",
+    "source/native/makhos_native.c": "4b4362e3e9af2cfc2d2f56bfb0deb124d20cfb3001663f930e18f9c76df9770f",
+    "source/native/makhos_types.h": "c088056972a2f73bfbb9c111a777aa32bdc1bc493d5ae41fa7534dbd300077bf",
+    "source/tools/verification/prepare_lazy_smp_race_probe_r4.py": "b508a60546d205202bb7d993e4ce0de238e9ba4598b75d43852a04e7fb70ddd8"
+  },
+  "inputs_unchanged": true,
+  "tests": {
+    "clang": {
+      "clang_smoke_pthread_plain": {
+        "compile": {
+          "name": "clang_smoke_pthread_plain_compile",
+          "command": "clang -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/smoke_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_smoke_pthread_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:36.696822+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 2.505928417,
+          "runner_killed": false,
+          "stdout": "clang_smoke_pthread_plain_compile.stdout.log",
+          "stderr": "clang_smoke_pthread_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_smoke_pthread_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_smoke_pthread_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:39.203168+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.003991116999998212,
+            "runner_killed": false,
+            "stdout": "clang_smoke_pthread_plain_run_01.stdout.log",
+            "stderr": "clang_smoke_pthread_plain_run_01.stderr.log",
+            "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "638abfece3ea3574c2a7951dd284d0978410ea6664f6357e2310bb189f00f4f3",
+        "binary_path": "results/35114293886-1/binaries/clang_smoke_pthread_plain"
+      },
+      "clang_smoke_pthread_tsan": {
+        "compile": {
+          "name": "clang_smoke_pthread_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/smoke_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_smoke_pthread_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:39.207426+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.3355485680000001,
+          "runner_killed": false,
+          "stdout": "clang_smoke_pthread_tsan_compile.stdout.log",
+          "stderr": "clang_smoke_pthread_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_smoke_pthread_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_smoke_pthread_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:39.552583+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.015541683999998668,
+            "runner_killed": false,
+            "stdout": "clang_smoke_pthread_tsan_run_01.stdout.log",
+            "stderr": "clang_smoke_pthread_tsan_run_01.stderr.log",
+            "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "5eaa656d33cd16091f760fe1d2f50de3e95496c9e571d012118c4d51bf60d169",
+        "binary_path": "results/35114293886-1/binaries/clang_smoke_pthread_tsan",
+        "reported_data_race": false
+      },
+      "clang_negative_pthread_plain": {
+        "compile": {
+          "name": "clang_negative_pthread_plain_compile",
+          "command": "clang -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_negative_pthread_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:39.568635+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.12406224000000066,
+          "runner_killed": false,
+          "stdout": "clang_negative_pthread_plain_compile.stdout.log",
+          "stderr": "clang_negative_pthread_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_negative_pthread_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_negative_pthread_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:39.693236+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.004382028000001981,
+            "runner_killed": false,
+            "stdout": "clang_negative_pthread_plain_run_01.stdout.log",
+            "stderr": "clang_negative_pthread_plain_run_01.stderr.log",
+            "stdout_sha256": "9ddd1f10484d8061edb549d0269606d786379ea4ced4793ec4ebfdbffdc7a0f2",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "af6a1fc258a270aa8c4fd2ebe92b91e4e4243163152e07d39c0e0a35dca4adb7",
+        "binary_path": "results/35114293886-1/binaries/clang_negative_pthread_plain"
+      },
+      "clang_negative_pthread_tsan": {
+        "compile": {
+          "name": "clang_negative_pthread_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_negative_pthread_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:39.697910+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.1286911150000023,
+          "runner_killed": false,
+          "stdout": "clang_negative_pthread_tsan_compile.stdout.log",
+          "stderr": "clang_negative_pthread_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_negative_pthread_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_negative_pthread_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:39.836077+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.25566049799999746,
+            "runner_killed": false,
+            "stdout": "clang_negative_pthread_tsan_run_01.stdout.log",
+            "stderr": "clang_negative_pthread_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "f0da43a62b3e6d0180e2a4a5784943e876aaafb1ce283c815085f091b123fcbe"
+          }
+        ],
+        "binary_sha256": "f3c3ddac81fa71f8fedd4be525ea2adb5b08f181f04c2b3675acad6e26634d3e",
+        "binary_path": "results/35114293886-1/binaries/clang_negative_pthread_tsan",
+        "reported_data_race": true
+      },
+      "clang_probe_plain": {
+        "compile": {
+          "name": "clang_probe_plain_compile",
+          "command": "clang -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:40.398418+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.11657611000000401,
+          "runner_killed": false,
+          "stdout": "clang_probe_plain_compile.stdout.log",
+          "stderr": "clang_probe_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_probe_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:40.515544+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.15338156500000366,
+            "runner_killed": false,
+            "stdout": "clang_probe_plain_run_01.stdout.log",
+            "stderr": "clang_probe_plain_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "1a57867dcc437f3282df8a1f8a42d526198c78b39e468d3ffa4248320e8fe39c"
+          }
+        ],
+        "binary_sha256": "47534b4af5b84b41cd1a05d55b8bb42fa9bd23a91aa9b7fc4fdb28eb94532606",
+        "binary_path": "results/35114293886-1/binaries/clang_probe_plain"
+      },
+      "clang_probe_tsan": {
+        "compile": {
+          "name": "clang_probe_tsan_compile",
+          "command": "clang -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:40.671239+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.21785885900000324,
+          "runner_killed": false,
+          "stdout": "clang_probe_tsan_compile.stdout.log",
+          "stderr": "clang_probe_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "clang_probe_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:40.899904+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.40271384799999765,
+            "runner_killed": false,
+            "stdout": "clang_probe_tsan_run_01.stdout.log",
+            "stderr": "clang_probe_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "b3c9618bdb001437897fbb23850500cfe210dfe96704514e35a56350bb5c53f9"
+          },
+          {
+            "name": "clang_probe_tsan_run_02",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:41.303511+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4554159290000044,
+            "runner_killed": false,
+            "stdout": "clang_probe_tsan_run_02.stdout.log",
+            "stderr": "clang_probe_tsan_run_02.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "b3c9618bdb001437897fbb23850500cfe210dfe96704514e35a56350bb5c53f9"
+          },
+          {
+            "name": "clang_probe_tsan_run_03",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:41.759669+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.46028903999999926,
+            "runner_killed": false,
+            "stdout": "clang_probe_tsan_run_03.stdout.log",
+            "stderr": "clang_probe_tsan_run_03.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "b3c9618bdb001437897fbb23850500cfe210dfe96704514e35a56350bb5c53f9"
+          },
+          {
+            "name": "clang_probe_tsan_run_04",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:42.220568+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4599072769999992,
+            "runner_killed": false,
+            "stdout": "clang_probe_tsan_run_04.stdout.log",
+            "stderr": "clang_probe_tsan_run_04.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "b3c9618bdb001437897fbb23850500cfe210dfe96704514e35a56350bb5c53f9"
+          },
+          {
+            "name": "clang_probe_tsan_run_05",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/clang_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:42.681568+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4590914220000002,
+            "runner_killed": false,
+            "stdout": "clang_probe_tsan_run_05.stdout.log",
+            "stderr": "clang_probe_tsan_run_05.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "b3c9618bdb001437897fbb23850500cfe210dfe96704514e35a56350bb5c53f9"
+          }
+        ],
+        "binary_sha256": "24c7ef0d3ed5804283c1e5d58f5f63ce1002f577ca858a980bdf05d9c5a8b1ed",
+        "binary_path": "results/35114293886-1/binaries/clang_probe_tsan",
+        "reported_data_race": false
+      }
+    },
+    "gcc": {
+      "gcc_smoke_pthread_plain": {
+        "compile": {
+          "name": "gcc_smoke_pthread_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/smoke_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_smoke_pthread_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:43.567511+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.09917444799999942,
+          "runner_killed": false,
+          "stdout": "gcc_smoke_pthread_plain_compile.stdout.log",
+          "stderr": "gcc_smoke_pthread_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_smoke_pthread_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_smoke_pthread_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:43.667339+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.003938093999998671,
+            "runner_killed": false,
+            "stdout": "gcc_smoke_pthread_plain_run_01.stdout.log",
+            "stderr": "gcc_smoke_pthread_plain_run_01.stderr.log",
+            "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "c65886360a847ea1109d4270fe9eb5fa959fb08ba6020bbbfb7f691f996880d1",
+        "binary_path": "results/35114293886-1/binaries/gcc_smoke_pthread_plain"
+      },
+      "gcc_smoke_pthread_tsan": {
+        "compile": {
+          "name": "gcc_smoke_pthread_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/smoke_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_smoke_pthread_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:43.671697+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.15616452199999742,
+          "runner_killed": false,
+          "stdout": "gcc_smoke_pthread_tsan_compile.stdout.log",
+          "stderr": "gcc_smoke_pthread_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_smoke_pthread_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_smoke_pthread_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:43.836138+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.04737145400000031,
+            "runner_killed": false,
+            "stdout": "gcc_smoke_pthread_tsan_run_01.stdout.log",
+            "stderr": "gcc_smoke_pthread_tsan_run_01.stderr.log",
+            "stdout_sha256": "a33132de7e7c5217e7fc7b687aef1cefacb4fd96813af4debe926dae120d1f2e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "1425139cd6be4beb0536591aa240d094724453d0b46197c52a748a168f38018c",
+        "binary_path": "results/35114293886-1/binaries/gcc_smoke_pthread_tsan",
+        "reported_data_race": false
+      },
+      "gcc_negative_pthread_plain": {
+        "compile": {
+          "name": "gcc_negative_pthread_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_negative_pthread_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:43.884405+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.045264601999996046,
+          "runner_killed": false,
+          "stdout": "gcc_negative_pthread_plain_compile.stdout.log",
+          "stderr": "gcc_negative_pthread_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_negative_pthread_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_negative_pthread_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:43.930362+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.004397800999996093,
+            "runner_killed": false,
+            "stdout": "gcc_negative_pthread_plain_run_01.stdout.log",
+            "stderr": "gcc_negative_pthread_plain_run_01.stderr.log",
+            "stdout_sha256": "e0579c839444d758dcd078f9159f78d402f63e18e240de92208df8b717a6672a",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "6e100f2597e4d668093b66c97315a615c19209bf6910b65c57c2df983b933f50",
+        "binary_path": "results/35114293886-1/binaries/gcc_negative_pthread_plain"
+      },
+      "gcc_negative_pthread_tsan": {
+        "compile": {
+          "name": "gcc_negative_pthread_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/negative_pthread.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_negative_pthread_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:43.935254+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.04824290199999837,
+          "runner_killed": false,
+          "stdout": "gcc_negative_pthread_tsan_compile.stdout.log",
+          "stderr": "gcc_negative_pthread_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_negative_pthread_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_negative_pthread_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:43.991585+00:00",
+            "exit_code": 66,
+            "elapsed_seconds": 0.32744784100000146,
+            "runner_killed": false,
+            "stdout": "gcc_negative_pthread_tsan_run_01.stdout.log",
+            "stderr": "gcc_negative_pthread_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "deef1e0bb616446e52e2c3697f27f0d237b3e2f336db0e0831df9c82ce1afb69"
+          }
+        ],
+        "binary_sha256": "062b730de763ac48b3ea5d78f85557281126cd2248e57e7f280866d1e83e4a06",
+        "binary_path": "results/35114293886-1/binaries/gcc_negative_pthread_tsan",
+        "reported_data_race": true
+      },
+      "gcc_probe_plain": {
+        "compile": {
+          "name": "gcc_probe_plain_compile",
+          "command": "gcc -std=c17 -O1 -g -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_plain",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:44.702215+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.06827069799999919,
+          "runner_killed": false,
+          "stdout": "gcc_probe_plain_compile.stdout.log",
+          "stderr": "gcc_probe_plain_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_probe_plain_run_01",
+            "command": "timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_plain",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:44.771190+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.13854989499999704,
+            "runner_killed": false,
+            "stdout": "gcc_probe_plain_run_01.stdout.log",
+            "stderr": "gcc_probe_plain_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "d38e5e22649e1f5a73ed6255c76cd0808479dad0d4e5a418d40352dd71506e48"
+          }
+        ],
+        "binary_sha256": "d143f7430cda869a5603308d3397213375fd636058f04474163fd5a17c8b8114",
+        "binary_path": "results/35114293886-1/binaries/gcc_probe_plain"
+      },
+      "gcc_probe_tsan": {
+        "compile": {
+          "name": "gcc_probe_tsan_compile",
+          "command": "gcc -std=c17 -O1 -g -fsanitize=thread -pthread /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/probe.c -o /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+          "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+          "started_utc": "2026-09-16T15:17:44.910748+00:00",
+          "exit_code": 0,
+          "elapsed_seconds": 0.12401272700000021,
+          "runner_killed": false,
+          "stdout": "gcc_probe_tsan_compile.stdout.log",
+          "stderr": "gcc_probe_tsan_compile.stderr.log",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "runs": [
+          {
+            "name": "gcc_probe_tsan_run_01",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:45.047779+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4685893739999969,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_01.stdout.log",
+            "stderr": "gcc_probe_tsan_run_01.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "a745557f8cbe53f60b4501e8401ae35a77947c6a1e9c0ab193ce3f4e7b835f9d"
+          },
+          {
+            "name": "gcc_probe_tsan_run_02",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:45.516927+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.45754307300000363,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_02.stdout.log",
+            "stderr": "gcc_probe_tsan_run_02.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "2aa88ca8a19f25b92e6a7cb026b9bb1725b8771aef8d65462cff38f54e65c5ce"
+          },
+          {
+            "name": "gcc_probe_tsan_run_03",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:45.975348+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4648501430000067,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_03.stdout.log",
+            "stderr": "gcc_probe_tsan_run_03.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "2aa88ca8a19f25b92e6a7cb026b9bb1725b8771aef8d65462cff38f54e65c5ce"
+          },
+          {
+            "name": "gcc_probe_tsan_run_04",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:46.441263+00:00",
+            "exit_code": -6,
+            "elapsed_seconds": 0.4638946589999904,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_04.stdout.log",
+            "stderr": "gcc_probe_tsan_run_04.stderr.log",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "2aa88ca8a19f25b92e6a7cb026b9bb1725b8771aef8d65462cff38f54e65c5ce"
+          },
+          {
+            "name": "gcc_probe_tsan_run_05",
+            "command": "TSAN_OPTIONS=halt_on_error=1 timeout 120s /home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4/results/35114293886-1/binaries/gcc_probe_tsan",
+            "cwd": "/home/runner/work/ThaiMakhosEngine/ThaiMakhosEngine/handoffs/lazy-smp-g2-r4",
+            "started_utc": "2026-09-16T15:17:46.907285+00:00",
+            "exit_code": 0,
+            "elapsed_seconds": 0.23068917199999817,
+            "runner_killed": false,
+            "stdout": "gcc_probe_tsan_run_05.stdout.log",
+            "stderr": "gcc_probe_tsan_run_05.stderr.log",
+            "stdout_sha256": "3e10806d89b5e86bda1a3ad0fc28f0b4d9858c2a750425186d58aee03a11bb5c",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "binary_sha256": "849c6aedd5c179fb66bd44d901e342dfbc4d88acafd71b7b89b3990f98abaa98",
+        "binary_path": "results/35114293886-1/binaries/gcc_probe_tsan",
+        "reported_data_race": false
+      }
+    }
+  },
+  "tsan_options": "halt_on_error=1",
+  "suppressions": false,
+  "aslr_modified": false,
+  "review_note": "a TSan report, assertion failure or timeout is not PASS; an unsupported sanitizer runtime is NOT_RUN"
+}

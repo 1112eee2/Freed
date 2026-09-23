@@ -1,0 +1,60 @@
+name: Lazy SMP r4 liveness measurement
+
+# Measures the liveness AND payload-consistency behaviour of the FROZEN r4 probe, and
+# runs the same measurement against the FROZEN r3 probe (C11 threads) as a differential
+# control for the pthread revision.
+#
+# This is a measurement of existing artifacts. It never edits a handoff, never weakens
+# an assertion, and is not gate evidence and not a re-run of the gate.
+#
+# Context: the r4 gate run aborted on `assert(atomic_load(&accepted) > 0)` in five of six
+# probe runs. A 20x-per-variant measurement found that the aborts are not only that
+# assertion: the probe also aborts on its own payload-consistency assertion
+# `move.captured_low == ~move.path_low`, which is supposed to hold for any snapshot the
+# reader accepts. This workflow quantifies both and asks whether r3 shows the same thing.
+
+on:
+  push:
+    branches: [codex/astra-g2-r4-liveness-measurement]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Frozen probe measurement / ubuntu-24.04
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install Clang TSan, GCC and debugger
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang libclang-rt-18-dev gcc gdb
+      - name: Measure the frozen r4 probe (pthread)
+        run: |
+          python3 tools/verification/measure_lazy_smp_r4_liveness.py \
+            --repeats 20 --output build/r4-liveness
+      - name: Measure the frozen r3 probe (C11 differential control)
+        run: |
+          python3 tools/verification/measure_lazy_smp_r4_liveness.py \
+            --handoff handoffs/lazy-smp-g2-r3 --repeats 20 --output build/r3-liveness
+      - name: Show the summaries
+        if: always()
+        run: |
+          for f in build/r4-liveness/summary.json build/r3-liveness/summary.json; do
+            echo "== $f"
+            cat "$f" 2>/dev/null || echo "no summary produced"
+          done
+      - name: Upload the measurements
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: r4-r3-liveness
+          path: |
+            build/r4-liveness/summary.json
+            build/r3-liveness/summary.json
+          if-no-files-found: warn

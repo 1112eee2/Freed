@@ -41,10 +41,15 @@ from scratch.nnue_scaling_health_audit import build_health_snapshot  # noqa: E40
 
 FORMAT = contract_gate.SUITE_FORMAT
 KIND = "post-acquisition-complete-suite"
-SOURCE_DIRECTORIES = ("makhos", "native", "schemas", "scratch", "tests", "web")
+# Maintained code/configuration only: frozen runs, user games and local build
+# artifacts keep their separate identities and are never swept into this scan.
+SOURCE_DIRECTORIES = (
+    ".github", "config", "makhos", "native", "schemas", "scratch", "tests", "tools", "web",
+)
 SOURCE_SUFFIXES = {
     ".c",
     ".cc",
+    ".cjs",
     ".cpp",
     ".css",
     ".h",
@@ -52,9 +57,12 @@ SOURCE_SUFFIXES = {
     ".html",
     ".js",
     ".json",
+    ".mjs",
     ".ps1",
     ".py",
     ".toml",
+    ".yaml",
+    ".yml",
 }
 TOP_LEVEL_SOURCES = (
     "RULESET.json",
@@ -64,7 +72,11 @@ TOP_LEVEL_SOURCES = (
     "build_nnue_incremental.ps1",
     "build_nnue_search_candidate.ps1",
     "build_nnue_scalar.ps1",
+    "follow_dfpn_saturated_line_on_d.ps1",
     "pyproject.toml",
+    "run_dfpn_on_d.ps1",
+    "run_gui.ps1",
+    "server.py",
 )
 
 

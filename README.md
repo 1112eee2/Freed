@@ -10,6 +10,13 @@
 
 เอนจิ้นอ้างอิงหมากฮอสไทยที่เน้นความถูกต้องก่อนความเร็ว พร้อมนโยบายเลือกตา 2 แบบบน search core เดียวกัน
 
+## เริ่มพัฒนาและตรวจสอบ
+
+ใช้ [CONTRIBUTING.md](CONTRIBUTING.md) สำหรับ setup, ขอบเขตโมดูล และเกณฑ์ตรวจรับ
+เริ่มด้วย `python -B tools/verification/run_tests.py` สำหรับ reference/GUI checks
+ส่วน `--suite full` ใช้บน Windows Local ที่มี artifacts ครบและไม่มี workload อื่น
+ผล reference หรือ full developer checks ไม่ใช่หลักฐานอนุมัติ candidate ขึ้น production
+
 ## บันทึกเกมและย้อนตาใน Web GUI
 
 เปิดด้วย `python server.py` แล้วใช้แผงประวัติการเดินและผลเกม:

@@ -7,7 +7,7 @@
 #>
 param(
     [Parameter(Mandatory=$true, Position=0)]
-    [ValidateSet('native', 'nnue_scalar', 'nnue_incremental', 'nnue_avx2', 'nnue_avx2_update', 'nnue_search_candidate', 'endgame_c1', 'endgame_c2', 'endgame_c3', 'endgame_c4')]
+    [ValidateSet('native', 'nnue_scalar', 'nnue_incremental', 'nnue_avx2', 'nnue_avx2_update', 'nnue_search_candidate', 'lazy_smp_candidate', 'endgame_c1', 'endgame_c2', 'endgame_c3', 'endgame_c4')]
     [string]$Variant,
 
     [Parameter(Mandatory=$false, Position=1)]
@@ -21,6 +21,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Bind to this shell: inherited PSModulePath may contain another PowerShell edition.
+Import-Module (Join-Path $PSHOME 'Modules\Microsoft.PowerShell.Utility\Microsoft.PowerShell.Utility.psd1') -ErrorAction Stop
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = (Resolve-Path -LiteralPath (Join-Path $ScriptDir '..\..')).Path
@@ -28,8 +30,8 @@ $BuildRoot = [IO.Path]::GetFullPath((Join-Path $ProjectRoot 'build'))
 
 # The existing strict key repair is an isolated strength candidate.
 if ($StrictSearchKey) {
-    if ($Variant -ne 'nnue_search_candidate') {
-        throw 'StrictSearchKey is supported only for nnue_search_candidate.'
+    if ($Variant -ne 'nnue_search_candidate' -and $Variant -ne 'lazy_smp_candidate') {
+        throw 'StrictSearchKey is supported only for nnue_search_candidate and lazy_smp_candidate.'
     }
     if (-not $OutputDirectory) {
         throw 'StrictSearchKey requires an explicit candidate OutputDirectory.'
@@ -409,6 +411,45 @@ switch ($Variant) {
                 quantized_model_sha256 = $ExpectedModelSha256
                 feature_abi = 'thai-makhos-shared-137-v1'
                 evaluator = 'incremental AVX2 NNUE at non-terminal native search leaves'
+                playing_path_changed = $true
+                promotion_status = 'UNTESTED'
+            }
+        }
+    }
+    'lazy_smp_candidate' {
+        $Src = (Resolve-Path -LiteralPath (Join-Path $ProjectRoot 'native\makhos_native_nnue.c')).Path
+        $NatSrc = (Resolve-Path -LiteralPath (Join-Path $ProjectRoot 'native\makhos_native.c')).Path
+        $UpdSrc = (Resolve-Path -LiteralPath (Join-Path $ProjectRoot 'native\makhos_nnue_avx2_update.c')).Path
+        $Flags = @('-O3', '-march=x86-64', '-std=c17', '-Wall', '-Wextra', '-Werror', '-Wno-unused-function', '-shared', '-Wl,/Brepro')
+        $Flags += '-DMAKHOS_NATIVE_LAZY_SMP=1'
+        if ($StrictSearchKey) { $Flags += '-DMAKHOS_STRICT_SEARCH_POSITION_KEY=1' }
+        Invoke-NnueReproducibleBuild -VariantName 'lazy_smp_candidate' -DefaultDir 'build\lazy_smp_candidate_v1' -FileName 'makhos_native_lazy_smp_candidate_v1.dll' -Format 'thai-makhos-lazy-smp-build-v1' -SourcePath $Src -Flags $Flags -BuildPayload {
+            param($Final, $Hash)
+            [ordered]@{
+                format = 'thai-makhos-lazy-smp-build-v1'
+                verdict = 'PASS'
+                source = $Src
+                source_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $Src).Hash
+                native_source = $NatSrc
+                native_source_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $NatSrc).Hash
+                update_source = $UpdSrc
+                update_source_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $UpdSrc).Hash
+                compiler = $ClangCompiler
+                compiler_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $ClangCompiler).Hash
+                compiler_version = (& $ClangCompiler --version | Select-Object -First 1).Trim()
+                flags = $Flags
+                vector_target = 'AVX2 function attributes in a baseline x86-64 DLL'
+                reproducible_builds = 2
+                byte_identical = $true
+                candidate = $Final
+                candidate_bytes = (Get-Item -LiteralPath $Final).Length
+                candidate_sha256 = $Hash
+                accepted_library_sha256 = $ExpectedAcceptedSha256
+                quantization_contract_sha256 = $ExpectedContractSha256
+                quantized_model_sha256 = $ExpectedModelSha256
+                feature_abi = 'thai-makhos-shared-137-v1'
+                evaluator = 'incremental AVX2 NNUE at non-terminal native search leaves'
+                smp_architecture = 'Native Shared-TT Lazy SMP (Move-Hints Only)'
                 playing_path_changed = $true
                 promotion_status = 'UNTESTED'
             }

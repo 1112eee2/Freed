@@ -243,6 +243,7 @@ def command_gui(args: argparse.Namespace) -> int:
         open_browser=not args.no_browser,
         native_library=args.native_library,
         nnue_model=args.nnue_model,
+        lazy_smp=args.lazy_smp,
         release_pointer=args.release_pointer,
         release_profile=args.release_profile,
     )

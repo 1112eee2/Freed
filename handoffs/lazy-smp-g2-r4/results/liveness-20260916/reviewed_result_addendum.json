@@ -1,0 +1,47 @@
+{
+  "amends": "handoffs/lazy-smp-g2-r4/results/reviewed_result.json (PR #20 branch codex/astra-g2-r4-tsan-results-20260916)",
+  "amended_on": "2026-09-16",
+  "reason": "a 20x-per-variant measurement of the frozen probes found a second, pre-existing abort that the single gate run could not surface",
+  "corrections": [
+    {
+      "field": "protocol_run.classification",
+      "was": "harness liveness calibration, not a publication defect",
+      "now": "INCOMPLETE. The liveness assertion is one of TWO abort modes. The probe also aborts on its own payload-consistency assertion `move.captured_low == ~move.path_low`, which no run of the gate could have shown because it aborts earlier. That second abort is not attributed to any mechanism and is not a harness calibration issue.",
+      "unchanged_part": "the liveness assertion itself is still timing-dependent and still should not be used as a gate"
+    },
+    {
+      "field": "gate_status",
+      "was": "NOT_PASSED",
+      "now": "NOT_PASSED",
+      "note": "unchanged, but now for two independent reasons"
+    }
+  ],
+  "new_observation": {
+    "assertion": "move.captured_low == ~move.path_low",
+    "location": "probe.c:125",
+    "reproduces_on_frozen_r3": true,
+    "r3_plain_clang": "5/20 pass, 9 payload aborts, 6 liveness aborts",
+    "r4_plain_clang": "4/20 pass, 10 payload aborts, 6 liveness aborts",
+    "r4_clang_tsan": "3/20 pass, 9 payload aborts, 8 liveness aborts",
+    "r4_gcc_tsan": "5/20 pass, 8 payload aborts, 7 liveness aborts",
+    "windows_12_cpu_r4_plain": "19/20 pass, 1 payload abort",
+    "r3_tsan_both_compilers": "0/20 pass, 20/20 exit 66 (the C11 sanitizer blocker, deterministic)",
+    "not_a_data_race_report": true,
+    "mechanism": "NOT ATTRIBUTED",
+    "tension_recorded": "the intended seqlock semantics suggest a torn payload should be impossible; the measurement contradicts that reading, and the contradiction is the finding"
+  },
+  "consequences": [
+    "G2's publication-protocol scope is not closed and should not be treated as near closure",
+    "a reader that can accept an inconsistent move snapshot can hand a wrong move to the search: a correctness question that outranks the Lazy SMP performance verdict",
+    "no production change, SPRT or promotion is authorised by this measurement"
+  ],
+  "next_diagnostic": {
+    "id": "r5 (NOT implemented)",
+    "first_step": "a diagnostic probe that records the accepted w0/w1/w2/d plus an immediate re-read of sequence/key/move_w0/move_w1/move_w2 instead of asserting, to show whether the accepted words came from different writes",
+    "no_code_change_controls": [
+      "run the same frozen probe pinned to one CPU (taskset -c 0)",
+      "repeat the 20x measurement on a host with more vCPUs (larger GitHub runners are unavailable on this repository's plan)"
+    ],
+    "constraint": "any change to the frozen probe, its assertions or its workload needs explicit owner acceptance and must not be made to manufacture a pass"
+  }
+}

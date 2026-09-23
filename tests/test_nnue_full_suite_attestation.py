@@ -43,6 +43,52 @@ def failing_suite() -> unittest.TestSuite:
 
 
 class FullSuiteAttestationTests(unittest.TestCase):
+    def test_inventory_binds_relocated_tools_ci_and_runtime_entrypoints(self):
+        included = (
+            ".github/workflows/reference-ci.yml",
+            ".github/dependabot.yaml",
+            "tools/verification/run_tests.py",
+            "tools/build/build_orchestrator.ps1",
+            "tools/nested/helper.mjs",
+            "tests/tooling/test_gui_lifecycle.cjs",
+            "config/gui_release.json",
+            "server.py",
+            "run_gui.ps1",
+            "run_dfpn_on_d.ps1",
+            "follow_dfpn_saturated_line_on_d.ps1",
+        )
+        excluded = (
+            "build/nnue_sprt_6t_vs_12t/checkpoint.json",
+            "build/nnue_sprt_6t_vs_12t_c4_v1/checkpoint.json",
+            "saved_games/game.json",
+            "tools/__pycache__/ghost.py",
+            "tools/notes.txt",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in included + excluded:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("original\n", encoding="utf-8")
+            paths = runner.source_inventory_paths(root)
+            self.assertEqual(
+                [path.relative_to(root).as_posix() for path in paths],
+                sorted(included),
+            )
+            original = runner.inventory_sha256(paths, root=root)
+            for name in included:
+                with self.subTest(path=name):
+                    path = root / name
+                    path.write_text("changed\n", encoding="utf-8")
+                    self.assertNotEqual(original, runner.inventory_sha256(paths, root=root))
+                    path.write_text("original\n", encoding="utf-8")
+            added = root / "tools/new_runner.py"
+            added.write_text("pass\n", encoding="utf-8")
+            self.assertNotEqual(paths, runner.source_inventory_paths(root))
+            added.unlink()
+            (root / included[0]).unlink()
+            self.assertNotEqual(paths, runner.source_inventory_paths(root))
+
     def test_real_suite_discovery_supports_non_package_tests_directory(self):
         suite = runner.discover_complete_suite()
         self.assertGreater(suite.countTestCases(), 0)

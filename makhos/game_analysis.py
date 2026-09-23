@@ -48,6 +48,9 @@ SEARCH_PROVENANCE_FIELDS = (
     "native_library",
     "native_library_sha256",
     "native_search_abi",
+    "nnue_enabled",
+    "nnue_feature_abi",
+    "nnue_model_sha256",
     "native_error",
 )
 EXTERNAL_NO_REPETITION_RULES = Rules(
@@ -401,6 +404,33 @@ def engine_provenance_issues(
         or any(character not in "0123456789abcdefABCDEF" for character in sha256)
     ):
         issues.append("invalid:native_library_sha256")
+    nnue_enabled = metadata.get("nnue_enabled")
+    if "nnue_enabled" in metadata and not isinstance(nnue_enabled, bool):
+        issues.append("invalid:nnue_enabled")
+    feature_abi = metadata.get("nnue_feature_abi")
+    if feature_abi is not None and (
+        not isinstance(feature_abi, str) or not feature_abi
+    ):
+        issues.append("invalid:nnue_feature_abi")
+    model_sha = metadata.get("nnue_model_sha256")
+    if model_sha is not None and (
+        not isinstance(model_sha, str)
+        or len(model_sha) != 64
+        or any(character not in "0123456789abcdefABCDEF" for character in model_sha)
+    ):
+        issues.append("invalid:nnue_model_sha256")
+    if (
+        nnue_enabled is True
+        and not isinstance(model_sha, str)
+        and "missing:nnue_model_sha256" not in issues
+    ):
+        issues.append("missing:nnue_model_sha256")
+    if (
+        nnue_enabled is True
+        and not isinstance(feature_abi, str)
+        and "missing:nnue_feature_abi" not in issues
+    ):
+        issues.append("missing:nnue_feature_abi")
     return tuple(issues)
 
 
@@ -413,6 +443,9 @@ def engine_provenance_mismatches(
     hash_mb: int,
     rules_profile: str,
     budget_ms: int,
+    nnue_enabled: bool | None = None,
+    nnue_feature_abi: str | None = None,
+    nnue_model_sha256: str | None = None,
 ) -> tuple[str, ...]:
     """Compare recorded per-ply settings with an isolated native replay."""
 
@@ -428,6 +461,28 @@ def engine_provenance_mismatches(
     recorded_abi = metadata.get("native_search_abi")
     if isinstance(recorded_abi, int) and recorded_abi != native_search_abi:
         mismatches.append("native_search_abi")
+    recorded_nnue_enabled = metadata.get("nnue_enabled")
+    if (
+        isinstance(recorded_nnue_enabled, bool)
+        and nnue_enabled is not None
+        and recorded_nnue_enabled != nnue_enabled
+    ):
+        mismatches.append("nnue_enabled")
+    recorded_feature_abi = metadata.get("nnue_feature_abi")
+    if (
+        isinstance(recorded_feature_abi, str)
+        and recorded_feature_abi != nnue_feature_abi
+    ):
+        mismatches.append("nnue_feature_abi")
+    recorded_model_sha = metadata.get("nnue_model_sha256")
+    if (
+        isinstance(recorded_model_sha, str)
+        and (
+            nnue_model_sha256 is None
+            or recorded_model_sha.lower() != nnue_model_sha256.lower()
+        )
+    ):
+        mismatches.append("nnue_model_sha256")
     if isinstance(metadata.get("threads"), int) and metadata["threads"] != threads:
         mismatches.append("threads")
     if isinstance(metadata.get("hash_mb"), int) and metadata["hash_mb"] != hash_mb:

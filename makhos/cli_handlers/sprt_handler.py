@@ -10,7 +10,9 @@ import sys
 
 from ..core import DEFAULT_RULES
 from ..native import (
+    NativeLazySmpSearch,
     NativeSearch,
+    hash_megabytes_for_power,
     hash_power_for_megabytes,
     native_tt_entry_bytes,
 )
@@ -176,6 +178,12 @@ def command_sprt(args: argparse.Namespace) -> int:
         raise ValueError("--root-alpha requires candidate Threads 2 or greater")
     if args.root_alpha and (args.selective_root or args.shared_tt):
         raise ValueError("test --root-alpha separately from selective-root/shared-TT")
+    if getattr(args, "lazy_smp", False) and (
+        args.selective_root or args.shared_tt or args.root_alpha
+    ):
+        raise ValueError(
+            "--lazy-smp is mutually exclusive with --selective-root/--shared-tt/--root-alpha"
+        )
     if args.resume and not args.output:
         raise ValueError("--resume requires --output")
 
@@ -386,6 +394,12 @@ def command_sprt(args: argparse.Namespace) -> int:
     # Fixed-time checkpoints bind their budget explicitly for resume validation.
     if args.fixed_move_time_ms is not None:
         sprt_config["fixed_move_time_ms"] = args.fixed_move_time_ms
+    # Added only for the opt-in backend, so legacy clock-mode checkpoint
+    # identities keep their exact shape.
+    if getattr(args, "lazy_smp", False):
+        sprt_config["lazy_smp"] = True
+        sprt_config["candidate_search_backend"] = "native-lazy-smp"
+        sprt_config["baseline_search_backend"] = "native-root-split"
     print(
         "SPRT_CONFIG " + json.dumps(sprt_config, sort_keys=True),
         flush=True,
@@ -404,7 +418,24 @@ def command_sprt(args: argparse.Namespace) -> int:
         selective_root: bool,
         root_alpha: bool,
         shared_tt: bool,
+        lazy_smp: bool = False,
     ):
+        if lazy_smp:
+            # Opt-in Lazy SMP owns its own total-Hash budgeting, so it is not
+            # combined with the root-split selective/shared-TT switches.
+            lazy_hash_mb = effective_hash_mb
+            if lazy_hash_mb is None:
+                lazy_hash_mb = int(hash_megabytes_for_power(
+                    args.search_hash_power,
+                    partitions=1,
+                    entry_bytes=native_tt_entry_bytes(library),
+                ))
+            return NativeLazySmpSearch(
+                library,
+                threads=threads,
+                hash_mb=lazy_hash_mb,
+                nnue_model=nnue_model,
+            )
         if threads == 1:
             hash_power = args.search_hash_power
             if effective_hash_mb is not None:
@@ -460,6 +491,7 @@ def command_sprt(args: argparse.Namespace) -> int:
                 selective_root=args.selective_root,
                 root_alpha=args.root_alpha,
                 shared_tt=args.shared_tt,
+                lazy_smp=getattr(args, "lazy_smp", False),
             ),
             native_endgame_search=dev_eg_search,
             native_endgame_enabled=dev_eg_search is not None,
@@ -491,6 +523,7 @@ def command_sprt(args: argparse.Namespace) -> int:
                 selective_root=False,
                 root_alpha=False,
                 shared_tt=False,
+                lazy_smp=False,
             ),
             native_endgame_search=master_eg_search,
             native_endgame_enabled=master_eg_search is not None,
