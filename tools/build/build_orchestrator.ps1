@@ -20,10 +20,7 @@ param(
     [switch]$StrictSearchKey,
 
     [Parameter(Mandatory=$false)]
-    [switch]$TablebaseDrawCutoff,
-
-    [Parameter(Mandatory=$false)]
-    [switch]$ReverseFutility
+    [switch]$TablebaseDrawCutoff
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,13 +29,11 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = (Resolve-Path -LiteralPath (Join-Path $ScriptDir '..\..')).Path
 $BuildRoot = [IO.Path]::GetFullPath((Join-Path $ProjectRoot 'build'))
 
-# The strict key repair, the tablebase draw cutoff and reverse futility are
-# isolated strength candidates: each builds only nnue_search_candidate into its
-# own directory.
+# The strict key repair and the tablebase draw cutoff are isolated strength
+# candidates: each builds only nnue_search_candidate into its own directory.
 $CandidateSwitches = @()
 if ($StrictSearchKey) { $CandidateSwitches += 'StrictSearchKey' }
 if ($TablebaseDrawCutoff) { $CandidateSwitches += 'TablebaseDrawCutoff' }
-if ($ReverseFutility) { $CandidateSwitches += 'ReverseFutility' }
 foreach ($CandidateSwitch in $CandidateSwitches) {
     if ($Variant -ne 'nnue_search_candidate') {
         throw "$CandidateSwitch is supported only for nnue_search_candidate."
@@ -201,10 +196,6 @@ function Invoke-NnueReproducibleBuild {
     if ($TablebaseDrawCutoff) {
         $Payload['tablebase_draw_cutoff'] = 'exact-draw-v1'
         $Payload['tablebase_draw_reason'] = 'Return exact TB4-6 draws at non-root main-search nodes'
-    }
-    if ($ReverseFutility) {
-        $Payload['reverse_futility'] = 'guarded-rfp-v1'
-        $Payload['reverse_futility_reason'] = 'Return beta at guarded shallow null-window nodes whose static evaluation clears it by a depth margin'
     }
     if ($CandidateSwitches.Count -gt 0) {
         $CandidateSources = @('native/makhos_native_nnue.c', 'native/makhos_native.c', 'native/makhos_types.h', 'native/makhos_format.h', 'native/makhos_nnue_scalar.c', 'native/makhos_nnue_incremental.c', 'native/makhos_nnue_avx2.c', 'native/makhos_nnue_avx2_update.c')
@@ -410,7 +401,6 @@ switch ($Variant) {
         $Flags = @('-O3', '-march=x86-64', '-std=c17', '-Wall', '-Wextra', '-Werror', '-Wno-unused-function', '-shared', '-Wl,/Brepro')
         if ($StrictSearchKey) { $Flags += '-DMAKHOS_STRICT_SEARCH_POSITION_KEY=1' }
         if ($TablebaseDrawCutoff) { $Flags += '-DMAKHOS_SEARCH_TB_DRAW=1' }
-        if ($ReverseFutility) { $Flags += '-DMAKHOS_REVERSE_FUTILITY=1' }
         Invoke-NnueReproducibleBuild -VariantName 'search_candidate' -DefaultDir 'build\nnue_search_v1_r5' -FileName 'makhos_native_nnue_candidate_v1.dll' -Format 'thai-makhos-nnue-search-build-v1' -SourcePath $Src -Flags $Flags -BuildPayload {
             param($Final, $Hash)
             [ordered]@{
