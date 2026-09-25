@@ -1,6 +1,17 @@
 # คู่มือพัฒนา: จบ NNUE v1 → แก้ความคุ้มค่าของ Threads → เพิ่ม Elo ต่อเนื่อง
 
-## งานปัจจุบัน 2026-09-11: ลด Tech Debt ก่อนเพิ่ม Complexity
+## งานปัจจุบัน 2026-09-25: Practical no-loss track (ไม่แพ้ Invincible 2 ในทางปฏิบัติ)
+
+ผู้ใช้อนุมัติ [Practical no-loss track](docs/architecture/PRACTICAL_NO_LOSS_TRACK.md)
+เป็นขอบเขตงาน strength ปัจจุบัน เป้าหมายคือไม่แพ้ Invincible 2 ในแมตช์ขนาดใหญ่
+ที่ตรึงล่วงหน้าและสลับสีครบ รายงานเป็นขอบบน 95% ของอัตราแพ้ ไม่อ้างว่า
+"พิสูจน์แล้วว่าสมบูรณ์แบบ" ไม่รวม DFPN/proof, tablebase ตั้งแต่ 7 ตัว และการออกแบบ Lazy SMP ใหม่
+
+ลำดับงานและ gate อยู่ในเอกสาร track จุดเดียว งานถัดไปอยู่ใน
+[current-state](.agents/skills/thai-makhos-engine/references/current-state.md)
+Tech-debt roadmap (Phase 0–3) เสร็จสมบูรณ์แล้ว หัวข้อด้านล่างเป็นประวัติ
+
+## ประวัติ 2026-09-11: ลด Tech Debt ก่อนเพิ่ม Complexity (เสร็จสมบูรณ์)
 
 PR #6 merged เป็น `e975d68` หลังผู้ใช้อนุมัติ correctness-only exception เฉพาะงานนี้
 Windows Local รายงาน full suite 513/513, Node 16/16, real-TB4–TB6 transition และ

@@ -1,6 +1,6 @@
 # ดัชนีหลักฐานและการทดลองของโครงการ (Experiment & Evidence Index)
 
-ปรับปรุงล่าสุด: 2026-09-11
+ปรับปรุงล่าสุด: 2026-09-25
 เอกสารนี้เป็นสารบัญหลัก (Canonical Index) เชื่อมโยงทุกหมุดหมาย, การทดลอง, กลไก, คำตัดสิน (Verdict), รหัส Commit และ Artifacts ที่ถูกตรึงถาวรใน ThaiMakhosEngine เพื่อให้ค้นหาและสอบทานย้อนกลับได้โดยไม่ต้องคัดลอกรายงานซ้ำซ้อน
 
 ---
@@ -24,6 +24,7 @@
 | **Tech Debt Phase 1B Cluster 1 (PR #9)** | Relocation: Attestation & Production Smoke | **MERGED** | Commit: `36cc8afc445d37e7ed534219ab82fa08dee90580`<br>Canonical: `tools/verification/full_suite_attestation.py` | [`docs/architecture/TECH_DEBT_ROADMAP_TH.md`](TECH_DEBT_ROADMAP_TH.md) |
 | **Tech Debt Phase 1B Cluster 2 (PR #10)** | Relocation: SPRT Arena & Telemetry Audit tools | **MERGED** | Commit: `c80b0c6ea1bf836e540862c510f09ce5032ff601`<br>Canonical: `tools/arena/`, `tools/verification/` | [`docs/architecture/TECH_DEBT_ROADMAP_TH.md`](TECH_DEBT_ROADMAP_TH.md) |
 | **Tech Debt Phase 1B Cluster 3 (PR #11)** | Migration: Tooling Tests to `tests/tooling/` | **MERGED** | Commit: `3308d4a2e12d5b6a483491f7b519a4909a32a224`<br>Full suite: 571/571 PASS, Wrappers: 55/55 PASS | [`docs/architecture/TECH_DEBT_ROADMAP_TH.md`](TECH_DEBT_ROADMAP_TH.md) |
+| **Practical no-loss track (2026-09-25)** | แผน strength ปัจจุบัน: ไม่แพ้ Invincible 2 ในแมตช์ที่ตรึงล่วงหน้า, never-lose suite, root policy เดียว | **ACTIVE PLAN / Phase 0** (ยังไม่มีการเปลี่ยน engine) | ยังไม่มี artifact; ข้อค้นพบ root-policy split และ schema drift อยู่ในเอกสาร track | [`docs/architecture/PRACTICAL_NO_LOSS_TRACK.md`](PRACTICAL_NO_LOSS_TRACK.md) |
 
 ---
 
@@ -47,6 +48,7 @@ graph TD
     README["README.md - ทางเข้าภาพรวมและคำสั่งใช้งาน"] --> DEVPLAN["DEVELOPMENT_PLAN_TH.md - ลำดับความสำคัญและแผนงานภาพรวม"]
     DEVPLAN --> TECHDEBT["docs/architecture/TECH_DEBT_ROADMAP_TH.md - แผนผังการลดหนี้ทางเทคนิค Phase 0-3"]
     DEVPLAN --> STATE[".agents/skills/.../references/current-state.md - สถานะการทำงานปัจจุบันแบบ Single Source of Truth"]
+    DEVPLAN --> TRACK["docs/architecture/PRACTICAL_NO_LOSS_TRACK.md - แผน strength ปัจจุบัน (ไม่แพ้ Invincible 2 ในทางปฏิบัติ)"]
     TECHDEBT --> MAP["docs/architecture/WORK_SCRATCH_CONSUMER_MAP_TH.md - ผังผู้ใช้และการจัดระเบียบ 113 ไฟล์"]
     TECHDEBT --> INDEX["docs/architecture/EXPERIMENT_EVIDENCE_INDEX_TH.md - ดัชนีหลักฐานและการทดลอง"]
     STATE --> LEDGER[".agents/skills/.../references/experiment-evidence-ledger.md - บันทึกหลักฐานย้อนหลังฉบับสมบูรณ์"]
