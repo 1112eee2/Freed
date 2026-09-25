@@ -309,6 +309,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(project_native_library()),
     )
     analyze_game_parser.add_argument(
+        "--nnue-model",
+        help="explicit NNUE model for an NNUE candidate search library",
+    )
+    analyze_game_parser.add_argument(
         "--side",
         choices=("engine", "black", "red", "both"),
         default="engine",

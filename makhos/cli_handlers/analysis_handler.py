@@ -311,14 +311,25 @@ def command_analyze_game(args: argparse.Namespace) -> int:
             args.hash_mb,
             entry_bytes=entry_bytes,
         )
-        searcher = NativeSearch(library, hash_power=hash_power, persistent=True)
+        searcher = NativeSearch(
+            library,
+            hash_power=hash_power,
+            persistent=True,
+            nnue_model=args.nnue_model,
+        )
     else:
         searcher = ParallelNativeSearch(
             library,
             threads=args.threads,
             hash_mb=args.hash_mb,
+            nnue_model=args.nnue_model,
         )
     analysis_native_search_abi = searcher.abi_version
+    analysis_nnue_enabled = bool(searcher.nnue_enabled)
+    analysis_nnue_feature_abi = searcher.nnue_feature_abi
+    analysis_nnue_model_path = searcher.nnue_model_path
+    analysis_nnue_model_sha256 = searcher.nnue_model_sha256
+    analysis_nnue_source_model_sha256 = searcher.nnue_source_model_sha256
 
     position_reports: list[dict] = []
     with searcher:
@@ -397,6 +408,9 @@ def command_analyze_game(args: argparse.Namespace) -> int:
                 hash_mb=args.hash_mb,
                 rules_profile=args.rules_profile,
                 budget_ms=budgets[0],
+                nnue_enabled=analysis_nnue_enabled,
+                nnue_feature_abi=analysis_nnue_feature_abi,
+                nnue_model_sha256=analysis_nnue_model_sha256,
             )
             classification = (
                 "settings-or-version-mismatch"
@@ -440,6 +454,15 @@ def command_analyze_game(args: argparse.Namespace) -> int:
         "native_search_abi": analysis_native_search_abi,
         "threads": args.threads,
         "hash_mb": args.hash_mb,
+        "nnue_enabled": analysis_nnue_enabled,
+        "nnue_feature_abi": analysis_nnue_feature_abi,
+        "nnue_model": (
+            None
+            if analysis_nnue_model_path is None
+            else str(Path(analysis_nnue_model_path).resolve())
+        ),
+        "nnue_model_sha256": analysis_nnue_model_sha256,
+        "nnue_source_model_sha256": analysis_nnue_source_model_sha256,
         "depth_limit": args.depth,
         "rules_profile": args.rules_profile,
         "repetition_limit": analysis_rules.repetition_limit,
