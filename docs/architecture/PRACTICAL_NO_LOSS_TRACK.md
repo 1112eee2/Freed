@@ -1,8 +1,10 @@
 # Practical no-loss track against Invincible 2
 
-Status 2026-09-25: the user approved this as the active strength scope. The
-track is in Phase 0, and no engine, rules, model or accepted artifact has changed
-under it. [current-state](../../.agents/skills/thai-makhos-engine/references/current-state.md)
+Status 2026-09-25: the user approved this as the active strength scope, and
+confirmed the changes in section 8. The track is in Phase 0. No production
+default, rules file, model or accepted artifact has changed under it; the
+default-off candidates are listed in current-state.
+[current-state](../../.agents/skills/thai-makhos-engine/references/current-state.md)
 owns the single next action, and results go to the
 [evidence ledger](../../.agents/skills/thai-makhos-engine/references/experiment-evidence-ledger.md).
 This document is the plan. It does not authorize launching any run.
@@ -85,6 +87,12 @@ That PR's Lazy SMP candidate is `REJECT_FOR_PERFORMANCE / NOT_PROMOTED`
 ([PR #26](https://github.com/1112eee2/ThaiMakhosEngine/pull/26)). The raw
 `saved_games/` files are gitignored and exist only on the Local machine.
 
+F1 status: PR #28 extracts `analyze-game --nnue-model` and the
+`2139e329d3c5def3/` evidence from PR #25 head `7cca706`. The other two
+evidence directories and the roadmap are still only on PR #25. The roadmap
+links a handoff file that is not on `main`, so it cannot be copied byte for
+byte without a broken link.
+
 ### 3.3 The game-record schema has drifted
 
 The GUI writes `result`, `rules_result` and the per-move backend
@@ -104,14 +112,85 @@ repetition limit and keeps the 80-ply limit (`engine_manager.py:48`,
 external sites that play past threefold, not as a claim about any site's draw
 counter.
 
-### 3.5 What is known about Invincible 2 (secondary sources, unverified)
+### 3.5 What is known about Invincible 2
 
-This cloud environment's network policy denies `hosbase.com`,
-`www.aimechatron.com`, `www.blognone.com`, `pantip.com` and `www.deepai21.com`.
-Everything below comes from search-result summaries of those pages
+#### Access
+
+Early on 2026-09-25 this container's egress proxy denied `hosbase.com`,
+`www.aimechatron.com`, `www.blognone.com`, `pantip.com` and
+`www.deepai21.com`. Later that day the PR #28 review loaded the live page in a
+separate cloud browser, and this container could then fetch it too. Network
+settings can change, so re-check access before relying on it. Access does not
+imply permission to automate play (section 7).
+
+#### Primary page (observed 2026-09-25)
+
+This container fetched the page and its three scripts once each: five
+requests, no WebSocket connection, no game started. Nothing from the site is
+stored in this repository. The observation is identified by hashes, not by a
+product version:
+
+| Item | Identity |
+|---|---|
+| `https://hosbase.com/invincible2/` | SHA-256 `3f84c59d8642db6714f10bf136f227ce8814471c38c997f96c02993301079bb4`, `Last-Modified: 2026-09-02` |
+| `js/control_250618.js` (game logic) | SHA-256 `ef7296c7cfe6bcf2dc7a2b1407cefa2e4eb952a7dbf3200cfa8e78d52f0b4a50` |
+| `js/class.js`, `js/utility.js` (helpers) | `b04c12d6…`, `a4596842…` |
+
+The script filename is not treated as a version. No first-party version
+string is visible.
+
+- The page has three controls: new game as Black, new game as White, and
+  About. About names ทศพล ธนะทิพานนท์, links AIMechatron and shows
+  "© พ.ศ. 2563–2568". The page shows no version, rules text, terms, game
+  export, position setup, or time or level setting.
+- The page script validates the human's moves and draws the board. The
+  engine's moves come from a remote WebSocket server named in the script.
+  Automated play would therefore load the developer's server, and needs the
+  developer's permission first (section 7).
+- Rules as implemented by the page script, compared with `project`
+  ([RULESET.json](../../RULESET.json)):
+
+  | Rule | Page script | `project` |
+  |---|---|---|
+  | Start | 8 men each on the two back rows; Black moves first | same |
+  | Men | one square diagonally forward; capture forward only, landing immediately beyond | same |
+  | Kings | any distance on a clear diagonal; capture the first piece on a ray if it is an opponent's, landing immediately beyond; continue in any direction | same |
+  | Captures | mandatory; no majority rule; the capturing piece must continue; each captured piece is removed at once | same |
+  | Promotion | on landing, and it ends the move | same |
+  | No legal move | loss | same |
+  | Threefold repetition | draw, but declared only when 10 or fewer pieces remain | draw at any piece count |
+  | No-progress limit | none | 80 reversible plies |
+  | One king each | draw once two consecutive positions have one king each and no capture is available | no special rule |
+
+- The page numbers the squares 0–31 row by row, starting from the row where
+  Black promotes. Its dark squares are the left-right mirror of ours, so page
+  index `i` is our square `4·⌊i/4⌋ + 4 − (i mod 4)`. This is derived from the
+  script only, so check it against a real game before any relay uses it.
+
+What this means for the track:
+
+1. Moves and captures match. Draw adjudication does not, and neither
+   `project` nor `external-no-repetition` reproduces it. Under section 2, a
+   service result is non-comparable once the game reaches a `project` draw
+   (80 reversible plies, or threefold repetition with more than 10 pieces)
+   that the service does not declare.
+2. Our TB4–TB6 values assume the 80-ply limit. Without that limit, a
+   tablebase WIN or LOSS keeps its value, but a DRAW may become a WIN or a
+   LOSS. A draw the engine counts on is therefore not guaranteed against the
+   service.
+3. The server's own behaviour is unknown: for example, how it chooses a move
+   in a drawn position, or whether it is deterministic.
+
+The Phase 0 verdict stays INCONCLUSIVE. The user has to decide how to treat
+the draw-rule difference, and permission for automated play is unknown.
+
+#### Secondary sources (unverified)
+
+The following comes from search-result summaries
 ([HosBase page](https://hosbase.com/invincible2/),
 [Blognone article](https://www.blognone.com/node/112944),
-[Pantip thread](https://pantip.com/topic/39356507)). It must be checked directly.
+[Pantip thread](https://pantip.com/topic/39356507)). None of it is confirmed
+by the page itself.
 
 - It is a free web application at `hosbase.com/invincible2/`, launched on
   2019-10-26. The site root presents a different engine called "Future",
@@ -124,9 +203,8 @@ Everything below comes from search-result summaries of those pages
   - that it has "solved" Thai Makhos and never loses.
 - HosBase also has an "End Game" page (`hosbase.com/endgame/`). Its purpose is
   not verified.
-- Still unknown: colour choice, position setup, game export, time settings,
-  draw rules, adjudication, terms of use, and whether automated play is
-  allowed.
+- Still unknown: the server's own rules and determinism, terms of use, and
+  whether automated play is allowed.
 
 If those claims hold:
 
@@ -140,27 +218,28 @@ If those claims hold:
 4. Relaying 300 games by hand could take tens of operator hours. Phase 0 must
    settle feasibility and the terms of use before any harness is built.
 
-### 3.6 Phase 0 access checklist (Local, or Web once the host is allowed)
+### 3.6 Phase 0 access checklist
 
-- [ ] Access modes: web only, downloadable program, or API.
-- [ ] Colour choice and who moves first.
-- [ ] Arbitrary position setup with side to move, or entering a move sequence.
-- [ ] Game export or copy, and mapping its notation to our 1–32 numbering.
-- [ ] Time or level settings, and whether play is deterministic from one
-      position.
-- [ ] Rules parity with [RULESET.json](../../RULESET.json):
-  - mandatory capture;
-  - men capture forward only;
-  - a king lands immediately beyond the captured piece;
-  - promotion ends the move;
-  - repetition;
-  - the no-progress limit;
-  - any counting rule for bare kings;
-  - no legal move means a loss;
-  - adjudication, resignation and timeouts.
+Items marked done were answered from the page and its script on 2026-09-25
+(section 3.5). The open items need the developer or a Local session.
+
+- [x] Access modes: a web page only. Moves come from a remote server, and
+      there is no download or documented API.
+- [x] Colour choice: the player picks Black or White. Black moves first.
+- [x] Position setup: none. Games start from the initial position only.
+- [x] Game export: none. The square mapping to our 1–32 numbering is derived
+      but not yet checked on a real game.
+- [ ] Time or level settings: none on the page. Whether the server plays
+      deterministically from one position is unknown.
+- [ ] Rules parity with [RULESET.json](../../RULESET.json): moves, captures,
+      promotion and the loss rule match. Repetition, the no-progress limit and
+      the bare-king rule differ in the page script. Server-side adjudication,
+      resignation and timeouts are unknown.
 - [ ] Terms of use, whether automated play is permitted, and a contact for
-      permission.
-- [ ] A version identity to freeze: URL, date and any visible version string.
+      permission. The page shows none, and About links the developer's
+      Facebook page and AIMechatron.
+- [x] Identity to freeze: URL, observation date and the page and script
+      SHA-256 values. No version string is visible.
 
 ## 4. Designing for future development
 
@@ -174,8 +253,10 @@ section 3.
   - the three game-review evidence directories;
   - the Invincible 2 roadmap.
 
-  After that, archive or close the Lazy SMP stack (#18–#26) as evidence. This
-  is the user's decision, and nothing moves without it.
+  After that, archive or close the Lazy SMP stack (#18–#26) as evidence. The
+  user confirmed this on 2026-09-25 in this form: extract only what the track
+  needs, and keep the Lazy SMP PRs open until the extracted pieces are on
+  `main`.
 - **F2: one root policy.** Before any safety change, extract a single
   root-choice function. The Python search, the native endgame adapter and the
   native root split all call it, and it keeps each path's current tie-break
@@ -224,7 +305,8 @@ section 3.
     fixed-depth screens that need no Windows artifact.
   - Local (Windows) does DLL builds, GUI work, matches, gauntlets, SPRT, and
     anything that uses `saved_games/` or tablebase files.
-  - Under the current network policy, cloud sessions cannot reach HosBase.
+  - Whether a cloud session can reach HosBase depends on its network
+    settings. Reaching it never implies permission to automate play.
 - **F9: one plan, one next action.** This document is the plan and
   current-state holds the next action. A Local/Web handoff is a PR that
   updates current-state and attaches evidence; it does not restate the plan.
@@ -239,7 +321,7 @@ section 3.
      the rules finding: comparable under `project`, comparable under
      `external-no-repetition`, or non-comparable.
 
-0.2. [Web] The F1 extraction PRs, pending the user's decision, and the F3
+0.2. [Web] The F1 extraction, confirmed and partly done in PR #28, and the F3
      schema fix.
 
 0.3. [Local] Freeze the production identity: DLL and model SHA-256 taken from
@@ -345,6 +427,8 @@ The following are out of scope:
   without the developer's permission.
 
 ## 8. Changes from the approved plan (2026-09-25 review)
+
+The user confirmed these changes on 2026-09-25.
 
 1. Phase 2 now has a prerequisite: the single root policy (F2). The
    `_choose`/`_safety_rank` path the plan named does not run for positions
