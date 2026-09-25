@@ -1,0 +1,68 @@
+{
+ "format": "thai-makhos-rfp-contract-v1",
+ "id": "RFP_01-L1",
+ "declared_utc": "2026-09-25T17:29:32Z",
+ "purpose": "Linux 1T no-tablebase screening match of RFP_01. Not a Windows, tablebase or production acceptance gate.",
+ "hypothesis": "RFP_01 (margin 48 per ply, depths 1-3, at least 11 pieces, guards as in benchmarks/rfp01/README.md) is stronger than the same-source control at 2s+0.02s, one thread, without tablebases.",
+ "source_sha256": {
+  "native/makhos_native.c": "b39969311ce08d6b8f1952a0aeb7ce4e2a0ac6c90bbce9cb0bf43bb7c3f39659",
+  "native/makhos_native_nnue.c": "278ddef497a7ee95b55a03d49a1aea49db9c4f061f34eeb758c499de85ac7c4e",
+  "native/makhos_nnue_avx2_update.c": "6a236861a185d6c6dad8da785f10c92d680d26823c4a534f5733e56651fd182c"
+ },
+ "base_commit": "a0f79645d9803680a6aa42ae910d49dee1d89f52",
+ "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+ "flags": [
+  "-O3",
+  "-march=x86-64",
+  "-std=c17",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-Wno-unused-function",
+  "-shared",
+  "-fPIC",
+  "-D_POSIX_C_SOURCE=200809L"
+ ],
+ "candidate": {
+  "library": "build/rfp01/l1-libs/rfp.so",
+  "sha256": "ce450b0602f9df0f88884d19e487c1af351ff1b123a6110bd3183b81bbc98f5c",
+  "define": "MAKHOS_REVERSE_FUTILITY=1"
+ },
+ "control": {
+  "library": "build/rfp01/l1-libs/control.so",
+  "sha256": "4178a8f72f5cc9d53b265d75fd5100a5fa5ccba2ffe5cd3478a178f6f27ab214",
+  "define": null
+ },
+ "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none (--no-tablebase)",
+  "rules": "project (threefold, 80 reversible plies)",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20260930,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": 0.0,
+  "elo1": 5.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 2000
+ },
+ "command": "python3 -B -m makhos sprt --dev-library build/rfp01/l1-libs/rfp.so --master-library build/rfp01/l1-libs/control.so --dev-nnue-model build/nnue_quantized_v1/model_a.mknnue --master-nnue-model build/nnue_quantized_v1/model_a.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20260930 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/rfp01/sprt-l1-20260925/sprt.json --resume",
+ "decision": {
+  "PASS": "Proceed to the Windows W1/W2 gates once BASELINE_HORIZON_01's records exist and the owner agrees.",
+  "FAIL": "REJECT RFP_01 as declared (margin 48, depths 1-3, 11+ pieces).",
+  "cap": "INCONCLUSIVE; report Elo and 95% interval only."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change of bounds, control, candidate or settings after launch.",
+  "Does not replace the Windows 1T 10s+0.1s and 12T fixed 1s gates with tablebases."
+ ]
+}
