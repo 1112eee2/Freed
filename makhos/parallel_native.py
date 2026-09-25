@@ -217,6 +217,37 @@ class ParallelNativeSearch:
             return None
         return sum(value for value in values if value is not None)
 
+    @property
+    def supports_tablebase_draw(self) -> bool:
+        self._require_open()
+        return all(worker.supports_tablebase_draw for worker in self._workers)
+
+    def attach_tablebase(self, tablebase) -> None:
+        """Attach one shared tablebase to every worker; see NativeSearch."""
+
+        self._require_open()
+        try:
+            for worker in self._workers:
+                worker.attach_tablebase(tablebase)
+        except BaseException:
+            self.detach_tablebase()
+            raise
+
+    def detach_tablebase(self) -> None:
+        self._require_open()
+        for worker in self._workers:
+            worker.detach_tablebase()
+
+    def tablebase_counters(self) -> tuple[int, int, int]:
+        """Probes, exact-draw cutoffs and probe errors summed over workers."""
+
+        self._require_open()
+        totals = [0, 0, 0]
+        for worker in self._workers:
+            for index, value in enumerate(worker.tablebase_counters()):
+                totals[index] += value
+        return totals[0], totals[1], totals[2]
+
     def clear(self) -> None:
         self._require_open()
         for worker_index, worker in enumerate(self._workers):

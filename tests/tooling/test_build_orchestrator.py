@@ -71,6 +71,27 @@ class BuildOrchestratorTests(unittest.TestCase):
                 self.assertNotEqual(proc.returncode, 0)
                 self.assertIn(expected, proc.stderr + proc.stdout)
 
+    def test_tablebase_draw_cutoff_requires_nnue_search_variant(self):
+        proc = self.run_pwsh("-Variant", "native", "-TablebaseDrawCutoff", "-VerifyOnly")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn(
+            "TablebaseDrawCutoff is supported only for nnue_search_candidate",
+            proc.stderr + proc.stdout,
+        )
+
+    def test_tablebase_draw_cutoff_requires_separate_output(self):
+        for extra, expected in (
+            ([], "requires an explicit candidate OutputDirectory"),
+            (["-OutputDirectory", str(ROOT / "build" / "nnue_search_v1_r5")],
+             "must not target the production NNUE directory"),
+        ):
+            with self.subTest(extra=extra):
+                proc = self.run_pwsh("-Variant", "nnue_search_candidate",
+                                     "-TablebaseDrawCutoff", "-VerifyOnly", *extra)
+                self.assertNotEqual(proc.returncode, 0)
+                self.assertIn(expected, proc.stderr + proc.stdout)
+                self.assertIn("TablebaseDrawCutoff", proc.stderr + proc.stdout)
+
     def test_reverse_futility_requires_nnue_search_variant(self):
         proc = self.run_pwsh("-Variant", "native", "-ReverseFutility", "-VerifyOnly")
         self.assertNotEqual(proc.returncode, 0)

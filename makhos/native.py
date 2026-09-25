@@ -549,6 +549,10 @@ class NativeSearch:
         self.nnue_source_model_sha256: str | None = None
         self.nnue_feature_abi: str | None = None
         self.supports_nnue_telemetry = False
+        self.supports_tablebase_draw = False
+        self._tablebase = None
+        self._tablebase_release = None
+        self._tablebase_errors_seen = 0
         self.shared_tt = shared_with is not None
         self._iterative_session_active = False
         if shared_with is not None and not persistent:
@@ -744,6 +748,23 @@ class NativeSearch:
                 ctypes.POINTER(_RepetitionCensusTelemetry),
             ]
             library.makhos_search_repetition_census.restype = ctypes.c_int
+        self.supports_tablebase_draw = hasattr(
+            library, "makhos_search_attach_tablebase"
+        )
+        if self.supports_tablebase_draw:
+            library.makhos_search_attach_tablebase.argtypes = [
+                ctypes.c_void_p,
+                ctypes.c_void_p,
+                ctypes.c_void_p,
+                ctypes.c_uint32,
+                ctypes.c_uint32,
+            ]
+            library.makhos_search_attach_tablebase.restype = ctypes.c_int
+            library.makhos_search_tablebase_counters.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_uint64),
+            ]
+            library.makhos_search_tablebase_counters.restype = ctypes.c_int
         self.supports_fixed_search = hasattr(library, "makhos_search_fixed")
         if self.supports_fixed_search:
             library.makhos_search_fixed.argtypes = [
@@ -1001,10 +1022,77 @@ class NativeSearch:
                     f"native local search clear failed with status {status}"
                 )
 
+    def attach_tablebase(self, tablebase) -> None:
+        """Return exact tablebase draws at non-root nodes of later searches.
+
+        Needs a persistent search from a ``MAKHOS_SEARCH_TB_DRAW`` build. The
+        native set stays retained until detach or close; keep ``tablebase``
+        (a NativeEndgameTablebase) open meanwhile.
+        """
+        with self._lock:
+            self._require_open()
+            if not self.persistent:
+                raise ValueError("tablebase draw probes require persistent search")
+            if not self.supports_tablebase_draw:
+                raise RuntimeError("native search library lacks tablebase draw probes")
+            self._detach_tablebase_locked()
+            address, probe, release = tablebase.borrow_for_search()
+            status = self._library.makhos_search_attach_tablebase(
+                self._require_handle(),
+                address,
+                probe,
+                tablebase.no_progress_plies,
+                tablebase.max_pieces,
+            )
+            if status != 0:
+                release()
+                raise RuntimeError(f"native tablebase attach failed ({status})")
+            self._tablebase = tablebase
+            self._tablebase_release = release
+            self._tablebase_errors_seen = self._tablebase_counters_locked()[2]
+
+    def detach_tablebase(self) -> None:
+        with self._lock:
+            self._detach_tablebase_locked()
+
+    def tablebase_counters(self) -> tuple[int, int, int]:
+        """Cumulative tablebase probes, exact-draw cutoffs and probe errors."""
+        with self._lock:
+            self._require_open()
+            return self._tablebase_counters_locked()
+
+    def _detach_tablebase_locked(self) -> None:
+        release = self._tablebase_release
+        if release is None:
+            return
+        if self._handle is not None:
+            self._library.makhos_search_attach_tablebase(self._handle, None, None, 0, 0)
+        self._tablebase = None
+        self._tablebase_release = None
+        release()
+
+    def _tablebase_counters_locked(self) -> tuple[int, int, int]:
+        if not self.supports_tablebase_draw or self._handle is None:
+            return (0, 0, 0)
+        values = (ctypes.c_uint64 * 3)()
+        if self._library.makhos_search_tablebase_counters(self._handle, values) != 0:
+            raise RuntimeError("native tablebase counters failed")
+        return (int(values[0]), int(values[1]), int(values[2]))
+
+    def _check_tablebase_errors_locked(self) -> None:
+        """Fail closed: a corrupt or invalid probe must not pass as a result."""
+        if self._tablebase_release is None:
+            return
+        errors = self._tablebase_counters_locked()[2]
+        if errors != self._tablebase_errors_seen:
+            self._tablebase_errors_seen = errors
+            raise RuntimeError("native tablebase probe failed during search")
+
     def close(self) -> None:
         with self._lock:
             if self._closed:
                 return
+            self._detach_tablebase_locked()
             if self._handle is not None:
                 self._library.makhos_search_destroy(self._handle)
                 self._handle = None
@@ -1326,6 +1414,8 @@ class NativeSearch:
             telemetry = (
                 self._read_telemetry_locked() if status == 0 else None
             )
+            if status == 0:
+                self._check_tablebase_errors_locked()
         if status != 0:
             messages = {
                 1: "invalid search arguments",
@@ -1401,6 +1491,8 @@ class NativeSearch:
             telemetry = (
                 self._read_telemetry_locked() if status == 0 else None
             )
+            if status in (0, 5):
+                self._check_tablebase_errors_locked()
         if status == 5:
             raise TimeoutError("fixed-depth native search timed out")
         if status != 0:
@@ -1484,6 +1576,8 @@ class NativeSearch:
             telemetry = (
                 self._read_telemetry_locked() if status == 0 else None
             )
+            if status in (0, 5):
+                self._check_tablebase_errors_locked()
         if status == 5:
             raise TimeoutError("windowed native search timed out")
         if status != 0:

@@ -82,6 +82,16 @@ class WDLBound:
     def exact_outcome(self) -> Outcome | None:
         return self.lower if self.lower == self.upper else None
 
+    @property
+    def text(self) -> str:
+        """Provenance form: the exact outcome, UNKNOWN, or LOWER..UPPER."""
+        exact = self.exact_outcome
+        if exact is not None:
+            return exact.name
+        if self.lower == Outcome.LOSS and self.upper == Outcome.WIN:
+            return "UNKNOWN"
+        return f"{self.lower.name}..{self.upper.name}"
+
 
 UNKNOWN_WDL = WDLBound(Outcome.LOSS, Outcome.WIN)
 

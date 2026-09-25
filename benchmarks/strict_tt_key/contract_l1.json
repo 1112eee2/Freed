@@ -1,0 +1,67 @@
+{
+ "format": "thai-makhos-strict-tt-key-contract-v1",
+ "id": "STRICT_KEY_01-L1",
+ "declared_utc": "2026-09-25T16:01:10Z",
+ "purpose": "Linux 1T no-tablebase non-regression diagnostic of the strict TT key. Not a Windows, tablebase or production acceptance gate.",
+ "hypothesis": "The strict key (injective XOR salt) is not weaker than the legacy OR-salted key by 3 Elo or more.",
+ "source_commit": "e406bd821da119eac8fc4946e66d980ae23d5bf1",
+ "source_sha256": {
+  "native/makhos_native.c": "ec04d86ec3b1766da1fb69893cf3c36e1adff4c4553800b13bf5a3886bea2e2b",
+  "native/makhos_native_nnue.c": "278ddef497a7ee95b55a03d49a1aea49db9c4f061f34eeb758c499de85ac7c4e",
+  "native/makhos_nnue_avx2_update.c": "6a236861a185d6c6dad8da785f10c92d680d26823c4a534f5733e56651fd182c"
+ },
+ "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+ "flags": [
+  "-O3",
+  "-march=x86-64",
+  "-std=c17",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-Wno-unused-function",
+  "-shared",
+  "-fPIC",
+  "-D_POSIX_C_SOURCE=200809L"
+ ],
+ "candidate": {
+  "library": "build/strict_tt_key/screen-20260925T154839Z/lib/strict.so",
+  "sha256": "73aef947ef5044a2804de84b1ff14b9bddd6b40ad94fc5dbf73848db479eab22",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1"
+ },
+ "control": {
+  "library": "build/strict_tt_key/screen-20260925T154839Z/lib/control.so",
+  "sha256": "4178a8f72f5cc9d53b265d75fd5100a5fa5ccba2ffe5cd3478a178f6f27ab214",
+  "define": null
+ },
+ "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none (--no-tablebase)",
+  "rules": "project (threefold, 80 reversible plies)",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20260925,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": -3.0,
+  "elo1": 1.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 3000
+ },
+ "decision": {
+  "PASS": "Not a regression in no-TB 1T play at this control; proceed to the Windows gates.",
+  "FAIL": "Regression; REJECT the strict key as-is and investigate TT layout/fragmentation cost.",
+  "cap": "INCONCLUSIVE; report Elo and 95% interval only."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change of bounds, control or settings after launch.",
+  "Does not replace the Windows 1T 10s+0.1s and 12T fixed 1s/2s gates with tablebases."
+ ]
+}
