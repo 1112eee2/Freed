@@ -58,54 +58,58 @@ The single active action is on **Local**: when the GUI is idle, run
 records, raw logs and manifest through a PR. Do not upload the DLL, model or
 tablebases. Do not stop the Arena or a user game to run it.
 
-No strength gate is queued behind it. The 2026-09-25 owner review on PR #28
-says no W1/W2 or other SPRT starts while `BASELINE_HORIZON_01`'s records are
-absent. STRICT_KEY_01's gates are withdrawn. TBDRAW_01's and RFP_01's wait for
-the PR #28 split and a scope-specific instruction.
+No Windows strength gate is queued behind it. The 2026-09-25 owner review on
+PR #28 says no W1/W2 starts while `BASELINE_HORIZON_01`'s records are absent.
+STRICT_KEY_01's gates are withdrawn. TBDRAW_01's wait for the rest of the
+PR #28 split. RFP_01's wait for a PASS of its Linux screening match
+RFP_01-L1, whose contract is on `main` but which has not started.
 
-The following are open until the user decides:
+Decided on 2026-09-25 under the user's delegation ("You are the head. Just
+pick one."):
 
-1. How to treat the draw-rule difference against Invincible 2: report those
-   games as non-comparable under `project` (the §2 default), or approve a
-   separate external rules profile for that match. `RULESET.json` stays
-   unchanged either way.
-2. Whether to ask the developer for permission for automated play. The page
-   lists no terms. Until permission exists, no relay or automated play is
-   built.
-3. Whether to split PR #28 into single-concept PRs from `main`, as its
-   2026-09-25 review requires before acceptance. The split needs new
-   branches. The proposal is in the PR thread.
-4. If PR #29 (the Linux lease fix) merges: whether to re-bind the frozen
-   NNUE-v1 tools. It changes `makhos/workload_isolation.py`, a locked input
-   of that acquisition, so the Windows attested full-suite runner then
-   refuses to run.
+1. Engine direction: RFP_01 is the single concept pursued now. It was split
+   out of PR #28 as PR #32, which is merged.
+2. Invincible 2 draw rules: a game that reaches a `project` draw the service
+   does not declare is reported non-comparable (the §2 default). There is no
+   external rules profile, and `RULESET.json` is unchanged.
+3. No relay or automated play against Invincible 2, and no permission request
+   for now.
+4. If PR #29 merges, the frozen NNUE-v1 tools stay blocked rather than
+   re-bound. Promotion gates then compare plain `unittest discover` failure
+   IDs with `main`'s.
+5. PR #28 is split one concept at a time. TBDRAW_01, the recorder and the
+   docs remain in it.
 
-The next Web steps are the F3 schema alignment with a record-validation test,
-then the F2 root-policy parity refactor. Both are behavior-preserving. Until
-F3 lands, `sprt --games-dir` records are replay-validated only: they fail the
-`thai-makhos-game-v1` JSON schema and are not gate evidence. The rest of F1
-(two evidence directories and the roadmap) is a separate small extraction.
+The F3 schema part is done: PR #30 aligned `thai-makhos-game-v1` with the
+GUI's records. `sprt --games-dir` records still fail that schema, because of
+the top-level `match` key, the per-move engine `role` and the missing engine
+fields. They are replay-validated only and not gate evidence until the
+recorder is aligned. The F2 root-policy parity refactor is behavior-preserving
+and follows. The rest of F1 (two evidence directories and the roadmap) is a
+separate small extraction.
 
-## Default-off candidates (PR #28)
+## Default-off candidates
 
 | Candidate | What | State |
 |---|---|---|
 | STRICT_KEY_01 | Strict TT key: XOR instead of OR when salting the key state, so kings and the clock are not erased | **REJECT_AS_DECLARED / NOT_PROMOTED.** The depth-20 screen met its declared falsifier, a repeatable fixed-depth slowdown: 1.147× and 1.037× total time. It remains correctness evidence: the legacy key made 20.3% and 4.3% of TT cutoffs false, strict none. The Linux match was stopped at 344 pairs: +19.7 ± 17.8 Elo, LLR +0.98, INCONCLUSIVE; do not resume it. Windows gates withdrawn. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
 | TBDRAW_01 | Main search returns 0 at non-root nodes on an exact tablebase DRAW | INCONCLUSIVE / NOT_PROMOTED. Implemented with 8 tests; default build byte-identical. No paired result. ([README](../../../../benchmarks/tb_frontier/README.md)) |
-| RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | Census only (depth 20, 128 positions): at a margin of 48 per ply, 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. The pre-declared rule picks 48, but the source default is still the placeholder 100. No match. Paused. |
+| RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | On `main` via PR #32 with margin 48, chosen by the rule declared before the census was read. Census at depth 20 on 128 positions: 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. Speed check: 0.843× nodes, 0.929× time, +0.19 plies in 500 ms. The RFP_01-L1 contract was declared at 17:29:32Z (1T, no tablebases, 2s+0.02s, H0=0/H1=+5, cap 2,000 pairs); the match has not started. ([README](../../../../benchmarks/rfp01/README.md)) |
 
 Tooling added in PR #28, each default-off: `sprt --games-dir` (replay-validated
-only until F3), `bench-native --candidate/--baseline-nnue-model`, and
+only), `bench-native --candidate/--baseline-nnue-model`, and
 `analyze-game --nnue-model`.
 
 ## Repository and PR state
 
-- `main` is at `a0f7964`: PR #17 merged on 2026-09-12. The strict TT key
-  candidate stays opt-in, and production 12T/C4 defaults, the model and the
-  accepted DLL are unchanged. Windows and paired-strength acceptance for
-  strict-key were pending at merge time; their later status has not been
-  re-checked from Web. The Lazy SMP design document is a reviewed proposal,
-  not a backend.
+- `main` is at `3dd14bf`. On 2026-09-25, PR #32 (RFP_01, default-off) and
+  PR #30 (game schema aligned with the GUI) merged on top of `a0f7964`
+  (PR #17, 2026-09-12). The strict TT key candidate stays opt-in, and
+  production 12T/C4 defaults, the model and the accepted DLL are unchanged.
+  The Lazy SMP design document is a reviewed proposal, not a backend.
+- PR #32 converted `tests/tooling/test_build_orchestrator.py` from CRLF to LF
+  line endings by accident. It is harmless, and the repository has no
+  `.gitattributes` convention, so it was left as is.
 - The tech-debt roadmap (Phases 0–3, PRs #7–#16) is complete; see
   [the roadmap](../../../../docs/architecture/TECH_DEBT_ROADMAP_TH.md).
 - These PRs are open and unmerged:
@@ -114,13 +118,13 @@ only until F3), `bench-native --candidate/--baseline-nnue-model`, and
     `REJECT_FOR_PERFORMANCE / NOT_PROMOTED` by #26.
   - #21: the self-drive loop.
   - #27: the strength-loop handoff.
-  - #28: the no-loss track docs, the F1 extraction, match tooling, and the
-    STRICT_KEY_01, TBDRAW_01 and RFP_01 candidates. Its 2026-09-25 review is
-    CHANGES_REQUIRED: split it before acceptance, and fix F3 before using
-    recorder output.
-  - #29: the Linux lease fix (another session): open-file-description locks
-    replace the whole-file `flock` that made the 32 slots act as one. The
-    Windows lease is unchanged.
+  - #28: the no-loss track docs, the F1 extraction, match tooling, the
+    STRICT_KEY_01 evidence and the TBDRAW_01 candidate. Its 2026-09-25 review
+    is CHANGES_REQUIRED: split it before acceptance, and do not use recorder
+    output as gate evidence. RFP_01 has left it (#32).
+  - #29 (draft): the Linux lease fix from another session.
+    Open-file-description locks replace the whole-file `flock` that made the
+    32 slots act as one. The Windows lease is unchanged.
 
   None of them changes production.
 
