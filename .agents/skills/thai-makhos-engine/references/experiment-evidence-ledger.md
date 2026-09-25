@@ -4324,3 +4324,10 @@ ported from #25; `sprt --games-dir` writes replay-validated records that fail
 the v1 JSON schema until F3. Owner review: split PR #28 into single-concept PRs
 before acceptance. RULESET.json, makhos/core.py, the accepted DLL, the model and
 the release pointer are unchanged.
+
+Update, same day: RFP_01 left PR #28 and merged to `main` as PR #32 with
+margin 48, the value the census rule declared before reading the table selects.
+A census re-run on that source reproduced the histograms exactly. Its
+RFP_01-L1 screening contract (1T, no TB, 2s+0.02s, H0=0/H1=+5, cap 2,000
+pairs) is declared on `main`; the match has not started. PR #30 aligned the v1
+game schema with GUI records; recorder output still fails it.
