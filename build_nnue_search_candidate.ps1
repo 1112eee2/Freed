@@ -6,10 +6,9 @@
 param(
     [string]$OutputDirectory = (Join-Path $PSScriptRoot 'build\nnue_search_v1_r5'),
     [switch]$StrictSearchKey,
-    [switch]$TablebaseDrawCutoff,
-    [switch]$ReverseFutility
+    [switch]$TablebaseDrawCutoff
 )
 $ErrorActionPreference = 'Stop'
 $orchestrator = Join-Path $PSScriptRoot 'tools\build\build_orchestrator.ps1'
-& $orchestrator -Variant 'nnue_search_candidate' -OutputDirectory $OutputDirectory -StrictSearchKey:$StrictSearchKey -TablebaseDrawCutoff:$TablebaseDrawCutoff -ReverseFutility:$ReverseFutility @args
+& $orchestrator -Variant 'nnue_search_candidate' -OutputDirectory $OutputDirectory -StrictSearchKey:$StrictSearchKey -TablebaseDrawCutoff:$TablebaseDrawCutoff @args
 exit $LASTEXITCODE
