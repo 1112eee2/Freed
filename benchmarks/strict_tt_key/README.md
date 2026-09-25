@@ -136,4 +136,28 @@ Decision rule, fixed before the runs:
 
 ## Screen results
 
-Pending: filled in from `screen.json` when the run finishes.
+Run `screen-20260925T154839Z`, 2,989.5 s on Linux, clang 18.1.3. The full
+output is [`screen_20260925T154839Z.json`](screen_20260925T154839Z.json),
+SHA-256 `f6f9a8d6…`. Libraries: control `4178a8f7…`, strict `73aef947…`,
+audit `a2770e83…` (legacy) and `9608cba3…` (strict).
+
+| Group, 64 positions each, depth 20 | Legacy false cutoffs | of which king-mask aliases | Strict false cutoffs | Same move | Strict nodes (geometric / total) | Strict time |
+|---|---:|---:|---:|---:|---:|---:|
+| Kings, 7–12 pieces | 9,899,449 of 48,814,153 (20.3%) | 3,571,009 | 0 | 51/64 | 1.102× / 1.143× | 1.147× |
+| King-free, 13 or more pieces | 379,325 of 8,760,337 (4.3%) | 14,602 | 0 | 51/64 | 1.032× / 1.043× | 1.037× |
+
+- **Audit neutrality:** the audit builds matched their plain builds in move,
+  score, nodes and PV on all 256 searches.
+- **The strict key removes every false hit and cutoff.**
+- **Scale:** every position had legacy false cutoffs, not just those from game
+  2139e329. In the king band, one cutoff in five came from a different
+  position under the legacy key.
+
+The strict build searches 3–14% more nodes at equal depth. Those are the
+subtrees the aliases wrongly skipped. The extra work costs depth at fixed
+time, so fixed-depth results cannot settle strength. The paired match
+decides.
+
+The clock aliases are mostly benign far from the 80-ply limit. The king-mask
+aliases can substitute a man for a king. The screen does not separate their
+playing impact.
