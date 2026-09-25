@@ -77,6 +77,8 @@ def command_bench_native(args: argparse.Namespace) -> int:
         repetitions=args.repetitions,
         seed=args.seed,
         hash_power=args.search_hash_power,
+        candidate_nnue_model=args.candidate_nnue_model,
+        baseline_nnue_model=args.baseline_nnue_model,
     )
     report_dict = report.as_dict()
     config = {
@@ -88,50 +90,36 @@ def command_bench_native(args: argparse.Namespace) -> int:
             "baseline_path",
             "baseline_sha256",
             "baseline_abi",
-            "cases",
-            "depth",
-            "repetitions",
             "seed",
-            "search_hash_power",
+            "hash_power",
+            "ply_schedule",
+            "candidate_nnue_model_sha256",
+            "baseline_nnue_model_sha256",
         )
     }
-    print("BENCHMARK_CONFIG " + json.dumps(config, sort_keys=True))
+    config.update(
+        {
+            "cases": args.cases,
+            "depth": args.depth,
+            "repetitions": args.repetitions,
+        }
+    )
+    print("NATIVE_BENCH_CONFIG " + json.dumps(config, sort_keys=True), flush=True)
     for row in report.rows:
+        node_ratio = row.candidate.nodes / row.baseline.nodes
         print(
-            f"[{row.case_index:03d}] d={row.depth} "
-            f"cand={row.candidate_bestmove} ({row.candidate_score:+05d}) "
-            f"{row.candidate_nodes:8d} nodes {row.candidate_elapsed_ms:8.2f} ms | "
-            f"base={row.baseline_bestmove} ({row.baseline_score:+05d}) "
-            f"{row.baseline_nodes:8d} nodes {row.baseline_elapsed_ms:8.2f} ms"
+            f"Case {row.case:3d} ply {row.target_plies:2d} | "
+            f"nodes {row.candidate.nodes}/{row.baseline.nodes} "
+            f"({node_ratio:.4f}x) | "
+            f"ms {row.candidate.wall_ms:.1f}/{row.baseline.wall_ms:.1f} | "
+            f"score {row.candidate.score}/{row.baseline.score} | "
+            f"move {row.candidate.move}/{row.baseline.move}",
+            flush=True,
         )
-    summary = report.summary
-    print("\nSummary:")
     print(
-        f"  Total time: candidate={summary.candidate_total_ms:.2f} ms "
-        f"baseline={summary.baseline_total_ms:.2f} ms "
-        f"ratio={summary.time_ratio:.3f}"
-    )
-    print(
-        f"  Total nodes: candidate={summary.candidate_total_nodes} "
-        f"baseline={summary.baseline_total_nodes} "
-        f"ratio={summary.node_ratio:.3f}"
-    )
-    print(
-        f"  NPS: candidate={summary.candidate_nps:,.0f} "
-        f"baseline={summary.baseline_nps:,.0f} "
-        f"ratio={summary.nps_ratio:.3f}"
-    )
-    print(
-        f"  Identical bestmoves: {summary.identical_bestmoves}/{len(report.rows)} "
-        f"({summary.bestmove_agreement_pct:.1f}%)"
-    )
-    print(
-        f"  Identical scores: {summary.identical_scores}/{len(report.rows)} "
-        f"({summary.score_agreement_pct:.1f}%)"
-    )
-    print(
-        f"  Max score diff: {summary.max_score_diff} "
-        f"mean={summary.mean_score_diff:.2f}"
+        "NATIVE_BENCH_RESULT "
+        + json.dumps(report_dict["summary"], sort_keys=True),
+        flush=True,
     )
     return 0
 
