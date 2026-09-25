@@ -497,14 +497,7 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
             provenance_finished = time.perf_counter()
 
         pv_notation = [m.notation for m in result.pv]
-        wdl_text = "UNKNOWN"
-        exact = result.bound.exact_outcome
-        if exact is not None:
-            wdl_text = exact.name
-        elif result.bound.lower == -1 and result.bound.upper == 1:
-            wdl_text = "UNKNOWN"
-        else:
-            wdl_text = f"{result.bound.lower.name}..{result.bound.upper.name}"
+        wdl_text = result.bound.text
 
         profile_report = profiler.report()
         response_ready = time.perf_counter()

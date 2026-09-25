@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 
 from ..core import DEFAULT_RULES
+from ..game_analysis import build_match_game_record
 from ..native import (
     NativeSearch,
     hash_power_for_megabytes,
@@ -496,6 +497,45 @@ def command_sprt(args: argparse.Namespace) -> int:
             native_endgame_enabled=master_eg_search is not None,
         )
 
+    # Game records are an optional side output. The directory stays out of
+    # sprt_config so checkpoint resume and multi-seed aggregation are unchanged.
+    games_dir = (
+        Path(args.games_dir).resolve() if getattr(args, "games_dir", None) else None
+    )
+    write_game = None
+    if games_dir is not None:
+        games_dir.mkdir(parents=True, exist_ok=True)
+        match_metadata = {
+            "tool": "makhos sprt",
+            "seed": args.seed,
+            "opening_plies": args.opening_plies,
+            "time_seconds": args.time,
+            "increment_seconds": args.inc,
+            "fixed_move_time_ms": args.fixed_move_time_ms,
+            "tablebases": tablebase_config,
+            **{
+                role: {
+                    key: libraries[role][key]
+                    for key in ("sha256", "search_abi", "threads", "nnue_model_sha256")
+                }
+                for role in ("candidate", "baseline")
+            },
+        }
+
+        def write_game(game: dict) -> None:
+            record = build_match_game_record(game, match=match_metadata)
+            path = games_dir / (
+                f"pair{game['pair']:05d}-candidate-{game['candidate_color']}.json"
+            )
+            temporary = path.with_suffix(".json.tmp")
+            temporary.write_text(
+                json.dumps(record, indent=1, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            temporary.replace(path)
+
+        print(f"SPRT_GAMES_DIR {games_dir}", flush=True)
+
     output = Path(args.output).resolve() if args.output else None
     resume_result = None
     if args.resume and output is not None and output.exists():
@@ -538,6 +578,7 @@ def command_sprt(args: argparse.Namespace) -> int:
                 workload_checkpoint=batch_lease.checkpoint,
                 resume_result=resume_result,
                 on_pair_completed=checkpoint_result if args.resume else None,
+                on_game_completed=write_game,
             )
     finally:
         for tablebase in ranked:

@@ -484,6 +484,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="fail closed if either paired game is unfinished after this many plies",
     )
     sprt_parser.add_argument(
+        "--games-dir",
+        default=None,
+        help=(
+            "write every game of each completed pair as a replay-validated "
+            "thai-makhos-game-v1 record into this directory"
+        ),
+    )
+    sprt_parser.add_argument(
         "--dev-library", default="build/makhos_native.dll",
         help="candidate native-search DLL",
     )

@@ -23,6 +23,7 @@ from .core import (
     State,
     apply_move,
     format_position,
+    initial_state,
     legal_moves,
     opponent,
     parse_position,
@@ -332,6 +333,85 @@ def replay_game(
             "reversible_plies does not match the clock reconstructed from moves"
         )
     return ReplayedGame(record, tuple(replayed), state, dict(history))
+
+
+def build_match_game_record(
+    game: Mapping[str, Any],
+    *,
+    match: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Convert one engine-match game into a replay-validated game record.
+
+    ``game`` is an SPRT ``on_game_completed`` payload; matches use the project
+    rules. Opening plies carry no actor; engine plies carry the side's role and
+    search summary. The record must replay with the verified rules and its
+    declared result must equal the replayed terminal status, otherwise
+    GameRecordError is raised.
+    """
+
+    rules = DEFAULT_RULES
+    candidate_color = game.get("candidate_color")
+    if candidate_color not in ("black", "red"):
+        raise GameRecordError("candidate_color must be 'black' or 'red'")
+    state = initial_state(rules=rules)
+    start_text = format_position(state)
+    notations = [(notation, None) for notation in game.get("opening", ())]
+    notations += [(entry.get("notation"), entry) for entry in game.get("moves", ())]
+    moves: list[dict[str, Any]] = []
+    for ply, (notation, entry) in enumerate(notations, start=1):
+        item: dict[str, Any] = {
+            "ply": ply,
+            "player": player_name(state.turn),
+            "notation": notation,
+        }
+        if entry is not None:
+            if entry.get("player") != item["player"]:
+                raise GameRecordError(f"ply {ply} transcript names the wrong side")
+            role = "candidate" if item["player"] == candidate_color else "baseline"
+            item["actor"] = "engine"
+            item["engine"] = {
+                "role": role,
+                **{
+                    key: value
+                    for key, value in entry.items()
+                    if key not in ("player", "notation")
+                },
+            }
+        moves.append(item)
+        matches = [move for move in legal_moves(state) if move.notation == notation]
+        if len(matches) != 1:
+            raise GameRecordError(f"ply {ply} is not a unique legal move: {notation}")
+        state = apply_move(state, matches[0], validate=False)
+
+    record: dict[str, Any] = {
+        "format": GAME_RECORD_FORMAT,
+        "start_position": start_text,
+        "start_reversible_plies": 0,
+        "final_position": format_position(state),
+        "reversible_plies": state.reversible_plies,
+        "moves": moves,
+        "engine": {"game_mode": "bot", "rules_profile": "project"},
+    }
+    replayed = replay_game(parse_game_record(record), rules=rules)
+    status = terminal_status(
+        replayed.final,
+        repetition_count=replayed.history[replayed.final.position_key],
+        rules=rules,
+    )
+    winner = None if status.winner is None else player_name(status.winner)
+    declared = (game.get("winner"), game.get("reason"))
+    if not status.terminal or (winner, status.reason) != declared:
+        raise GameRecordError(
+            "declared match result does not match the replayed terminal status"
+        )
+    record["result"] = {"source": "rules", "winner": winner, "reason": status.reason}
+    record["rules_result"] = {"terminal": True, "winner": winner, "reason": status.reason}
+    record["match"] = {
+        **match,
+        "pair": game.get("pair"),
+        "candidate_color": candidate_color,
+    }
+    return record
 
 
 def inferred_engine_players(record: GameRecord) -> tuple[int, ...] | None:
