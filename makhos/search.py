@@ -17,6 +17,7 @@ from .native import NativeSearch, NativeSearchResult
 from .policy_value import EmpiricalPolicyValueModel, PolicyValueEstimate, PolicyValueModel
 from .proof import MappedProofStrategy, ProofStrategy
 from .ranked_tablebase import RankedTablebase
+from .root_policy import choose_root
 
 from .core import (
     BLACK,
@@ -1147,34 +1148,21 @@ class Engine:
         *,
         proof_guided: bool = False,
     ) -> RootCandidate:
-        best_rank = max(self._safety_rank(candidate.bound) for candidate in candidates)
-        ranked = [
-            candidate
-            for candidate in candidates
-            if self._safety_rank(candidate.bound) == best_rank
-        ]
-        best_score = max(candidate.score for candidate in ranked)
-        if mode == Mode.BEST:
-            return max(
-                ranked,
-                key=lambda item: (
-                    item.score,
-                    self._distance_rank(item.distance),
-                    item.policy_value.win,
-                    item.policy_value.policy,
-                    -len(item.pv),
-                    item.move.notation,
-                ),
-            )
-
-        safe = ranked if proof_guided else [
-            candidate
-            for candidate in ranked
-            if candidate.score >= best_score - win_margin
-        ]
-        return max(
-            safe,
-            key=lambda item: (
+        return choose_root(
+            candidates,
+            mode=mode,
+            win_margin=win_margin,
+            safety_rank=lambda item: self._safety_rank(item.bound),
+            score=lambda item: item.score,
+            best_rank=lambda item: (
+                item.score,
+                self._distance_rank(item.distance),
+                item.policy_value.win,
+                item.policy_value.policy,
+                -len(item.pv),
+                item.move.notation,
+            ),
+            win_rank=lambda item: (
                 item.bound.exact_outcome == Outcome.WIN,
                 item.score if item.score >= MATE_SCORE - 10_000 else 0,
                 self._decisive_distance_rank(item.distance),
@@ -1185,6 +1173,7 @@ class Engine:
                 item.score,
                 item.move.notation,
             ),
+            proof_guided=proof_guided,
         )
 
     @staticmethod

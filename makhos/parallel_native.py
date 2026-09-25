@@ -19,6 +19,7 @@ from .native import (
     hash_power_for_megabytes,
     native_tt_entry_bytes,
 )
+from .root_policy import choose_root
 
 MATE_SCORE = 1_000_000
 SEARCH_INFINITY = 2_000_000
@@ -494,12 +495,15 @@ class ParallelNativeSearch:
         results: tuple[_RootResult, ...],
     ) -> _RootResult:
         by_move = {result.move: result for result in results}
-        chosen = by_move[root_moves[0]]
-        for move in root_moves[1:]:
-            candidate = by_move[move]
-            if candidate.score > chosen.score:
-                chosen = candidate
-        return chosen
+        ordered = tuple(by_move[move] for move in root_moves)
+        return choose_root(
+            ordered,
+            mode="best",
+            win_margin=0,
+            safety_rank=lambda _item: (0, 0),
+            score=lambda item: item.score,
+            best_rank=lambda item: item.score,
+        )
 
     def search(
         self,
