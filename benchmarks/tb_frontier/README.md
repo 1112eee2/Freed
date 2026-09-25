@@ -84,10 +84,12 @@ draw cutoffs per game, with 0 errors.
 
 ### Windows gates for Local (the strength decision)
 
-These are fixed before any strength run. Run them on the target host with the
-GUI idle, under the workload lease at BelowNormal. If STRICT_KEY_01 is
-promoted first, add `-StrictSearchKey` to **both** builds, so the only
-difference remains the draw cutoff.
+These are fixed before any strength run. They are **not authorized yet**: per
+the 2026-09-25 review on PR #28, they wait for the PR split, a scope-specific
+instruction and `BASELINE_HORIZON_01`'s records (see current-state). When
+authorized, run them on the target host with the GUI idle, under the workload
+lease at BelowNormal. STRICT_KEY_01 was rejected as declared, so both builds
+keep the legacy key and the only difference is the draw cutoff.
 
 ```powershell
 .\build_nnue_search_candidate.ps1 -OutputDirectory build\tbdraw01\control

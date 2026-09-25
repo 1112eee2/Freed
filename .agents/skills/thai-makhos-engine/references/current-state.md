@@ -58,12 +58,10 @@ The single active action is on **Local**: when the GUI is idle, run
 records, raw logs and manifest through a PR. Do not upload the DLL, model or
 tablebases. Do not stop the Arena or a user game to run it.
 
-After it, Local's queue is the strength gates in PR #28, in this order. Each
-has pre-declared commands and a decision rule in its README:
-
-1. STRICT_KEY_01 W1 and W2 ([README](../../../../benchmarks/strict_tt_key/README.md)).
-2. TBDRAW_01 W1 and W2 ([README](../../../../benchmarks/tb_frontier/README.md)).
-   If STRICT_KEY_01 was promoted, both TBDRAW_01 builds add `-StrictSearchKey`.
+No strength gate is queued behind it. The 2026-09-25 owner review on PR #28
+says no W1/W2 or other SPRT starts while `BASELINE_HORIZON_01`'s records are
+absent. STRICT_KEY_01's gates are withdrawn. TBDRAW_01's and RFP_01's wait for
+the PR #28 split and a scope-specific instruction.
 
 The following are open until the user decides:
 
@@ -74,21 +72,30 @@ The following are open until the user decides:
 2. Whether to ask the developer for permission for automated play. The page
    lists no terms. Until permission exists, no relay or automated play is
    built.
+3. Whether to split PR #28 into single-concept PRs from `main`, as its
+   2026-09-25 review requires before acceptance. The split needs new
+   branches. The proposal is in the PR thread.
+4. If PR #29 (the Linux lease fix) merges: whether to re-bind the frozen
+   NNUE-v1 tools. It changes `makhos/workload_isolation.py`, a locked input
+   of that acquisition, so the Windows attested full-suite runner then
+   refuses to run.
 
 The next Web steps are the F3 schema alignment with a record-validation test,
-then the F2 root-policy parity refactor. Both are behavior-preserving. The
-rest of F1 (two evidence directories and the roadmap) is a separate small
-extraction.
+then the F2 root-policy parity refactor. Both are behavior-preserving. Until
+F3 lands, `sprt --games-dir` records are replay-validated only: they fail the
+`thai-makhos-game-v1` JSON schema and are not gate evidence. The rest of F1
+(two evidence directories and the roadmap) is a separate small extraction.
 
 ## Default-off candidates (PR #28)
 
 | Candidate | What | State |
 |---|---|---|
-| STRICT_KEY_01 | Strict TT key: XOR instead of OR when salting the key state, so kings and the clock are not erased | Screen done at depth 20: legacy keys made 20.3% of TT cutoffs false in 7–12 piece king positions and 4.3% in king-free 13+ piece positions; strict made none, at 1.10× and 1.03× nodes (geometric mean). Linux diagnostic SPRT L1 running; Windows W1/W2 pending. |
-| TBDRAW_01 | Main search returns 0 at non-root nodes on an exact tablebase DRAW | Implemented with 8 tests; default build byte-identical. Windows W1/W2 pending. |
+| STRICT_KEY_01 | Strict TT key: XOR instead of OR when salting the key state, so kings and the clock are not erased | **REJECT_AS_DECLARED / NOT_PROMOTED.** The depth-20 screen met its declared falsifier, a repeatable fixed-depth slowdown: 1.147× and 1.037× total time. It remains correctness evidence: the legacy key made 20.3% and 4.3% of TT cutoffs false, strict none. The Linux match was stopped at 344 pairs: +19.7 ± 17.8 Elo, LLR +0.98, INCONCLUSIVE; do not resume it. Windows gates withdrawn. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
+| TBDRAW_01 | Main search returns 0 at non-root nodes on an exact tablebase DRAW | INCONCLUSIVE / NOT_PROMOTED. Implemented with 8 tests; default build byte-identical. No paired result. ([README](../../../../benchmarks/tb_frontier/README.md)) |
+| RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | Census only (depth 20, 128 positions): at a margin of 48 per ply, 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. The pre-declared rule picks 48, but the source default is still the placeholder 100. No match. Paused. |
 
 Tooling added in PR #28, each default-off: `sprt --games-dir` (replay-validated
-game records), `bench-native --candidate/--baseline-nnue-model`, and
+only until F3), `bench-native --candidate/--baseline-nnue-model`, and
 `analyze-game --nnue-model`.
 
 ## Repository and PR state
@@ -108,11 +115,14 @@ game records), `bench-native --candidate/--baseline-nnue-model`, and
   - #21: the self-drive loop.
   - #27: the strength-loop handoff.
   - #28: the no-loss track docs, the F1 extraction, match tooling, and the
-    STRICT_KEY_01 and TBDRAW_01 candidates.
+    STRICT_KEY_01, TBDRAW_01 and RFP_01 candidates. Its 2026-09-25 review is
+    CHANGES_REQUIRED: split it before acceptance, and fix F3 before using
+    recorder output.
+  - #29: the Linux lease fix (another session): open-file-description locks
+    replace the whole-file `flock` that made the 32 slots act as one. The
+    Windows lease is unchanged.
 
   None of them changes production.
-- On Linux, `BatchWorkLease` uses a whole-file `flock`, so its 32 slots act as
-  one. This is tracked separately; the Windows lease is unaffected.
 
 ## Latest accepted correctness change
 

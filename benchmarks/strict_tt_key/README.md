@@ -1,9 +1,12 @@
 # STRICT_KEY_01: strict TT search key
 
-Status 2026-09-25: **evidence in progress, not promoted.** Production, the GUI
-release, the accepted DLL and the default build are unchanged. The candidate
-already exists in source behind `MAKHOS_STRICT_SEARCH_POSITION_KEY=1`; this
-directory holds its measurements and the gates it still needs.
+Status 2026-09-25: **REJECT_AS_DECLARED / NOT_PROMOTED.** The screen met this
+hypothesis's declared falsifier, a repeatable fixed-depth slowdown
+([results](#screen-results)). The Linux match was stopped and is
+INCONCLUSIVE ([result](#linux-match-result-stopped)). No Elo gain is
+established. Production, the GUI release, the accepted DLL and the default
+build are unchanged. The candidate stays in source behind
+`MAKHOS_STRICT_SEARCH_POSITION_KEY=1`, as it was before this work.
 
 ## Hypothesis
 
@@ -84,8 +87,8 @@ The contract, [`contract_l1.json`](contract_l1.json), was declared at
 It answers only whether the strict key is a regression in no-tablebase
 single-thread play. It is not the Windows acceptance gate.
 
-The run checkpoints every pair and resumes with the exact command stored in
-the contract settings:
+It was launched with this command. It was stopped on 2026-09-25 and must not
+be resumed ([result](#linux-match-result-stopped)).
 
 ```bash
 L=build/strict_tt_key/screen-20260925T154839Z/lib; M=build/nnue_quantized_v1/model_a.mknnue
@@ -96,43 +99,12 @@ python3 -B -m makhos sprt --dev-library $L/strict.so --master-library $L/control
   --pairs 3000 --output build/strict_tt_key/sprt-l1-20260925/sprt.json --resume
 ```
 
-## Windows gates for Local (before any promotion)
+## Windows gates for Local: withdrawn
 
-Run these on the target host with the GUI idle, under the workload lease at
-BelowNormal. Each gate writes to a new output path, and nothing is resumed
-from older runs.
-
-```powershell
-# 0. Same-source control and candidate, with build manifests recording SHA-256.
-.\build_nnue_search_candidate.ps1 -OutputDirectory build\strict01\control
-.\build_nnue_search_candidate.ps1 -OutputDirectory build\strict01\strict -StrictSearchKey
-$c = 'build\strict01\control\makhos_native_nnue_candidate_v1.dll'
-$s = 'build\strict01\strict\makhos_native_nnue_candidate_v1.dll'
-$m = 'build\nnue_quantized_v1\model_a.mknnue'
-
-# 1. Correctness, focused then full (full suite via the maintained attestation).
-python -m unittest tests.test_native_search.NativeSearchPositionKeyCandidateTests tests.tooling.test_build_orchestrator -v
-
-# 2. Screen with Windows clang (expects 0 strict false cutoffs).
-python -B benchmarks\strict_tt_key\screen.py --output-dir build\strict_tt_key\<new-run-id>
-
-# 3. W1: 1T intrinsic, production tablebases, non-regression.
-python -B -m makhos sprt --dev-library $s --master-library $c --dev-nnue-model $m --master-nnue-model $m --threads 1 --persistent-search --time 10 --inc 0.1 --elo0 -3 --elo1 1 --pairs 3000 --seed 20260926 --parallel-games 2 --output build\strict01\sprt-w1-1t-10s.json --resume
-
-# 4. W2: production path, 12T and 512 MiB at a fixed 1 s per move, one game at a time.
-python -B -m makhos sprt --dev-library $s --master-library $c --dev-nnue-model $m --master-nnue-model $m --threads 12 --hash-mb 512 --fixed-move-time-ms 1000 --elo0 -3 --elo1 1 --pairs 1000 --seed 20260927 --output build\strict01\sprt-w2-12t-1s.json --resume
-```
-
-Decision rule, fixed before the runs:
-
-- **PROMOTE** only if the full suite passes, the screen shows 0 strict false
-  cutoffs, and W1 and W2 both PASS.
-- **REJECT** on any FAIL.
-- A capped run is **INCONCLUSIVE**. Promoting a fix on correctness grounds
-  without an Elo claim then needs an explicit user exception, as PR #6 did.
-- Promotion means one release build with `-StrictSearchKey`, a new release
-  manifest and pointer, the production smoke test, and rollback to the current
-  release DLL.
+The W1 (1T, 10s+0.1s) and W2 (12T, fixed 1 s) gates declared in commit
+`10b1b91` are withdrawn, because the screen rejected the hypothesis as
+declared. Do not run them. A strict key can only return as a new hypothesis
+with its own falsifiers, declared before any new measurement.
 
 ## Screen results
 
@@ -153,11 +125,39 @@ audit `a2770e83…` (legacy) and `9608cba3…` (strict).
   2139e329. In the king band, one cutoff in five came from a different
   position under the legacy key.
 
-The strict build searches 3–14% more nodes at equal depth. Those are the
-subtrees the aliases wrongly skipped. The extra work costs depth at fixed
-time, so fixed-depth results cannot settle strength. The paired match
-decides.
+Per-position time ratios (strict median over control median, three
+alternating repetitions each):
+
+| Group | Median per-position ratio | Positions where strict was slower |
+|---|---:|---:|
+| Kings, 7–12 pieces | 1.1713× | 42/64 |
+| King-free, 13 or more pieces | 1.0427× | 36/64 |
+
+**Verdict: REJECT_AS_DECLARED / NOT_PROMOTED.** The strict build searches
+3–14% more nodes at equal depth and takes 1.147× and 1.037× the total time.
+That is the repeatable fixed-depth slowdown this hypothesis declared as a
+falsifier. An earlier version of this section argued that fixed-depth results
+cannot settle strength and that the paired match decides. That changed the
+declared criterion after the result was known, and it is withdrawn. The screen
+remains valid correctness evidence: the strict key removes every false hit and
+cutoff.
 
 The clock aliases are mostly benign far from the 80-ply limit. The king-mask
 aliases can substitute a man for a king. The screen does not separate their
 playing impact.
+
+## Linux match result (stopped)
+
+STRICT_KEY_01-L1 ran in the cloud container, not on Local. It was stopped on
+2026-09-25 right after its pair-344 checkpoint, following the owner's review
+on PR #28. Checkpoints are written atomically, and no partial file remained.
+The stopped checkpoint is
+[`sprt_l1_20260925_stopped.json`](sprt_l1_20260925_stopped.json), SHA-256
+`0ecbe932…`.
+
+| Pairs | W / D / L | Pentanomial | LLR (bounds ±2.94) | Elo, 95% |
+|---:|---|---|---:|---|
+| 344 | 266 / 195 / 227 | 20 / 56 / 161 / 79 / 28 | +0.98 | +19.7 ± 17.8 |
+
+The result is **INCONCLUSIVE**. It cannot override the screen verdict, and the
+run must not be resumed or rerun.
