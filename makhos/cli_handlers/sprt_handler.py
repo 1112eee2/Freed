@@ -179,6 +179,11 @@ def command_sprt(args: argparse.Namespace) -> int:
         raise ValueError("test --root-alpha separately from selective-root/shared-TT")
     if args.resume and not args.output:
         raise ValueError("--resume requires --output")
+    tb_draw_cutoff = bool(getattr(args, "tb_draw_cutoff", False))
+    if tb_draw_cutoff and args.no_tablebase:
+        raise ValueError("--tb-draw-cutoff requires tablebases")
+    if tb_draw_cutoff and candidate_threads == 1 and not args.persistent_search:
+        raise ValueError("--tb-draw-cutoff requires --persistent-search at one thread")
 
     libraries: dict[str, dict[str, object]] = {}
     for label, library, threads, nnue_model in (
@@ -201,6 +206,14 @@ def command_sprt(args: argparse.Namespace) -> int:
             nnue_enabled = probe.nnue_enabled
             nnue_model_sha256 = probe.nnue_model_sha256
             nnue_feature_abi = probe.nnue_feature_abi
+            if (
+                tb_draw_cutoff
+                and label == "candidate"
+                and not getattr(probe, "supports_tablebase_draw", False)
+            ):
+                raise RuntimeError(
+                    "--tb-draw-cutoff needs a candidate built with MAKHOS_SEARCH_TB_DRAW"
+                )
         if args.persistent_search and abi_version < 3:
             raise RuntimeError(
                 f"{label} DLL does not support --persistent-search: "
@@ -387,6 +400,12 @@ def command_sprt(args: argparse.Namespace) -> int:
     # Fixed-time checkpoints bind their budget explicitly for resume validation.
     if args.fixed_move_time_ms is not None:
         sprt_config["fixed_move_time_ms"] = args.fixed_move_time_ms
+    if tb_draw_cutoff:
+        # Present only when enabled, so existing checkpoint identities hold.
+        if shared_endgame_tb is None:
+            raise ValueError("--tb-draw-cutoff requires the native endgame tablebases")
+        sprt_config["candidate_tb_draw_cutoff"] = True
+        sprt_config["candidate_tb_draw_max_pieces"] = shared_endgame_tb.max_pieces
     print(
         "SPRT_CONFIG " + json.dumps(sprt_config, sort_keys=True),
         flush=True,
@@ -449,19 +468,22 @@ def command_sprt(args: argparse.Namespace) -> int:
                     shared_endgame_tb,
                     nnue_model=dev_nnue_model,
                 )
+        dev_native_search = make_native_search(
+            dev_library,
+            threads=candidate_threads,
+            nnue_model=dev_nnue_model,
+            selective_root=args.selective_root,
+            root_alpha=args.root_alpha,
+            shared_tt=args.shared_tt,
+        )
+        if tb_draw_cutoff:
+            dev_native_search.attach_tablebase(shared_endgame_tb)
         return Engine(
             DEFAULT_RULES,
             exact_piece_limit=2,
             native_tablebase=native_tablebase,
             ranked_tablebases=ranked,
-            native_search=make_native_search(
-                dev_library,
-                threads=candidate_threads,
-                nnue_model=dev_nnue_model,
-                selective_root=args.selective_root,
-                root_alpha=args.root_alpha,
-                shared_tt=args.shared_tt,
-            ),
+            native_search=dev_native_search,
             native_endgame_search=dev_eg_search,
             native_endgame_enabled=dev_eg_search is not None,
         )

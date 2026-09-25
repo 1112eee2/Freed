@@ -1310,6 +1310,9 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #ifndef MAKHOS_SEARCH_KEY_TEST_API
 #define MAKHOS_SEARCH_KEY_TEST_API 0
 #endif
+#ifndef MAKHOS_SEARCH_TB_DRAW
+#define MAKHOS_SEARCH_TB_DRAW 0
+#endif
 #ifndef MAKHOS_EXPERIMENTAL_SEARCH_APIS
 #define MAKHOS_EXPERIMENTAL_SEARCH_APIS 1
 #endif
@@ -1330,6 +1333,17 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #endif
 #if MAKHOS_QSEARCH_TT_CENSUS && MAKHOS_SHARED_TT
 #error "MAKHOS_QSEARCH_TT_CENSUS requires private search contexts"
+#endif
+#if MAKHOS_SEARCH_TB_DRAW
+/* The probe and set are borrowed from an already loaded endgame tablebase
+ * library.  Its owner keeps one set reference and the library loaded for as
+ * long as any search context stays attached. */
+#include "makhos_endgame_tb.h"
+typedef int32_t (*NativeSearchTBProbe)(
+    const MakhosTBSet *set,
+    const MakhosEndgamePosition *position,
+    MakhosTBProbe *output
+);
 #endif
 
 enum {
@@ -1570,6 +1584,15 @@ typedef struct {
     uint64_t nnue_refreshes;
     uint64_t nnue_updates;
     uint64_t nnue_evaluations;
+#endif
+#if MAKHOS_SEARCH_TB_DRAW
+    const MakhosTBSet *tb_set;
+    NativeSearchTBProbe tb_probe;
+    uint32_t tb_no_progress_plies;
+    uint32_t tb_max_pieces;
+    uint64_t tb_probes;
+    uint64_t tb_draw_cutoffs;
+    uint64_t tb_errors;
 #endif
 } NativeSearchContext;
 
@@ -3422,6 +3445,47 @@ static int native_quiescence(
     int ply
 );
 
+#if MAKHOS_SEARCH_TB_DRAW
+/*
+ * An exact history-free tablebase DRAW stays a draw under threefold
+ * repetition, which can only add draws.  WIN and LOSS are only bounds once
+ * repetition applies, so they keep the ordinary search.  The root is never
+ * probed because it must still return a move.
+ */
+static bool search_tablebase_draw(
+    NativeSearchContext *context,
+    Position position,
+    int ply
+) {
+    if (
+        context->tb_probe == NULL ||
+        ply == 0 ||
+        context->no_progress_plies != context->tb_no_progress_plies ||
+        (uint32_t)native_count_bits(occupied(position)) > context->tb_max_pieces
+    ) {
+        return false;
+    }
+    MakhosEndgamePosition query = {
+        position.red,
+        position.black,
+        position.kings,
+        position.turn,
+        position.reversible_plies
+    };
+    MakhosTBProbe probe = {sizeof(probe), MAKHOS_ENDGAME_API_V1, 0, 0, 0, 0};
+    ++context->tb_probes;
+    int32_t status = context->tb_probe(context->tb_set, &query, &probe);
+    if (status == MK_EG_MISS) return false;
+    if (status != MK_EG_OK) {
+        ++context->tb_errors;
+        return false;
+    }
+    if (probe.outcome != 0) return false;
+    ++context->tb_draw_cutoffs;
+    return true;
+}
+#endif
+
 static int native_negamax(
     NativeSearchContext *context,
     Position position,
@@ -3464,6 +3528,12 @@ static int native_negamax(
         context->pv_length[ply] = 0;
         return 0;
     }
+#if MAKHOS_SEARCH_TB_DRAW
+    if (search_tablebase_draw(context, position, ply)) {
+        context->pv_length[ply] = 0;
+        return 0;
+    }
+#endif
 
     MoveList *moves;
 #if !MAKHOS_EARLY_TT_CUTOFF
@@ -3812,6 +3882,12 @@ static int native_quiescence(
         context->pv_length[ply] = 0;
         return 0;
     }
+#if MAKHOS_SEARCH_TB_DRAW
+    if (search_tablebase_draw(context, position, ply)) {
+        context->pv_length[ply] = 0;
+        return 0;
+    }
+#endif
 #if MAKHOS_QSEARCH_CAPTURE_ONLY && MAKHOS_QSEARCH_FAST_CAPTURE_EXISTS && MAKHOS_EARLY_TT_CUTOFF
     /* Most qnodes have no mandatory capture.  Prove that cheaply before
      * allocating or filling a full MoveList; if a capture exists, keep the
@@ -5515,6 +5591,49 @@ MAKHOS_API int makhos_search_clear(void *handle) {
 MAKHOS_API int makhos_search_clear_local(void *handle) {
     return clear_native_search(handle, false);
 }
+
+#if MAKHOS_SEARCH_TB_DRAW
+/* Attach a borrowed tablebase set and its probe; NULL set or probe detaches.
+ * Probing applies only while a search uses the same no-progress horizon. */
+MAKHOS_API int makhos_search_attach_tablebase(
+    void *handle,
+    const MakhosTBSet *set,
+    NativeSearchTBProbe probe,
+    uint32_t no_progress_plies,
+    uint32_t max_pieces
+) {
+    if (handle == NULL) return 1;
+    NativeSearchContext *context = handle;
+    if (set == NULL || probe == NULL) {
+        context->tb_set = NULL;
+        context->tb_probe = NULL;
+        context->tb_no_progress_plies = 0;
+        context->tb_max_pieces = 0;
+        return 0;
+    }
+    if (
+        no_progress_plies == 0 || no_progress_plies > 255 ||
+        max_pieces == 0 || max_pieces > 32
+    ) {
+        return 1;
+    }
+    context->tb_set = set;
+    context->tb_probe = probe;
+    context->tb_no_progress_plies = no_progress_plies;
+    context->tb_max_pieces = max_pieces;
+    return 0;
+}
+
+/* Cumulative per context: probes, exact-draw cutoffs, probe errors. */
+MAKHOS_API int makhos_search_tablebase_counters(void *handle, uint64_t *output) {
+    if (handle == NULL || output == NULL) return 1;
+    const NativeSearchContext *context = handle;
+    output[0] = context->tb_probes;
+    output[1] = context->tb_draw_cutoffs;
+    output[2] = context->tb_errors;
+    return 0;
+}
+#endif
 
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
 MAKHOS_API uint64_t makhos_search_memory_bytes(void *handle);
