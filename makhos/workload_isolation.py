@@ -4,6 +4,19 @@ The GUI owns the whole lock range while it is running.  Batch workers own one
 byte each and periodically observe the interactive-priority event, allowing a
 new GUI session to drain existing workers at a safe position boundary.  Windows
 releases both file locks and named-event handles if a process crashes.
+
+One process may hold several leases on the same lock file; the full-suite
+attestation, for example, holds every slot while the tests it runs in-process
+open SPRT's ``BatchWorkLease``.  Each ``_RangeLock`` therefore owns its bytes
+through its own open file, as a Windows handle does: another ``_RangeLock`` in
+the same process is refused an overlapping range, and closing one never
+releases another's range.  Linux provides this with open-file-description
+locks.  ``fcntl.lockf`` is deliberately not used: its locks belong to the whole
+process, so it would grant that in-process overlap, and closing any descriptor
+of the file would drop every range the process holds.  POSIX systems without
+open-file-description locks keep a whole-file ``flock``, which has the same
+ownership but admits one batch job at a time.  The kernel releases all of these
+locks if a process crashes.
 """
 
 from __future__ import annotations
@@ -77,6 +90,51 @@ def ensure_interactive_session_inactive(stage: str) -> None:
         )
 
 
+class _FileLockRequest(ctypes.Structure):
+    """``struct flock`` as Linux ``F_OFD_SETLK`` reads it.
+
+    CPython builds with 64-bit ``off_t``; ``l_pid`` must be zero.
+    """
+
+    _fields_ = [
+        ("l_type", ctypes.c_short),
+        ("l_whence", ctypes.c_short),
+        ("l_start", ctypes.c_int64),
+        ("l_len", ctypes.c_int64),
+        ("l_pid", ctypes.c_int),
+    ]
+
+
+def _posix_locking(
+    fd: int,
+    offset: int,
+    length: int,
+    *,
+    unlock: bool = False,
+) -> None:
+    """Non-blocking POSIX counterpart of ``msvcrt.locking`` for one open file.
+
+    A range already held through another open file raises BlockingIOError or
+    PermissionError.
+    """
+
+    import fcntl
+
+    command = getattr(fcntl, "F_OFD_SETLK", None)
+    if command is None:
+        mode = fcntl.LOCK_UN if unlock else fcntl.LOCK_EX | fcntl.LOCK_NB
+        fcntl.flock(fd, mode)
+        return
+    request = _FileLockRequest(
+        fcntl.F_UNLCK if unlock else fcntl.F_WRLCK,
+        os.SEEK_SET,
+        offset,
+        length,
+        0,
+    )
+    fcntl.fcntl(fd, command, bytes(request))
+
+
 class _RangeLock:
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -97,18 +155,22 @@ class _RangeLock:
     def try_lock(self, offset: int, length: int) -> bool:
         self._open()
         assert self.handle is not None
-        self.handle.seek(offset)
-        try:
-            if os.name == "nt":
-                import msvcrt
+        if os.name == "nt":
+            import msvcrt
 
+            self.handle.seek(offset)
+            try:
                 msvcrt.locking(self.handle.fileno(), msvcrt.LK_NBLCK, length)
-            else:
-                import fcntl
-
-                fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except OSError:
-            return False
+            except OSError:
+                return False
+        else:
+            try:
+                _posix_locking(self.handle.fileno(), offset, length)
+            except (BlockingIOError, PermissionError):
+                # EAGAIN/EACCES is contention.  Anything else, such as a
+                # kernel without open-file-description locks, must surface
+                # rather than masquerade as occupied slots.
+                return False
         self.offset = offset
         self.length = length
         return True
@@ -118,19 +180,22 @@ class _RangeLock:
             return
         try:
             if self.length:
-                self.handle.seek(self.offset)
                 if os.name == "nt":
                     import msvcrt
 
+                    self.handle.seek(self.offset)
                     msvcrt.locking(
                         self.handle.fileno(),
                         msvcrt.LK_UNLCK,
                         self.length,
                     )
                 else:
-                    import fcntl
-
-                    fcntl.flock(self.handle.fileno(), fcntl.LOCK_UN)
+                    _posix_locking(
+                        self.handle.fileno(),
+                        self.offset,
+                        self.length,
+                        unlock=True,
+                    )
         finally:
             self.length = 0
             self.handle.close()

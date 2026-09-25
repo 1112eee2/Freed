@@ -426,6 +426,13 @@ class NnueScalingFinalAuditTests(unittest.TestCase):
             capacity_path = temp_path / "capacity.json"
             write_json(capacity_path, capacity)
             capacity_sha = file_sha256(capacity_path)
+            # The frozen audit pins the acquisition-era workload_isolation.py
+            # and fails closed on the real run once that file changes.  This
+            # test covers the audit logic, so it binds the live file like its
+            # other synthetic inputs.
+            isolation_sha = file_sha256(
+                final_audit.ROOT / "makhos" / "workload_isolation.py"
+            )
             full_manifest = {
                 "format": "thai-makhos-nnue-scaling-full-run-v1",
                 "kind": "locked-full-run-manifest",
@@ -439,9 +446,7 @@ class NnueScalingFinalAuditTests(unittest.TestCase):
                 "supervisor_script_sha256": (
                     final_audit.EXPECTED_SUPERVISOR_SHA256
                 ),
-                "workload_isolation_sha256": (
-                    final_audit.EXPECTED_WORKLOAD_ISOLATION_SHA256
-                ),
+                "workload_isolation_sha256": isolation_sha,
                 "config_sha256": config_sha,
                 "sealed_test_labels_opened": False,
                 "model_trained": False,
@@ -519,6 +524,11 @@ class NnueScalingFinalAuditTests(unittest.TestCase):
                     final_audit,
                     "EXPECTED_FULL_RUN_MANIFEST_SHA256",
                     full_manifest_sha,
+                ),
+                patch.object(
+                    final_audit,
+                    "EXPECTED_WORKLOAD_ISOLATION_SHA256",
+                    isolation_sha,
                 ),
                 patch.object(Path, "open", guarded_open),
             ):
