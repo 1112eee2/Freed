@@ -484,6 +484,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="fail closed if either paired game is unfinished after this many plies",
     )
     sprt_parser.add_argument(
+        "--tb-draw-cutoff",
+        action="store_true",
+        help=(
+            "candidate-only: attach the match tablebases to the candidate's "
+            "main search for exact-draw cutoffs (needs a MAKHOS_SEARCH_TB_DRAW "
+            "library, tablebases and persistent search)"
+        ),
+    )
+    sprt_parser.add_argument(
         "--games-dir",
         default=None,
         help=(

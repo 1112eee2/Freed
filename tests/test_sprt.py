@@ -207,6 +207,31 @@ class SPRTGameRecordTests(unittest.TestCase):
             self.assertNotIn("games_dir", config)
 
 
+class SPRTTablebaseDrawOptionTests(unittest.TestCase):
+    def test_tb_draw_cutoff_rejects_unsupported_combinations_before_engine_work(self):
+        from makhos.cli import command_sprt
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            dev, master = root / "dev.so", root / "master.so"
+            dev.write_bytes(b"candidate")
+            master.write_bytes(b"baseline")
+            base = ["sprt", "--dev-library", str(dev), "--master-library", str(master),
+                    "--tb-draw-cutoff"]
+            for extra, message in (
+                (["--no-tablebase", "--persistent-search"], "requires tablebases"),
+                ([], "requires --persistent-search"),
+            ):
+                with self.subTest(extra=extra):
+                    args = build_parser().parse_args([*base, *extra])
+                    with (
+                        patch("makhos.cli_handlers.sprt_handler.NativeSearch") as probe,
+                        self.assertRaisesRegex(ValueError, message),
+                    ):
+                        command_sprt(args)
+                    probe.assert_not_called()
+
+
 class SPRTTests(unittest.TestCase):
     def test_fixed_move_budget_is_exact_for_both_colors_every_ply(self):
         class RecordingEngine:
