@@ -59,6 +59,11 @@ WIN and LOSS are only bounds once repetition applies, so they keep the
 ordinary search. The search already recognizes those almost perfectly. This
 matches the C4 endgame search's own handling of exact draws.
 
+The tablebase draws assume the project's 80-ply no-progress limit. Under
+rules without that limit, such as the Invincible 2 page's (track §3.5), a
+tablebase draw may be a win or a loss. The gates below measure strength under
+project rules only.
+
 The tablebase set and its probe come from the already loaded endgame
 library. The files are not mapped a second time.
 
