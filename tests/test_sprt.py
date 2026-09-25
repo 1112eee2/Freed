@@ -1,6 +1,9 @@
 """Unit tests for the SPRT testing harness."""
 
 from collections import Counter
+from contextlib import redirect_stdout
+import io
+import json
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
@@ -13,8 +16,15 @@ from makhos.cli import (
     _write_sprt_checkpoint,
     build_parser,
 )
-from makhos.core import DEFAULT_RULES, initial_state, legal_moves
-from makhos.search import Engine, TimeManager
+from makhos.core import DEFAULT_RULES, apply_move, initial_state, legal_moves
+from makhos.game_analysis import (
+    GameRecordError,
+    build_match_game_record,
+    load_game_record,
+    parse_game_record,
+    replay_game,
+)
+from makhos.search import UNKNOWN_WDL, Engine, TimeManager
 from makhos.sprt import (
     calculate_pentanomial_sprt,
     calculate_sprt,
@@ -24,6 +34,177 @@ from makhos.sprt import (
     SPRTResult,
 )
 from makhos.workload_isolation import InteractiveSessionActive
+
+
+class _FirstMoveEngine:
+    native_search = None
+
+    def search(self, state, _limits, **_kwargs):
+        return SimpleNamespace(move=legal_moves(state)[0])
+
+
+def _recorded_games(max_pairs: int = 1) -> tuple[SPRTResult, list[dict]]:
+    games: list[dict] = []
+    result = run_sprt_match(
+        _FirstMoveEngine,
+        _FirstMoveEngine,
+        max_pairs=max_pairs,
+        seed=8675309,
+        verbose=False,
+        on_game_completed=games.append,
+    )
+    return result, games
+
+
+class SPRTGameRecordTests(unittest.TestCase):
+    def test_timed_game_transcript_records_every_played_ply(self) -> None:
+        class SummaryEngine:
+            last_search_backend = "native-single"
+
+            def search(self, state, _limits, **_kwargs):
+                move = legal_moves(state)[0]
+                return SimpleNamespace(
+                    move=move, score=7, depth=3, nodes=11, pv=(move,),
+                    bound=UNKNOWN_WDL, tablebase_hits=0,
+                )
+
+        state = initial_state()
+        transcript: list[dict] = []
+        outcome = play_timed_game(
+            state, Counter({state.position_key: 1}),
+            black_engine=SummaryEngine(), red_engine=SummaryEngine(),
+            black_mode="best", red_mode="best", fixed_move_time_ms=5,
+            max_game_plies=6, transcript=transcript,
+        )
+
+        self.assertEqual(outcome, (None, "sprt_max_plies"))
+        self.assertEqual(
+            [entry["player"] for entry in transcript], ["black", "red"] * 3
+        )
+        replay = initial_state()
+        for entry in transcript:
+            move = legal_moves(replay)[0]
+            self.assertEqual(entry["notation"], move.notation)
+            self.assertEqual(entry["requested_time_ms"], 5)
+            self.assertEqual((entry["score"], entry["depth"], entry["nodes"]), (7, 3, 11))
+            self.assertEqual(entry["pv"], [move.notation])
+            self.assertEqual(entry["wdl"], "UNKNOWN")
+            self.assertEqual(entry["search_backend"], "native-single")
+            replay = apply_move(replay, move)
+
+    def test_game_records_leave_results_unchanged_and_replay(self) -> None:
+        plain = run_sprt_match(
+            _FirstMoveEngine, _FirstMoveEngine,
+            max_pairs=2, seed=8675309, verbose=False,
+        )
+        recorded, games = _recorded_games(max_pairs=2)
+
+        self.assertEqual(recorded, plain)
+        self.assertEqual(
+            [(game["pair"], game["candidate_color"]) for game in games],
+            [(1, "black"), (1, "red"), (2, "black"), (2, "red")],
+        )
+        self.assertEqual(games[0]["opening"], games[1]["opening"])
+        for game in games:
+            record = build_match_game_record(game, match={"tool": "test"})
+            replayed = replay_game(parse_game_record(record))
+            self.assertEqual(
+                len(replayed.plies), len(game["opening"]) + len(game["moves"])
+            )
+            self.assertEqual(
+                (record["result"]["winner"], record["result"]["reason"]),
+                (game["winner"], game["reason"]),
+            )
+            self.assertEqual(record["match"]["candidate_color"], game["candidate_color"])
+            engine_moves = [move for move in record["moves"] if move.get("actor")]
+            self.assertEqual(len(engine_moves), len(game["moves"]))
+            for move in engine_moves:
+                self.assertEqual(
+                    move["engine"]["role"] == "candidate",
+                    move["player"] == game["candidate_color"],
+                )
+
+    def test_match_record_rejects_results_the_replay_does_not_reach(self) -> None:
+        _result, games = _recorded_games()
+        game = games[0]
+        wrong_winner = "black" if game["winner"] != "black" else "red"
+        for label, bad in (
+            ("winner", {**game, "winner": wrong_winner}),
+            ("reason", {**game, "reason": "made_up"}),
+            ("unfinished", {**game, "moves": game["moves"][:-1]}),
+            ("wrong side", {**game, "moves": ({**game["moves"][0], "player": "x"},)}),
+        ):
+            with self.subTest(label=label), self.assertRaises(GameRecordError):
+                build_match_game_record(bad, match={})
+
+    def test_command_sprt_writes_game_records_outside_the_config(self) -> None:
+        from makhos.cli import command_sprt
+
+        _result, games = _recorded_games()
+
+        class ProbeStub:
+            abi_version = 5
+            supports_fixed_search = True
+            supports_window_search = True
+            supports_shared_tt = False
+            nnue_enabled = False
+            nnue_model_sha256 = None
+            nnue_feature_abi = None
+
+            def __init__(self, *_args, **_kwargs):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        class LeaseStub(ProbeStub):
+            # Isolate the test from any batch job holding the real lease.
+            def checkpoint(self, _stage):
+                pass
+
+        def fake_run_sprt_match(_dev_factory, _master_factory, **kwargs):
+            for game in games:
+                kwargs["on_game_completed"](game)
+            return SPRTResult("INCONCLUSIVE", 0.0, 0.0, 0.0, 1, 0, 1, 2, (0, 0, 1, 0, 0))
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            dev, master = root / "dev.so", root / "master.so"
+            dev.write_bytes(b"candidate")
+            master.write_bytes(b"baseline")
+            games_dir = root / "games"
+            args = build_parser().parse_args([
+                "sprt", "--dev-library", str(dev), "--master-library", str(master),
+                "--no-tablebase", "--pairs", "1", "--games-dir", str(games_dir),
+            ])
+            output = io.StringIO()
+            with (
+                patch("makhos.cli_handlers.sprt_handler.NativeSearch", ProbeStub),
+                patch("makhos.cli_handlers.sprt_handler.BatchWorkLease", LeaseStub),
+                patch("makhos.sprt.run_sprt_match", side_effect=fake_run_sprt_match),
+                redirect_stdout(output),
+            ):
+                command_sprt(args)
+
+            paths = sorted(games_dir.glob("*.json"))
+            self.assertEqual(
+                [path.name for path in paths],
+                ["pair00001-candidate-black.json", "pair00001-candidate-red.json"],
+            )
+            for path in paths:
+                replay_game(load_game_record(path))
+                record = json.loads(path.read_text(encoding="utf-8"))
+                self.assertEqual(record["match"]["candidate"]["threads"], 1)
+                self.assertEqual(record["match"]["tool"], "makhos sprt")
+            config_line = next(
+                line for line in output.getvalue().splitlines()
+                if line.startswith("SPRT_CONFIG ")
+            )
+            config = json.loads(config_line.removeprefix("SPRT_CONFIG "))
+            self.assertNotIn("games_dir", config)
 
 
 class SPRTTests(unittest.TestCase):
