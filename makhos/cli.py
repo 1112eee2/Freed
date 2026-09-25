@@ -227,6 +227,16 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument("--repetitions", type=int, default=2)
     benchmark_parser.add_argument("--seed", type=int, default=0x4D414B484F53)
     benchmark_parser.add_argument("--search-hash-power", type=int, default=18)
+    benchmark_parser.add_argument(
+        "--candidate-nnue-model",
+        default=None,
+        help="explicit NNUE model for the candidate library",
+    )
+    benchmark_parser.add_argument(
+        "--baseline-nnue-model",
+        default=None,
+        help="explicit NNUE model for the baseline library",
+    )
     benchmark_parser.set_defaults(func=command_bench_native)
 
     profile_parser = subparsers.add_parser(
