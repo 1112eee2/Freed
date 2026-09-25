@@ -51,6 +51,7 @@ def _signature(report: dict) -> list[dict]:
 
 def _run(args: argparse.Namespace) -> dict:
     root = args.repo_root.resolve()
+    lease_root = args.lease_root.resolve()
     library = args.library.resolve()
     model = args.model.resolve()
     if not library.is_file():
@@ -76,7 +77,7 @@ def _run(args: argparse.Namespace) -> dict:
         for name, position in CASES
     )
     records: list[dict] = []
-    with BatchWorkLease(root) as lease:
+    with BatchWorkLease(lease_root) as lease:
         for threads in THREADS:
             if threads == 1:
                 hash_power = hash_power_for_megabytes(
@@ -127,6 +128,7 @@ def _run(args: argparse.Namespace) -> dict:
     return {
         "format": "thai-makhos-root-policy-parity-v1",
         "source_commit": _source_commit(root),
+        "lease_root": str(lease_root),
         "library": str(library),
         "library_sha256": _sha256(library),
         "model": str(model),
@@ -141,6 +143,12 @@ def _run(args: argparse.Namespace) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument(
+        "--lease-root",
+        type=Path,
+        default=Path.cwd(),
+        help="shared project root whose workload lock both runs must use",
+    )
     parser.add_argument(
         "--library",
         type=Path,
