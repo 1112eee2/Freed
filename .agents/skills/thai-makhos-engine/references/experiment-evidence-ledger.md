@@ -4288,3 +4288,39 @@ removes the stale Experiment A launch directive from SKILL.md, and consolidates
 current status with a byte-identical historical snapshot. No engine/native/build
 scripts, defaults, artifacts or checkpoints change. Next implementation slice:
 Phase 1A work/scratch consumer and evidence map; no SMP/arena launch is implied.
+
+## 2026-09-25 — No-loss track Web evidence (PR #28, not merged)
+
+STRICT_KEY_01: REJECT_AS_DECLARED / NOT_PROMOTED. Its declared falsifiers were a
+repeatable fixed-depth slowdown or a significant paired loss. The depth-20
+screen (128 train-split positions, NNUE v1, Linux clang 18.1.3) met the first:
+strict took 1.147x/1.037x total time and 1.1713x/1.0427x median per position
+(slower on 42/64 and 36/64). It stays correctness evidence: the legacy key made
+9,899,449 of 48,814,153 TT cutoffs false in the 7-12 piece king group and
+379,325 of 8,760,337 in the 13+ king-free group; strict made none, and audit
+builds matched plain builds on all 256 searches. Linux match STRICT_KEY_01-L1
+(1T, no TB, 2s+0.02s, H0=-3/H1=+1) was stopped at pair 344 after the owner's
+review: 266/195/227, pentanomial 20/56/161/79/28, LLR +0.98, +19.7 +/-17.8 Elo,
+INCONCLUSIVE. Do not resume it, and do not use it against the screen; any
+strict key returns only as a new hypothesis. Windows gates withdrawn.
+
+TB frontier (measurement): on 9,000 exact-labelled 4-6 piece positions, depth-8
+search scored 64.4% of exact draws beyond +/-50 and got 2/6,000 decisive signs
+wrong. TBDRAW_01 (exact TB draw returns 0 at non-root nodes, default-off,
+byte-identical default build, 8 tests): INCONCLUSIVE / NOT_PROMOTED, no paired
+result. Its soundness is scoped to the 80-ply project rules.
+
+RFP_01 (guarded reverse futility, default-off): census only. At depth 20 on 128
+train-split positions, margin 48 per ply mispruned 0.30%/0.70%/0.26% at depths
+1-3 while pruning about half the guarded nodes; source default still 100.
+No match.
+
+Invincible 2 page script (five fetches, no game): moves and captures match
+`project`; draw adjudication differs (repetition only at 10 or fewer pieces, no
+no-progress limit, bare-king draw). Phase 0 stays INCONCLUSIVE.
+
+Tooling: `bench-native` KeyError regression fixed; `analyze-game --nnue-model`
+ported from #25; `sprt --games-dir` writes replay-validated records that fail
+the v1 JSON schema until F3. Owner review: split PR #28 into single-concept PRs
+before acceptance. RULESET.json, makhos/core.py, the accepted DLL, the model and
+the release pointer are unchanged.
