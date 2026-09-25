@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://thaicheckers.local/schemas/thai-makhos-game-v1.schema.json",
-  "title": "Thai Makhos GUI game record v1",
+  "title": "Thai Makhos game record v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,95 +13,431 @@
     "engine"
   ],
   "properties": {
-    "format": { "const": "thai-makhos-game-v1" },
-    "start_position": { "type": "string", "minLength": 1 },
-    "start_reversible_plies": { "type": "integer", "minimum": 0 },
-    "final_position": { "type": "string", "minLength": 1 },
-    "reversible_plies": { "type": "integer", "minimum": 0 },
+    "format": {
+      "const": "thai-makhos-game-v1"
+    },
+    "game_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{16}$"
+    },
+    "saved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "start_position": {
+      "type": "string",
+      "minLength": 1
+    },
+    "start_reversible_plies": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "final_position": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reversible_plies": {
+      "type": "integer",
+      "minimum": 0
+    },
     "position_history": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "result": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/result"
+        }
+      ]
+    },
+    "rules_result": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/rules_result"
+        }
+      ]
     },
     "moves": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["ply", "player", "notation"],
+        "required": [
+          "ply",
+          "player",
+          "notation"
+        ],
         "properties": {
-          "ply": { "type": "integer", "minimum": 1 },
-          "player": { "enum": ["black", "red"] },
-          "notation": { "type": "string", "minLength": 3 },
-          "actor": { "enum": ["human", "engine"] },
+          "ply": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "player": {
+            "enum": [
+              "black",
+              "red"
+            ]
+          },
+          "notation": {
+            "type": "string",
+            "minLength": 3
+          },
+          "actor": {
+            "enum": [
+              "human",
+              "engine"
+            ]
+          },
           "engine": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["think_time_seconds", "threads", "hash_mb", "mode"],
-            "properties": {
-              "think_time_seconds": { "type": "number", "exclusiveMinimum": 0 },
-              "threads": { "type": "integer", "minimum": 1, "maximum": 12 },
-              "hash_mb": { "type": "integer", "minimum": 4, "maximum": 1024 },
-              "mode": { "enum": ["best", "win"] },
-              "provenance_version": { "const": "search-v1" },
-              "requested_time_ms": { "type": "integer", "minimum": 1 },
-              "elapsed_ms": { "type": "integer", "minimum": 0 },
-              "depth_limit": { "type": "integer", "minimum": 1, "maximum": 94 },
-              "depth": { "type": "integer", "minimum": 1, "maximum": 94 },
-              "common_depth": { "type": "integer", "minimum": 1, "maximum": 94 },
-              "selective_root": { "type": "boolean" },
-              "nodes": { "type": "integer", "minimum": 0 },
-              "score": { "type": "integer" },
-              "pv": {
-                "type": "array",
-                "items": { "type": "string", "minLength": 3 }
-              },
-              "wdl": { "type": "string" },
-              "tablebase_hits": { "type": "integer", "minimum": 0 },
-              "hash_allocated_mb": { "type": "number", "minimum": 0 },
-              "rules_profile": {
-                "enum": ["project", "external-no-repetition"]
-              },
-              "search_backend": {
-                "enum": [
-                  "native-single",
-                  "native-root-split",
-                  "python",
-                  "python-fallback",
-                  "forced"
-                ]
-              },
-              "native_library": { "type": ["string", "null"] },
-              "native_library_sha256": {
-                "oneOf": [
-                  { "type": "null" },
-                  { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" }
-                ]
-              },
-              "native_search_abi": {
-                "type": ["integer", "null"],
-                "minimum": 2
-              },
-              "native_error": { "type": ["string", "null"] }
-            }
+            "$ref": "#/$defs/search_engine"
           }
         }
       }
     },
     "engine": {
+      "$ref": "#/$defs/game_engine"
+    }
+  },
+  "$defs": {
+    "result": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["think_time_seconds", "threads", "hash_mb", "mode"],
+      "required": [
+        "source",
+        "winner"
+      ],
       "properties": {
-        "think_time_seconds": { "type": "number", "exclusiveMinimum": 0 },
-        "threads": { "type": "integer", "minimum": 1, "maximum": 12 },
-        "hash_mb": { "type": "integer", "minimum": 4, "maximum": 1024 },
-        "mode": { "enum": ["best", "win"] },
-        "provenance_version": { "type": ["string", "null"], "enum": ["search-v1", null] },
-        "game_mode": { "enum": ["human", "bot", "edit"] },
-        "human_side": { "enum": ["black", "red"] },
+        "source": {
+          "enum": [
+            "user",
+            "rules"
+          ]
+        },
+        "winner": {
+          "enum": [
+            "black",
+            "red",
+            null
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "rules_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "terminal",
+        "winner",
+        "reason"
+      ],
+      "properties": {
+        "terminal": {
+          "type": "boolean"
+        },
+        "winner": {
+          "enum": [
+            "black",
+            "red",
+            null
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "search_engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "think_time_seconds",
+        "threads",
+        "hash_mb",
+        "mode"
+      ],
+      "properties": {
+        "think_time_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "hash_mb": {
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 1024
+        },
+        "mode": {
+          "enum": [
+            "best",
+            "win"
+          ]
+        },
+        "provenance_version": {
+          "const": "search-v1"
+        },
+        "requested_time_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "request_elapsed_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "pre_search_setup_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "depth_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 94
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 94
+        },
+        "common_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 94
+        },
+        "selective_root": {
+          "type": "boolean"
+        },
+        "nodes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "score": {
+          "type": "integer"
+        },
+        "pv": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "wdl": {
+          "type": "string"
+        },
+        "tablebase_hits": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hash_allocated_mb": {
+          "type": "number",
+          "minimum": 0
+        },
         "rules_profile": {
-          "enum": ["project", "external-no-repetition"]
+          "enum": [
+            "project",
+            "external-no-repetition"
+          ]
+        },
+        "search_backend": {
+          "enum": [
+            "native-single",
+            "native-root-split",
+            "native-endgame",
+            "python",
+            "python-fallback",
+            "forced"
+          ]
+        },
+        "native_library": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "native_library_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{64}$"
+            }
+          ]
+        },
+        "native_search_abi": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 2
+        },
+        "nnue_enabled": {
+          "type": "boolean"
+        },
+        "nnue_feature_abi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nnue_model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nnue_model_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{64}$"
+            }
+          ]
+        },
+        "nnue_source_model_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{64}$"
+            }
+          ]
+        },
+        "native_tablebase_ready": {
+          "type": "boolean"
+        },
+        "native_tablebase_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tb3": {
+          "type": "object"
+        },
+        "runtime_isolation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "native_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evaluator_used": {
+          "type": "string",
+          "minLength": 1
+        },
+        "release_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "release_manifest_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{64}$"
+            }
+          ]
+        }
+      }
+    },
+    "game_engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "think_time_seconds",
+        "threads",
+        "hash_mb",
+        "mode"
+      ],
+      "properties": {
+        "think_time_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "hash_mb": {
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 1024
+        },
+        "mode": {
+          "enum": [
+            "best",
+            "win"
+          ]
+        },
+        "provenance_version": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "search-v1",
+            null
+          ]
+        },
+        "game_mode": {
+          "enum": [
+            "human",
+            "bot",
+            "edit"
+          ]
+        },
+        "human_side": {
+          "enum": [
+            "black",
+            "red"
+          ]
+        },
+        "rules_profile": {
+          "enum": [
+            "project",
+            "external-no-repetition"
+          ]
         }
       }
     }
