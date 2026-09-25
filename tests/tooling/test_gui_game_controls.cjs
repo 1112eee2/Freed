@@ -7,6 +7,100 @@ const {test} = require('node:test');
 const app = fs.readFileSync(path.join(__dirname, '../../web/app.js'), 'utf8');
 const tick = () => new Promise(resolve => setImmediate(resolve));
 
+const gameRecordSchema = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, '../../schemas/thai-makhos-game-v1.schema.json'),
+    'utf8',
+  ),
+);
+
+function schemaTypeMatches(value, type) {
+  if (type === 'null') return value === null;
+  if (type === 'array') return Array.isArray(value);
+  if (type === 'object') return value !== null && typeof value === 'object' && !Array.isArray(value);
+  if (type === 'integer') return Number.isInteger(value);
+  return typeof value === type;
+}
+
+function validateSchema(value, definition, location = 'root') {
+  if (definition.$ref) {
+    const segments = definition.$ref.replace(/^#\//, '').split('/');
+    let target = gameRecordSchema;
+    for (const segment of segments) target = target[segment];
+    validateSchema(value, target, location);
+    return;
+  }
+  if (definition.oneOf) {
+    let matches = 0;
+    for (const candidate of definition.oneOf) {
+      try {
+        validateSchema(value, candidate, location);
+        matches += 1;
+      } catch (_error) {}
+    }
+    assert.equal(matches, 1, location + ' must match exactly one schema');
+    return;
+  }
+  if (Object.hasOwn(definition, 'const')) {
+    assert.deepEqual(value, definition.const, location + ' has the wrong constant');
+  }
+  if (definition.enum) {
+    assert.ok(
+      definition.enum.some(candidate => candidate === value),
+      location + ' is outside the enum',
+    );
+  }
+  if (definition.type) {
+    const types = Array.isArray(definition.type) ? definition.type : [definition.type];
+    assert.ok(
+      types.some(type => schemaTypeMatches(value, type)),
+      location + ' has the wrong type',
+    );
+  }
+  if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    for (const required of definition.required || []) {
+      assert.ok(Object.hasOwn(value, required), location + ' is missing ' + required);
+    }
+    const properties = definition.properties || {};
+    if (definition.additionalProperties === false) {
+      for (const key of Object.keys(value)) {
+        assert.ok(Object.hasOwn(properties, key), location + ' forbids ' + key);
+      }
+    }
+    for (const [key, child] of Object.entries(value)) {
+      if (properties[key]) validateSchema(child, properties[key], location + '.' + key);
+    }
+  }
+  if (Array.isArray(value)) {
+    if (definition.minItems !== undefined) {
+      assert.ok(value.length >= definition.minItems, location + ' has too few items');
+    }
+    if (definition.items) {
+      value.forEach((child, index) => validateSchema(child, definition.items, location + '[' + index + ']'));
+    }
+  }
+  if (typeof value === 'string') {
+    if (definition.minLength !== undefined) {
+      assert.ok(value.length >= definition.minLength, location + ' is too short');
+    }
+    if (definition.pattern) {
+      assert.match(value, new RegExp(definition.pattern), location + ' misses the pattern');
+    }
+  }
+  if (typeof value === 'number') {
+    if (definition.minimum !== undefined) {
+      assert.ok(value >= definition.minimum, location + ' is below minimum');
+    }
+    if (definition.maximum !== undefined) {
+      assert.ok(value <= definition.maximum, location + ' is above maximum');
+    }
+    if (definition.exclusiveMinimum !== undefined) {
+      assert.ok(value > definition.exclusiveMinimum, location + ' is below exclusiveMinimum');
+    }
+  }
+}
+
+
 function fixture(initial) {
   if (!initial) {
     const board = Array(32).fill(0); board[24] = 2; board[0] = 1;
@@ -166,6 +260,66 @@ test('adjudication drains bot-vs-bot timer and blocks further moves', async () =
   assert.equal(record.result.source, 'user');
   assert.equal(record.result.winner, 'black');
   assert.equal(record.rules_result.terminal, false);
+});
+
+
+test('GUI and saved game records satisfy thai-makhos-game-v1 schema', async () => {
+  const f = fixture();
+  f.run("gameState.gameMode = 'bot'");
+  const pending = f.run('triggerBotSearch()');
+  f.reply('/api/bestmove', {
+    bestmove: '25-21',
+    provenance_version: 'search-v1',
+    requested_time_ms: 1000,
+    elapsed_ms: 9,
+    request_elapsed_ms: 10.5,
+    pre_search_setup_ms: 1.25,
+    depth_limit: 64,
+    depth: 12,
+    common_depth: 11,
+    selective_root: true,
+    nodes: 12345,
+    score: 7,
+    pv: ['25-21', '1-5'],
+    wdl: 'UNKNOWN',
+    tablebase_hits: 0,
+    threads: 12,
+    hash_mb: 512,
+    hash_allocated_mb: 510.5,
+    mode: 'win',
+    rules_profile: 'project',
+    search_backend: 'native-endgame',
+    native_library: 'build/makhos_native.dll',
+    native_library_sha256: 'a'.repeat(64),
+    native_search_abi: 5,
+    nnue_enabled: true,
+    nnue_feature_abi: 'thai-makhos-shared-137-v1',
+    nnue_model: 'build/model_a.mknnue',
+    nnue_model_sha256: 'b'.repeat(64),
+    nnue_source_model_sha256: 'c'.repeat(64),
+    native_tablebase_ready: true,
+    native_tablebase_error: null,
+    tb3: {ready: true, state: 'ready', error: null},
+    runtime_isolation: 'interactive-exclusive-v1',
+    native_error: null,
+    evaluator_used: 'nnue',
+    release_id: 'nnue-v1-20260908',
+    release_manifest_sha256: 'd'.repeat(64),
+  });
+  await tick();
+  f.reply('/api/apply-move', quietChild(f));
+  await pending;
+  f.adjudicate();
+
+  const guiRecord = JSON.parse(f.run('buildGameRecord()'));
+  assert.doesNotThrow(() => validateSchema(guiRecord, gameRecordSchema));
+
+  const savedRecord = {
+    ...guiRecord,
+    game_id: 'e'.repeat(16),
+    saved_at: '2026-09-25T17:00:00+00:00',
+  };
+  assert.doesNotThrow(() => validateSchema(savedRecord, gameRecordSchema));
 });
 
 test('double-click cannot apply one move twice', async () => {
