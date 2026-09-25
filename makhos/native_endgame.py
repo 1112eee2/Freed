@@ -128,6 +128,29 @@ class NativeEndgameTablebase:
             self.close()
             raise
 
+    def borrow_for_search(self):
+        """Retain the native set for a main-search context.
+
+        Returns the set address, the address of this library's probe and a
+        release callback. The caller keeps this object open until it has
+        called release, which it does exactly once.
+        """
+        with self._lock:
+            if not self._handle:
+                raise RuntimeError("native endgame tablebase is closed")
+            self._dll.makhos_tb_set_retain(self._handle)
+            address = self._handle.value
+        probe = C.cast(self._dll.makhos_tb_set_probe, C.c_void_p).value
+        released = False
+
+        def release() -> None:
+            nonlocal released
+            if not released:
+                released = True
+                self._dll.makhos_tb_set_release(C.c_void_p(address))
+
+        return address, probe, release
+
     def ranked_info(self, pieces: int) -> dict[str, int]:
         """Return metadata/identity from the mapped file, without reopening it."""
         if pieces not in (4, 5, 6):
