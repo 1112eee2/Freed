@@ -1,8 +1,12 @@
 # RFP_01: guarded reverse futility pruning
 
-Status 2026-09-25: **candidate, default-off, not promoted.** Production, the
-GUI release, the accepted DLL, the model and the default build are unchanged.
-This is the single strength concept being pursued now.
+Status 2026-09-26: **INCONCLUSIVE / NOT_PROMOTED.** The Linux screening match
+reached its 2,000-pair cap at +4.1 ± 7.9 Elo, LLR +0.49
+([result](#rfp_01-l1-result)), with neither a PASS nor a FAIL. Its contract
+reports only the Elo and its interval, and the Windows gates, which need a
+PASS, are not triggered. The candidate stays in source, default-off.
+Production, the GUI release, the accepted DLL, the model and the default build
+are unchanged.
 
 ## Hypothesis
 
@@ -111,11 +115,34 @@ first game. It is a screen, not an acceptance gate: 1T, no tablebases,
 2s+0.02s, pentanomial SPRT with H0 = 0 and H1 = +5 Elo, capped at 2,000
 pairs.
 
+### RFP_01-L1 result
+
+The match ran in the Linux cloud container from a worktree pinned to
+`9d22c01`, the commit that holds the contract. Before launch, its libraries,
+model and native sources matched the contract's SHA-256 values, and the
+harness logged candidate `ce450b06…` against control `4178a8f7…` with seed
+20260930. It started at 2026-09-25T17:45:15Z and reached the cap at about
+00:40Z on 2026-09-26. The final checkpoint is
+[`sprt_l1_20260925_final.json`](sprt_l1_20260925_final.json), SHA-256
+`b636d95b…`.
+
+| Pairs | W / D / L | Pentanomial (0–2) | LLR (bounds ±2.94) | Elo, 95% |
+|---:|---|---|---:|---|
+| 2,000 (cap) | 1,414 / 1,219 / 1,367 | 163 / 393 / 849 / 424 / 171 | +0.49 | +4.1 ± 7.9 |
+
+**Verdict: INCONCLUSIVE.** The 95% interval, about −3.8 to +12.0 Elo,
+excludes a large loss but cannot tell +5 from 0. That fits the speed check: a
+modest net speedup that the extra static evaluations partly cancel. The
+contract forbids a rerun with a new seed, so RFP_01 as declared stops here.
+A changed rule would be a new hypothesis with its own contract.
+
 ## Windows gates for Local
 
 These run only after an L1 PASS, after `BASELINE_HORIZON_01`'s records exist,
-and with the owner's go-ahead. The GUI must be idle, and they run under the
-workload lease at BelowNormal.
+and with the owner's go-ahead. RFP_01-L1 ended INCONCLUSIVE, so they are
+**not triggered**. The commands stay here as the record of what was declared.
+When run, the GUI must be idle, and they run under the workload lease at
+BelowNormal.
 
 ```powershell
 .\build_nnue_search_candidate.ps1 -OutputDirectory build\rfp01\control
