@@ -1,0 +1,89 @@
+{
+  "complete": true,
+  "config": {
+    "baseline_persistent_search": true,
+    "baseline_threads": 1,
+    "candidate_persistent_search": true,
+    "candidate_threads": 1,
+    "elo0": 0.0,
+    "elo1": 5.0,
+    "hash_mb": null,
+    "increment_seconds": 0.02,
+    "libraries": {
+      "baseline": {
+        "fixed_search": true,
+        "nnue_enabled": true,
+        "nnue_feature_abi": "thai-makhos-shared-137-v1",
+        "nnue_model": "/tmp/claude-0/-home-user-ThaiMakhosEngine/8d7d80f8-5d7b-51fe-805d-4e29da58bd17/scratchpad/rfp-l1-wt/build/nnue_quantized_v1/model_a.mknnue",
+        "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+        "path": "/tmp/claude-0/-home-user-ThaiMakhosEngine/8d7d80f8-5d7b-51fe-805d-4e29da58bd17/scratchpad/rfp-l1-wt/build/rfp01/l1-libs/control.so",
+        "search_abi": 5,
+        "sha256": "4178a8f72f5cc9d53b265d75fd5100a5fa5ccba2ffe5cd3478a178f6f27ab214",
+        "shared_tt": false,
+        "threads": 1,
+        "window_search": true
+      },
+      "candidate": {
+        "fixed_search": true,
+        "nnue_enabled": true,
+        "nnue_feature_abi": "thai-makhos-shared-137-v1",
+        "nnue_model": "/tmp/claude-0/-home-user-ThaiMakhosEngine/8d7d80f8-5d7b-51fe-805d-4e29da58bd17/scratchpad/rfp-l1-wt/build/nnue_quantized_v1/model_a.mknnue",
+        "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+        "path": "/tmp/claude-0/-home-user-ThaiMakhosEngine/8d7d80f8-5d7b-51fe-805d-4e29da58bd17/scratchpad/rfp-l1-wt/build/rfp01/l1-libs/rfp.so",
+        "search_abi": 5,
+        "sha256": "ce450b0602f9df0f88884d19e487c1af351ff1b123a6110bd3183b81bbc98f5c",
+        "shared_tt": false,
+        "threads": 1,
+        "window_search": true
+      }
+    },
+    "max_game_plies": 300,
+    "max_pairs": 2000,
+    "move_time_cap_ms": null,
+    "opening_plies": 6,
+    "parallel_games": 2,
+    "persistent_search": true,
+    "resume": true,
+    "root_alpha": false,
+    "root_alpha_margin": 32,
+    "root_alpha_min_depth": 16,
+    "search_hash_power": 20,
+    "seed": 20260930,
+    "selective_candidates": 4,
+    "selective_margin": 160,
+    "selective_reserve": 0.6,
+    "selective_root": false,
+    "shared_tt": false,
+    "shared_tt_group_size": 4,
+    "tablebases": {
+      "native_3_piece": false,
+      "ranked": []
+    },
+    "threads": 1,
+    "time_seconds": 2.0,
+    "workload_isolation": {
+      "checkpoint_granularity": "before-each-pair-and-ply",
+      "policy": "interactive-gui-priority-v1",
+      "process_priority": "platform-default"
+    }
+  },
+  "format": "thai-makhos-sprt-result-v2",
+  "result": {
+    "draws": 1219,
+    "elo": 4.082556019438382,
+    "elo_95_error": 7.899649308077137,
+    "games": 4000,
+    "llr": 0.48706894312135207,
+    "losses": 1367,
+    "pairs": 2000,
+    "pentanomial": [
+      163,
+      393,
+      849,
+      424,
+      171
+    ],
+    "status": "INCONCLUSIVE",
+    "wins": 1414
+  }
+}
