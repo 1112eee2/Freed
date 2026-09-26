@@ -61,10 +61,9 @@ tablebases. Do not stop the Arena or a user game to run it.
 No Windows strength gate is queued behind it. The 2026-09-25 owner review on
 PR #28 says no W1/W2 starts while `BASELINE_HORIZON_01`'s records are absent.
 STRICT_KEY_01's gates are withdrawn. TBDRAW_01's also need a scope-specific
-instruction. RFP_01's also need a PASS of its Linux screening match
-RFP_01-L1. That match was launched at 2026-09-25T17:45:15Z from a worktree
-pinned to `9d22c01`, with libraries, model and sources matching the contract,
-and is running.
+instruction. RFP_01's needed a PASS of its Linux screening match RFP_01-L1,
+which instead ended INCONCLUSIVE at its 2,000-pair cap on 2026-09-26
+(+4.1 ± 7.9 Elo, LLR +0.49), so they are not triggered.
 
 Decided on 2026-09-25 under the user's delegation ("You are the head. Just
 pick one."):
@@ -95,7 +94,7 @@ separate small extraction.
 |---|---|---|
 | STRICT_KEY_01 | Strict TT key: XOR instead of OR when salting the key state, so kings and the clock are not erased | **REJECT_AS_DECLARED / NOT_PROMOTED.** The depth-20 screen met its declared falsifier, a repeatable fixed-depth slowdown: 1.147× and 1.037× total time. It remains correctness evidence: the legacy key made 20.3% and 4.3% of TT cutoffs false, strict none. The Linux match was stopped at 344 pairs: +19.7 ± 17.8 Elo, LLR +0.98, INCONCLUSIVE; do not resume it. Windows gates withdrawn. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
 | TBDRAW_01 | Main search returns 0 at non-root nodes on an exact tablebase DRAW | INCONCLUSIVE / NOT_PROMOTED. On `main` since PR #28, default-off, with 8 tests; default build byte-identical. No paired result. ([README](../../../../benchmarks/tb_frontier/README.md)) |
-| RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | On `main` via PR #32 with margin 48, chosen by the rule declared before the census was read. Census at depth 20 on 128 positions: 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. Speed check: 0.843× nodes, 0.929× time, +0.19 plies in 500 ms. The RFP_01-L1 contract was declared at 17:29:32Z (1T, no tablebases, 2s+0.02s, H0=0/H1=+5, cap 2,000 pairs); the match was launched at 17:45:15Z and is running. ([README](../../../../benchmarks/rfp01/README.md)) |
+| RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | On `main` via PR #32 with margin 48, chosen by the rule declared before the census was read. Census at depth 20 on 128 positions: 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. Speed check: 0.843× nodes, 0.929× time, +0.19 plies in 500 ms. **RFP_01-L1: INCONCLUSIVE / NOT_PROMOTED.** Contract declared at 17:29:32Z (1T, no tablebases, 2s+0.02s, H0=0/H1=+5, cap 2,000 pairs). At the cap: 1,414/1,219/1,367, pentanomial 163/393/849/424/171, LLR +0.49, +4.1 ± 7.9 Elo. No rerun with a new seed; a changed rule would be a new hypothesis. ([README](../../../../benchmarks/rfp01/README.md)) |
 
 Tooling added by PR #28, now on `main`, each default-off: `sprt --games-dir` (replay-validated
 only), `bench-native --candidate/--baseline-nnue-model`, and
