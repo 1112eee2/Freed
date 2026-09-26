@@ -8,6 +8,13 @@ established. Production, the GUI release, the accepted DLL and the default
 build are unchanged. The candidate stays in source behind
 `MAKHOS_STRICT_SEARCH_POSITION_KEY=1`, as it was before this work.
 
+Status 2026-09-26: **STRICT_KEY_02** is a new paired-play hypothesis for the
+same flag, declared before any new measurement
+([section](#strict_key_02-paired-play-hypothesis)). It does not reopen or
+override STRICT_KEY_01's verdict. Its Linux screening match **PASSED** at
++15.9 ± 9.3 Elo ([result](#strict_key_02-l1-result)). Promotion still needs
+the Windows gates, and the flag stays default-off until then.
+
 ## Hypothesis
 
 The injective XOR salt removes the deterministic false TT hits and cutoffs of
@@ -161,3 +168,97 @@ The stopped checkpoint is
 
 The result is **INCONCLUSIVE**. It cannot override the screen verdict, and the
 run must not be resumed or rerun.
+
+## STRICT_KEY_02: paired-play hypothesis
+
+Declared on 2026-09-26, before any new measurement.
+
+**Hypothesis.** Removing the legacy key's deterministic aliases makes the
+engine stronger in paired play. The better TT information outweighs the
+depth lost to the larger tree.
+
+**Falsifier: a paired loss only.** That means a FAIL of STRICT_KEY_02-L1
+below, or later of either Windows gate. Fixed-depth time is not a falsifier
+for this hypothesis. The legacy key's false cutoffs skip subtrees on wrong
+information, so removing them must enlarge the tree at equal depth. The
+screen measured 3–14% more nodes. Time to depth therefore measures the size
+of the defect, not playing strength.
+
+**Independence.** This is a new contract with a new seed. No game from the
+stopped STRICT_KEY_01-L1 is reused, pooled or resumed. For transparency,
+choosing this hypothesis was informed by that partial result, +19.7 ± 17.8
+Elo at 344 pairs.
+
+### Linux screening match (STRICT_KEY_02-L1)
+
+The contract is [`contract_02_l1.json`](contract_02_l1.json), declared before
+the first game:
+
+- players: the strict library `73aef947…` against the control `4178a8f7…`,
+  built from `main` at `80f85be` with the Linux production flags;
+- the strict library is byte-identical to STRICT_KEY_01's candidate;
+- 1 thread each, persistent search, hash power 20, **no tablebases**, project
+  rules;
+- 2s+0.02s, 6 random opening plies, seed 20261003, two parallel games;
+- pentanomial SPRT with H0 = 0 and H1 = +5 Elo, capped at 2,000 pairs.
+
+Decision rule:
+
+- **PASS** → the Windows gates below, once `BASELINE_HORIZON_01`'s records
+  exist and the owner agrees;
+- **FAIL** → REJECT the strict key;
+- **cap** → INCONCLUSIVE, with Elo and interval only.
+
+There is no rerun with another seed.
+
+### STRICT_KEY_02-L1 result
+
+The match ran in the Linux cloud container from a worktree pinned to
+`f931921`, the commit that declared the contract. Before launch, its
+libraries, model and native sources matched the contract's SHA-256 values,
+and the harness logged candidate `73aef947…` against control `4178a8f7…` with
+seed 20261003. It started at 2026-09-26T00:55:17Z and stopped at 05:09Z, when
+the LLR crossed the upper bound. The final checkpoint is
+[`sprt_02_l1_20260926_final.json`](sprt_02_l1_20260926_final.json), SHA-256
+`42ac349b…`.
+
+| Pairs | W / D / L | Pentanomial (0–2) | LLR (bounds ±2.94) | Elo, 95% |
+|---:|---|---|---:|---|
+| 1,281 | 945 / 789 / 828 | 83 / 199 / 623 / 270 / 106 | +2.96 | +15.9 ± 9.3 |
+
+**Verdict: PASS.** Removing the key aliases gained more than the larger tree
+cost in depth. That held despite the fixed-depth slowdown the STRICT_KEY_01
+screen measured: 1.147× time in the 7–12 piece king band and 1.037× elsewhere.
+
+What this result does not establish:
+
+- It is a 1T, no-tablebase, 2s+0.02s screen, not the acceptance gate.
+- It says nothing yet about 10s+0.1s, 12 threads, or play with TB4–6
+  attached.
+- Its hypothesis was chosen after seeing STRICT_KEY_01's stopped partial.
+  This match used fresh games with a new seed, so its error control holds on
+  its own, but that selection is disclosed.
+
+Next, per the contract: the Windows gates below, once `BASELINE_HORIZON_01`'s
+records exist and the owner agrees.
+
+### Windows gates for STRICT_KEY_02 (only after an L1 PASS)
+
+STRICT_KEY_02-L1 passed, so these are the next gates. They wait for
+`BASELINE_HORIZON_01`'s records and the owner's go-ahead.
+
+```powershell
+.\build_nnue_search_candidate.ps1 -OutputDirectory build\strict02\control
+.\build_nnue_search_candidate.ps1 -OutputDirectory build\strict02\strict -StrictSearchKey
+$c = 'build\strict02\control\makhos_native_nnue_candidate_v1.dll'
+$s = 'build\strict02\strict\makhos_native_nnue_candidate_v1.dll'
+$m = 'build\nnue_quantized_v1\model_a.mknnue'
+python -m unittest tests.test_native_search.NativeSearchPositionKeyCandidateTests tests.tooling.test_build_orchestrator -v
+# W1: 1T intrinsic with production TB4-6, the standard strength bounds.
+python -B -m makhos sprt --dev-library $s --master-library $c --dev-nnue-model $m --master-nnue-model $m --threads 1 --persistent-search --time 10 --inc 0.1 --elo0 0 --elo1 2 --pairs 4000 --seed 20261004 --parallel-games 2 --output build\strict02\sprt-w1-1t-10s.json --resume
+# W2: production path, 12T and 512 MiB at a fixed 1 s per move, one game at a time.
+python -B -m makhos sprt --dev-library $s --master-library $c --dev-nnue-model $m --master-nnue-model $m --threads 12 --hash-mb 512 --fixed-move-time-ms 1000 --elo0 0 --elo1 2 --pairs 1000 --seed 20261005 --output build\strict02\sprt-w2-12t-1s.json --resume
+```
+
+**PROMOTE** only if the full suite passes and W1 and W2 both PASS. **REJECT**
+on any FAIL. A capped run is **INCONCLUSIVE**.
