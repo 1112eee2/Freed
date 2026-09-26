@@ -1,0 +1,70 @@
+{
+ "format": "thai-makhos-strict-tt-key-contract-v1",
+ "id": "STRICT_KEY_02-L1",
+ "declared_utc": "2026-09-26T00:54:53Z",
+ "purpose": "Linux 1T no-tablebase screening match of the STRICT_KEY_02 paired-play hypothesis. Not a Windows, tablebase or production acceptance gate.",
+ "hypothesis": "The strict TT key (MAKHOS_STRICT_SEARCH_POSITION_KEY=1) is stronger than the legacy key at 2s+0.02s, one thread, without tablebases.",
+ "falsifier": "A FAIL of this match (or later of the Windows gates). Fixed-depth time is not a falsifier: removing false cutoffs must enlarge the tree.",
+ "independence": "New contract and seed; no game from the stopped STRICT_KEY_01-L1 is reused, pooled or resumed. Its partial (+19.7 +/- 17.8 Elo at 344 pairs) informed the choice of this hypothesis.",
+ "source_commit": "80f85be4c939ffa8e435afdcf8bf7e5ae713d02c",
+ "source_sha256": {
+  "native/makhos_native.c": "6454abbb18c2fa06c89a0005e15b137f7518f4b0a804b0f4012bac55adc60a03",
+  "native/makhos_native_nnue.c": "278ddef497a7ee95b55a03d49a1aea49db9c4f061f34eeb758c499de85ac7c4e",
+  "native/makhos_nnue_avx2_update.c": "6a236861a185d6c6dad8da785f10c92d680d26823c4a534f5733e56651fd182c"
+ },
+ "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+ "flags": [
+  "-O3",
+  "-march=x86-64",
+  "-std=c17",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-Wno-unused-function",
+  "-shared",
+  "-fPIC",
+  "-D_POSIX_C_SOURCE=200809L"
+ ],
+ "candidate": {
+  "library": "build/strict02/l1-libs/strict.so",
+  "sha256": "73aef947ef5044a2804de84b1ff14b9bddd6b40ad94fc5dbf73848db479eab22",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1"
+ },
+ "control": {
+  "library": "build/strict02/l1-libs/control.so",
+  "sha256": "4178a8f72f5cc9d53b265d75fd5100a5fa5ccba2ffe5cd3478a178f6f27ab214",
+  "define": null
+ },
+ "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none (--no-tablebase)",
+  "rules": "project (threefold, 80 reversible plies)",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20261003,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": 0.0,
+  "elo1": 5.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 2000
+ },
+ "command": "python3 -B -m makhos sprt --dev-library build/strict02/l1-libs/strict.so --master-library build/strict02/l1-libs/control.so --dev-nnue-model build/nnue_quantized_v1/model_a.mknnue --master-nnue-model build/nnue_quantized_v1/model_a.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20261003 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/strict02/sprt-l1-20260926/sprt.json --resume",
+ "decision": {
+  "PASS": "Proceed to the Windows W1/W2 gates in the README once BASELINE_HORIZON_01's records exist and the owner agrees.",
+  "FAIL": "REJECT the strict key.",
+  "cap": "INCONCLUSIVE; report Elo and 95% interval only."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change of bounds, control, candidate or settings after launch.",
+  "Does not replace the Windows 1T 10s+0.1s and 12T fixed 1s gates with tablebases."
+ ]
+}
