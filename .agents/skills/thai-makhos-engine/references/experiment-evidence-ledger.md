@@ -4331,3 +4331,17 @@ A census re-run on that source reproduced the histograms exactly. Its
 RFP_01-L1 screening contract (1T, no TB, 2s+0.02s, H0=0/H1=+5, cap 2,000
 pairs) is declared on `main`; the match has not started. PR #30 aligned the v1
 game schema with GUI records; recorder output still fails it.
+
+## 2026-09-26 — RFP_01-L1 screening match
+
+INCONCLUSIVE / NOT_PROMOTED. RFP_01 (guarded reverse futility, margin 48 per
+ply, depths 1-3, at least 11 pieces; default-off on `main` since PR #32) against
+the same-source control: Linux 1T, no tablebases, 2s+0.02s, 6 opening plies,
+seed 20260930, H0=0/H1=+5. It ran from a worktree pinned to the contract commit
+`9d22c01`, with libraries `ce450b06` (candidate) and `4178a8f7` (control). At
+the 2,000-pair cap: W1414 D1219 L1367, pentanomial 163/393/849/424/171, LLR
++0.49, +4.1 +/-7.9 Elo (95%). The interval excludes a large loss but cannot
+separate +5 from 0, consistent with the screen's 0.929x time to depth. The
+Windows gates need an L1 PASS and are not triggered. The contract forbids a
+new-seed rerun; any changed rule (for example cheaper guards in the 11-14 piece
+band, where time was 1.022x) is a new hypothesis.
