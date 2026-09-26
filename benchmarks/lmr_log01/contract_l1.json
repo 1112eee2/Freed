@@ -1,0 +1,69 @@
+{
+ "format": "thai-makhos-lmr-contract-v1",
+ "id": "LMR_LOG_01-L1",
+ "declared_utc": "2026-09-26T05:19:02Z",
+ "purpose": "Linux 1T no-tablebase screening match of LMR_LOG_01 on top of the strict TT key. Not a Windows, tablebase or production acceptance gate.",
+ "hypothesis": "Log-formula late-move reductions (MAKHOS_LMR_LOG=1) make the strict-key engine stronger at 2s+0.02s, one thread, without tablebases.",
+ "falsifier": "A FAIL of this match (or later of the Windows gates). Fixed-depth node counts are not a falsifier.",
+ "base_commit": "e13894b3a28e5c60e38f48dcb6770da1565e955b",
+ "source_sha256": {
+  "native/makhos_native.c": "39cb6f9d72997d5dfc3b6445a92187ad0f19a17afcf9f85feaa2895e76e58c03",
+  "native/makhos_native_nnue.c": "278ddef497a7ee95b55a03d49a1aea49db9c4f061f34eeb758c499de85ac7c4e",
+  "native/makhos_nnue_avx2_update.c": "6a236861a185d6c6dad8da785f10c92d680d26823c4a534f5733e56651fd182c"
+ },
+ "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+ "flags": [
+  "-O3",
+  "-march=x86-64",
+  "-std=c17",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-Wno-unused-function",
+  "-shared",
+  "-fPIC",
+  "-D_POSIX_C_SOURCE=200809L"
+ ],
+ "candidate": {
+  "library": "build/lmr01/l1-libs/lmr.so",
+  "sha256": "125068f248cff19a9d17c5d0b4032908cbbe9f3a6c32db8d70b0ee5dda970e20",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1 MAKHOS_LMR_LOG=1"
+ },
+ "control": {
+  "library": "build/lmr01/l1-libs/control.so",
+  "sha256": "73aef947ef5044a2804de84b1ff14b9bddd6b40ad94fc5dbf73848db479eab22",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1"
+ },
+ "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none (--no-tablebase)",
+  "rules": "project (threefold, 80 reversible plies)",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20261006,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": 0.0,
+  "elo1": 5.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 2000
+ },
+ "command": "python3 -B -m makhos sprt --dev-library build/lmr01/l1-libs/lmr.so --master-library build/lmr01/l1-libs/control.so --dev-nnue-model build/nnue_quantized_v1/model_a.mknnue --master-nnue-model build/nnue_quantized_v1/model_a.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20261006 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/lmr01/sprt-l1-20260926/sprt.json --resume",
+ "decision": {
+  "PASS": "Proceed to the Windows W1/W2 gates in the README after STRICT_KEY_02's, once BASELINE_HORIZON_01's records exist and the owner agrees.",
+  "FAIL": "REJECT LMR_LOG_01 as declared.",
+  "cap": "INCONCLUSIVE; report Elo and 95% interval only."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change of bounds, control, candidate or settings after launch.",
+  "Does not replace the Windows 1T 10s+0.1s and 12T fixed 1s gates with tablebases."
+ ]
+}
