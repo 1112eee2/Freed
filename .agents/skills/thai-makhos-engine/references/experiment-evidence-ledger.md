@@ -4345,3 +4345,22 @@ separate +5 from 0, consistent with the screen's 0.929x time to depth. The
 Windows gates need an L1 PASS and are not triggered. The contract forbids a
 new-seed rerun; any changed rule (for example cheaper guards in the 11-14 piece
 band, where time was 1.022x) is a new hypothesis.
+
+## 2026-09-26 — STRICT_KEY_02-L1 screening match
+
+LINUX SCREEN PASS / NOT_PROMOTED. STRICT_KEY_02 is a new hypothesis for the
+default-off strict TT key (`MAKHOS_STRICT_SEARCH_POSITION_KEY=1`): removing the
+legacy key's deterministic aliases makes the engine stronger in paired play. It
+was declared before any new measurement, with a paired loss as its only
+falsifier; fixed-depth time was excluded because removing false cutoffs must
+enlarge the tree. STRICT_KEY_01's REJECT_AS_DECLARED verdict stands. The
+contract was declared at 2026-09-26T00:54:53Z on `f931921`: strict `73aef947`
+(byte-identical to STRICT_KEY_01's candidate) against control `4178a8f7`, built
+from `main` `80f85be4`. Settings: Linux 1T, no tablebases, 2s+0.02s, 6 opening
+plies, seed 20261003, H0=0/H1=+5, cap 2,000 pairs. No STRICT_KEY_01-L1 game was
+reused. It ran from a worktree pinned to `f931921` and stopped at pair 1,281:
+W945 D789 L828, pentanomial 83/199/623/270/106, LLR +2.96, +15.9 +/-9.3 Elo
+(95%). The hypothesis was chosen after seeing STRICT_KEY_01's stopped partial;
+this match used fresh games. Next: Windows W1 (1T 10s+0.1s with TB4-6,
+H0=0/H1=+2) and W2 (12T/512 MiB, fixed 1 s), after `BASELINE_HORIZON_01`'s
+records and the owner's go-ahead. Promotion needs both and the full suite.

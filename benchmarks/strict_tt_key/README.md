@@ -11,7 +11,9 @@ build are unchanged. The candidate stays in source behind
 Status 2026-09-26: **STRICT_KEY_02** is a new paired-play hypothesis for the
 same flag, declared before any new measurement
 ([section](#strict_key_02-paired-play-hypothesis)). It does not reopen or
-override STRICT_KEY_01's verdict.
+override STRICT_KEY_01's verdict. Its Linux screening match **PASSED** at
++15.9 ± 9.3 Elo ([result](#strict_key_02-l1-result)). Promotion still needs
+the Windows gates, and the flag stays default-off until then.
 
 ## Hypothesis
 
@@ -209,7 +211,41 @@ Decision rule:
 
 There is no rerun with another seed.
 
+### STRICT_KEY_02-L1 result
+
+The match ran in the Linux cloud container from a worktree pinned to
+`f931921`, the commit that declared the contract. Before launch, its
+libraries, model and native sources matched the contract's SHA-256 values,
+and the harness logged candidate `73aef947…` against control `4178a8f7…` with
+seed 20261003. It started at 2026-09-26T00:55:17Z and stopped at 05:09Z, when
+the LLR crossed the upper bound. The final checkpoint is
+[`sprt_02_l1_20260926_final.json`](sprt_02_l1_20260926_final.json), SHA-256
+`42ac349b…`.
+
+| Pairs | W / D / L | Pentanomial (0–2) | LLR (bounds ±2.94) | Elo, 95% |
+|---:|---|---|---:|---|
+| 1,281 | 945 / 789 / 828 | 83 / 199 / 623 / 270 / 106 | +2.96 | +15.9 ± 9.3 |
+
+**Verdict: PASS.** Removing the key aliases gained more than the larger tree
+cost in depth. That held despite the fixed-depth slowdown the STRICT_KEY_01
+screen measured: 1.147× time in the 7–12 piece king band and 1.037× elsewhere.
+
+What this result does not establish:
+
+- It is a 1T, no-tablebase, 2s+0.02s screen, not the acceptance gate.
+- It says nothing yet about 10s+0.1s, 12 threads, or play with TB4–6
+  attached.
+- Its hypothesis was chosen after seeing STRICT_KEY_01's stopped partial.
+  This match used fresh games with a new seed, so its error control holds on
+  its own, but that selection is disclosed.
+
+Next, per the contract: the Windows gates below, once `BASELINE_HORIZON_01`'s
+records exist and the owner agrees.
+
 ### Windows gates for STRICT_KEY_02 (only after an L1 PASS)
+
+STRICT_KEY_02-L1 passed, so these are the next gates. They wait for
+`BASELINE_HORIZON_01`'s records and the owner's go-ahead.
 
 ```powershell
 .\build_nnue_search_candidate.ps1 -OutputDirectory build\strict02\control
