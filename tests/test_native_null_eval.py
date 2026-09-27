@@ -2,7 +2,8 @@
 
 The candidate (MAKHOS_NULL_EVAL_GUARD=1) is compiled from source; the default
 build tries null move at every eligible node, PV or not, whatever the
-evaluation.
+evaluation.  The guard evaluates interior nodes, so the NNUE build is also
+checked with the accumulator parity guard.
 """
 
 import os
@@ -16,6 +17,7 @@ from makhos.core import initial_state, legal_moves, parse_position
 from makhos.native import NativeSearch
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "build" / "nnue_quantized_v1" / "model_a.mknnue"
 SEARCH = dict(time_ms=None, no_progress_plies=80, repetition_limit=3)
 # Train-split middlegame and endgame positions (as in test_native_lmr).
 POSITIONS = (
@@ -105,6 +107,65 @@ class NativeNullEvalGuardTests(unittest.TestCase):
             for position in (initial_state(), *POSITIONS)
         )
         self.assertGreater(changed, 0)
+
+
+
+class NativeNullEvalGuardNnueTests(unittest.TestCase):
+    """The NNUE playing build, with every evaluation checked against a refresh."""
+
+    @classmethod
+    def setUpClass(cls):
+        compiler = _compiler()
+        if compiler is None or not MODEL.is_file():
+            raise unittest.SkipTest("a C compiler and the NNUE v1 model are required")
+        (ROOT / "build").mkdir(exist_ok=True)
+        build = Path(tempfile.mkdtemp(prefix="null-eval-nnue-tests-", dir=ROOT / "build"))
+        cls.addClassCleanup(shutil.rmtree, build, ignore_errors=True)
+        flags = ["-O2", "-march=x86-64", "-std=c17", "-shared",
+                 "-DMAKHOS_NNUE_PARITY_GUARD=1"]
+        if os.name != "nt":
+            flags += ["-fPIC", "-D_POSIX_C_SOURCE=200809L", "-lm", "-lpthread"]
+        suffix = ".dll" if os.name == "nt" else ".so"
+        cls.control_path = build / ("control" + suffix)
+        cls.candidate_path = build / ("candidate" + suffix)
+        for output, defines in (
+            (cls.control_path, []),
+            (cls.candidate_path, ["-DMAKHOS_NULL_EVAL_GUARD=1"]),
+        ):
+            process = subprocess.run(
+                [compiler, *flags, *defines, "-I", str(ROOT / "native"),
+                 str(ROOT / "native" / "makhos_native_nnue.c"), "-o", str(output)],
+                cwd=ROOT, capture_output=True, text=True, check=False,
+            )
+            if process.returncode:
+                raise AssertionError(process.stderr)
+
+    def search(self, library, position, depth):
+        state = parse_position(position) if isinstance(position, str) else position
+        with NativeSearch(
+            library, hash_power=16, persistent=True, nnue_model=MODEL
+        ) as engine:
+            result = engine.search(
+                state, depth=depth, history={state.position_key: 1}, **SEARCH
+            )
+        self.assertEqual(result.depth, depth)
+        self.assertIn(result.move, legal_moves(state))
+        return result
+
+    def test_shallow_searches_match_the_control(self):
+        for position in (initial_state(), *POSITIONS):
+            with self.subTest(position=position):
+                self.assertEqual(
+                    _outcome(self.search(self.candidate_path, position, 2)),
+                    _outcome(self.search(self.control_path, position, 2)),
+                )
+
+    def test_guarded_searches_keep_accumulator_parity(self):
+        # MAKHOS_NNUE_PARITY_GUARD stops the search if any evaluation,
+        # including the guard's interior ones, differs from a full refresh.
+        for position in (initial_state(), *POSITIONS):
+            with self.subTest(position=position):
+                self.search(self.candidate_path, position, 10)
 
 
 if __name__ == "__main__":

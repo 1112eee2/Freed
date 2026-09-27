@@ -3865,6 +3865,7 @@ static int native_negamax(
          * short-circuit it.
          */
         && beta - alpha == 1 &&
+        beta > -MAKHOS_SEARCH_MATE + 1000 &&
         beta < MAKHOS_SEARCH_MATE - 1000 &&
         native_search_evaluate(context, position, position.turn, ply) >= beta
 #endif
