@@ -1,0 +1,81 @@
+{
+ "format": "thai-makhos-null-eval-contract-v1",
+ "id": "NULL_EVAL_01-L1W",
+ "declared_utc": "2026-09-27T12:14:25Z",
+ "purpose": "Windows 1T no-tablebase screening match of NULL_EVAL_01 on top of the strict TT key. Not a W1/W2, tablebase or production acceptance gate.",
+ "hypothesis": "Trying null move only at null-window nodes whose static evaluation reaches beta (MAKHOS_NULL_EVAL_GUARD=1) makes the strict-key engine stronger at 2s+0.02s, one thread, without tablebases.",
+ "falsifier": "A FAIL of this match (or later of the Windows gates). Fixed-depth node counts are not a falsifier.",
+ "base_commit": "664e9818ae4423dddc1373c47710b5a141f0831b",
+ "candidate_commit": "c16cf02",
+ "source_sha256": {
+  "native/makhos_native.c": "fc796c5396fe107e1a0c769aaaba19320b079b89b30ed8be1e370285c3f16ee9",
+  "native/makhos_native_nnue.c": "278ddef497a7ee95b55a03d49a1aea49db9c4f061f34eeb758c499de85ac7c4e",
+  "native/makhos_nnue_avx2_update.c": "6a236861a185d6c6dad8da785f10c92d680d26823c4a534f5733e56651fd182c",
+  "makhos/cli_handlers/sprt_handler.py": "594ac584bdb1b32068ff927cc6bf58fb3fdfd494ac2d88b5d3992f5a55b817c3",
+  "makhos/sprt.py": "cf82416b7c3d7e27a8c44279f3a5a6228b0002ca518c3255bf67e17b6c5a0355"
+ },
+ "compiler": "clang version 22.1.6 (https://github.com/llvm/llvm-project fc4aad7b5db3fff421df9a9637605b9ca5667881)",
+ "compiler_sha256": "f168b58c0f1c38f21b04c1d43a487a7ec73553c42526d26d1190efe05c07239a",
+ "python": "3.14.0",
+ "build": [
+  ".\\build_nnue_search_candidate.ps1 -OutputDirectory build\\nullev01\\control -StrictSearchKey",
+  ".\\build_nnue_search_candidate.ps1 -OutputDirectory build\\nullev01\\candidate -StrictSearchKey -NullEvalGuard"
+ ],
+ "flags": [
+  "-O3",
+  "-march=x86-64",
+  "-std=c17",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "-Wno-unused-function",
+  "-shared",
+  "-Wl,/Brepro"
+ ],
+ "reproducible_builds": 2,
+ "candidate": {
+  "library": "build/nullev01/candidate/makhos_native_nnue_candidate_v1.dll",
+  "sha256": "e4d7b0d3f3493366e620f1ba97108a7cfd10a69221defe6322aa7ba87ce23b47",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1 MAKHOS_NULL_EVAL_GUARD=1"
+ },
+ "control": {
+  "library": "build/nullev01/control/makhos_native_nnue_candidate_v1.dll",
+  "sha256": "8b82fef8ffdac91555b9e5ea2bcceaaa505955f7a6772ac9bebefc5e5db5c4fa",
+  "define": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1",
+  "note": "byte-identical to LMR_LOG_01-L1W's control"
+ },
+ "nnue_model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+ "host": "Local Windows 11, 6 cores / 12 threads, batch lease at BelowNormal; GUI idle at declaration; runs alongside LMR_LOG_01-L1W (2 threads each)",
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none (--no-tablebase)",
+  "rules": "project (threefold, 80 reversible plies)",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20261009,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": 0.0,
+  "elo1": 5.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 2000
+ },
+ "command": "python -B -m makhos sprt --dev-library build/nullev01/candidate/makhos_native_nnue_candidate_v1.dll --master-library build/nullev01/control/makhos_native_nnue_candidate_v1.dll --dev-nnue-model build/nnue_quantized_v1/model_a.mknnue --master-nnue-model build/nnue_quantized_v1/model_a.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20261009 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/nullev01/sprt-l1w-20260927/sprt.json --resume",
+ "decision": {
+  "PASS": "Proceed to the Windows W1/W2 gates in the README, once BASELINE_HORIZON_01's records exist and the owner agrees.",
+  "FAIL": "REJECT NULL_EVAL_01 as declared.",
+  "cap": "INCONCLUSIVE; report Elo and 95% interval only."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change of bounds, control, candidate or settings after launch.",
+  "A pause for interactive GUI priority resumes with the same command and --resume; it is not a rerun.",
+  "Does not replace the Windows 1T 10s+0.1s and 12T fixed 1s gates with tablebases."
+ ]
+}
