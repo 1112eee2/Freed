@@ -1253,6 +1253,9 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #ifndef MAKHOS_NULL_MOVE
 #define MAKHOS_NULL_MOVE 1
 #endif
+#ifndef MAKHOS_NULL_EVAL_GUARD
+#define MAKHOS_NULL_EVAL_GUARD 0
+#endif
 #ifndef MAKHOS_NULL_DEEP_REDUCTION
 #define MAKHOS_NULL_DEEP_REDUCTION 3
 #endif
@@ -3854,6 +3857,17 @@ static int native_negamax(
         moves->moves[0].capture_count == 0 &&
         native_count_bits(occupied(position)) > 6 &&
         repetition_count <= 1
+#if MAKHOS_NULL_EVAL_GUARD
+        /*
+         * Try null move only where a fail high is expected: a null-window
+         * node, away from mate bounds, whose static evaluation already
+         * reaches beta.  The evaluation comes last so the cheap guards
+         * short-circuit it.
+         */
+        && beta - alpha == 1 &&
+        beta < MAKHOS_SEARCH_MATE - 1000 &&
+        native_search_evaluate(context, position, position.turn, ply) >= beta
+#endif
     ) {
         SEARCH_TELEMETRY_INC(context, null_attempts);
         int reduction = depth >= 6 ? MAKHOS_NULL_DEEP_REDUCTION : 2;
