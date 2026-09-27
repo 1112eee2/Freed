@@ -1310,6 +1310,29 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #ifndef MAKHOS_SEARCH_KEY_TEST_API
 #define MAKHOS_SEARCH_KEY_TEST_API 0
 #endif
+#ifndef MAKHOS_SEARCH_TB_DRAW
+#define MAKHOS_SEARCH_TB_DRAW 0
+#endif
+#ifndef MAKHOS_REVERSE_FUTILITY
+#define MAKHOS_REVERSE_FUTILITY 0
+#endif
+#ifndef MAKHOS_RFP_CENSUS
+#define MAKHOS_RFP_CENSUS 0
+#endif
+#if MAKHOS_REVERSE_FUTILITY || MAKHOS_RFP_CENSUS
+#ifndef MAKHOS_RFP_MAX_DEPTH
+#define MAKHOS_RFP_MAX_DEPTH 3
+#endif
+#ifndef MAKHOS_RFP_MARGIN
+#define MAKHOS_RFP_MARGIN 48
+#endif
+#ifndef MAKHOS_RFP_MIN_PIECES
+#define MAKHOS_RFP_MIN_PIECES 11
+#endif
+#ifndef MAKHOS_RFP_NO_PROGRESS_MARGIN
+#define MAKHOS_RFP_NO_PROGRESS_MARGIN 16
+#endif
+#endif
 #ifndef MAKHOS_EXPERIMENTAL_SEARCH_APIS
 #define MAKHOS_EXPERIMENTAL_SEARCH_APIS 1
 #endif
@@ -1330,6 +1353,23 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #endif
 #if MAKHOS_QSEARCH_TT_CENSUS && MAKHOS_SHARED_TT
 #error "MAKHOS_QSEARCH_TT_CENSUS requires private search contexts"
+#endif
+#if MAKHOS_SEARCH_TB_DRAW
+/* The probe and set are borrowed from an already loaded endgame tablebase
+ * library.  Its owner keeps one set reference and the library loaded for as
+ * long as any search context stays attached. */
+#include "makhos_endgame_tb.h"
+typedef int32_t (*NativeSearchTBProbe)(
+    const MakhosTBSet *set,
+    const MakhosEndgamePosition *position,
+    MakhosTBProbe *output
+);
+#endif
+#if MAKHOS_REVERSE_FUTILITY && MAKHOS_RFP_CENSUS
+#error "MAKHOS_RFP_CENSUS measures the unpruned search"
+#endif
+#if (MAKHOS_REVERSE_FUTILITY || MAKHOS_RFP_CENSUS) && !MAKHOS_EARLY_TT_CUTOFF
+#error "reverse futility guards use native_has_capture()"
 #endif
 
 enum {
@@ -1443,6 +1483,25 @@ typedef struct {
 } MakhosRepetitionCensusTelemetry;
 #endif
 
+#if MAKHOS_RFP_CENSUS
+#define MAKHOS_RFP_CENSUS_DEPTHS 4
+#define MAKHOS_RFP_CENSUS_REASONS 8
+#define MAKHOS_RFP_CENSUS_BINS 128
+#define MAKHOS_RFP_CENSUS_BIN_WIDTH 8
+/*
+ * Measurement-only census for a reverse futility candidate.  At null-window
+ * nodes of depth 1..4 it records which guard rejected the node, and for
+ * guarded nodes the static evaluation minus beta against the node's real
+ * outcome.  The search itself is unchanged.
+ */
+typedef struct {
+    uint64_t rejected[MAKHOS_RFP_CENSUS_DEPTHS][MAKHOS_RFP_CENSUS_REASONS];
+    uint64_t below_beta[MAKHOS_RFP_CENSUS_DEPTHS][2];
+    uint64_t fail_low[MAKHOS_RFP_CENSUS_DEPTHS][MAKHOS_RFP_CENSUS_BINS];
+    uint64_t fail_high[MAKHOS_RFP_CENSUS_DEPTHS][MAKHOS_RFP_CENSUS_BINS];
+} MakhosRfpCensusTelemetry;
+#endif
+
 #if MAKHOS_QSEARCH_TT_CENSUS
 typedef struct {
     uint64_t key;
@@ -1508,6 +1567,9 @@ typedef struct {
 #if MAKHOS_REPETITION_CENSUS
     MakhosRepetitionCensusTelemetry repetition_census_telemetry;
 #endif
+#if MAKHOS_RFP_CENSUS
+    MakhosRfpCensusTelemetry rfp_census_telemetry;
+#endif
 #if MAKHOS_QSEARCH_TT_CENSUS
     NativeQttCensusEntry *qtt_census;
     size_t qtt_census_count;
@@ -1570,6 +1632,15 @@ typedef struct {
     uint64_t nnue_refreshes;
     uint64_t nnue_updates;
     uint64_t nnue_evaluations;
+#endif
+#if MAKHOS_SEARCH_TB_DRAW
+    const MakhosTBSet *tb_set;
+    NativeSearchTBProbe tb_probe;
+    uint32_t tb_no_progress_plies;
+    uint32_t tb_max_pieces;
+    uint64_t tb_probes;
+    uint64_t tb_draw_cutoffs;
+    uint64_t tb_errors;
 #endif
 } NativeSearchContext;
 
@@ -3422,6 +3493,170 @@ static int native_quiescence(
     int ply
 );
 
+#if MAKHOS_SEARCH_TB_DRAW
+/*
+ * An exact history-free tablebase DRAW stays a draw under threefold
+ * repetition, which can only add draws.  WIN and LOSS are only bounds once
+ * repetition applies, so they keep the ordinary search.  The root is never
+ * probed because it must still return a move.
+ */
+static bool search_tablebase_draw(
+    NativeSearchContext *context,
+    Position position,
+    int ply
+) {
+    if (
+        context->tb_probe == NULL ||
+        ply == 0 ||
+        context->no_progress_plies != context->tb_no_progress_plies ||
+        (uint32_t)native_count_bits(occupied(position)) > context->tb_max_pieces
+    ) {
+        return false;
+    }
+    MakhosEndgamePosition query = {
+        position.red,
+        position.black,
+        position.kings,
+        position.turn,
+        position.reversible_plies
+    };
+    MakhosTBProbe probe = {sizeof(probe), MAKHOS_ENDGAME_API_V1, 0, 0, 0, 0};
+    ++context->tb_probes;
+    int32_t status = context->tb_probe(context->tb_set, &query, &probe);
+    if (status == MK_EG_MISS) return false;
+    if (status != MK_EG_OK) {
+        ++context->tb_errors;
+        return false;
+    }
+    if (probe.outcome != 0) return false;
+    ++context->tb_draw_cutoffs;
+    return true;
+}
+#endif
+
+#if MAKHOS_REVERSE_FUTILITY || MAKHOS_RFP_CENSUS
+enum {
+    RFP_ELIGIBLE = 0,
+    RFP_REJECT_MATE_WINDOW = 1,
+    RFP_REJECT_CAPTURE = 2,
+    RFP_REJECT_PIECES = 3,
+    RFP_REJECT_REPETITION = 4,
+    RFP_REJECT_NO_PROGRESS = 5,
+    RFP_REJECT_THREAT_CAPTURE = 6,
+    RFP_REJECT_THREAT_PROMOTION = 7
+};
+
+/* A man of the side not to move that could promote with a quiet step. */
+static bool opponent_can_promote_quietly(Position position) {
+    uint8_t opponent = other(position.turn);
+    uint32_t men = pieces_for(position, opponent) & ~position.kings;
+    uint32_t occupancy = occupied(position);
+    int from_row = opponent == RED ? 6 : 1;
+    int to_row = opponent == RED ? 7 : 0;
+    while (men != 0) {
+        int square = pop_lsb(&men);
+        int row;
+        int col;
+        index_to_coord(square, &row, &col);
+        if (row != from_row) continue;
+        for (int dc = -1; dc <= 1; dc += 2) {
+            int landing = coord_to_index(to_row, col + dc);
+            if (landing >= 0 && (occupancy & bit_at(landing)) == 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/*
+ * Guards for a shallow null-window node whose static evaluation may stand in
+ * for its search: no mate-range bound, a quiet position for both sides with
+ * no promotion threat, a middlegame piece count, no earlier occurrence of the
+ * position, and a no-progress clock well short of the draw limit.
+ */
+static int reverse_futility_guard(
+    const NativeSearchContext *context,
+    Position position,
+    const MoveList *moves,
+    int beta,
+    int repetition_count
+) {
+    if (
+        beta <= -MAKHOS_SEARCH_MATE + MAKHOS_SEARCH_MAX_PLY ||
+        beta >= MAKHOS_SEARCH_MATE - MAKHOS_SEARCH_MAX_PLY
+    ) {
+        return RFP_REJECT_MATE_WINDOW;
+    }
+    if (moves->moves[0].capture_count != 0) return RFP_REJECT_CAPTURE;
+    if (native_count_bits(occupied(position)) < MAKHOS_RFP_MIN_PIECES) {
+        return RFP_REJECT_PIECES;
+    }
+    if (repetition_count > 1) return RFP_REJECT_REPETITION;
+    if (
+        (int)position.reversible_plies + MAKHOS_RFP_NO_PROGRESS_MARGIN >=
+        (int)context->no_progress_plies
+    ) {
+        return RFP_REJECT_NO_PROGRESS;
+    }
+    Position opponent_to_move = position;
+    opponent_to_move.turn = other(position.turn);
+    if (native_has_capture(opponent_to_move)) return RFP_REJECT_THREAT_CAPTURE;
+    if (opponent_can_promote_quietly(position)) {
+        return RFP_REJECT_THREAT_PROMOTION;
+    }
+    return RFP_ELIGIBLE;
+}
+#endif
+
+#if MAKHOS_RFP_CENSUS
+/* Returns the census slot (depth) of a guarded node, or 0. */
+static int record_rfp_census_node(
+    NativeSearchContext *context,
+    Position position,
+    const MoveList *moves,
+    int depth,
+    int alpha,
+    int beta,
+    int ply,
+    int repetition_count,
+    int *delta
+) {
+    if (ply <= 0 || beta - alpha != 1 || depth > MAKHOS_RFP_CENSUS_DEPTHS) {
+        return 0;
+    }
+    MakhosRfpCensusTelemetry *telemetry = &context->rfp_census_telemetry;
+    int reason = reverse_futility_guard(
+        context, position, moves, beta, repetition_count
+    );
+    ++telemetry->rejected[depth - 1][reason];
+    if (reason != RFP_ELIGIBLE) return 0;
+    *delta = native_search_evaluate(context, position, position.turn, ply) - beta;
+    return depth;
+}
+
+static void record_rfp_census_outcome(
+    NativeSearchContext *context,
+    int slot,
+    int delta,
+    bool fail_high
+) {
+    if (slot <= 0 || context->stopped) return;
+    MakhosRfpCensusTelemetry *telemetry = &context->rfp_census_telemetry;
+    if (delta < 0) {
+        ++telemetry->below_beta[slot - 1][fail_high ? 1 : 0];
+        return;
+    }
+    int bin = delta / MAKHOS_RFP_CENSUS_BIN_WIDTH;
+    if (bin >= MAKHOS_RFP_CENSUS_BINS) bin = MAKHOS_RFP_CENSUS_BINS - 1;
+    if (fail_high) {
+        ++telemetry->fail_high[slot - 1][bin];
+    } else {
+        ++telemetry->fail_low[slot - 1][bin];
+    }
+}
+#endif
+
 static int native_negamax(
     NativeSearchContext *context,
     Position position,
@@ -3464,6 +3699,12 @@ static int native_negamax(
         context->pv_length[ply] = 0;
         return 0;
     }
+#if MAKHOS_SEARCH_TB_DRAW
+    if (search_tablebase_draw(context, position, ply)) {
+        context->pv_length[ply] = 0;
+        return 0;
+    }
+#endif
 
     MoveList *moves;
 #if !MAKHOS_EARLY_TT_CUTOFF
@@ -3573,6 +3814,41 @@ static int native_negamax(
     );
 #endif
 
+#if MAKHOS_RFP_CENSUS
+    int rfp_census_delta = 0;
+    int rfp_census_slot = record_rfp_census_node(
+        context,
+        position,
+        moves,
+        depth,
+        alpha,
+        beta,
+        ply,
+        repetition_count,
+        &rfp_census_delta
+    );
+#endif
+
+#if MAKHOS_REVERSE_FUTILITY
+    /*
+     * Reverse futility: at a guarded shallow null-window node, a static
+     * evaluation this far above beta stands in for the search.  Return the
+     * bound only, and store nothing in the TT.
+     */
+    if (
+        ply > 0 && beta - alpha == 1 && depth <= MAKHOS_RFP_MAX_DEPTH &&
+        reverse_futility_guard(
+            context, position, moves, beta, repetition_count
+        ) == RFP_ELIGIBLE &&
+        native_search_evaluate(context, position, position.turn, ply) -
+            MAKHOS_RFP_MARGIN * depth >= beta
+    ) {
+        if (context->stopped) return 0;
+        context->pv_length[ply] = 0;
+        return beta;
+    }
+#endif
+
     if (
         MAKHOS_NULL_MOVE && allow_null && depth >= 3 && ply > 0 &&
         moves->moves[0].capture_count == 0 &&
@@ -3605,6 +3881,11 @@ static int native_negamax(
         }
         if (null_score >= beta) {
             SEARCH_TELEMETRY_INC(context, null_cutoffs);
+#if MAKHOS_RFP_CENSUS
+            record_rfp_census_outcome(
+                context, rfp_census_slot, rfp_census_delta, true
+            );
+#endif
             return beta;
         }
     }
@@ -3729,6 +4010,12 @@ static int native_negamax(
         }
     }
 
+#if MAKHOS_RFP_CENSUS
+    record_rfp_census_outcome(
+        context, rfp_census_slot, rfp_census_delta, best_score >= beta
+    );
+#endif
+
     uint8_t flag = best_score >= beta
         ? SEARCH_TT_LOWER
         : (best_score > original_alpha ? SEARCH_TT_EXACT : SEARCH_TT_UPPER);
@@ -3812,6 +4099,12 @@ static int native_quiescence(
         context->pv_length[ply] = 0;
         return 0;
     }
+#if MAKHOS_SEARCH_TB_DRAW
+    if (search_tablebase_draw(context, position, ply)) {
+        context->pv_length[ply] = 0;
+        return 0;
+    }
+#endif
 #if MAKHOS_QSEARCH_CAPTURE_ONLY && MAKHOS_QSEARCH_FAST_CAPTURE_EXISTS && MAKHOS_EARLY_TT_CUTOFF
     /* Most qnodes have no mandatory capture.  Prove that cheaply before
      * allocating or filling a full MoveList; if a capture exists, keep the
@@ -4106,6 +4399,13 @@ static void prepare_native_search(
         &context->repetition_census_telemetry,
         0,
         sizeof(context->repetition_census_telemetry)
+    );
+#endif
+#if MAKHOS_RFP_CENSUS
+    memset(
+        &context->rfp_census_telemetry,
+        0,
+        sizeof(context->rfp_census_telemetry)
     );
 #endif
     context->stopped = false;
@@ -5493,6 +5793,13 @@ static int clear_native_search(void *handle, bool clear_tt) {
         sizeof(context->repetition_census_telemetry)
     );
 #endif
+#if MAKHOS_RFP_CENSUS
+    memset(
+        &context->rfp_census_telemetry,
+        0,
+        sizeof(context->rfp_census_telemetry)
+    );
+#endif
 #if MAKHOS_QSEARCH_TT_CENSUS
     memset(
         context->qtt_census,
@@ -5515,6 +5822,49 @@ MAKHOS_API int makhos_search_clear(void *handle) {
 MAKHOS_API int makhos_search_clear_local(void *handle) {
     return clear_native_search(handle, false);
 }
+
+#if MAKHOS_SEARCH_TB_DRAW
+/* Attach a borrowed tablebase set and its probe; NULL set or probe detaches.
+ * Probing applies only while a search uses the same no-progress horizon. */
+MAKHOS_API int makhos_search_attach_tablebase(
+    void *handle,
+    const MakhosTBSet *set,
+    NativeSearchTBProbe probe,
+    uint32_t no_progress_plies,
+    uint32_t max_pieces
+) {
+    if (handle == NULL) return 1;
+    NativeSearchContext *context = handle;
+    if (set == NULL || probe == NULL) {
+        context->tb_set = NULL;
+        context->tb_probe = NULL;
+        context->tb_no_progress_plies = 0;
+        context->tb_max_pieces = 0;
+        return 0;
+    }
+    if (
+        no_progress_plies == 0 || no_progress_plies > 255 ||
+        max_pieces == 0 || max_pieces > 32
+    ) {
+        return 1;
+    }
+    context->tb_set = set;
+    context->tb_probe = probe;
+    context->tb_no_progress_plies = no_progress_plies;
+    context->tb_max_pieces = max_pieces;
+    return 0;
+}
+
+/* Cumulative per context: probes, exact-draw cutoffs, probe errors. */
+MAKHOS_API int makhos_search_tablebase_counters(void *handle, uint64_t *output) {
+    if (handle == NULL || output == NULL) return 1;
+    const NativeSearchContext *context = handle;
+    output[0] = context->tb_probes;
+    output[1] = context->tb_draw_cutoffs;
+    output[2] = context->tb_errors;
+    return 0;
+}
+#endif
 
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
 MAKHOS_API uint64_t makhos_search_memory_bytes(void *handle);
@@ -6057,6 +6407,18 @@ MAKHOS_API int makhos_search_repetition_census(
     if (handle == NULL || telemetry == NULL) return 1;
     const NativeSearchContext *context = handle;
     *telemetry = context->repetition_census_telemetry;
+    return 0;
+}
+#endif
+
+#if MAKHOS_RFP_CENSUS
+MAKHOS_API int makhos_search_rfp_census(
+    void *handle,
+    MakhosRfpCensusTelemetry *telemetry
+) {
+    if (handle == NULL || telemetry == NULL) return 1;
+    const NativeSearchContext *context = handle;
+    *telemetry = context->rfp_census_telemetry;
     return 0;
 }
 #endif

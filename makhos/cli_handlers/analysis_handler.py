@@ -77,6 +77,8 @@ def command_bench_native(args: argparse.Namespace) -> int:
         repetitions=args.repetitions,
         seed=args.seed,
         hash_power=args.search_hash_power,
+        candidate_nnue_model=args.candidate_nnue_model,
+        baseline_nnue_model=args.baseline_nnue_model,
     )
     report_dict = report.as_dict()
     config = {
@@ -88,50 +90,36 @@ def command_bench_native(args: argparse.Namespace) -> int:
             "baseline_path",
             "baseline_sha256",
             "baseline_abi",
-            "cases",
-            "depth",
-            "repetitions",
             "seed",
-            "search_hash_power",
+            "hash_power",
+            "ply_schedule",
+            "candidate_nnue_model_sha256",
+            "baseline_nnue_model_sha256",
         )
     }
-    print("BENCHMARK_CONFIG " + json.dumps(config, sort_keys=True))
+    config.update(
+        {
+            "cases": args.cases,
+            "depth": args.depth,
+            "repetitions": args.repetitions,
+        }
+    )
+    print("NATIVE_BENCH_CONFIG " + json.dumps(config, sort_keys=True), flush=True)
     for row in report.rows:
+        node_ratio = row.candidate.nodes / row.baseline.nodes
         print(
-            f"[{row.case_index:03d}] d={row.depth} "
-            f"cand={row.candidate_bestmove} ({row.candidate_score:+05d}) "
-            f"{row.candidate_nodes:8d} nodes {row.candidate_elapsed_ms:8.2f} ms | "
-            f"base={row.baseline_bestmove} ({row.baseline_score:+05d}) "
-            f"{row.baseline_nodes:8d} nodes {row.baseline_elapsed_ms:8.2f} ms"
+            f"Case {row.case:3d} ply {row.target_plies:2d} | "
+            f"nodes {row.candidate.nodes}/{row.baseline.nodes} "
+            f"({node_ratio:.4f}x) | "
+            f"ms {row.candidate.wall_ms:.1f}/{row.baseline.wall_ms:.1f} | "
+            f"score {row.candidate.score}/{row.baseline.score} | "
+            f"move {row.candidate.move}/{row.baseline.move}",
+            flush=True,
         )
-    summary = report.summary
-    print("\nSummary:")
     print(
-        f"  Total time: candidate={summary.candidate_total_ms:.2f} ms "
-        f"baseline={summary.baseline_total_ms:.2f} ms "
-        f"ratio={summary.time_ratio:.3f}"
-    )
-    print(
-        f"  Total nodes: candidate={summary.candidate_total_nodes} "
-        f"baseline={summary.baseline_total_nodes} "
-        f"ratio={summary.node_ratio:.3f}"
-    )
-    print(
-        f"  NPS: candidate={summary.candidate_nps:,.0f} "
-        f"baseline={summary.baseline_nps:,.0f} "
-        f"ratio={summary.nps_ratio:.3f}"
-    )
-    print(
-        f"  Identical bestmoves: {summary.identical_bestmoves}/{len(report.rows)} "
-        f"({summary.bestmove_agreement_pct:.1f}%)"
-    )
-    print(
-        f"  Identical scores: {summary.identical_scores}/{len(report.rows)} "
-        f"({summary.score_agreement_pct:.1f}%)"
-    )
-    print(
-        f"  Max score diff: {summary.max_score_diff} "
-        f"mean={summary.mean_score_diff:.2f}"
+        "NATIVE_BENCH_RESULT "
+        + json.dumps(report_dict["summary"], sort_keys=True),
+        flush=True,
     )
     return 0
 
@@ -323,14 +311,25 @@ def command_analyze_game(args: argparse.Namespace) -> int:
             args.hash_mb,
             entry_bytes=entry_bytes,
         )
-        searcher = NativeSearch(library, hash_power=hash_power, persistent=True)
+        searcher = NativeSearch(
+            library,
+            hash_power=hash_power,
+            persistent=True,
+            nnue_model=args.nnue_model,
+        )
     else:
         searcher = ParallelNativeSearch(
             library,
             threads=args.threads,
             hash_mb=args.hash_mb,
+            nnue_model=args.nnue_model,
         )
     analysis_native_search_abi = searcher.abi_version
+    analysis_nnue_enabled = bool(searcher.nnue_enabled)
+    analysis_nnue_feature_abi = searcher.nnue_feature_abi
+    analysis_nnue_model_path = searcher.nnue_model_path
+    analysis_nnue_model_sha256 = searcher.nnue_model_sha256
+    analysis_nnue_source_model_sha256 = searcher.nnue_source_model_sha256
 
     position_reports: list[dict] = []
     with searcher:
@@ -409,6 +408,9 @@ def command_analyze_game(args: argparse.Namespace) -> int:
                 hash_mb=args.hash_mb,
                 rules_profile=args.rules_profile,
                 budget_ms=budgets[0],
+                nnue_enabled=analysis_nnue_enabled,
+                nnue_feature_abi=analysis_nnue_feature_abi,
+                nnue_model_sha256=analysis_nnue_model_sha256,
             )
             classification = (
                 "settings-or-version-mismatch"
@@ -452,6 +454,15 @@ def command_analyze_game(args: argparse.Namespace) -> int:
         "native_search_abi": analysis_native_search_abi,
         "threads": args.threads,
         "hash_mb": args.hash_mb,
+        "nnue_enabled": analysis_nnue_enabled,
+        "nnue_feature_abi": analysis_nnue_feature_abi,
+        "nnue_model": (
+            None
+            if analysis_nnue_model_path is None
+            else str(Path(analysis_nnue_model_path).resolve())
+        ),
+        "nnue_model_sha256": analysis_nnue_model_sha256,
+        "nnue_source_model_sha256": analysis_nnue_source_model_sha256,
         "depth_limit": args.depth,
         "rules_profile": args.rules_profile,
         "repetition_limit": analysis_rules.repetition_limit,

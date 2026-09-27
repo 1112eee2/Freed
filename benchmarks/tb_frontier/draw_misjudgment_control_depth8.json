@@ -1,0 +1,132 @@
+{
+ "config": {
+  "depth": 8,
+  "hash_power": 18,
+  "margin": 50
+ },
+ "elapsed_s": 52.8,
+ "format": "thai-makhos-tb-frontier-draw-misjudgment-v1",
+ "identity": {
+  "corpus_sha256": "60162de06939397c6ef67f04f1e112380949c1b1d3d697fb1be6d7bdf37d8642",
+  "library": "/home/user/ThaiMakhosEngine/build/strict_tt_key/screen-20260925T154839Z/lib/control.so",
+  "library_sha256": "4178a8f72f5cc9d53b265d75fd5100a5fa5ccba2ffe5cd3478a178f6f27ab214",
+  "model_sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c",
+  "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39"
+ },
+ "positions": 9000,
+ "summary": {
+  "search": {
+   "decisive": 6000,
+   "decisive_sign_errors": 2,
+   "draws": 3000,
+   "draws_scored_decisive": 1933
+  },
+  "static": {
+   "decisive": 6000,
+   "decisive_sign_errors": 56,
+   "draws": 3000,
+   "draws_scored_decisive": 2430
+  }
+ },
+ "table": {
+  "search": {
+   "4": {
+    "draw": {
+     "near_zero": 445,
+     "negative": 397,
+     "positive": 158
+    },
+    "loss": {
+     "negative": 1000
+    },
+    "win": {
+     "near_zero": 3,
+     "negative": 1,
+     "positive": 996
+    }
+   },
+   "5": {
+    "draw": {
+     "near_zero": 301,
+     "negative": 496,
+     "positive": 203
+    },
+    "loss": {
+     "negative": 1000
+    },
+    "win": {
+     "near_zero": 1,
+     "positive": 999
+    }
+   },
+   "6": {
+    "draw": {
+     "near_zero": 321,
+     "negative": 473,
+     "positive": 206
+    },
+    "loss": {
+     "negative": 999,
+     "positive": 1
+    },
+    "win": {
+     "near_zero": 1,
+     "positive": 999
+    }
+   }
+  },
+  "static": {
+   "4": {
+    "draw": {
+     "near_zero": 199,
+     "negative": 410,
+     "positive": 391
+    },
+    "loss": {
+     "near_zero": 9,
+     "negative": 988,
+     "positive": 3
+    },
+    "win": {
+     "near_zero": 10,
+     "negative": 7,
+     "positive": 983
+    }
+   },
+   "5": {
+    "draw": {
+     "near_zero": 185,
+     "negative": 483,
+     "positive": 332
+    },
+    "loss": {
+     "near_zero": 8,
+     "negative": 986,
+     "positive": 6
+    },
+    "win": {
+     "near_zero": 15,
+     "negative": 11,
+     "positive": 974
+    }
+   },
+   "6": {
+    "draw": {
+     "near_zero": 186,
+     "negative": 473,
+     "positive": 341
+    },
+    "loss": {
+     "near_zero": 7,
+     "negative": 984,
+     "positive": 9
+    },
+    "win": {
+     "near_zero": 17,
+     "negative": 20,
+     "positive": 963
+    }
+   }
+  }
+ }
+}

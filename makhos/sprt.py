@@ -237,8 +237,13 @@ def play_timed_game(
     move_time_cap_ms: int | None = None,
     fixed_move_time_ms: int | None = None,
     workload_checkpoint: Callable[[str], None] | None = None,
+    transcript: list[dict] | None = None,
 ) -> tuple[int | None, str]:
-    """Play one game under timed clock controls (10s + 0.1s)."""
+    """Play one game under timed clock controls (10s + 0.1s).
+
+    When ``transcript`` is a list, one entry per played ply is appended; the
+    game itself is unaffected.
+    """
 
     if fixed_move_time_ms is not None:
         if type(fixed_move_time_ms) is not int or fixed_move_time_ms < 1:
@@ -291,10 +296,52 @@ def play_timed_game(
             used_ms = int((time.perf_counter() - start) * 1000)
             red_time = max(10, red_time - used_ms + inc_ms)
 
+        if transcript is not None:
+            transcript.append(
+                _transcript_entry(
+                    state,
+                    result,
+                    black_engine if turn == BLACK else red_engine,
+                    requested_ms=alloc_time,
+                    elapsed_ms=used_ms,
+                )
+            )
         state = apply_move(state, result.move, validate=False)
         history[state.position_key] += 1
 
     return None, "sprt_max_plies"
+
+
+def _transcript_entry(
+    state: State,
+    result,
+    engine,
+    *,
+    requested_ms: int,
+    elapsed_ms: int,
+) -> dict:
+    """Describe one engine ply; tolerate minimal search results from stubs."""
+
+    entry: dict = {
+        "player": "black" if state.turn == BLACK else "red",
+        "notation": result.move.notation,
+        "requested_time_ms": requested_ms,
+        "elapsed_ms": elapsed_ms,
+    }
+    for field in ("score", "depth", "nodes", "tablebase_hits"):
+        value = getattr(result, field, None)
+        if isinstance(value, int) and not isinstance(value, bool):
+            entry[field] = value
+    pv = getattr(result, "pv", None)
+    if pv:
+        entry["pv"] = [move.notation for move in pv]
+    bound = getattr(result, "bound", None)
+    if bound is not None:
+        entry["wdl"] = bound.text
+    backend = getattr(engine, "last_search_backend", None)
+    if isinstance(backend, str):
+        entry["search_backend"] = backend
+    return entry
 
 
 def run_sprt_match(
@@ -316,8 +363,13 @@ def run_sprt_match(
     workload_checkpoint: Callable[[str], None] | None = None,
     resume_result: SPRTResult | None = None,
     on_pair_completed: Callable[[SPRTResult], None] | None = None,
+    on_game_completed: Callable[[dict], None] | None = None,
 ) -> SPRTResult:
-    """Run an SPRT match between candidate dev engine and baseline master engine."""
+    """Run an SPRT match between candidate dev engine and baseline master engine.
+
+    ``on_game_completed`` receives each finished game of a complete pair
+    (opening moves, per-ply transcript, result) before the pair is counted.
+    """
 
     if fixed_move_time_ms is not None:
         if type(fixed_move_time_ms) is not int or fixed_move_time_ms < 1:
@@ -372,17 +424,19 @@ def run_sprt_match(
         if status != "INCONCLUSIVE" or completed_pairs == max_pairs:
             return resume_result
 
-    def generate_opening() -> tuple[State, Counter]:
+    def generate_opening() -> tuple[State, Counter, tuple[str, ...]]:
         state = initial_state(rules=rules)
         history = Counter({state.position_key: 1})
+        played: list[str] = []
         for _ in range(opening_plies):
             moves = legal_moves(state)
             if not moves:
                 break
             move = rng.choice(moves)
+            played.append(move.notation)
             state = apply_move(state, move, validate=False)
             history[state.position_key] += 1
-        return state, history
+        return state, history, tuple(played)
 
     for _ in range(completed_pairs):
         generate_opening()
@@ -410,11 +464,16 @@ def run_sprt_match(
                 executor.shutdown(wait=True, cancel_futures=True)
             raise
 
-        state, history = generate_opening()
+        state, history, opening = generate_opening()
+        transcripts: dict[bool, list[dict]] = {}
 
         def play_assignment(dev_is_black: bool) -> tuple[int | None, str]:
             dev_engine = dev_factory()
             master_engine = master_factory()
+            recording = {}
+            if on_game_completed is not None:
+                transcripts[dev_is_black] = []
+                recording["transcript"] = transcripts[dev_is_black]
             try:
                 return play_timed_game(
                     state,
@@ -430,6 +489,7 @@ def run_sprt_match(
                     fixed_move_time_ms=fixed_move_time_ms,
                     max_game_plies=max_game_plies,
                     workload_checkpoint=workload_checkpoint,
+                    **recording,
                 )
             finally:
                 for engine in (dev_engine, master_engine):
@@ -461,6 +521,30 @@ def run_sprt_match(
                 f"candidate_black={reason1}, candidate_red={reason2}; "
                 "no result was recorded"
             )
+
+        if on_game_completed is not None:
+            try:
+                for dev_is_black, winner, reason in (
+                    (True, winner1, reason1),
+                    (False, winner2, reason2),
+                ):
+                    on_game_completed(
+                        {
+                            "pair": pair_idx,
+                            "candidate_color": "black" if dev_is_black else "red",
+                            "opening": opening,
+                            "moves": tuple(transcripts.get(dev_is_black, ())),
+                            "winner": (
+                                None if winner is None
+                                else "black" if winner == BLACK else "red"
+                            ),
+                            "reason": reason,
+                        }
+                    )
+            except BaseException:
+                if executor is not None:
+                    executor.shutdown(wait=True, cancel_futures=True)
+                raise
 
         if winner1 == BLACK:
             wins += 1

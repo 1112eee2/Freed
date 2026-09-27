@@ -8,6 +8,13 @@ from makhos.search import Engine, Mode, RootCandidate, SearchLimits, UNKNOWN_WDL
 
 
 class SearchTests(unittest.TestCase):
+    def test_wdl_bound_text_matches_gui_provenance_form(self):
+        self.assertEqual(WDLBound.exact(Outcome.WIN).text, "WIN")
+        self.assertEqual(WDLBound.exact(Outcome.DRAW).text, "DRAW")
+        self.assertEqual(UNKNOWN_WDL.text, "UNKNOWN")
+        self.assertEqual(WDLBound(Outcome.LOSS, Outcome.DRAW).text, "LOSS..DRAW")
+        self.assertEqual(WDLBound(Outcome.DRAW, Outcome.WIN).text, "DRAW..WIN")
+
     def test_proof_tablebase_leaf_derives_safe_fallback_moves(self):
         class DrawNative:
             no_progress_plies = 1

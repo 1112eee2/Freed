@@ -227,6 +227,16 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument("--repetitions", type=int, default=2)
     benchmark_parser.add_argument("--seed", type=int, default=0x4D414B484F53)
     benchmark_parser.add_argument("--search-hash-power", type=int, default=18)
+    benchmark_parser.add_argument(
+        "--candidate-nnue-model",
+        default=None,
+        help="explicit NNUE model for the candidate library",
+    )
+    benchmark_parser.add_argument(
+        "--baseline-nnue-model",
+        default=None,
+        help="explicit NNUE model for the baseline library",
+    )
     benchmark_parser.set_defaults(func=command_bench_native)
 
     profile_parser = subparsers.add_parser(
@@ -297,6 +307,10 @@ def build_parser() -> argparse.ArgumentParser:
     analyze_game_parser.add_argument(
         "--library",
         default=str(project_native_library()),
+    )
+    analyze_game_parser.add_argument(
+        "--nnue-model",
+        help="explicit NNUE model for an NNUE candidate search library",
     )
     analyze_game_parser.add_argument(
         "--side",
@@ -468,6 +482,23 @@ def build_parser() -> argparse.ArgumentParser:
     sprt_parser.add_argument(
         "--max-game-plies", type=int, default=300,
         help="fail closed if either paired game is unfinished after this many plies",
+    )
+    sprt_parser.add_argument(
+        "--tb-draw-cutoff",
+        action="store_true",
+        help=(
+            "candidate-only: attach the match tablebases to the candidate's "
+            "main search for exact-draw cutoffs (needs a MAKHOS_SEARCH_TB_DRAW "
+            "library, tablebases and persistent search)"
+        ),
+    )
+    sprt_parser.add_argument(
+        "--games-dir",
+        default=None,
+        help=(
+            "write every game of each completed pair as a replay-validated "
+            "thai-makhos-game-v1 record into this directory"
+        ),
     )
     sprt_parser.add_argument(
         "--dev-library", default="build/makhos_native.dll",
