@@ -4288,3 +4288,79 @@ removes the stale Experiment A launch directive from SKILL.md, and consolidates
 current status with a byte-identical historical snapshot. No engine/native/build
 scripts, defaults, artifacts or checkpoints change. Next implementation slice:
 Phase 1A work/scratch consumer and evidence map; no SMP/arena launch is implied.
+
+## 2026-09-25 — No-loss track Web evidence (PR #28, not merged)
+
+STRICT_KEY_01: REJECT_AS_DECLARED / NOT_PROMOTED. Its declared falsifiers were a
+repeatable fixed-depth slowdown or a significant paired loss. The depth-20
+screen (128 train-split positions, NNUE v1, Linux clang 18.1.3) met the first:
+strict took 1.147x/1.037x total time and 1.1713x/1.0427x median per position
+(slower on 42/64 and 36/64). It stays correctness evidence: the legacy key made
+9,899,449 of 48,814,153 TT cutoffs false in the 7-12 piece king group and
+379,325 of 8,760,337 in the 13+ king-free group; strict made none, and audit
+builds matched plain builds on all 256 searches. Linux match STRICT_KEY_01-L1
+(1T, no TB, 2s+0.02s, H0=-3/H1=+1) was stopped at pair 344 after the owner's
+review: 266/195/227, pentanomial 20/56/161/79/28, LLR +0.98, +19.7 +/-17.8 Elo,
+INCONCLUSIVE. Do not resume it, and do not use it against the screen; any
+strict key returns only as a new hypothesis. Windows gates withdrawn.
+
+TB frontier (measurement): on 9,000 exact-labelled 4-6 piece positions, depth-8
+search scored 64.4% of exact draws beyond +/-50 and got 2/6,000 decisive signs
+wrong. TBDRAW_01 (exact TB draw returns 0 at non-root nodes, default-off,
+byte-identical default build, 8 tests): INCONCLUSIVE / NOT_PROMOTED, no paired
+result. Its soundness is scoped to the 80-ply project rules.
+
+RFP_01 (guarded reverse futility, default-off): census only. At depth 20 on 128
+train-split positions, margin 48 per ply mispruned 0.30%/0.70%/0.26% at depths
+1-3 while pruning about half the guarded nodes; source default still 100.
+No match.
+
+Invincible 2 page script (five fetches, no game): moves and captures match
+`project`; draw adjudication differs (repetition only at 10 or fewer pieces, no
+no-progress limit, bare-king draw). Phase 0 stays INCONCLUSIVE.
+
+Tooling: `bench-native` KeyError regression fixed; `analyze-game --nnue-model`
+ported from #25; `sprt --games-dir` writes replay-validated records that fail
+the v1 JSON schema until F3. Owner review: split PR #28 into single-concept PRs
+before acceptance. RULESET.json, makhos/core.py, the accepted DLL, the model and
+the release pointer are unchanged.
+
+Update, same day: RFP_01 left PR #28 and merged to `main` as PR #32 with
+margin 48, the value the census rule declared before reading the table selects.
+A census re-run on that source reproduced the histograms exactly. Its
+RFP_01-L1 screening contract (1T, no TB, 2s+0.02s, H0=0/H1=+5, cap 2,000
+pairs) is declared on `main`; the match has not started. PR #30 aligned the v1
+game schema with GUI records; recorder output still fails it.
+
+## 2026-09-26 — RFP_01-L1 screening match
+
+INCONCLUSIVE / NOT_PROMOTED. RFP_01 (guarded reverse futility, margin 48 per
+ply, depths 1-3, at least 11 pieces; default-off on `main` since PR #32) against
+the same-source control: Linux 1T, no tablebases, 2s+0.02s, 6 opening plies,
+seed 20260930, H0=0/H1=+5. It ran from a worktree pinned to the contract commit
+`9d22c01`, with libraries `ce450b06` (candidate) and `4178a8f7` (control). At
+the 2,000-pair cap: W1414 D1219 L1367, pentanomial 163/393/849/424/171, LLR
++0.49, +4.1 +/-7.9 Elo (95%). The interval excludes a large loss but cannot
+separate +5 from 0, consistent with the screen's 0.929x time to depth. The
+Windows gates need an L1 PASS and are not triggered. The contract forbids a
+new-seed rerun; any changed rule (for example cheaper guards in the 11-14 piece
+band, where time was 1.022x) is a new hypothesis.
+
+## 2026-09-26 — STRICT_KEY_02-L1 screening match
+
+LINUX SCREEN PASS / NOT_PROMOTED. STRICT_KEY_02 is a new hypothesis for the
+default-off strict TT key (`MAKHOS_STRICT_SEARCH_POSITION_KEY=1`): removing the
+legacy key's deterministic aliases makes the engine stronger in paired play. It
+was declared before any new measurement, with a paired loss as its only
+falsifier; fixed-depth time was excluded because removing false cutoffs must
+enlarge the tree. STRICT_KEY_01's REJECT_AS_DECLARED verdict stands. The
+contract was declared at 2026-09-26T00:54:53Z on `f931921`: strict `73aef947`
+(byte-identical to STRICT_KEY_01's candidate) against control `4178a8f7`, built
+from `main` `80f85be4`. Settings: Linux 1T, no tablebases, 2s+0.02s, 6 opening
+plies, seed 20261003, H0=0/H1=+5, cap 2,000 pairs. No STRICT_KEY_01-L1 game was
+reused. It ran from a worktree pinned to `f931921` and stopped at pair 1,281:
+W945 D789 L828, pentanomial 83/199/623/270/106, LLR +2.96, +15.9 +/-9.3 Elo
+(95%). The hypothesis was chosen after seeing STRICT_KEY_01's stopped partial;
+this match used fresh games. Next: Windows W1 (1T 10s+0.1s with TB4-6,
+H0=0/H1=+2) and W2 (12T/512 MiB, fixed 1 s), after `BASELINE_HORIZON_01`'s
+records and the owner's go-ahead. Promotion needs both and the full suite.

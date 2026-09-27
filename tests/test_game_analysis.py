@@ -1,7 +1,16 @@
+import contextlib
+import hashlib
+import io
+import json
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from makhos.cli import build_parser
-from makhos.core import BLACK, RED, format_position
+from makhos.cli_handlers import analysis_handler
+from makhos.core import BLACK, RED, format_position, legal_moves
 from makhos.game_analysis import (
     GameRecordError,
     EXTERNAL_NO_REPETITION_RULES,
@@ -87,6 +96,9 @@ class GameAnalysisTests(unittest.TestCase):
             "native_library": r"D:\ThaiMakhosEngine\build\makhos_native_accepted.dll",
             "native_library_sha256": "a" * 64,
             "native_search_abi": 5,
+            "nnue_enabled": True,
+            "nnue_feature_abi": "thai-makhos-shared-137-v1",
+            "nnue_model_sha256": "c" * 64,
             "native_error": None,
         }
 
@@ -120,6 +132,9 @@ class GameAnalysisTests(unittest.TestCase):
                 hash_mb=512,
                 rules_profile="project",
                 budget_ms=2000,
+                nnue_enabled=True,
+                nnue_feature_abi="thai-makhos-shared-137-v1",
+                nnue_model_sha256="c" * 64,
             ),
             (),
         )
@@ -142,12 +157,18 @@ class GameAnalysisTests(unittest.TestCase):
             hash_mb=128,
             rules_profile="external-no-repetition",
             budget_ms=1000,
+            nnue_enabled=False,
+            nnue_feature_abi="wrong-feature-abi",
+            nnue_model_sha256="b" * 64,
         )
         self.assertEqual(
             mismatches,
             (
                 "native_library_sha256",
                 "native_search_abi",
+                "nnue_enabled",
+                "nnue_feature_abi",
+                "nnue_model_sha256",
                 "threads",
                 "hash_mb",
                 "rules_profile",
@@ -161,7 +182,16 @@ class GameAnalysisTests(unittest.TestCase):
         issues = engine_provenance_issues(metadata)
         self.assertIn("missing:provenance_version", issues)
         self.assertIn("missing:native_library_sha256", issues)
+        self.assertIn("missing:nnue_model_sha256", issues)
         self.assertIn("missing:elapsed_ms", issues)
+
+    def test_nnue_enabled_metadata_requires_model_and_feature_identities(self) -> None:
+        metadata = self.complete_search_provenance()
+        metadata["nnue_model_sha256"] = None
+        metadata["nnue_feature_abi"] = None
+        issues = engine_provenance_issues(metadata)
+        self.assertIn("missing:nnue_model_sha256", issues)
+        self.assertIn("missing:nnue_feature_abi", issues)
 
     def test_illegal_or_inconsistent_record_is_rejected(self) -> None:
         bad_move = sample_record()
@@ -233,11 +263,14 @@ class GameAnalysisTests(unittest.TestCase):
         parser = build_parser()
         defaults = parser.parse_args(["analyze-game", "--game", "game.json"])
         self.assertIsNone(defaults.budget_ms)
+        self.assertIsNone(defaults.nnue_model)
         custom = parser.parse_args(
             [
                 "analyze-game",
                 "--game",
                 "game.json",
+                "--nnue-model",
+                "model.mknnue",
                 "--budget-ms",
                 "10",
                 "--budget-ms",
@@ -245,6 +278,141 @@ class GameAnalysisTests(unittest.TestCase):
             ]
         )
         self.assertEqual(custom.budget_ms, [10, 20])
+        self.assertEqual(custom.nnue_model, "model.mknnue")
+
+    def test_analyze_game_binds_explicit_nnue_model_for_both_search_backends(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            game_path = root / "game.json"
+            library_path = root / "candidate.dll"
+            model_path = root / "model.mknnue"
+            game_path.write_text(json.dumps(sample_record()), encoding="utf-8")
+            library_path.write_bytes(b"test library identity")
+            model_path.write_bytes(b"test model identity")
+
+            start = parse_game_record(sample_record()).start
+            selected_move = next(
+                move for move in legal_moves(start) if move.notation == "25-21"
+            )
+            model_sha256 = hashlib.sha256(model_path.read_bytes()).hexdigest()
+
+            class SearcherStub:
+                def __init__(self) -> None:
+                    self._open = True
+                    self.abi_version = 5
+
+                def _require_open(self):
+                    if not self._open:
+                        raise RuntimeError("searcher closed")
+
+                @property
+                def nnue_enabled(self):
+                    self._require_open()
+                    return True
+
+                @property
+                def nnue_model_path(self):
+                    self._require_open()
+                    return model_path.resolve()
+
+                @property
+                def nnue_model_sha256(self):
+                    self._require_open()
+                    return model_sha256
+
+                @property
+                def nnue_feature_abi(self):
+                    self._require_open()
+                    return "thai-makhos-shared-137-v1"
+
+                @property
+                def nnue_source_model_sha256(self):
+                    self._require_open()
+                    return "d" * 64
+
+                def __enter__(self):
+                    return self
+
+                def __exit__(self, *_args):
+                    self._open = False
+                    return False
+
+                def clear(self):
+                    pass
+
+                def search(self, *_args, **_kwargs):
+                    return SimpleNamespace(
+                        move=selected_move,
+                        score=0,
+                        depth=1,
+                        nodes=1,
+                        elapsed_ms=10,
+                        pv=(selected_move,),
+                        root_moves=(),
+                        common_depth=1,
+                        selective_root=False,
+                    )
+
+            for threads in (1, 2):
+                with self.subTest(threads=threads):
+                    searcher = SearcherStub()
+                    output_path = root / f"analysis-{threads}t.json"
+                    args = build_parser().parse_args(
+                        [
+                            "analyze-game",
+                            "--game",
+                            str(game_path),
+                            "--library",
+                            str(library_path),
+                            "--nnue-model",
+                            str(model_path),
+                            "--side",
+                            "engine",
+                            "--ply",
+                            "1",
+                            "--budget-ms",
+                            "10",
+                            "--budget-ms",
+                            "20",
+                            "--threads",
+                            str(threads),
+                            "--output",
+                            str(output_path),
+                        ]
+                    )
+                    with (
+                        patch.object(
+                            analysis_handler,
+                            "native_tt_entry_bytes",
+                            return_value=32,
+                        ),
+                        patch.object(
+                            analysis_handler,
+                            "NativeSearch",
+                            return_value=searcher,
+                        ) as one_thread,
+                        patch.object(
+                            analysis_handler,
+                            "ParallelNativeSearch",
+                            return_value=searcher,
+                        ) as root_split,
+                        contextlib.redirect_stdout(io.StringIO()),
+                    ):
+                        self.assertEqual(
+                            analysis_handler.command_analyze_game(args), 0
+                        )
+
+                    constructor = one_thread if threads == 1 else root_split
+                    self.assertEqual(
+                        Path(constructor.call_args.kwargs["nnue_model"]).resolve(),
+                        model_path.resolve(),
+                    )
+                    report = json.loads(output_path.read_text(encoding="utf-8"))
+                    self.assertTrue(report["nnue_enabled"])
+                    self.assertEqual(report["nnue_model_sha256"], model_sha256)
+                    self.assertEqual(
+                        report["nnue_feature_abi"], "thai-makhos-shared-137-v1"
+                    )
 
     def test_per_move_actor_can_identify_engine_after_side_change(self) -> None:
         payload = sample_record()

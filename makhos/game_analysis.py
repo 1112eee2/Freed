@@ -23,6 +23,7 @@ from .core import (
     State,
     apply_move,
     format_position,
+    initial_state,
     legal_moves,
     opponent,
     parse_position,
@@ -48,6 +49,9 @@ SEARCH_PROVENANCE_FIELDS = (
     "native_library",
     "native_library_sha256",
     "native_search_abi",
+    "nnue_enabled",
+    "nnue_feature_abi",
+    "nnue_model_sha256",
     "native_error",
 )
 EXTERNAL_NO_REPETITION_RULES = Rules(
@@ -331,6 +335,85 @@ def replay_game(
     return ReplayedGame(record, tuple(replayed), state, dict(history))
 
 
+def build_match_game_record(
+    game: Mapping[str, Any],
+    *,
+    match: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Convert one engine-match game into a replay-validated game record.
+
+    ``game`` is an SPRT ``on_game_completed`` payload; matches use the project
+    rules. Opening plies carry no actor; engine plies carry the side's role and
+    search summary. The record must replay with the verified rules and its
+    declared result must equal the replayed terminal status, otherwise
+    GameRecordError is raised.
+    """
+
+    rules = DEFAULT_RULES
+    candidate_color = game.get("candidate_color")
+    if candidate_color not in ("black", "red"):
+        raise GameRecordError("candidate_color must be 'black' or 'red'")
+    state = initial_state(rules=rules)
+    start_text = format_position(state)
+    notations = [(notation, None) for notation in game.get("opening", ())]
+    notations += [(entry.get("notation"), entry) for entry in game.get("moves", ())]
+    moves: list[dict[str, Any]] = []
+    for ply, (notation, entry) in enumerate(notations, start=1):
+        item: dict[str, Any] = {
+            "ply": ply,
+            "player": player_name(state.turn),
+            "notation": notation,
+        }
+        if entry is not None:
+            if entry.get("player") != item["player"]:
+                raise GameRecordError(f"ply {ply} transcript names the wrong side")
+            role = "candidate" if item["player"] == candidate_color else "baseline"
+            item["actor"] = "engine"
+            item["engine"] = {
+                "role": role,
+                **{
+                    key: value
+                    for key, value in entry.items()
+                    if key not in ("player", "notation")
+                },
+            }
+        moves.append(item)
+        matches = [move for move in legal_moves(state) if move.notation == notation]
+        if len(matches) != 1:
+            raise GameRecordError(f"ply {ply} is not a unique legal move: {notation}")
+        state = apply_move(state, matches[0], validate=False)
+
+    record: dict[str, Any] = {
+        "format": GAME_RECORD_FORMAT,
+        "start_position": start_text,
+        "start_reversible_plies": 0,
+        "final_position": format_position(state),
+        "reversible_plies": state.reversible_plies,
+        "moves": moves,
+        "engine": {"game_mode": "bot", "rules_profile": "project"},
+    }
+    replayed = replay_game(parse_game_record(record), rules=rules)
+    status = terminal_status(
+        replayed.final,
+        repetition_count=replayed.history[replayed.final.position_key],
+        rules=rules,
+    )
+    winner = None if status.winner is None else player_name(status.winner)
+    declared = (game.get("winner"), game.get("reason"))
+    if not status.terminal or (winner, status.reason) != declared:
+        raise GameRecordError(
+            "declared match result does not match the replayed terminal status"
+        )
+    record["result"] = {"source": "rules", "winner": winner, "reason": status.reason}
+    record["rules_result"] = {"terminal": True, "winner": winner, "reason": status.reason}
+    record["match"] = {
+        **match,
+        "pair": game.get("pair"),
+        "candidate_color": candidate_color,
+    }
+    return record
+
+
 def inferred_engine_players(record: GameRecord) -> tuple[int, ...] | None:
     """Infer which recorded side was controlled by this engine, if possible."""
 
@@ -401,6 +484,33 @@ def engine_provenance_issues(
         or any(character not in "0123456789abcdefABCDEF" for character in sha256)
     ):
         issues.append("invalid:native_library_sha256")
+    nnue_enabled = metadata.get("nnue_enabled")
+    if "nnue_enabled" in metadata and not isinstance(nnue_enabled, bool):
+        issues.append("invalid:nnue_enabled")
+    feature_abi = metadata.get("nnue_feature_abi")
+    if feature_abi is not None and (
+        not isinstance(feature_abi, str) or not feature_abi
+    ):
+        issues.append("invalid:nnue_feature_abi")
+    model_sha = metadata.get("nnue_model_sha256")
+    if model_sha is not None and (
+        not isinstance(model_sha, str)
+        or len(model_sha) != 64
+        or any(character not in "0123456789abcdefABCDEF" for character in model_sha)
+    ):
+        issues.append("invalid:nnue_model_sha256")
+    if (
+        nnue_enabled is True
+        and not isinstance(model_sha, str)
+        and "missing:nnue_model_sha256" not in issues
+    ):
+        issues.append("missing:nnue_model_sha256")
+    if (
+        nnue_enabled is True
+        and not isinstance(feature_abi, str)
+        and "missing:nnue_feature_abi" not in issues
+    ):
+        issues.append("missing:nnue_feature_abi")
     return tuple(issues)
 
 
@@ -413,6 +523,9 @@ def engine_provenance_mismatches(
     hash_mb: int,
     rules_profile: str,
     budget_ms: int,
+    nnue_enabled: bool | None = None,
+    nnue_feature_abi: str | None = None,
+    nnue_model_sha256: str | None = None,
 ) -> tuple[str, ...]:
     """Compare recorded per-ply settings with an isolated native replay."""
 
@@ -428,6 +541,28 @@ def engine_provenance_mismatches(
     recorded_abi = metadata.get("native_search_abi")
     if isinstance(recorded_abi, int) and recorded_abi != native_search_abi:
         mismatches.append("native_search_abi")
+    recorded_nnue_enabled = metadata.get("nnue_enabled")
+    if (
+        isinstance(recorded_nnue_enabled, bool)
+        and nnue_enabled is not None
+        and recorded_nnue_enabled != nnue_enabled
+    ):
+        mismatches.append("nnue_enabled")
+    recorded_feature_abi = metadata.get("nnue_feature_abi")
+    if (
+        isinstance(recorded_feature_abi, str)
+        and recorded_feature_abi != nnue_feature_abi
+    ):
+        mismatches.append("nnue_feature_abi")
+    recorded_model_sha = metadata.get("nnue_model_sha256")
+    if (
+        isinstance(recorded_model_sha, str)
+        and (
+            nnue_model_sha256 is None
+            or recorded_model_sha.lower() != nnue_model_sha256.lower()
+        )
+    ):
+        mismatches.append("nnue_model_sha256")
     if isinstance(metadata.get("threads"), int) and metadata["threads"] != threads:
         mismatches.append("threads")
     if isinstance(metadata.get("hash_mb"), int) and metadata["hash_mb"] != hash_mb:

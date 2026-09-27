@@ -19,6 +19,7 @@ from .native import (
     hash_power_for_megabytes,
     native_tt_entry_bytes,
 )
+from .root_policy import choose_root
 
 MATE_SCORE = 1_000_000
 SEARCH_INFINITY = 2_000_000
@@ -215,6 +216,37 @@ class ParallelNativeSearch:
         if any(value is None for value in values):
             return None
         return sum(value for value in values if value is not None)
+
+    @property
+    def supports_tablebase_draw(self) -> bool:
+        self._require_open()
+        return all(worker.supports_tablebase_draw for worker in self._workers)
+
+    def attach_tablebase(self, tablebase) -> None:
+        """Attach one shared tablebase to every worker; see NativeSearch."""
+
+        self._require_open()
+        try:
+            for worker in self._workers:
+                worker.attach_tablebase(tablebase)
+        except BaseException:
+            self.detach_tablebase()
+            raise
+
+    def detach_tablebase(self) -> None:
+        self._require_open()
+        for worker in self._workers:
+            worker.detach_tablebase()
+
+    def tablebase_counters(self) -> tuple[int, int, int]:
+        """Probes, exact-draw cutoffs and probe errors summed over workers."""
+
+        self._require_open()
+        totals = [0, 0, 0]
+        for worker in self._workers:
+            for index, value in enumerate(worker.tablebase_counters()):
+                totals[index] += value
+        return totals[0], totals[1], totals[2]
 
     def clear(self) -> None:
         self._require_open()
@@ -494,12 +526,15 @@ class ParallelNativeSearch:
         results: tuple[_RootResult, ...],
     ) -> _RootResult:
         by_move = {result.move: result for result in results}
-        chosen = by_move[root_moves[0]]
-        for move in root_moves[1:]:
-            candidate = by_move[move]
-            if candidate.score > chosen.score:
-                chosen = candidate
-        return chosen
+        ordered = tuple(by_move[move] for move in root_moves)
+        return choose_root(
+            ordered,
+            mode="best",
+            win_margin=0,
+            safety_rank=lambda _item: (0, 0),
+            score=lambda item: item.score,
+            best_rank=lambda item: item.score,
+        )
 
     def search(
         self,
