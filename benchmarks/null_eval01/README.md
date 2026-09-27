@@ -57,15 +57,20 @@ not. The build switch is `-NullEvalGuard`.
 
 ## Speed check (context, not a falsifier)
 
-The 64 census positions from RFP_01 (the first 32 of each group, from the
-train split), strict + guard against strict, each searched once at depth 16
-and once for 500 ms, in fresh contexts with alternating order, Windows:
+The 64 census positions from RFP_01 (the first 32 of each group of the
+128-position census, from the train split), strict + guard against strict,
+each searched once at depth 16 and once for 500 ms, in fresh contexts with
+alternating order, on Windows:
 
 | Group | Nodes at depth 16 (geometric) | Time to depth 16 | Depth reached in 500 ms | Same move at depth 16 |
 |---|---:|---:|---:|---:|
-| 11–14 pieces | 0.858× | 0.906× | +0.38 plies | 25/32 |
-| 15+ pieces | 0.923× | 0.977× | +0.22 plies | 21/32 |
-| All 64 | 0.890× | 0.941× | +0.30 plies | 46/64 |
+| 11–14 pieces | 0.857× | 0.877× | +0.22 plies | 25/32 |
+| 15+ pieces | 0.970× | 0.996× | +0.06 plies | 25/32 |
+| All 64 | 0.912× | 0.934× | +0.14 plies | 50/64 |
+
+A second, independent draw of 32 positions per group gave 0.890× nodes,
+0.941× time and +0.30 plies. The saving is concentrated in the 11–14-piece
+middlegame.
 
 ## Windows screening match (NULL_EVAL_01-L1W)
 
