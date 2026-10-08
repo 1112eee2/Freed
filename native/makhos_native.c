@@ -48,6 +48,16 @@
 
 #if MAKHOS_NNUE_SEARCH_CANDIDATE
 static MakhosNnueIncrementalModel *native_nnue_model = NULL;
+#ifdef MAKHOS_NNUE_MODEL_IDENTITY_HEADER
+/*
+ * Development builds only: a generated header supplies the expected model
+ * identity (native_nnue_source_model_sha256, native_nnue_binary_sha256 and
+ * the two MAKHOS_NNUE_*_SHA256_TEXT strings).  Default builds keep v1's.
+ */
+#include MAKHOS_NNUE_MODEL_IDENTITY_HEADER
+#else
+#define MAKHOS_NNUE_BINARY_SHA256_TEXT     "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C"
+#define MAKHOS_NNUE_SOURCE_SHA256_TEXT     "5FD87ABD2F9CAAC81045A58AEA420445B90CAC9A70D5FFBDFC5694BA1338CA4E"
 static const uint8_t native_nnue_source_model_sha256[32] = {
     0x5f, 0xd8, 0x7a, 0xbd, 0x2f, 0x9c, 0xaa, 0xc8,
     0x10, 0x45, 0xa5, 0x8a, 0xea, 0x42, 0x04, 0x45,
@@ -60,6 +70,7 @@ static const uint8_t native_nnue_binary_sha256[32] = {
     0xf9, 0x1e, 0xb0, 0x86, 0xe0, 0x42, 0x79, 0x0f,
     0x33, 0xea, 0x0a, 0x8c, 0x09, 0x14, 0x16, 0x4c
 };
+#endif
 #endif
 
 #if defined(MAKHOS_NO_MAIN)
@@ -5417,11 +5428,11 @@ MAKHOS_API const char *makhos_search_nnue_feature_abi(void) {
 }
 
 MAKHOS_API const char *makhos_search_nnue_model_sha256(void) {
-    return "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C";
+    return MAKHOS_NNUE_BINARY_SHA256_TEXT;
 }
 
 MAKHOS_API const char *makhos_search_nnue_source_model_sha256(void) {
-    return "5FD87ABD2F9CAAC81045A58AEA420445B90CAC9A70D5FFBDFC5694BA1338CA4E";
+    return MAKHOS_NNUE_SOURCE_SHA256_TEXT;
 }
 
 MAKHOS_API const char *makhos_search_nnue_last_error(void) {
