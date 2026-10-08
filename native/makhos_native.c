@@ -1220,6 +1220,12 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #define MAKHOS_HISTORY_GRAVITY 0
 #endif
 #define MAKHOS_HISTORY_GRAVITY_MAX 16384
+#ifndef MAKHOS_ITER_PARTIAL
+#define MAKHOS_ITER_PARTIAL 0
+#endif
+#ifndef MAKHOS_TEST_STOP_AFTER_NODES
+#define MAKHOS_TEST_STOP_AFTER_NODES 0
+#endif
 #ifndef MAKHOS_COMPACT_TT
 #define MAKHOS_COMPACT_TT 1
 #endif
@@ -2940,6 +2946,14 @@ static bool search_time_expired(NativeSearchContext *context) {
             memory_order_acquire
         )
     ) {
+        context->stopped = true;
+        return true;
+    }
+#endif
+#if MAKHOS_TEST_STOP_AFTER_NODES
+    /* Test builds only: stop at a fixed node count so an interrupted
+     * iteration is reproducible without a wall-clock deadline. */
+    if (context->nodes >= (uint64_t)MAKHOS_TEST_STOP_AFTER_NODES) {
         context->stopped = true;
         return true;
     }
@@ -4845,6 +4859,9 @@ static int execute_native_search_impl(
         Move iteration_move;
         NativePVMove iteration_pv[MAKHOS_SEARCH_MAX_PLY];
         uint8_t iteration_pv_length = 0;
+#if MAKHOS_ITER_PARTIAL
+        bool iteration_improved = false;
+#endif
         for (uint32_t index = 0; index < root_moves->count; ++index) {
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
             if (shadow_started && index > 0) {
@@ -4901,6 +4918,9 @@ static int execute_native_search_impl(
             }
 #endif
             if (score > iteration_score) {
+#if MAKHOS_ITER_PARTIAL
+                if (index > 0) iteration_improved = true;
+#endif
                 iteration_score = score;
                 iteration_move = *move;
                 store_native_pv_move(&iteration_pv[0], move);
@@ -4921,6 +4941,27 @@ static int execute_native_search_impl(
         }
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
         if (shadow_started) finish_native_root_pvs_shadow_iteration(root_pvs);
+#endif
+#if MAKHOS_ITER_PARTIAL
+        /*
+         * An interrupted iteration still counts when a later root move
+         * finished its full-window search above the first move's completed
+         * score at this deeper depth.  The reported depth stays the last
+         * completed one.
+         */
+        if (context->stopped && iteration_improved) {
+            completed_move = iteration_move;
+            completed_score = iteration_score;
+            completed_pv_length = iteration_pv_length;
+            memcpy(
+                completed_pv,
+                iteration_pv,
+                (size_t)iteration_pv_length * sizeof(NativePVMove)
+            );
+            context->cached_root_key = root_key;
+            context->cached_root_best = iteration_move;
+            context->has_cached_root_best = true;
+        }
 #endif
         if (context->stopped) break;
 
