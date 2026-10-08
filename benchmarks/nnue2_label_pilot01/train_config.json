@@ -1,0 +1,39 @@
+{
+ "format": "thai-makhos-nnue2-pilot-train-config-v1",
+ "id": "NNUE2_LABEL_PILOT_01",
+ "note": "Shared by arm H and arm N. Only the teacher label differs. Fixed before any pilot label was computed.",
+ "feature_abi": "thai-makhos-shared-137-v1",
+ "network": {
+  "feature_width": 128,
+  "concatenated_width": 256,
+  "hidden_width": 32,
+  "output_width": 1,
+  "activation": "clipped ReLU [0, 1] on the accumulator and the hidden layer"
+ },
+ "target": {
+  "teacher_transform": "tanh(clip(cp, -2000, 2000) / 600)",
+  "teacher_loss": "huber",
+  "huber_delta": 0.1,
+  "outcome_and_wdl_loss": "squared error against -1/0/+1",
+  "loss_mix": {"teacher_score": 1.0, "game_outcome": 0.1, "exact_wdl": 0.5},
+  "mix_normalization": "per-sample weighted mean over the available terms, as in v1"
+ },
+ "weighting": {
+  "phase_weights": {"13_to_16": 1.0, "9_to_12": 1.0, "5_to_8": 1.0},
+  "per_game_normalization": "1 / rows from the same source game, as in v1",
+  "exact_wdl_multiplier": 1.0
+ },
+ "optimizer": {
+  "kind": "AdamW",
+  "learning_rate": 0.001,
+  "weight_decay": 0.0,
+  "batch_size": 512,
+  "schedule": "linear warmup for 2 epochs, then cosine to 0 at the last epoch",
+  "epochs": 10,
+  "early_stopping": false,
+  "checkpoint": "the model after the last epoch; no checkpoint is chosen by any validation metric"
+ },
+ "seeds": [20261015, 20261016],
+ "determinism": "torch.use_deterministic_algorithms(True), 1 CPU thread, seeded epoch shuffles",
+ "quantization": "unchanged v1 scales and integer types from build/nnue_phase1_evidence/quantization_contract_v2.json, via the v1 exporter's own functions"
+}
