@@ -1,0 +1,4 @@
+﻿launch_utc=2026-10-08T16:54:08.2893980Z
+pid=11848
+creation=2026-10-08T16:54:07.6295740Z
+command=python -B -m makhos sprt --dev-library build/histmalus01/candidate/makhos_native_nnue_candidate_v1.dll --master-library build/histmalus01/control/makhos_native_nnue_candidate_v1.dll --dev-nnue-model build/nnue_quantized_v1/model_a.mknnue --master-nnue-model build/nnue_quantized_v1/model_a.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20261013 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/histmalus01/sprt-l1w-20261008/sprt.json --resume
