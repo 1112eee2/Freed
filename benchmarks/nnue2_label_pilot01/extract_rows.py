@@ -25,10 +25,12 @@ FIELDS = (
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--v1-dir", type=Path, default=V1)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
+    v1 = args.v1_dir
     manifest = json.loads(
-        (V1 / "development_selection_manifest.json").read_text(encoding="utf-8")
+        (v1 / "development_selection_manifest.json").read_text(encoding="utf-8")
     )
     splits = {}
     for game in manifest["games"]:
@@ -41,7 +43,7 @@ def main() -> int:
             raise SystemExit(f"{split} game count differs from the manifest")
     rows = []
     for game_id in sorted(splits):
-        path = V1 / "analyses" / f"{game_id}.analysis.json"
+        path = v1 / "analyses" / f"{game_id}.analysis.json"
         payload = json.loads(path.read_text(encoding="utf-8"))
         if payload.get("game_id") != game_id or payload.get("split") != splits[game_id]:
             raise SystemExit(f"analysis binding differs for {game_id}")

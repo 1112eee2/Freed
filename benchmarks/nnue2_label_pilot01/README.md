@@ -32,7 +32,7 @@ thread, hash power 20, project rules, and a single-entry history.
 
 ## Part 1: depth choice (validation positions only)
 
-A fixed sample of 4,000 validation rows, stratified equally across the three
+A fixed sample of 4,002 validation rows, 1,334 from each of the three
 phase bands (13–16, 9–12, 5–8 pieces) by a seeded draw over sorted sample
 IDs (seed 20261014), is labelled with:
 
