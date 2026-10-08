@@ -1,0 +1,248 @@
+{
+ "chosen_depth": 10,
+ "format": "thai-makhos-nnue2-pilot-part1-v1",
+ "mean_ms": {
+  "d10": 12.262593703148426,
+  "d12": 34.32241379310344,
+  "d14": 92.36669165417291,
+  "d8": 4.135332333833083
+ },
+ "qualifying_depths": [
+  10,
+  12,
+  14
+ ],
+ "reference_mean_depth": 22.691404297851076,
+ "rows": 4002,
+ "rule": "smallest depth whose MAE to the 8,000 ms reference is at most the HCE 2000 ms label's in every phase band and in the king and no-king strata; 14 if none qualifies",
+ "strata": {
+  "13_to_16": {
+   "count": 1334,
+   "hce2000": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.145871932029898,
+    "outcome_mae": 0.751146558974202,
+    "outcome_rows": 1334
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.09686600365564157,
+    "outcome_mae": 0.7458586211106241,
+    "outcome_rows": 1334
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.08351524787690938,
+    "outcome_mae": 0.7471565739961208,
+    "outcome_rows": 1334
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.07018663326206669,
+    "outcome_mae": 0.7465093252139529,
+    "outcome_rows": 1334
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.11143090221940234,
+    "outcome_mae": 0.7466928983361436,
+    "outcome_rows": 1334
+   }
+  },
+  "5_to_8": {
+   "count": 1334,
+   "hce2000": {
+    "exact_wdl_mae": 0.37262904445981115,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.14270304342219003,
+    "outcome_mae": 0.5758814569081216,
+    "outcome_rows": 1334
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": 0.37159366150506945,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.1256150201817741,
+    "outcome_mae": 0.5805918085055322,
+    "outcome_rows": 1334
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": 0.3556649250761958,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.1079435207880815,
+    "outcome_mae": 0.5769483256649929,
+    "outcome_rows": 1334
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": 0.33955966260739595,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.09004416674591487,
+    "outcome_mae": 0.5766157948142822,
+    "outcome_rows": 1334
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": 0.3828491281015747,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.14363738527414333,
+    "outcome_mae": 0.582231286252267,
+    "outcome_rows": 1334
+   }
+  },
+  "9_to_12": {
+   "count": 1334,
+   "hce2000": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.14630929688228259,
+    "outcome_mae": 0.6848962123371014,
+    "outcome_rows": 1334
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.13038805688812716,
+    "outcome_mae": 0.6850474354649935,
+    "outcome_rows": 1334
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.1163909862530195,
+    "outcome_mae": 0.6847449391798256,
+    "outcome_rows": 1334
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.09784366246119951,
+    "outcome_mae": 0.6840364189538937,
+    "outcome_rows": 1334
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": null,
+    "exact_wdl_rows": 0,
+    "mae_to_reference": 0.14882166049777834,
+    "outcome_mae": 0.687807337507576,
+    "outcome_rows": 1334
+   }
+  },
+  "all": {
+   "count": 4002,
+   "hce2000": {
+    "exact_wdl_mae": 0.37262904445981115,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.14496142411145688,
+    "outcome_mae": 0.6706414094064751,
+    "outcome_rows": 4002
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": 0.37159366150506945,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.11762302690851427,
+    "outcome_mae": 0.6704992883603833,
+    "outcome_rows": 4002
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": 0.3556649250761958,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.10261658497267014,
+    "outcome_mae": 0.6696166129469798,
+    "outcome_rows": 4002
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": 0.33955966260739595,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.08602482082306036,
+    "outcome_mae": 0.6690538463273763,
+    "outcome_rows": 4002
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": 0.3828491281015747,
+    "exact_wdl_rows": 571,
+    "mae_to_reference": 0.13462998266377466,
+    "outcome_mae": 0.6722438406986623,
+    "outcome_rows": 4002
+   }
+  },
+  "kings": {
+   "count": 1161,
+   "hce2000": {
+    "exact_wdl_mae": 0.3560817856595545,
+    "exact_wdl_rows": 438,
+    "mae_to_reference": 0.13994082944716388,
+    "outcome_mae": 0.5691384461719399,
+    "outcome_rows": 1161
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": 0.3466067931800597,
+    "exact_wdl_rows": 438,
+    "mae_to_reference": 0.11729156193086453,
+    "outcome_mae": 0.5732544649809449,
+    "outcome_rows": 1161
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": 0.33330889913569434,
+    "exact_wdl_rows": 438,
+    "mae_to_reference": 0.09854689599649286,
+    "outcome_mae": 0.5696755924523308,
+    "outcome_rows": 1161
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": 0.3176081641117616,
+    "exact_wdl_rows": 438,
+    "mae_to_reference": 0.07929723946505987,
+    "outcome_mae": 0.5686710243418203,
+    "outcome_rows": 1161
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": 0.36008481751376675,
+    "exact_wdl_rows": 438,
+    "mae_to_reference": 0.13541650185233203,
+    "outcome_mae": 0.5756814920515507,
+    "outcome_rows": 1161
+   }
+  },
+  "no_kings": {
+   "count": 2841,
+   "hce2000": {
+    "exact_wdl_mae": 0.42712302456892715,
+    "exact_wdl_rows": 133,
+    "mae_to_reference": 0.14701313491935697,
+    "outcome_mae": 0.712121501034527,
+    "outcome_rows": 2841
+   },
+   "nnue_d10": {
+    "exact_wdl_mae": 0.4538812429062294,
+    "exact_wdl_rows": 133,
+    "mae_to_reference": 0.11775848302926448,
+    "outcome_mae": 0.7102392531416322,
+    "outcome_rows": 2841
+   },
+   "nnue_d12": {
+    "exact_wdl_mae": 0.4292885293013059,
+    "exact_wdl_rows": 133,
+    "mae_to_reference": 0.1042796996862716,
+    "outcome_mae": 0.7104584027372958,
+    "outcome_rows": 2841
+   },
+   "nnue_d14": {
+    "exact_wdl_mae": 0.41185106366820673,
+    "exact_wdl_rows": 133,
+    "mae_to_reference": 0.08877410697464029,
+    "outcome_mae": 0.7100761822391082,
+    "outcome_rows": 2841
+   },
+   "nnue_d8": {
+    "exact_wdl_mae": 0.45781730883435573,
+    "exact_wdl_rows": 133,
+    "mae_to_reference": 0.13430856457932724,
+    "outcome_mae": 0.711704906090882,
+    "outcome_rows": 2841
+   }
+  }
+ }
+}

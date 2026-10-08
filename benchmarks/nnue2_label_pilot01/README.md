@@ -84,3 +84,26 @@ Decision:
 
 No rerun with a new seed to chase a PASS. Nothing in this pilot opens a sealed
 test, so its models are development models and cannot be promoted.
+
+## Part 1 result (2026-10-09): `d*` = 10
+
+[`part1_report.json`](part1_report.json). MAE to the 8,000 ms reference
+(mean depth 22.7), in tanh(cp/600) units:
+
+| Stratum | Rows | HCE 2000 ms | NNUE d8 | d10 | d12 | d14 |
+|---|---:|---:|---:|---:|---:|---:|
+| 13–16 | 1,334 | 0.1459 | 0.1114 | 0.0969 | 0.0835 | 0.0702 |
+| 9–12 | 1,334 | 0.1463 | 0.1488 | 0.1304 | 0.1164 | 0.0978 |
+| 5–8 | 1,334 | 0.1427 | 0.1436 | 0.1256 | 0.1079 | 0.0900 |
+| kings | 1,161 | 0.1399 | 0.1354 | 0.1173 | 0.0985 | 0.0793 |
+| no kings | 2,841 | 0.1470 | 0.1343 | 0.1178 | 0.1043 | 0.0888 |
+
+Depths 10, 12 and 14 qualify, so the declared rule picks **d10**, which costs
+12.3 ms per position against about 2.6 s of HCE search per eligible v1 label.
+On the independent check, exact WDL (571 rows, 5–6 pieces), d10's MAE is
+0.372 against HCE's 0.373 (d12 0.356, d14 0.340); game-outcome MAE is
+0.670–0.672 for every label.
+
+The labels and the 4,002-row sample were computed with DLL `32c32302…` and
+model `07b9ab0f…`; part 1 took 150 s for the depths and 8,018 s for the
+reference on 4 Idle-priority workers. Stderr was empty.
