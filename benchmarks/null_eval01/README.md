@@ -112,3 +112,12 @@ python -B -m makhos sprt --dev-library $n --master-library $c --dev-nnue-model $
 
 **PROMOTE** only if the full suite passes and W1 and W2 both PASS. **REJECT**
 on any FAIL. A capped run is **INCONCLUSIVE**.
+
+## Result: NULL_EVAL_01-L1W PASS (2026-10-08)
+
+The restarted run (see [the incident note](incident_l1w_restart_20261008.md))
+stopped at pair 486 with **PASS**: 382/325/265, pentanomial
+22/80/200/127/57, LLR +2.95, +42.0 ± 15.8 Elo. Raw output, logs and the
+launch record are in [`sprt_l1w_20261008/`](sprt_l1w_20261008/); stderr is
+empty. This is a screening pass only; NULL_EVAL_01 is not promoted until the
+Windows W1/W2 gates above pass.
