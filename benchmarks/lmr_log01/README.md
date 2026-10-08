@@ -111,3 +111,12 @@ python -B -m makhos sprt --dev-library $l --master-library $c --dev-nnue-model $
 
 **PROMOTE** only if the full suite passes and W1 and W2 both PASS. **REJECT**
 on any FAIL. A capped run is **INCONCLUSIVE**.
+
+## Result: LMR_LOG_01-L1W PASS (2026-10-08)
+
+The restarted run (see [the incident note](incident_l1w_restart_20261008.md))
+stopped at pair 967 with **PASS**: 695/663/576, pentanomial
+56/173/430/212/96, LLR +2.96, +21.4 ± 11.1 Elo. Raw output, logs and the
+launch record are in [`sprt_l1w_20261008/`](sprt_l1w_20261008/); stderr is
+empty. This is a screening pass only; LMR_LOG_01 is not promoted until the
+Windows W1/W2 gates above pass.
