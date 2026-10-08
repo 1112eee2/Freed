@@ -1,0 +1,59 @@
+{
+ "format": "thai-makhos-nnue2-pilot-match-contract-v1",
+ "id": "NNUE2_LABEL_PILOT_01-P2",
+ "declared_utc": "2026-10-08T22:07:55Z",
+ "purpose": "Decide the NNUE V2 label source: the v1 shape trained on NNUE v1 depth-10 labels (arm N) against the same shape trained on v1's HCE 2000 ms labels (arm H), everything else identical.",
+ "hypothesis": "Arm N plays stronger than arm H at 2s+0.02s, one thread, without tablebases.",
+ "arms": {
+  "N": {
+   "float_model_sha256": "466e33c37aadb5108ab33834b4fd250552bb83c130c98f8f121fb222219be930",
+   "binary_sha256": "b956045efbae2a6c49591ba80d9438712caee173a05383ccd1c959f0d631f1d5",
+   "dll_sha256": "ae90c032484dfe0af7906c39fa8dc5e5012931542452167b5487f277816b0ff2",
+   "label": "NNUE v1 (DLL 32c32302, model 07b9ab0f) depth 10, part2_d10_all.jsonl sha256 3002980652d0c824ad6f3e864cfa7f9dc5874daa12926fab19d5b6fa9d5f9269"
+  },
+  "H": {
+   "float_model_sha256": "4c4d646aebf6acc1de6e88bb7965b64ed61b92af1fe8bda84d961ff45a3cb0b1",
+   "binary_sha256": "ee2b86f8f6308b3abe5ec2ce13e5c5458168a3f774e98e6416a4e768c6540697",
+   "dll_sha256": "e7b49544c3b8667483e16cffd19a5989dcaa2afcb6b3480f8185eea887e864c6",
+   "label": "v1 HCE 2000 ms teacher score"
+  }
+ },
+ "shared": {
+  "rows_sha256": "920cff44c55985bd186f18d7cc0404d261c901752af0fbc994f754d34fcd760b",
+  "train_config_sha256": "02e7ec142870b06a143b60d3084759709f706cc622be6d11500c9106b6c04f7d",
+  "seed": 20261015,
+  "search_flags": "MAKHOS_STRICT_SEARCH_POSITION_KEY=1, identity header per arm",
+  "dll_source": "this branch; the default build of the same source is the strict control 8b82fef8"
+ },
+ "settings": {
+  "threads": 1,
+  "persistent_search": true,
+  "search_hash_power": 20,
+  "tablebases": "none",
+  "time_control": "2s + 0.02s",
+  "opening_plies": 6,
+  "seed": 20261017,
+  "parallel_games": 2,
+  "max_game_plies": 300
+ },
+ "sprt": {
+  "elo0": 0.0,
+  "elo1": 5.0,
+  "alpha": 0.05,
+  "beta": 0.05,
+  "statistic": "generalized logistic pentanomial LLR",
+  "max_pairs": 2000
+ },
+ "command": "python -B -m makhos sprt --dev-library build/pilot/armN/makhos_native_nnue_candidate_v1.dll --master-library build/pilot/armH/makhos_native_nnue_candidate_v1.dll --dev-nnue-model build/pilot/armN/armN_seed20261015.mknnue --master-nnue-model build/pilot/armH/armH_seed20261015.mknnue --threads 1 --persistent-search --search-hash-power 20 --no-tablebase --time 2 --inc 0.02 --opening-plies 6 --seed 20261017 --parallel-games 2 --max-game-plies 300 --elo0 0 --elo1 5 --pairs 2000 --output build/pilot/sprt-part2-20261009/sprt.json --resume",
+ "run_tree": "build/runs/nnue2_pilot_p2 (git archive of this commit plus the two DLLs and models)",
+ "decision": {
+  "PASS": "NNUE fixed-depth labels are the V2 label source.",
+  "FAIL": "Keep HCE-quality labels; try deeper or mixed labels before scaling.",
+  "cap": "INCONCLUSIVE; report Elo and interval; prefer the cheaper source only with owner agreement."
+ },
+ "restrictions": [
+  "No rerun with a new seed to chase a PASS.",
+  "No change after launch.",
+  "Development models only; nothing here is promoted."
+ ]
+}
