@@ -78,6 +78,26 @@ line is inferred.
   ply 10 the played move scored -119 against -59 for the best move at 5 s, and at
   ply 12 -291 against -172 at 10 s. It is not concluded and no cause is assigned.
 
+## Tech-debt branches (2026-10-13, local, not pushed)
+
+Each branch is one change off main `664e981`, with focused tests only (no full
+suite while the W1 matches run). None touches `RULESET.json`, `makhos/core.py`
+or the accepted DLL.
+
+| Branch | Change |
+|---|---|
+| `tech-debt/sprt-fail-closed-tablebase` | `sprt` raises when a default `build/tb{4,5,6}_np80.compact.bin` is absent (it used to skip silently) |
+| `tech-debt/hermetic-build-tests` | tracks the pinned `quantization_contract_v2.json` so orchestrator tests pass in a fresh checkout |
+| `tech-debt/sprt-game-record-schema` | `schemas/thai-makhos-match-game-v1.schema.json` for `--games-dir` records, validated in tests |
+| `tech-debt/sprt-gate-launcher` | `tools/arena/launch_sprt_gate.py`: hash/argument preflight, live-owner check, `launch.txt` with PID and creation time |
+| `tech-debt/immutable-artifact-manifest` | `config/immutable_artifacts.json` and `tools/verification/verify_immutable_artifacts.py` |
+| `tech-debt/native-flag-registry` | generated `docs/architecture/NATIVE_COMPILE_FLAGS.md` and a drift test |
+
+Backups (untracked, `build/backups/`): a git bundle of the local-only branches
+and a checksummed copy of the small critical artifacts. Known remaining debt:
+`tests/test_sprt.py::test_command_sprt_attaches_c4_endgame_to_factories` needs
+the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
+
 ## Next action
 
 1. Wait for the three W1 results (LMR_LOG_01, NULL_EVAL_01, STRICT_KEY_02) and
