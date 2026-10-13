@@ -1,7 +1,76 @@
 # Current ThaiMakhosEngine state
 
-Updated 2026-09-25. This file owns the current scope and the next action.
-Historical commands and counters are evidence, not launch instructions.
+Updated 2026-10-13: the director-loop section below is new. Text dated
+2026-09-25 further down was not re-verified. This file owns the current scope
+and the next action. Historical commands and counters are evidence, not launch
+instructions. The previous version is preserved at
+[history/20261013-current-state-before-director-loop-update.md](history/20261013-current-state-before-director-loop-update.md).
+
+## Director-loop status (2026-10-13)
+
+Written from the process inventory, the `build/runs/` trees and local git refs
+on 2026-10-13. For strength work it supersedes the "Next action" section below.
+The BASELINE_HORIZON_01 gate named there was not re-checked in this session.
+
+**Scope.** NNUE V2 became a main track beside the no-loss track on 2026-10-08
+(owner approval, recorded in the handoff). Search candidates run one concept at
+a time through four stages:
+
+1. **Screen:** 1T, 2s+0.02s, no tablebases, H0=0/H1=+5, cap 2,000 pairs,
+   control = strict TT key (`8b82fef8…`).
+2. **W1:** 1T, 10s+0.1s, TB4–6 plus the C4 endgame library, H0=0/H1=+2,
+   cap 4,000 pairs.
+3. **W2:** 12T/512 MiB, fixed 1 s, 1,000 pairs. It needs the owner's go-ahead
+   and an idle machine; the owner asked for it to run at night.
+4. **Integrated candidate and full suite.** Gains from separate candidates are
+   not assumed to add.
+
+Nothing below is promoted. Production, the accepted DLL, `RULESET.json` and
+`makhos/core.py` are unchanged. Screen intervals are wide and screen results
+are not promotion evidence.
+
+| Candidate (branch) | Result so far | Now |
+|---|---|---|
+| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
+| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 running** since 2026-10-13T06:58Z, pid 19692, seed 20261007, tree `build/runs/lmr_w1` |
+| NULL_EVAL_01 (`null-eval-01`, local only, 7 ahead of `origin/main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 running** since 2026-10-13T06:58Z, pid 5408, seed 20261010, tree `build/runs/nullev_w1` |
+| HISTORY_MALUS_01 (`history-malus-01`) | Screen PASS, 1,021 pairs, +20.1 ± 10.6 Elo, LLR +2.95 (seed 20261013); QA tests 5/5 and reproducible build per the handoff | W1 not started |
+| ITER_PARTIAL_01 (`iter-partial-01`) | **INCONCLUSIVE** at the 2,000-pair cap: +5.5 ± 7.1 Elo, LLR +1.14 (seed 20261012). Raw result in `build/runs/iterpartial_l1w`; only the declaration is committed on its branch | Do not rerun with a new seed; a changed rule is a new hypothesis |
+| NNUE2_LABEL_PILOT_01 (`nnue2-label-pilot-01`) | Part 1: NNUE depth-10 labels cost about 12 ms against about 2.6 s per position; 223,473 rows relabelled, no sealed test. Part 2: the NNUE-label model beat the HCE-label model, PASS at 1,563 pairs, +14.2 ± 8.7 Elo, LLR +2.96 (seed 20261017; arms `B956045E…` vs `EE2B86F8…`). One seed per arm, screen settings | Next: freeze the stage-2 data contract. No compute while W1 runs |
+
+**Decision rules.** W1 PASS → W2. FAIL → REJECT as declared. Cap → INCONCLUSIVE,
+with no rerun on a new seed. LMR_LOG_01 and NULL_EVAL_01 are both measured on
+top of the strict key, so if STRICT_KEY_02 fails W1 or W2 their results are
+conditional on it.
+
+**Identities bound to the W1 runs.** Control `8b82fef8…`; LMR candidate
+`7cef50eb…`; NULL candidate `e4d7b0d3…`; NNUE v1 model `07b9ab0f…`; C4 endgame
+library `eb8af045…`; TB4/5/6 header FNV `89459baa…`, `c9e825ce…`, `7102f551…`.
+The two new run trees are copies of the screen trees. They lack `build/tb*` and
+`build/native_endgame_c4`, so their commands pass `--ranked-tablebase` with
+absolute paths and `--native-endgame-library`. Without those options `sprt`
+silently skips absent default tablebase files and fails later on the missing
+endgame library. The first launch attempt failed at startup for that reason, with
+no game played. Its logs are kept as `sprt-w1-20261013-attempt1-failed-no-endgame-lib`.
+
+**Monitoring.** `build/runs/_status/w1_live_status.ps1` is read-only. It reads
+only `stdout.log` and process identity (PID plus creation time), never a running
+match's `sprt.json`. `sprt` prints only when a pair finishes, so the "now playing"
+line is inferred.
+
+**Open items.**
+
+- The BASELINE_HORIZON_01 gate, which an older owner review set before any W1/W2
+  start, is not verified. The owner told this session on 2026-10-13 to start W1
+  and to resume STRICT_KEY_02 W1.
+- Untracked on `main`: `.claude/`, `scratch/profile_smp_scaling.py`, and a nested
+  checkout `ThaiMakhosEngine/` with its own `.git` that no session created. It was
+  not touched.
+- No relay or automated play against Invincible 2 (2026-09-25 decision), so the
+  external baseline can only be gathered by hand.
+- The review of game `6ef62f9998d12db4` was only read from the existing log: at
+  ply 10 the played move scored -119 against -59 for the best move at 5 s, and at
+  ply 12 -291 against -172 at 10 s. It is not concluded and no cause is assigned.
 
 ## Current scope: practical no-loss track against Invincible 2
 
@@ -53,6 +122,9 @@ Findings from the 2026-09-25 Web review, all checked against source:
 
 ## Next action
 
+For strength work, see "Director-loop status (2026-10-13)" above. The rest of this
+section is the 2026-09-25 text.
+
 The single active action is on **Local**: when the GUI is idle, run
 `BASELINE_HORIZON_01` exactly as frozen in PR #27, and return the 8 slot
 records, raw logs and manifest through a PR. Do not upload the DLL, model or
@@ -102,7 +174,7 @@ separate small extraction.
 | Candidate | What | State |
 |---|---|---|
 | STRICT_KEY_01 | Strict TT key: XOR instead of OR when salting the key state, so kings and the clock are not erased | **REJECT_AS_DECLARED / NOT_PROMOTED.** The depth-20 screen met its declared falsifier, a repeatable fixed-depth slowdown: 1.147× and 1.037× total time. It remains correctness evidence: the legacy key made 20.3% and 4.3% of TT cutoffs false, strict none. The Linux match was stopped at 344 pairs: +19.7 ± 17.8 Elo, LLR +0.98, INCONCLUSIVE; do not resume it. Windows gates withdrawn. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
-| STRICT_KEY_02 | The same flag as STRICT_KEY_01, under a new paired-play hypothesis whose only falsifier is a paired loss | **Linux screen PASS (2026-09-26).** STRICT_KEY_02-L1: strict `73aef947` against control `4178a8f7`, 1T, no tablebases, 2s+0.02s, seed 20261003, H0=0/H1=+5. Stopped at 1,281 pairs: 945/789/828, pentanomial 83/199/623/270/106, LLR +2.96, +15.9 ± 9.3 Elo. Not promoted: the Windows W1 (1T 10s+0.1s with TB4–6) and W2 (12T, fixed 1 s) gates come next. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
+| STRICT_KEY_02 | The same flag as STRICT_KEY_01, under a new paired-play hypothesis whose only falsifier is a paired loss | **Linux screen PASS (2026-09-26).** STRICT_KEY_02-L1: strict `73aef947` against control `4178a8f7`, 1T, no tablebases, 2s+0.02s, seed 20261003, H0=0/H1=+5. Stopped at 1,281 pairs: 945/789/828, pentanomial 83/199/623/270/106, LLR +2.96, +15.9 ± 9.3 Elo. Not promoted: the Windows W1 (1T 10s+0.1s with TB4–6) and W2 (12T, fixed 1 s) gates come next. W1 was resumed on 2026-10-13; see the director-loop section. ([README](../../../../benchmarks/strict_tt_key/README.md)) |
 | TBDRAW_01 | Main search returns 0 at non-root nodes on an exact tablebase DRAW | INCONCLUSIVE / NOT_PROMOTED. On `main` since PR #28, default-off, with 8 tests; default build byte-identical. No paired result. ([README](../../../../benchmarks/tb_frontier/README.md)) |
 | RFP_01 | Reverse futility at guarded shallow null-window nodes with 11 or more pieces | On `main` via PR #32 with margin 48, chosen by the rule declared before the census was read. Census at depth 20 on 128 positions: 0.30%, 0.70% and 0.26% of pruned nodes at depths 1–3 failed low in the real search. Speed check: 0.843× nodes, 0.929× time, +0.19 plies in 500 ms. **RFP_01-L1: INCONCLUSIVE / NOT_PROMOTED.** Contract declared at 17:29:32Z (1T, no tablebases, 2s+0.02s, H0=0/H1=+5, cap 2,000 pairs). At the cap: 1,414/1,219/1,367, pentanomial 163/393/849/424/171, LLR +0.49, +4.1 ± 7.9 Elo. No rerun with a new seed; a changed rule would be a new hypothesis. ([README](../../../../benchmarks/rfp01/README.md)) |
 
@@ -112,7 +184,9 @@ only), `bench-native --candidate/--baseline-nnue-model`, and
 
 ## Repository and PR state
 
-- `main` is at `80f85be`. On 2026-09-25, four PRs merged on top of `a0f7964`
+- `main` was at `80f85be` on 2026-09-25 and is at `664e981` on 2026-10-13, after
+  PR #33 and #34 (the STRICT_KEY_02 declaration and its Linux screen evidence).
+  On 2026-09-25, four PRs merged on top of `a0f7964`
   (PR #17, 2026-09-12): #32 (RFP_01, default-off), #30 (game schema aligned
   with the GUI), #31 (F2 root-choice refactor, no policy change) and #28 (the
   no-loss track docs, F1 extraction, match tooling, STRICT_KEY_01 evidence
