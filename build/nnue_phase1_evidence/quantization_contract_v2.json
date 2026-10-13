@@ -1,0 +1,49 @@
+{
+  "dimensions": {
+    "feature_width": 128,
+    "hidden_width": 32,
+    "input_dimensions": 137,
+    "output_width": 1
+  },
+  "exporter_source_sha256": "9854F2065605E9F875F836DED656C981A7CC886A71CD1D450F3AB9E185FB18F4",
+  "feature_spec_sha256": "C649D1EE00A39157DD58DB9142CE943C5B78CBC9F5DBA186405B6F46404D49BA",
+  "float_contract_sha256": "890B1B6AF0D8DF0E5FEE4F4ABA111E531A33B47837D77CA1D852CA6656F5C12E",
+  "format": "thai-makhos-nnue-quantization-contract-v1",
+  "integer_types": {
+    "dense_activations": "int8",
+    "dense_biases": "int32",
+    "dense_sums": "int32",
+    "dense_weights": "int8",
+    "feature_accumulator": "int16",
+    "feature_bias": "int16",
+    "feature_weights": "int16"
+  },
+  "kind": "first-quantized-nnue-v1",
+  "nonterminal_cp_bound": 30000,
+  "parity_limits": {
+    "mae": 0.005,
+    "max_abs": 0.05,
+    "rmse": 0.0075,
+    "sign_mismatch_rate": 0.01
+  },
+  "payload_order": [
+    "feature_weights",
+    "feature_bias",
+    "hidden.weight",
+    "hidden.bias",
+    "output.weight",
+    "output.bias"
+  ],
+  "playing_code_changed": false,
+  "ruleset_sha256": "77528ADDC0E08B17217346C511C7C4084BAD4AF48789955C3EC85EF76A64871F",
+  "scales": {
+    "activation": 127,
+    "feature": 2048,
+    "hidden_weight": 256,
+    "output_weight": 192
+  },
+  "sealed_test_labels_opened": false,
+  "source_model_sha256": "5FD87ABD2F9CAAC81045A58AEA420445B90CAC9A70D5FFBDFC5694BA1338CA4E",
+  "status": "FROZEN",
+  "validation_inventory_sha256": "82A4726F74F5FC29E447168667F5DB88039B54089F4545B9A130E7208EB12F34"
+}
