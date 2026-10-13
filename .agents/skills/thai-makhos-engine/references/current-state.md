@@ -78,13 +78,13 @@ line is inferred.
   ply 10 the played move scored -119 against -59 for the best move at 5 s, and at
   ply 12 -291 against -172 at 10 s. It is not concluded and no cause is assigned.
 
-## Tech-debt branches (2026-10-13, local, not pushed)
+## Tech-debt changes (2026-10-13, merged into local `main`, not pushed)
 
-Each branch is one change off main `664e981`, with focused tests only (no full
+Each change was a branch off main `664e981` (now merged with `--no-ff` and the branches deleted; local `main` is `63c2ed3`, ahead of origin/main), with focused tests only (no full
 suite while the W1 matches run). None touches `RULESET.json`, `makhos/core.py`
 or the accepted DLL.
 
-| Branch | Change |
+| Former branch | Change |
 |---|---|
 | `tech-debt/sprt-fail-closed-tablebase` | `sprt` raises when a default `build/tb{4,5,6}_np80.compact.bin` is absent (it used to skip silently) |
 | `tech-debt/hermetic-build-tests` | tracks the pinned `quantization_contract_v2.json` so orchestrator tests pass in a fresh checkout |
