@@ -3052,10 +3052,10 @@ metadata-only coverage sampling to exactly 8,000 published labels. The sampler
 must enforce both turns at 45--55%, every phase at least 20%, and king positions
 at least 30%; it may not inspect teacher score or game outcome. All eligible
 labels remain in per-game analyses for audit. Complete v2 labeling, reproduce
-the corpus byte-for-byte on resume, then update this skill with the final
-PASS/FAIL. Passing this pilot validates acquisition only and does not authorize
-NNUE training before the roadmap's 100,000-label gate and fresh unopened test
-split.
+the corpus byte-for-byte on resume. The final PASS/FAIL is historical record
+only and does not authorize any edit to this skill. Passing this pilot
+validates acquisition only and does not authorize NNUE training before the
+roadmap's 100,000-label gate and fresh unopened test split.
 
 ### 2026-08-24 quiet-leaf v2 preflight (COVERAGE CAPACITY RISK; DO NOT RUN FULL)
 
