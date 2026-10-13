@@ -12,10 +12,11 @@ instructions, and detail that is no longer current lives in the snapshots below.
 - The director-loop section below was first committed in `748ac0c` on branch
   `docs/current-state-director-loop-20261013`.
 
-## Director-loop status (2026-10-13)
+## Director-loop status (2026-10-14)
 
-Written from the process inventory, the `build/runs/` trees and local git refs
-on 2026-10-13. For strength work it supersedes the 2026-09-25 text. The
+Updated 2026-10-14 00:05 local time from `w1_live_status.ps1 -Once` and the
+`sprt.json` of NULL_EVAL_01. Earlier text was written from the process inventory,
+the `build/runs/` trees and local git refs on 2026-10-13. For strength work it supersedes the 2026-09-25 text. The
 BASELINE_HORIZON_01 gate named there was not re-checked in this session.
 
 **Scope.** NNUE V2 became a main track beside the no-loss track on 2026-10-08
@@ -37,9 +38,9 @@ are not promotion evidence.
 
 | Candidate (branch) | Result so far | Now |
 |---|---|---|
-| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
-| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 running** since 2026-10-13T06:58Z, pid 19692, seed 20261007, tree `build/runs/lmr_w1` |
-| NULL_EVAL_01 (`null-eval-01`, local only, 7 ahead of `origin/main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 running** since 2026-10-13T06:58Z, pid 5408, seed 20261010, tree `build/runs/nullev_w1` |
+| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. At 3,540/4,000 pairs: +9.8 ± 5.3 Elo, LLR +2.41 (at most 460 pairs remain before the cap). Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
+| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 running** since 2026-10-13T06:58Z, pid 19692, seed 20261007, tree `build/runs/lmr_w1`. At 1,632/4,000 pairs: +18.3 ± 7.7 Elo, LLR +2.20 (bound +2.94) |
+| NULL_EVAL_01 (`null-eval-01`, pushed to origin 2026-10-14, based on an older `main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 PASS** at 824 pairs (1,648 games, W 634 / D 608 / L 406, Ptnml 18/115/388/227/76), LLR +2.94, +48.4 ± 10.8 Elo, `complete: true`, process exited, stderr empty. Result in `build/runs/nullev_w1/build/nullev01/sprt-w1-20261013/sprt.json`. **W2 not started**: it needs an idle machine and the owner's go-ahead |
 | HISTORY_MALUS_01 (`history-malus-01`) | Screen PASS, 1,021 pairs, +20.1 ± 10.6 Elo, LLR +2.95 (seed 20261013); QA tests 5/5 and reproducible build per the handoff | W1 not started |
 | ITER_PARTIAL_01 (`iter-partial-01`) | **INCONCLUSIVE** at the 2,000-pair cap: +5.5 ± 7.1 Elo, LLR +1.14 (seed 20261012). Raw result in `build/runs/iterpartial_l1w`; only the declaration is committed on its branch | Do not rerun with a new seed; a changed rule is a new hypothesis |
 | NNUE2_LABEL_PILOT_01 (`nnue2-label-pilot-01`) | Part 1: NNUE depth-10 labels cost about 12 ms against about 2.6 s per position; 223,473 rows relabelled, no sealed test. Part 2: the NNUE-label model beat the HCE-label model, PASS at 1,563 pairs, +14.2 ± 8.7 Elo, LLR +2.96 (seed 20261017; arms `B956045E…` vs `EE2B86F8…`). One seed per arm, screen settings | Next: freeze the stage-2 data contract. No compute while W1 runs |
@@ -69,19 +70,19 @@ line is inferred.
 - The BASELINE_HORIZON_01 gate, which an older owner review set before any W1/W2
   start, is not verified. The owner told this session on 2026-10-13 to start W1
   and to resume STRICT_KEY_02 W1.
-- Untracked on `main`: `.claude/`, `scratch/profile_smp_scaling.py`, and a nested
-  checkout `ThaiMakhosEngine/` with its own `.git` that no session created. It was
-  not touched.
+- Untracked in the main checkout: `scratch/profile_smp_scaling.py`, which no
+  file references and which is the only copy. `.claude/` is now in `.gitignore`.
+  The nested checkout `ThaiMakhosEngine/` was removed on 2026-10-13 after it was
+  verified clean and at `origin/main`.
 - No relay or automated play against Invincible 2 (2026-09-25 decision), so the
   external baseline can only be gathered by hand.
 - The review of game `6ef62f9998d12db4` was only read from the existing log: at
   ply 10 the played move scored -119 against -59 for the best move at 5 s, and at
   ply 12 -291 against -172 at 10 s. It is not concluded and no cause is assigned.
 
-## Tech-debt changes (2026-10-13, merged into local `main`, not pushed)
+## Tech-debt changes (2026-10-13, merged into `main`)
 
-Each change was a branch off main `664e981` (now merged with `--no-ff` and the branches deleted; local `main` is `63c2ed3`, ahead of origin/main), with focused tests only (no full
-suite while the W1 matches run). None touches `RULESET.json`, `makhos/core.py`
+Each change was a branch off main `664e981`. They are merged into `main` with `--no-ff` and the branches are deleted. Focused tests only, with no full suite while the W1 matches run. None touches `RULESET.json`, `makhos/core.py`
 or the accepted DLL.
 
 | Former branch | Change |
@@ -100,9 +101,11 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. Wait for the three W1 results (LMR_LOG_01, NULL_EVAL_01, STRICT_KEY_02) and
-   apply the decision rules above. Do not start other heavy work meanwhile.
+1. Wait for the two open W1 results (LMR_LOG_01, STRICT_KEY_02) and apply the
+   decision rules above. NULL_EVAL_01 W1 has already PASSed. Do not start other
+   heavy work meanwhile.
 2. For each W1 PASS, run W2 only on an idle machine and with the owner's go-ahead.
+   NULL_EVAL_01 W2 is the next candidate, and it is waiting for the owner.
 3. Light work that does not touch the running trees is allowed: documentation,
    and drafting the NNUE stage-2 data contract. The tech-debt order agreed on
    2026-10-13 starts with trimming this file and the branch/PR clean-up.
@@ -168,7 +171,8 @@ Tooling on `main` since PR #28, each default-off: `sprt --games-dir`
 
 ## Repository and PR state
 
-- `main` is at `664e981` (2026-10-13). Since `a0f7964` (PR #17) these merged:
+- `origin/main` is at `f67f9a9` (2026-10-13), which holds the six tech-debt merges and the
+  docs state. Before that it was `664e981`. Since `a0f7964` (PR #17) these merged:
   #28 (no-loss track docs, match tooling, STRICT_KEY_01 evidence, TBDRAW_01),
   #30 (game schema), #31 (root-choice refactor, no policy change), #32 (RFP_01),
   #33 and #34 (the STRICT_KEY_02 declaration and its Linux screen evidence).
@@ -179,6 +183,11 @@ Tooling on `main` since PR #28, each default-off: `sprt --games-dir`
   self-drive loop), #27 (the strength-loop handoff) and #29 (a draft Linux lease
   fix). None of them changes production. The Lazy SMP design document is a
   reviewed proposal, not a backend.
+- Local branches with work not in `main` were pushed to origin on 2026-10-14
+  (`null-eval-01`, `history-malus-01`, `iter-partial-01`, `nnue2-label-pilot-01`,
+  `local/strict-key-acceptance-a0f7964`, `r4liveness`, `selfdrive`, and the docs branch).
+  `lmr-log-01` and `pr29-lease` were fast-forwarded onto their existing remote branches.
+  No force push was used.
 - The tech-debt roadmap (Phases 0–3, PRs #7–#16) is complete; see
   [the roadmap](../../../../docs/architecture/TECH_DEBT_ROADMAP_TH.md).
 
