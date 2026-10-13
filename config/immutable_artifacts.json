@@ -1,0 +1,14 @@
+{
+  "format": "thai-makhos-immutable-artifacts-v1",
+  "note": "Files that must never change in place. Verify with tools/verification/verify_immutable_artifacts.py. 'tracked' entries live in git; the others live in the untracked build/ tree and are backed up with a SHA256SUMS file (see current-state.md, Evidence routing).",
+  "artifacts": [
+    {"path": "RULESET.json", "sha256": "77528addc0e08b17217346c511c7c4084bad4af48789955c3ec85ef76a64871f", "tracked": true},
+    {"path": "makhos/core.py", "sha256": "03152e513bd360e6c2c97ecdf08dc58a290dca0ae6e28889ae70585a381292ab", "tracked": true},
+    {"path": "build/makhos_native_accepted.dll", "sha256": "feedd39cf16e5f5abc236452be897abe1ecf26b8ba7adcda4a25022b868c3ddd", "tracked": true},
+    {"path": "build/nnue_quantized_v1/model_a.mknnue", "sha256": "07b9ab0f83e253cb74b2acd2bd5291f5f91eb086e042790f33ea0a8c0914164c", "tracked": true},
+    {"path": "build/nnue_phase1_evidence/quantization_contract_v2.json", "sha256": "68cca3e4fb46b1c6fa9f45ff34875e0d1ace396881bb1d2e175cba5d43e91fbf", "tracked": false},
+    {"path": "build/native_endgame_c4/makhos_endgame_search_nnue.dll", "sha256": "eb8af04596420bd6a00f8cfe981b4027220b119975c5abec057be252bad8f0b1", "tracked": false},
+    {"path": "build/nnue_sprt_6t_vs_12t/sprt_6t_vs_12t_1000ms_seed20261108.json", "sha256": "09cffee749b485c1a742f921d89a173c86defbd5f15bc1a7f1f2a1b84b3de06f", "tracked": false},
+    {"path": "build/nnue_sprt_6t_vs_12t_c4_v1/sprt_6t_vs_12t_1000ms_seed20261108.json", "sha256": "66d67efc5ec10ab60f19ff1ef24789ec212c69de8e6d2d7f8400846471cb0c9c", "tracked": false}
+  ]
+}
