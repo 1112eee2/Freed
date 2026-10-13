@@ -49,6 +49,37 @@ def _set_batch_process_priority() -> str:
     return "BelowNormal"
 
 
+DEFAULT_RANKED_TABLEBASES = (
+    "build/tb4_np80.compact.bin",
+    "build/tb5_np80.compact.bin",
+    "build/tb6_np80.compact.bin",
+)
+
+
+def _resolve_ranked_tablebase_paths(requested: list[str] | None) -> list[Path]:
+    """Return the ranked tablebase files for a match, failing closed.
+
+    A match that silently plays without its tablebases measures a different
+    engine, so an absent file is an error for the default set as well as for
+    explicit ``--ranked-tablebase`` paths. ``--no-tablebase`` is the way to
+    play without them.
+    """
+    explicit = requested is not None
+    paths = [
+        Path(path).resolve()
+        for path in (requested if explicit else DEFAULT_RANKED_TABLEBASES)
+    ]
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        source = "requested" if explicit else "default"
+        raise FileNotFoundError(
+            f"{source} ranked tablebase file(s) absent: "
+            + ", ".join(str(path) for path in missing)
+            + "; pass --ranked-tablebase with existing files or --no-tablebase"
+        )
+    return paths
+
+
 def _sprt_result_payload(
     *,
     config: dict[str, object],
@@ -254,22 +285,7 @@ def command_sprt(args: argparse.Namespace) -> int:
 
     ranked_paths: list[Path] = []
     if not args.no_tablebase:
-        requested_ranked = args.ranked_tablebase
-        if requested_ranked is None:
-            requested_ranked = [
-                "build/tb4_np80.compact.bin",
-                "build/tb5_np80.compact.bin",
-                "build/tb6_np80.compact.bin",
-            ]
-        ranked_paths = [
-            Path(path).resolve()
-            for path in requested_ranked
-            if Path(path).resolve().is_file()
-        ]
-        if args.ranked_tablebase is not None and (
-            len(ranked_paths) != len(args.ranked_tablebase)
-        ):
-            raise FileNotFoundError("one or more requested ranked tablebases are absent")
+        ranked_paths = _resolve_ranked_tablebase_paths(args.ranked_tablebase)
 
     ranked: list[RankedTablebase] = []
     native_tablebase = None
