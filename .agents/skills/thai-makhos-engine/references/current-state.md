@@ -110,6 +110,40 @@ branches stay local, per the owner.
   games of the same engine (search nondeterminism). The 302 same-colour openings are
   the first candidates for the loss-finding loop. Parts B (time-control curve) and C
   (12T) are not declared yet.
+- **Part A loss analysis (2026-10-15, read-only on the game records; no engine search
+  ran beside the W2).** Files in `build/runs/selfplay_baseline01/report/`
+  (`loss_positions_v2.json`, `same_colour_sudden_drops.json`, `analysis_scripts/`).
+  - *Moves get about 0.3 s each.* The 10s+0.1s clock gives a median 312 ms per move
+    (median depth 14), so part A measures blitz-speed play, not 10 s a move.
+  - *The first move matters.* Over all openings black won 42% of games after 25-22
+    and red 21%; after 27-24, 26-22 and 25-21 red won more (35%, 33%, 31% against
+    26%, 23%, 24%). Draws are 35–45% for every first move. The 2-ply prefixes with
+    the most draws (60–67%) have only 12–30 games each and are not conclusions.
+  - *The loser usually sees it late.* Of 1,422 decisive games, 781 have a sudden
+    collapse (the loser's own score falls by at least 100 cp to -150 or worse in
+    one search) and 641 a gradual one. The collapse follows a move played at ply
+    20–29 in 52% of cases and ply 10–29 in 76%; the previous search had a median
+    score near 0 and median depth 18. In 80% of collapses the reply is a quiet
+    move, not a capture. Moves from the back row (red squares 1–4, black 29–32)
+    are about 25% more frequent among collapse moves than among the same side's
+    other moves at plies 9–31 (weak evidence).
+  - **Defect found: 159 engine moves (0.08%) in 138 of 2,450 games were played by
+    the Python fallback at depth 0** (first legal move, no search). Cause,
+    reproduced on the part A positions: the native PV is read back from the
+    transposition table and can end in a stale move (seen as a king move carrying
+    `promotes=True`), and `Engine._native_result` threw the whole native result
+    away on one illegal PV move. A side that played such a move lost 96 of 148
+    games (65%) against 29% overall; these moves precede 44 of the 781 collapses.
+    It explains a small share of the losses (about 50 of 1,422), not the main
+    cause. Fix on local branch `fix-native-pv-truncate` (`dc74f5b`, Python only):
+    compare moves by path and captures, keep the legal PV prefix, count
+    truncations. With it, 120 reruns of the failing positions (real DLL, 1T) fell
+    back 0 times; before, 3 of 60 did. 4 new tests. Not merged and not
+    SPRT-tested: the effect is too small for an SPRT; it needs the owner's decision
+    because it changes the production `Engine`. The 12T `ParallelNativeSearch`
+    path validates its PV through the same function; no fallback appeared in the 3
+    real saved games, which is not proof. The same strict check exists in
+    `_native_endgame_result` and was not changed.
 - **Paused 19:48 and resumed 21:06 local (2026-10-14, owner request).** Part A and
   the W2 watcher were stopped at part1 274 / part2 277 pairs (clean checkpoints,
   equal to the `games` directories) and resumed with `--resume` through
