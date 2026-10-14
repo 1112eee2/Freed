@@ -1,6 +1,6 @@
 # Current ThaiMakhosEngine state
 
-Updated 2026-10-13. This file owns the current scope and the next action. It is
+Updated 2026-10-14. This file owns the current scope and the next action. It is
 kept short on purpose: historical commands and counters are evidence, not launch
 instructions, and detail that is no longer current lives in the snapshots below.
 
@@ -83,6 +83,53 @@ line is inferred.
   ply 10 the played move scored -119 against -59 for the best move at 5 s, and at
   ply 12 -291 against -172 at 10 s. It is not concluded and no cause is assigned.
 
+## Self-play baseline, safety mode and stage-2 data (2026-10-14)
+
+Owner goal for the short term: the production engine should draw (not lose to)
+itself in as many openings as possible. These items serve that goal. None changes
+production, the accepted DLL, `RULESET.json` or `makhos/core.py`. Training-related
+branches stay local, per the owner.
+
+- **SELFPLAY_BASELINE_01 part A** (branch `selfplay-baseline-01`, local; contract
+  `benchmarks/selfplay_baseline01/contract_part_a.json`, declared before the first
+  game). Production NNUE v1 against itself, 1T, 10s+0.1s, TB4–6 and the C4 library,
+  every one of the 1,225 distinct positions after 4 plies, 2 games each. Two
+  detached `sprt` processes (part1 613 openings, part2 612) with
+  `--play-all-pairs`, started 2026-10-14 18:05 local after a first launch died with
+  a stray Ctrl+C at 17:58 (logs kept as `*.attempt1-ctrlc.*`; cause unknown). Run
+  tree `build/runs/selfplay_baseline01/`. It is a measurement: no pass/fail, no
+  rerun for a better number. **Interim (19:27 local, 437 of 1,225 openings, 874
+  games, not a result):** draws 43.5% (95% 40.2–46.8%), red wins 272, black wins
+  222; per opening 83 both drawn, 256 the two games differ, 98 the same colour won
+  both. Every game replays legally. The first estimate of about 4 hours was too low
+  and then too high; at the interim pace the run ends roughly 22:00–23:00 local.
+  Report with `tools/arena/selfplay_report.py --opening-plies 4` on both `games`
+  directories. Parts B (time-control curve) and C (12T) are not declared yet.
+- **W2 watcher.** `build/runs/nullev_w1/w2_after_selfplay.ps1` (log
+  `w2_watcher.log`) starts the NULL_EVAL_01 W2 only after both part A processes
+  finished complete; it refused once while part A was incomplete and was restarted.
+  It was approved by the owner on 2026-10-14. LMR_LOG_01 W2 is not queued yet.
+- **NNUE V2 stage-2 data contract** is **frozen** (owner, 2026-10-14):
+  `benchmarks/nnue2_stage2/data_contract_v1.json`, branch
+  `nnue2-stage2-data-contract` (local). v1 development games are excluded.
+  Generator and row extractor are in `tools/nnue2/` with tests. Still missing before
+  acquisition: the exact-WDL probe and a byte-identical regeneration check.
+  Acquisition starts only after part A and the W2 gates, never beside a gate.
+- **Safety-first move choice** (branch `safety-mode-01`, local, `ddbb79d`): opt-in
+  and default-off. After the normal search it re-checks the root moves within a
+  margin of the best score (default 40 cp, up to 3, +2 plies, 10 cp to switch,
+  30% of the move time) with a deeper child search and prefers the best worst case.
+  It never overrides a mate-band score and never picks an unverified move. Code in
+  `makhos/safety_mode.py` and the `Engine(safety_policy=...)` hook; candidate-only
+  `sprt` flags `--candidate-safety-mode`, `--safety-*` (needs a byte-identical DLL
+  copy for the candidate). 14 new unit tests pass. **Not strength-tested**: a
+  screen (+5, 1T, 2s) is queued behind part A and the W2 gates.
+- **Opening book** (branch `opening-book-01`, draft only, local): entries would be
+  labelled "deep-search verified at depth/time", never "proven"; parameters wait for
+  part A. The branch holds a plan only.
+- `selfplay-baseline-01`'s `sprt` changes (`--openings-file`, `--play-all-pairs`)
+  and the report tool are not yet in `main`.
+
 ## Tech-debt changes (2026-10-13, merged into `main`)
 
 Each change was a branch off main `664e981`. They are merged into `main` with `--no-ff` and the branches are deleted. Focused tests only, with no full suite while the W1 matches run. None touches `RULESET.json`, `makhos/core.py`
@@ -106,20 +153,20 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. All three W1 gates are done: NULL_EVAL_01 PASS, LMR_LOG_01 PASS, STRICT_KEY_02
-   INCONCLUSIVE at the cap. No W1 is running. Do not start other
-   heavy work meanwhile.
-2. For each W1 PASS, run W2 only on an idle machine and with the owner's go-ahead.
-   NULL_EVAL_01 W2 and LMR_LOG_01 W2 wait for the owner; run them one at a time
-   (each uses 12 threads). Both are conditional on the strict key (see the
+1. Let SELFPLAY_BASELINE_01 part A finish (see above). Then run
+   `selfplay_report.py` on both parts and record the draw rate, the per-opening
+   classes and the decisive games in this file. Do not start other heavy work
+   meanwhile.
+2. NULL_EVAL_01 W2 starts by itself after part A (owner-approved, 12T, idle
+   machine). LMR_LOG_01 W2 runs the following night and still needs the owner's
+   go-ahead. One W2 at a time; both are conditional on the strict key (see the
    decision rules).
-   The NNUE V2 stage-2 data contract is drafted on branch
-   `nnue2-stage2-data-contract` (`benchmarks/nnue2_stage2/`) and waits for the
-   owner's freeze decision.
-3. Light work that does not touch the running trees is allowed: documentation,
-   and drafting the NNUE stage-2 data contract. The tech-debt order agreed on
-   2026-10-13 starts with trimming this file and the branch/PR clean-up.
-4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
+3. After the W2 runs: screen of `safety-mode-01`; NNUE stage-2 prerequisites
+   (exact-WDL probe, regeneration check) and then acquisition; declare part B of
+   the self-play baseline if the owner wants the time-control curve.
+4. Light work that does not touch the running trees is allowed: documentation and
+   code with unit tests only.
+5. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
 
 ## Standing scope: practical no-loss track against Invincible 2
