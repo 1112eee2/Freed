@@ -135,12 +135,12 @@ branches stay local, per the owner.
     away on one illegal PV move. A side that played such a move lost 96 of 148
     games (65%) against 29% overall; these moves precede 44 of the 781 collapses.
     It explains a small share of the losses (about 50 of 1,422), not the main
-    cause. Fix on local branch `fix-native-pv-truncate` (`dc74f5b`, Python only):
+    cause. Fix `fix-native-pv-truncate` (`dc74f5b`, Python only), **merged into local
+    `main` on 2026-10-15 with the owner's approval, not pushed**:
     compare moves by path and captures, keep the legal PV prefix, count
     truncations. With it, 120 reruns of the failing positions (real DLL, 1T) fell
-    back 0 times; before, 3 of 60 did. 4 new tests. Not merged and not
-    SPRT-tested: the effect is too small for an SPRT; it needs the owner's decision
-    because it changes the production `Engine`. The 12T `ParallelNativeSearch`
+    back 0 times; before, 3 of 60 did. 4 new tests. Not SPRT-tested: the effect is
+    too small for an SPRT. It changes the production `Engine`. The 12T `ParallelNativeSearch`
     path validates its PV through the same function; no fallback appeared in the 3
     real saved games, which is not proof. The same strict check exists in
     `_native_endgame_result` and was not changed.
