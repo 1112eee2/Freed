@@ -123,7 +123,7 @@ branches stay local, per the owner.
     collapse (the loser's own score falls by at least 100 cp to -150 or worse in
     one search) and 641 a gradual one. The collapse follows a move played at ply
     20–29 in 52% of cases and ply 10–29 in 76%; the previous search had a median
-    score near 0 and median depth 18. In 80% of collapses the reply is a quiet
+    score near 0 and median depth 19. In 80% of collapses the reply is a quiet
     move, not a capture. Moves from the back row (red squares 1–4, black 29–32)
     are about 25% more frequent among collapse moves than among the same side's
     other moves at plies 9–31 (weak evidence).
