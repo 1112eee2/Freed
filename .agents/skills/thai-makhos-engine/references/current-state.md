@@ -38,8 +38,8 @@ are not promotion evidence.
 
 | Candidate (branch) | Result so far | Now |
 |---|---|---|
-| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. At 3,540/4,000 pairs: +9.8 ± 5.3 Elo, LLR +2.41 (at most 460 pairs remain before the cap). Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
-| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 running** since 2026-10-13T06:58Z, pid 19692, seed 20261007, tree `build/runs/lmr_w1`. At 1,632/4,000 pairs: +18.3 ± 7.7 Elo, LLR +2.20 (bound +2.94) |
+| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Stopped again at 3,962/4,000 pairs (+8.6 ± 5.0 Elo, LLR +2.35) at the same moment as LMR_LOG_01; **resumed** 2026-10-14 ~10:53 local, pid 19116, logs `build/strict02/resume-20261014/`. At most 38 pairs remain before the cap. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
+| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 interrupted** at 2,054/4,000 pairs (+17.3 ± 6.9 Elo, LLR +2.61, bound +2.94) when the first process (pid 19692, seed 20261007) died 2026-10-14 ~02:39 local; **resumed** 2026-10-14 ~10:53 local, pid 25220, same command with `--resume`, same tree `build/runs/lmr_w1`. Checkpoint backup `build/backups/checkpoints-before-resume-20261014/` |
 | NULL_EVAL_01 (`null-eval-01`, pushed to origin 2026-10-14, based on an older `main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 PASS** at 824 pairs (1,648 games, W 634 / D 608 / L 406, Ptnml 18/115/388/227/76), LLR +2.94, +48.4 ± 10.8 Elo, `complete: true`, process exited, stderr empty. Result in `build/runs/nullev_w1/build/nullev01/sprt-w1-20261013/sprt.json`. **W2 not started**: it needs an idle machine and the owner's go-ahead |
 | HISTORY_MALUS_01 (`history-malus-01`) | Screen PASS, 1,021 pairs, +20.1 ± 10.6 Elo, LLR +2.95 (seed 20261013); QA tests 5/5 and reproducible build per the handoff | W1 not started |
 | ITER_PARTIAL_01 (`iter-partial-01`) | **INCONCLUSIVE** at the 2,000-pair cap: +5.5 ± 7.1 Elo, LLR +1.14 (seed 20261012). Raw result in `build/runs/iterpartial_l1w`; only the declaration is committed on its branch | Do not rerun with a new seed; a changed rule is a new hypothesis |
@@ -98,6 +98,8 @@ Backups (untracked, `build/backups/`): a git bundle of the local-only branches
 and a checksummed copy of the small critical artifacts. Known remaining debt:
 `tests/test_sprt.py::test_command_sprt_attaches_c4_endgame_to_factories` needs
 the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
+
+**Why the matches stopped (2026-10-14).** Both processes stopped between 02:39:28 and 02:39:54 local, with empty stderr and fresh checkpoints. Windows logged the Claude desktop app package servicing (AppX deployment, `CoworkVMService` restart) at 02:39:59–02:40:01, so the app update most likely killed the child processes. This is an inference; no process exit record was found. The earlier unexplained STRICT_KEY_02 stop at 1,909 pairs may have the same cause. Long matches should therefore be started detached from the app, or the app's auto-update should be avoided while they run.
 
 ## Next action
 
