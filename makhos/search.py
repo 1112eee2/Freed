@@ -176,6 +176,16 @@ def evaluate(state: State, perspective: int) -> int:
     return evaluate_handcrafted(state, perspective)
 
 
+
+def _match_legal(moves: Iterable[Move], move: Move) -> Move | None:
+    """The legal move with the same path and captures as ``move``, if any."""
+
+    for candidate in moves:
+        if candidate.path == move.path and candidate.captures == move.captures:
+            return candidate
+    return None
+
+
 class Engine:
     """One search core with two root move-selection policies.
 
@@ -233,6 +243,8 @@ class Engine:
         self.native_endgame_evaluator = None
         self._native_eval_compatible = eval_fn is None
         self.last_native_error: str | None = None
+        # Counts native PV tails cut at an illegal move (diagnostic only).
+        self.native_pv_truncations = 0
         # Exposed to the GUI so exported games identify the backend that
         # actually produced each move, including forced-move and Python
         # fallback paths.  A configured native DLL alone is not proof that a
@@ -565,13 +577,28 @@ class Engine:
         limits: SearchLimits,
         start: float,
     ) -> SearchResult:
-        if native.move not in root_moves:
+        # Moves are identified by path and captures.  The native `promotes`
+        # flag is not part of a move's identity: a stale transposition-table
+        # move can carry it for a king, which must not discard a good search.
+        root_move = _match_legal(root_moves, native.move)
+        if root_move is None:
             raise RuntimeError("native search returned an illegal root move")
+        # The PV tail is read back from the transposition table and may hold a
+        # move from a colliding entry.  Keep the legal prefix instead of
+        # throwing the whole result away (the old behaviour played a depth-0
+        # first-legal move from the Python fallback).
+        pv: list[Move] = []
         pv_state = state
         for move in native.pv:
-            if move not in legal_moves(pv_state):
-                raise RuntimeError("native search returned an illegal PV")
-            pv_state = apply_move(pv_state, move, validate=False)
+            legal = _match_legal(legal_moves(pv_state), move)
+            if legal is None:
+                self.native_pv_truncations += 1
+                break
+            pv.append(legal)
+            pv_state = apply_move(pv_state, legal, validate=False)
+        if not pv or pv[0] != root_move:
+            pv = [root_move]
+        native = replace(native, move=root_move, pv=tuple(pv))
         predictions = self.policy_value_model.predict(state, (native.move,))
         candidate = RootCandidate(
             move=native.move,
