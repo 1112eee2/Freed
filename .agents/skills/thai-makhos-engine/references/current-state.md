@@ -39,7 +39,7 @@ are not promotion evidence.
 | Candidate (branch) | Result so far | Now |
 |---|---|---|
 | STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. **W1 INCONCLUSIVE at the 4,000-pair cap** (2026-10-14 ~11:40 local): 8,000 games, W 2,606 / D 2,989 / L 2,405, pentanomial 195/783/1891/888/243, LLR +2.40 (bound +2.94), +8.7 ± 5.0 Elo; `complete: true`, stderr empty, result SHA-256 `e1e9c5af…bae23`. Per the decision rules: no W2, no rerun on a new seed. | Run history: stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21), cause not recorded; **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Stopped again at 3,962/4,000 pairs (+8.6 ± 5.0 Elo, LLR +2.35) at the same moment as LMR_LOG_01; **resumed** 2026-10-14 ~10:53 local, pid 19116, logs `build/strict02/resume-20261014/`. Finished at the cap. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
-| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 interrupted** at 2,054/4,000 pairs (+17.3 ± 6.9 Elo, LLR +2.61, bound +2.94) when the first process (pid 19692, seed 20261007) died 2026-10-14 ~02:39 local; **resumed** 2026-10-14 ~10:53 local, pid 25220, same command with `--resume`, same tree `build/runs/lmr_w1`. Checkpoint backup `build/backups/checkpoints-before-resume-20261014/` |
+| LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006). **W1 PASS** 2026-10-14 12:20 local at 2,284 pairs (4,568 games, W 1,524 / D 1,753 / L 1,291, pentanomial 99/424/1045/577/139), LLR +2.95, +17.7 ± 6.6 Elo; `complete: true`, stderr empty, result SHA-256 `60333f36…bcac3` | Interrupted once at 2,054 pairs (2026-10-14 ~02:39 local, app update) and resumed with `--resume` (pid 25220). Result `build/runs/lmr_w1/build/lmr01/sprt-w1-20261013/sprt.json`. **W2 not started**: it needs an idle machine and the owner's go-ahead |
 | NULL_EVAL_01 (`null-eval-01`, pushed to origin 2026-10-14, based on an older `main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 PASS** at 824 pairs (1,648 games, W 634 / D 608 / L 406, Ptnml 18/115/388/227/76), LLR +2.94, +48.4 ± 10.8 Elo, `complete: true`, process exited, stderr empty. Result in `build/runs/nullev_w1/build/nullev01/sprt-w1-20261013/sprt.json`. **W2 not started**: it needs an idle machine and the owner's go-ahead |
 | HISTORY_MALUS_01 (`history-malus-01`) | Screen PASS, 1,021 pairs, +20.1 ± 10.6 Elo, LLR +2.95 (seed 20261013); QA tests 5/5 and reproducible build per the handoff | W1 not started |
 | ITER_PARTIAL_01 (`iter-partial-01`) | **INCONCLUSIVE** at the 2,000-pair cap: +5.5 ± 7.1 Elo, LLR +1.14 (seed 20261012). Raw result in `build/runs/iterpartial_l1w`; only the declaration is committed on its branch | Do not rerun with a new seed; a changed rule is a new hypothesis |
@@ -106,11 +106,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. Wait for the open W1 result (LMR_LOG_01) and apply the decision rules above.
-   NULL_EVAL_01 W1 PASSed; STRICT_KEY_02 W1 ended INCONCLUSIVE at the cap. Do not start other
+1. All three W1 gates are done: NULL_EVAL_01 PASS, LMR_LOG_01 PASS, STRICT_KEY_02
+   INCONCLUSIVE at the cap. No W1 is running. Do not start other
    heavy work meanwhile.
 2. For each W1 PASS, run W2 only on an idle machine and with the owner's go-ahead.
-   NULL_EVAL_01 W2 is the next candidate, and it is waiting for the owner.
+   NULL_EVAL_01 W2 and LMR_LOG_01 W2 wait for the owner; run them one at a time
+   (each uses 12 threads). Both are conditional on the strict key (see the
+   decision rules).
+   The NNUE V2 stage-2 data contract is drafted on branch
+   `nnue2-stage2-data-contract` (`benchmarks/nnue2_stage2/`) and waits for the
+   owner's freeze decision.
 3. Light work that does not touch the running trees is allowed: documentation,
    and drafting the NNUE stage-2 data contract. The tech-debt order agreed on
    2026-10-13 starts with trimming this file and the branch/PR clean-up.
