@@ -105,13 +105,12 @@ branches stay local, per the owner.
   and then too high; at the interim pace the run ends roughly 22:00–23:00 local.
   Report with `tools/arena/selfplay_report.py --opening-plies 4` on both `games`
   directories. Parts B (time-control curve) and C (12T) are not declared yet.
-- **PAUSED by the owner 2026-10-14 19:48 local.** Part A and the W2 watcher were
-  stopped on request (pids 14276, 17004, 22208). Checkpoints are clean: part1
-  274 pairs (548 games), part2 277 pairs (554 games), each equal to its `games`
-  directory, `complete: false`. Resume each part with the `--resume` command in
-  its `launch.txt` (run detached, `build/runs/selfplay_baseline01/relaunch_detached.py`),
-  then restart `build/runs/nullev_w1/w2_after_selfplay.ps1`, which starts the
-  NULL_EVAL_01 W2 only after both parts are complete. Nothing runs now.
+- **Paused 19:48 and resumed 21:06 local (2026-10-14, owner request).** Part A and
+  the W2 watcher were stopped at part1 274 / part2 277 pairs (clean checkpoints,
+  equal to the `games` directories) and resumed with `--resume` through
+  `build/runs/selfplay_baseline01/relaunch_resume_paused.py` (detached, BelowNormal;
+  pids 32584 and 32636; earlier logs kept as `*.paused-20261014.*`). The W2
+  watcher was restarted (pid 23852).
 - **W2 watcher.** `build/runs/nullev_w1/w2_after_selfplay.ps1` (log
   `w2_watcher.log`) starts the NULL_EVAL_01 W2 only after both part A processes
   finished complete; it refused once while part A was incomplete and was restarted.
