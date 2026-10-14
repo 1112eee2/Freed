@@ -38,7 +38,7 @@ are not promotion evidence.
 
 | Candidate (branch) | Result so far | Now |
 |---|---|---|
-| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. The W1 checkpoint stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21); the cause of the stop was not recorded | **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Stopped again at 3,962/4,000 pairs (+8.6 ± 5.0 Elo, LLR +2.35) at the same moment as LMR_LOG_01; **resumed** 2026-10-14 ~10:53 local, pid 19116, logs `build/strict02/resume-20261014/`. At most 38 pairs remain before the cap. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
+| STRICT_KEY_02 | Linux screen PASS, +15.9 ± 9.3 Elo. **W1 INCONCLUSIVE at the 4,000-pair cap** (2026-10-14 ~11:40 local): 8,000 games, W 2,606 / D 2,989 / L 2,405, pentanomial 195/783/1891/888/243, LLR +2.40 (bound +2.94), +8.7 ± 5.0 Elo; `complete: true`, stderr empty, result SHA-256 `e1e9c5af…bae23`. Per the decision rules: no W2, no rerun on a new seed. | Run history: stopped at 1,909 pairs (+9.5 ± 7.3, LLR +1.21), cause not recorded; **W1 resumed** 2026-10-13T07:05Z, pid 25052, seed 20261004. Stopped again at 3,962/4,000 pairs (+8.6 ± 5.0 Elo, LLR +2.35) at the same moment as LMR_LOG_01; **resumed** 2026-10-14 ~10:53 local, pid 19116, logs `build/strict02/resume-20261014/`. Finished at the cap. Pre-resume checkpoint SHA-256 `F0D3DCD8…7FFE`, kept as `build/strict02/sprt-w1-1t-10s.pre-resume-20261013.json`. Output `build/strict02/sprt-w1-1t-10s.json`, logs `build/strict02/resume-20261013/` |
 | LMR_LOG_01 (`lmr-log-01`, PR #35 per the handoff) | Screen PASS, 967 pairs, +21.4 ± 11.1 Elo (screen seed 20261006) | **W1 interrupted** at 2,054/4,000 pairs (+17.3 ± 6.9 Elo, LLR +2.61, bound +2.94) when the first process (pid 19692, seed 20261007) died 2026-10-14 ~02:39 local; **resumed** 2026-10-14 ~10:53 local, pid 25220, same command with `--resume`, same tree `build/runs/lmr_w1`. Checkpoint backup `build/backups/checkpoints-before-resume-20261014/` |
 | NULL_EVAL_01 (`null-eval-01`, pushed to origin 2026-10-14, based on an older `main`) | Screen PASS, 486 pairs, +42.0 ± 15.8 Elo, LLR +2.95 (seed 20261009) | **W1 PASS** at 824 pairs (1,648 games, W 634 / D 608 / L 406, Ptnml 18/115/388/227/76), LLR +2.94, +48.4 ± 10.8 Elo, `complete: true`, process exited, stderr empty. Result in `build/runs/nullev_w1/build/nullev01/sprt-w1-20261013/sprt.json`. **W2 not started**: it needs an idle machine and the owner's go-ahead |
 | HISTORY_MALUS_01 (`history-malus-01`) | Screen PASS, 1,021 pairs, +20.1 ± 10.6 Elo, LLR +2.95 (seed 20261013); QA tests 5/5 and reproducible build per the handoff | W1 not started |
@@ -48,7 +48,10 @@ are not promotion evidence.
 **Decision rules.** W1 PASS → W2. FAIL → REJECT as declared. Cap → INCONCLUSIVE,
 with no rerun on a new seed. LMR_LOG_01 and NULL_EVAL_01 are both measured on
 top of the strict key, so if STRICT_KEY_02 fails W1 or W2 their results are
-conditional on it.
+conditional on it. STRICT_KEY_02 W1 ended INCONCLUSIVE (not a FAIL), so the strict
+key is neither promoted nor rejected; any later promotion of LMR_LOG_01 or
+NULL_EVAL_01 must either bring the strict key with it as part of an integrated
+candidate that passes its own gates, or be re-measured on the production key.
 
 **Identities bound to the W1 runs.** Control `8b82fef8…`; LMR candidate
 `7cef50eb…`; NULL candidate `e4d7b0d3…`; NNUE v1 model `07b9ab0f…`; C4 endgame
@@ -103,8 +106,8 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. Wait for the two open W1 results (LMR_LOG_01, STRICT_KEY_02) and apply the
-   decision rules above. NULL_EVAL_01 W1 has already PASSed. Do not start other
+1. Wait for the open W1 result (LMR_LOG_01) and apply the decision rules above.
+   NULL_EVAL_01 W1 PASSed; STRICT_KEY_02 W1 ended INCONCLUSIVE at the cap. Do not start other
    heavy work meanwhile.
 2. For each W1 PASS, run W2 only on an idle machine and with the owner's go-ahead.
    NULL_EVAL_01 W2 is the next candidate, and it is waiting for the owner.
