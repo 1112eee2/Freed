@@ -90,31 +90,38 @@ itself in as many openings as possible. These items serve that goal. None change
 production, the accepted DLL, `RULESET.json` or `makhos/core.py`. Training-related
 branches stay local, per the owner.
 
-- **SELFPLAY_BASELINE_01 part A** (branch `selfplay-baseline-01`, local; contract
+- **SELFPLAY_BASELINE_01 part A: COMPLETE (2026-10-14 23:17 local).** Branch
+  `selfplay-baseline-01` (local; contract
   `benchmarks/selfplay_baseline01/contract_part_a.json`, declared before the first
   game). Production NNUE v1 against itself, 1T, 10s+0.1s, TB4–6 and the C4 library,
-  every one of the 1,225 distinct positions after 4 plies, 2 games each. Two
-  detached `sprt` processes (part1 613 openings, part2 612) with
-  `--play-all-pairs`, started 2026-10-14 18:05 local after a first launch died with
-  a stray Ctrl+C at 17:58 (logs kept as `*.attempt1-ctrlc.*`; cause unknown). Run
-  tree `build/runs/selfplay_baseline01/`. It is a measurement: no pass/fail, no
-  rerun for a better number. **Interim (19:27 local, 437 of 1,225 openings, 874
-  games, not a result):** draws 43.5% (95% 40.2–46.8%), red wins 272, black wins
-  222; per opening 83 both drawn, 256 the two games differ, 98 the same colour won
-  both. Every game replays legally. The first estimate of about 4 hours was too low
-  and then too high; at the interim pace the run ends roughly 22:00–23:00 local.
-  Report with `tools/arena/selfplay_report.py --opening-plies 4` on both `games`
-  directories. Parts B (time-control curve) and C (12T) are not declared yet.
+  all 1,225 distinct positions after 4 plies, 2 games each (part1 613 openings, part2
+  612). It is a measurement: no pass/fail, no rerun for a better number. Run tree
+  `build/runs/selfplay_baseline01/`, report
+  `report/part_a_report.json` (made with `tools/arena/selfplay_report.py
+  --opening-plies 4`). stderr empty; all 2,450 game records replay legally.
+  **Result:** draws 1,028 of 2,450 = **42.0% (95% CI 40.0–43.9%)**; black won 749,
+  red won 673. Ended by no legal move 1,422, repetition 1,027, no progress 1. Per
+  opening: 231 both games drawn (18.9%), 692 the two games differ (56.5%), 302 the
+  same colour won both (24.7%: black 170, red 132). Decisive games: median 81 plies;
+  the loser's score first dropped by 150 cp at a median of ply 25 (quartiles 21/25/30;
+  336 by ply 20, 953 at 21–40, 133 later). Reading: at this time control the
+  engine is far from a 100% draw rate against itself; many losses start in the
+  opening and early middlegame, and 57% of openings give different results to two
+  games of the same engine (search nondeterminism). The 302 same-colour openings are
+  the first candidates for the loss-finding loop. Parts B (time-control curve) and C
+  (12T) are not declared yet.
 - **Paused 19:48 and resumed 21:06 local (2026-10-14, owner request).** Part A and
   the W2 watcher were stopped at part1 274 / part2 277 pairs (clean checkpoints,
   equal to the `games` directories) and resumed with `--resume` through
   `build/runs/selfplay_baseline01/relaunch_resume_paused.py` (detached, BelowNormal;
   pids 32584 and 32636; earlier logs kept as `*.paused-20261014.*`). The W2
   watcher was restarted (pid 23852).
-- **W2 watcher.** `build/runs/nullev_w1/w2_after_selfplay.ps1` (log
-  `w2_watcher.log`) starts the NULL_EVAL_01 W2 only after both part A processes
-  finished complete; it refused once while part A was incomplete and was restarted.
-  It was approved by the owner on 2026-10-14. LMR_LOG_01 W2 is not queued yet.
+- **NULL_EVAL_01 W2 is running** (started by the watcher at 2026-10-14 23:17 local,
+  pid 33244, 12T/512 MiB, fixed 1 s, cap 1,000 pairs, owner-approved; run dir
+  `build/runs/nullev_w1/build/nullev01/sprt-w2-20261014`). It had 25 pairs at
+  00:09, about 2 minutes a pair, so the cap would take about 35 hours; an SPRT
+  bound can end it earlier. Do not run other heavy work beside it. LMR_LOG_01 W2 is
+  not queued yet.
 - **NNUE V2 stage-2 data contract** is **frozen** (owner, 2026-10-14):
   `benchmarks/nnue2_stage2/data_contract_v1.json`, branch
   `nnue2-stage2-data-contract` (local). v1 development games are excluded.
@@ -159,20 +166,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. Let SELFPLAY_BASELINE_01 part A finish (see above). Then run
-   `selfplay_report.py` on both parts and record the draw rate, the per-opening
-   classes and the decisive games in this file. Do not start other heavy work
-   meanwhile.
-2. NULL_EVAL_01 W2 starts by itself after part A (owner-approved, 12T, idle
-   machine). LMR_LOG_01 W2 runs the following night and still needs the owner's
-   go-ahead. One W2 at a time; both are conditional on the strict key (see the
-   decision rules).
-3. After the W2 runs: screen of `safety-mode-01`; NNUE stage-2 prerequisites
-   (exact-WDL probe, regeneration check) and then acquisition; declare part B of
-   the self-play baseline if the owner wants the time-control curve.
-4. Light work that does not touch the running trees is allowed: documentation and
-   code with unit tests only.
-5. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
+1. NULL_EVAL_01 W2 is running (see above). Do not start other heavy work beside
+   it. It uses the owner's go-ahead of 2026-10-14. If it is interrupted, resume it
+   with `--resume` from its `launch.txt` command, detached.
+2. Light work meanwhile: study the decisive games of part A (loss-finding loop),
+   starting with the 302 openings where one colour won both games, from the report
+   in `build/runs/selfplay_baseline01/report/`.
+3. After W2 ends: LMR_LOG_01 W2 (needs the owner's go-ahead); screen of
+   `safety-mode-01`; NNUE stage-2 prerequisites (exact-WDL probe, regeneration
+   check) and then acquisition; declare part B of the self-play baseline.
+4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
 
 ## Standing scope: practical no-loss track against Invincible 2
