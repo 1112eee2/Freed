@@ -208,6 +208,11 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
+0. **Drafted 2026-10-15, waiting for the owner's answers (Q1–Q4):**
+   [STRENGTH_PHASE_01 plan](../../../../docs/architecture/STRENGTH_PHASE_01_PLAN_TH.md),
+   a target of at least +50 Elo against production (RC-2 = integrated search
+   candidate + the better NNUE), with pre-declared gates G1–G7. The steps below
+   still apply until the owner answers.
 1. NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair 146, see
    above). If it is interrupted again, resume it the same way. Do not start other
    heavy work beside it.
