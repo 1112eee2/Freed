@@ -226,14 +226,13 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    a target of at least +50 Elo against production (RC-2 = integrated search
    candidate + the better NNUE), with pre-declared gates G1–G7. It now owns the
    sequencing; the steps below are its first items.
-1. **A1: NULL_EVAL_01 W2 is PAUSED by the owner (2026-10-15 19:54 local)** at 307
-   of 1,000 pairs: W 254 / D 192 / L 168, Ptnml 16/40/132/80/39, +49.0 ± 20.1 Elo,
-   LLR +0.86, `complete: false`, stderr empty. Process tree stopped with taskkill;
-   the checkpoint is copied to `sprt.pre-pause-20261015.json` and `PAUSED.txt` sits in
-   the run dir. Resume only when the owner asks, with
-   `build/runs/nullev_w1/relaunch_w2_resume.py` (same command, `--resume`). The
-   completion pop-up watcher (`build/runs/nullev_w1/w2_watcher.py`) was stopped too;
-   start it again after a resume.
+1. **A1:** NULL_EVAL_01 W2 was paused by the owner at 307 pairs (2026-10-15 19:54;
+   +49.0 ± 20.1 Elo, LLR +0.86; checkpoint copy `sprt.pre-pause-20261015.json`) and
+   **resumed at the owner's request 2026-10-15 21:09 local**: pid 4960, BelowNormal,
+   detached via WMI through `build/runs/nullev_w1/relaunch_w2_resume_after_pause.py`
+   (logs before it kept as `*.paused-20261015.*`); first resumed pair 308. The
+   completion pop-up watcher runs again (pid 18000, Idle, log
+   `build/runs/nullev_w1/w2_done_watcher.log`). No other heavy work beside it.
 2. **A3 (built 2026-10-15):** local branch `search-int-01` (worktree
    `.claude/worktrees/search-int-01`, merge `fd1daf6`) = `main` + `null-eval-01` +
    `lmr-log-01` + `history-malus-01`. The build orchestrator now takes
