@@ -150,12 +150,16 @@ branches stay local, per the owner.
   `build/runs/selfplay_baseline01/relaunch_resume_paused.py` (detached, BelowNormal;
   pids 32584 and 32636; earlier logs kept as `*.paused-20261014.*`). The W2
   watcher was restarted (pid 23852).
-- **NULL_EVAL_01 W2 is running** (started by the watcher at 2026-10-14 23:17 local,
-  pid 33244, 12T/512 MiB, fixed 1 s, cap 1,000 pairs, owner-approved; run dir
-  `build/runs/nullev_w1/build/nullev01/sprt-w2-20261014`). It had 25 pairs at
-  00:09, about 2 minutes a pair, so the cap would take about 35 hours; an SPRT
-  bound can end it earlier. Do not run other heavy work beside it. LMR_LOG_01 W2 is
-  not queued yet.
+- **NULL_EVAL_01 W2 is INTERRUPTED at 145 of 1,000 pairs** (started by the watcher
+  2026-10-14 23:17 local, pid 33244, 12T/512 MiB, fixed 1 s, owner-approved; run dir
+  `build/runs/nullev_w1/build/nullev01/sprt-w2-20261014`). Last checkpoint 2026-10-15
+  03:57:47: W 126 / D 83 / L 81, Ptnml 8/17/62/38/20, LLR +0.43 (bound +2.94),
+  +54.4 ± 29.8 Elo, INCONCLUSIVE, `complete: false`, stderr empty. The Windows event
+  log shows the machine restarted for Windows Update at 03:59 (MoUsoCoreWorker) and
+  04:02 (TrustedInstaller) and shut down at 08:12, back up at 14:33; the process did
+  not survive. Resume it with `--resume` from its `launch.txt` command, detached, on
+  an idle machine. Do not run other heavy work beside it. LMR_LOG_01 W2 is not queued
+  yet.
 - **NNUE V2 stage-2 data contract** is **frozen** (owner, 2026-10-14):
   `benchmarks/nnue2_stage2/data_contract_v1.json`, branch
   `nnue2-stage2-data-contract` (local). v1 development games are excluded.
@@ -200,9 +204,9 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. NULL_EVAL_01 W2 is running (see above). Do not start other heavy work beside
-   it. It uses the owner's go-ahead of 2026-10-14. If it is interrupted, resume it
-   with `--resume` from its `launch.txt` command, detached.
+1. NULL_EVAL_01 W2 was interrupted at 145 pairs (see above) and waits to be resumed
+   on an idle machine (owner go-ahead of 2026-10-14 covers this run). Do not start
+   other heavy work beside it.
 2. Light work meanwhile: study the decisive games of part A (loss-finding loop),
    starting with the 302 openings where one colour won both games, from the report
    in `build/runs/selfplay_baseline01/report/`.
