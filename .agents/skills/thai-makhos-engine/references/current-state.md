@@ -226,10 +226,14 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    a target of at least +50 Elo against production (RC-2 = integrated search
    candidate + the better NNUE), with pre-declared gates G1–G7. It now owns the
    sequencing; the steps below are its first items.
-1. **A1:** NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair
-   146, see above); at 15:16 it stood at 166 pairs, +55.9 ± 28.0 Elo, LLR +0.50,
-   about 44 pairs per hour (the cap of 1,000 is about 19 hours away).
-   If it is interrupted again, resume it the same way. No other heavy work beside it.
+1. **A1: NULL_EVAL_01 W2 is PAUSED by the owner (2026-10-15 19:54 local)** at 307
+   of 1,000 pairs: W 254 / D 192 / L 168, Ptnml 16/40/132/80/39, +49.0 ± 20.1 Elo,
+   LLR +0.86, `complete: false`, stderr empty. Process tree stopped with taskkill;
+   the checkpoint is copied to `sprt.pre-pause-20261015.json` and `PAUSED.txt` sits in
+   the run dir. Resume only when the owner asks, with
+   `build/runs/nullev_w1/relaunch_w2_resume.py` (same command, `--resume`). The
+   completion pop-up watcher (`build/runs/nullev_w1/w2_watcher.py`) was stopped too;
+   start it again after a resume.
 2. **A3 (built 2026-10-15):** local branch `search-int-01` (worktree
    `.claude/worktrees/search-int-01`, merge `fd1daf6`) = `main` + `null-eval-01` +
    `lmr-log-01` + `history-malus-01`. The build orchestrator now takes
