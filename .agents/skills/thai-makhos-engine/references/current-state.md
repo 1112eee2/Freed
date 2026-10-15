@@ -167,9 +167,18 @@ branches stay local, per the owner.
 - **NNUE V2 stage-2 data contract** is **frozen** (owner, 2026-10-14):
   `benchmarks/nnue2_stage2/data_contract_v1.json`, branch
   `nnue2-stage2-data-contract` (local). v1 development games are excluded.
-  Generator and row extractor are in `tools/nnue2/` with tests. Still missing before
-  acquisition: the exact-WDL probe and a byte-identical regeneration check.
-  Acquisition starts only after part A and the W2 gates, never beside a gate.
+  Generator and row extractor are in `tools/nnue2/` with tests. **B1 done
+  2026-10-15** (branch commits `5747714`, `96979e3`): the extractor fills
+  `exact_wdl` from TB4-6 (side to move; a sign check on 400 random TB4 positions
+  agreed with their children), and `tools/nnue2/regen_check.py` is the determinism
+  gate. A 100-game dry run at the contract settings
+  (`build/runs/nnue2_b1_dryrun/`) passed coverage, leakage and 15/15 byte-identical
+  regenerations, at about 250k labels per worker-hour. **Blocking finding:** games
+  average 56 plies (about 30 train rows per train game), so the contract's
+  100,000-seed range gives about 2.4M train rows, not 10M; about 430,000 games are
+  needed. Rows with 2-3 pieces get no exact WDL (TB4-6 do not cover them). The
+  contract is frozen, so acquisition waits for the owner's decision on a v2.
+  Acquisition never runs beside a gate.
 - **Safety-first move choice** (branch `safety-mode-01`, local, `ddbb79d`): opt-in
   and default-off. After the normal search it re-checks the root moves within a
   margin of the best score (default 40 cp, up to 3, +2 plies, 10 cp to switch,
@@ -229,9 +238,9 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    generation or state; perft 10, the differential and the full suite still run once
    W2 ends, before A4.
 3. **Next after W2:** the A3 checks above, then A2 (HISTORY_MALUS_01 W1), then A4
-   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). Light work meanwhile: B1
-   (exact-WDL probe and regeneration check on `nnue2-stage2-data-contract`) and the
-   C1 collapse-suite tool (781 positions from
+   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). B1 is done (see above) and
+   waits for the owner's contract-v2 decision. Light work meanwhile: the C1
+   collapse-suite tool (781 positions from
    `build/runs/selfplay_baseline01/report/loss_positions_v2.json`).
 4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
