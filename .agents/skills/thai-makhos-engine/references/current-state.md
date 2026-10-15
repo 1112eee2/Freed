@@ -215,15 +215,24 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    a target of at least +50 Elo against production (RC-2 = integrated search
    candidate + the better NNUE), with pre-declared gates G1–G7. It now owns the
    sequencing; the steps below are its first items.
-1. NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair 146, see
-   above). If it is interrupted again, resume it the same way. Do not start other
-   heavy work beside it.
-2. Light work meanwhile: study the decisive games of part A (loss-finding loop),
-   starting with the 302 openings where one colour won both games, from the report
-   in `build/runs/selfplay_baseline01/report/`.
-3. After W2 ends: LMR_LOG_01 W2 (needs the owner's go-ahead); screen of
-   `safety-mode-01`; NNUE stage-2 prerequisites (exact-WDL probe, regeneration
-   check) and then acquisition; declare part B of the self-play baseline.
+1. **A1:** NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair
+   146, see above); at 15:05 it stood at 158 pairs, +60.0 ± 28.5 Elo, LLR +0.51.
+   If it is interrupted again, resume it the same way. No other heavy work beside it.
+2. **A3 (built 2026-10-15):** local branch `search-int-01` (worktree
+   `.claude/worktrees/search-int-01`, merge `fd1daf6`) = `main` + `null-eval-01` +
+   `lmr-log-01` + `history-malus-01`. The build orchestrator now takes
+   `-NullEvalGuard -LogLmr -HistoryMalus` together. SEARCH_INT_01 DLL (strict key +
+   null-eval guard + log LMR + history gravity/malus), two byte-identical builds,
+   SHA-256 `5ed1fe18…eac9`, copied with its manifest to
+   `build/search_int01/candidate/`. 33 focused tests pass (null-eval, LMR, history
+   malus, build orchestrator, PV validation). The diff changes search only, not move
+   generation or state; perft 10, the differential and the full suite still run once
+   W2 ends, before A4.
+3. **Next after W2:** the A3 checks above, then A2 (HISTORY_MALUS_01 W1), then A4
+   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). Light work meanwhile: B1
+   (exact-WDL probe and regeneration check on `nnue2-stage2-data-contract`) and the
+   C1 collapse-suite tool (781 positions from
+   `build/runs/selfplay_baseline01/report/loss_positions_v2.json`).
 4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
 
