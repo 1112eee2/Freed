@@ -157,9 +157,13 @@ branches stay local, per the owner.
   +54.4 ± 29.8 Elo, INCONCLUSIVE, `complete: false`, stderr empty. The Windows event
   log shows the machine restarted for Windows Update at 03:59 (MoUsoCoreWorker) and
   04:02 (TrustedInstaller) and shut down at 08:12, back up at 14:33; the process did
-  not survive. Resume it with `--resume` from its `launch.txt` command, detached, on
-  an idle machine. Do not run other heavy work beside it. LMR_LOG_01 W2 is not queued
-  yet.
+  not survive. **Resumed 2026-10-15 14:37 local (owner request)** with `--resume`,
+  detached, BelowNormal, pid 23048, through
+  `build/runs/nullev_w1/relaunch_w2_resume.py`; the run tree carries its own copy of
+  `makhos/`, so the later `main` fixes do not affect it. Checkpoint before the resume
+  kept as `sprt.pre-resume-20261015.json`; earlier logs as `*.interrupted-20261015.*`.
+  The first resumed pair was 146 (LLR +0.43). Do not run other heavy work beside it.
+  LMR_LOG_01 W2 is not queued yet.
 - **NNUE V2 stage-2 data contract** is **frozen** (owner, 2026-10-14):
   `benchmarks/nnue2_stage2/data_contract_v1.json`, branch
   `nnue2-stage2-data-contract` (local). v1 development games are excluded.
@@ -204,9 +208,9 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-1. NULL_EVAL_01 W2 was interrupted at 145 pairs (see above) and waits to be resumed
-   on an idle machine (owner go-ahead of 2026-10-14 covers this run). Do not start
-   other heavy work beside it.
+1. NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair 146, see
+   above). If it is interrupted again, resume it the same way. Do not start other
+   heavy work beside it.
 2. Light work meanwhile: study the decisive games of part A (loss-finding loop),
    starting with the 302 openings where one colour won both games, from the report
    in `build/runs/selfplay_baseline01/report/`.
