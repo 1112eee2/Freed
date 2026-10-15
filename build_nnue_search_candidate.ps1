@@ -9,9 +9,10 @@ param(
     [switch]$TablebaseDrawCutoff,
     [switch]$ReverseFutility,
     [switch]$NullEvalGuard,
-    [switch]$LogLmr
+    [switch]$LogLmr,
+    [switch]$HistoryMalus
 )
 $ErrorActionPreference = 'Stop'
 $orchestrator = Join-Path $PSScriptRoot 'tools\build\build_orchestrator.ps1'
-& $orchestrator -Variant 'nnue_search_candidate' -OutputDirectory $OutputDirectory -StrictSearchKey:$StrictSearchKey -TablebaseDrawCutoff:$TablebaseDrawCutoff -ReverseFutility:$ReverseFutility -NullEvalGuard:$NullEvalGuard -LogLmr:$LogLmr @args
+& $orchestrator -Variant 'nnue_search_candidate' -OutputDirectory $OutputDirectory -StrictSearchKey:$StrictSearchKey -TablebaseDrawCutoff:$TablebaseDrawCutoff -ReverseFutility:$ReverseFutility -NullEvalGuard:$NullEvalGuard -LogLmr:$LogLmr -HistoryMalus:$HistoryMalus @args
 exit $LASTEXITCODE

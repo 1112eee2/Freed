@@ -1220,6 +1220,12 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #define MAKHOS_HISTORY_GRAVITY 0
 #endif
 #define MAKHOS_HISTORY_GRAVITY_MAX 16384
+#ifndef MAKHOS_HISTORY_MALUS
+#define MAKHOS_HISTORY_MALUS 0
+#endif
+#if MAKHOS_HISTORY_MALUS && !MAKHOS_HISTORY_GRAVITY
+#error "the history malus uses the bounded history-gravity update"
+#endif
 #ifndef MAKHOS_COMPACT_TT
 #define MAKHOS_COMPACT_TT 1
 #endif
@@ -3517,6 +3523,34 @@ static void record_search_cutoff(
 #endif
 }
 
+#if MAKHOS_HISTORY_MALUS
+/*
+ * After a quiet cutoff, lower the history of the quiet moves searched before
+ * it by the same bounded gravity step, so history tracks how often a move
+ * cuts off when tried rather than how often it ever did.
+ */
+static void apply_history_malus(
+    NativeSearchContext *context,
+    Position position,
+    const Move *moves,
+    uint32_t tried,
+    int depth
+) {
+    int bonus = depth * depth * 32;
+    if (bonus > MAKHOS_HISTORY_GRAVITY_MAX) {
+        bonus = MAKHOS_HISTORY_GRAVITY_MAX;
+    }
+    for (uint32_t index = 0; index < tried; ++index) {
+        const Move *move = &moves[index];
+        if (move->capture_count > 0 || move->promotes) continue;
+        int32_t *history = &context->history[
+            position.turn
+        ][move->path[0]][move->path[move->path_len - 1]];
+        *history += -bonus - (*history * bonus) / MAKHOS_HISTORY_GRAVITY_MAX;
+    }
+}
+#endif
+
 static int score_from_tt(int score, int ply) {
     if (score >= MAKHOS_SEARCH_MATE - 1000) return score - ply;
     if (score <= -MAKHOS_SEARCH_MATE + 1000) return score + ply;
@@ -4111,6 +4145,13 @@ static int native_negamax(
                 SEARCH_TELEMETRY_INC(context, beta_cutoff_first);
             }
             record_search_cutoff(context, position, move, depth, ply);
+#if MAKHOS_HISTORY_MALUS
+            if (move->capture_count == 0 && ply < MAKHOS_SEARCH_MAX_PLY) {
+                apply_history_malus(
+                    context, position, moves->moves, index, depth
+                );
+            }
+#endif
             break;
         }
     }
