@@ -176,9 +176,11 @@ branches stay local, per the owner.
   regenerations, at about 250k labels per worker-hour. **Blocking finding:** games
   average 56 plies (about 30 train rows per train game), so the contract's
   100,000-seed range gives about 2.4M train rows, not 10M; about 430,000 games are
-  needed. Rows with 2-3 pieces get no exact WDL (TB4-6 do not cover them). The
-  contract is frozen, so acquisition waits for the owner's decision on a v2.
-  Acquisition never runs beside a gate.
+  needed. Rows with 2-3 pieces get no exact WDL (TB4-6 do not cover them).
+  **Contract v2 approved 2026-10-15** (owner chose to widen the seeds):
+  `benchmarks/nnue2_stage2/data_contract_v2.json` on the branch, seeds
+  2026200000-2026999999, everything else as v1; v1 kept as the record. B2
+  (acquisition, about 11 hours on 5 workers) is ready but never runs beside a gate.
 - **Safety-first move choice** (branch `safety-mode-01`, local, `ddbb79d`): opt-in
   and default-off. After the normal search it re-checks the root moves within a
   margin of the best score (default 40 cp, up to 3, +2 plies, 10 cp to switch,
@@ -239,8 +241,8 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    generation or state; perft 10, the differential and the full suite still run once
    W2 ends, before A4.
 3. **Next after W2:** the A3 checks above, then A2 (HISTORY_MALUS_01 W1), then A4
-   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). B1 is done (see above) and
-   waits for the owner's contract-v2 decision. **C1 tool done** (local branch
+   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). B1 is done and contract v2 is
+   approved, so B2 acquisition can start in the first gap without a gate. **C1 tool done** (local branch
    `collapse-suite-01`, `cb8b849`): `tools/analysis/collapse_suite.py`
    build/label/run/report; the suite is `build/runs/collapse_suite01/suite.json`
    (781 positions, 758 active, 23 with <= 6 pieces excluded). A 5-position smoke run
