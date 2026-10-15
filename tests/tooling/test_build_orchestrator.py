@@ -134,6 +134,27 @@ class BuildOrchestratorTests(unittest.TestCase):
                 self.assertIn(expected, proc.stderr + proc.stdout)
                 self.assertIn("NullEvalGuard", proc.stderr + proc.stdout)
 
+    def test_log_lmr_requires_nnue_search_variant(self):
+        proc = self.run_pwsh("-Variant", "native", "-LogLmr", "-VerifyOnly")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn(
+            "LogLmr is supported only for nnue_search_candidate",
+            proc.stderr + proc.stdout,
+        )
+
+    def test_log_lmr_requires_separate_output(self):
+        for extra, expected in (
+            ([], "requires an explicit candidate OutputDirectory"),
+            (["-OutputDirectory", str(ROOT / "build" / "nnue_search_v1_r5")],
+             "must not target the production NNUE directory"),
+        ):
+            with self.subTest(extra=extra):
+                proc = self.run_pwsh("-Variant", "nnue_search_candidate",
+                                     "-LogLmr", "-VerifyOnly", *extra)
+                self.assertNotEqual(proc.returncode, 0)
+                self.assertIn(expected, proc.stderr + proc.stdout)
+                self.assertIn("LogLmr", proc.stderr + proc.stdout)
+
     def test_unknown_variant_rejected(self):
         proc = self.run_pwsh("-Variant", "non_existent_variant")
         self.assertNotEqual(proc.returncode, 0)

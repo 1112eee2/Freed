@@ -1,0 +1,89 @@
+{
+  "complete": true,
+  "config": {
+    "baseline_persistent_search": true,
+    "baseline_threads": 1,
+    "candidate_persistent_search": true,
+    "candidate_threads": 1,
+    "elo0": 0.0,
+    "elo1": 5.0,
+    "hash_mb": null,
+    "increment_seconds": 0.02,
+    "libraries": {
+      "baseline": {
+        "fixed_search": true,
+        "nnue_enabled": true,
+        "nnue_feature_abi": "thai-makhos-shared-137-v1",
+        "nnue_model": "D:\\ThaiMakhosEngine\\build\\runs\\lmr_l1w\\build\\nnue_quantized_v1\\model_a.mknnue",
+        "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+        "path": "D:\\ThaiMakhosEngine\\build\\runs\\lmr_l1w\\build\\lmr01\\control\\makhos_native_nnue_candidate_v1.dll",
+        "search_abi": 5,
+        "sha256": "8b82fef8ffdac91555b9e5ea2bcceaaa505955f7a6772ac9bebefc5e5db5c4fa",
+        "shared_tt": false,
+        "threads": 1,
+        "window_search": true
+      },
+      "candidate": {
+        "fixed_search": true,
+        "nnue_enabled": true,
+        "nnue_feature_abi": "thai-makhos-shared-137-v1",
+        "nnue_model": "D:\\ThaiMakhosEngine\\build\\runs\\lmr_l1w\\build\\nnue_quantized_v1\\model_a.mknnue",
+        "nnue_model_sha256": "07B9AB0F83E253CB74B2ACD2BD5291F5F91EB086E042790F33EA0A8C0914164C",
+        "path": "D:\\ThaiMakhosEngine\\build\\runs\\lmr_l1w\\build\\lmr01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+        "search_abi": 5,
+        "sha256": "7cef50ebf12a4168aa0f10dfba022e6a33d27d29b807d21aefaf7fa7562157a8",
+        "shared_tt": false,
+        "threads": 1,
+        "window_search": true
+      }
+    },
+    "max_game_plies": 300,
+    "max_pairs": 2000,
+    "move_time_cap_ms": null,
+    "opening_plies": 6,
+    "parallel_games": 2,
+    "persistent_search": true,
+    "resume": true,
+    "root_alpha": false,
+    "root_alpha_margin": 32,
+    "root_alpha_min_depth": 16,
+    "search_hash_power": 20,
+    "seed": 20261006,
+    "selective_candidates": 4,
+    "selective_margin": 160,
+    "selective_reserve": 0.6,
+    "selective_root": false,
+    "shared_tt": false,
+    "shared_tt_group_size": 4,
+    "tablebases": {
+      "native_3_piece": false,
+      "ranked": []
+    },
+    "threads": 1,
+    "time_seconds": 2.0,
+    "workload_isolation": {
+      "checkpoint_granularity": "before-each-pair-and-ply",
+      "policy": "interactive-gui-priority-v1",
+      "process_priority": "BelowNormal"
+    }
+  },
+  "format": "thai-makhos-sprt-result-v2",
+  "result": {
+    "draws": 663,
+    "elo": 21.404927999384242,
+    "elo_95_error": 11.058850276596132,
+    "games": 1934,
+    "llr": 2.960401472296988,
+    "losses": 576,
+    "pairs": 967,
+    "pentanomial": [
+      56,
+      173,
+      430,
+      212,
+      96
+    ],
+    "status": "PASS",
+    "wins": 695
+  }
+}
