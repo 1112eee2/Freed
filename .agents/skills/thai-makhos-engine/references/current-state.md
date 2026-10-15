@@ -208,11 +208,13 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 ## Next action
 
-0. **Drafted 2026-10-15, waiting for the owner's answers (Q1–Q4):**
+0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
+   and HISTORY_MALUS_01, control = production, no SMP unless DP3, near-continuous
+   BelowNormal batch work):**
    [STRENGTH_PHASE_01 plan](../../../../docs/architecture/STRENGTH_PHASE_01_PLAN_TH.md),
    a target of at least +50 Elo against production (RC-2 = integrated search
-   candidate + the better NNUE), with pre-declared gates G1–G7. The steps below
-   still apply until the owner answers.
+   candidate + the better NNUE), with pre-declared gates G1–G7. It now owns the
+   sequencing; the steps below are its first items.
 1. NULL_EVAL_01 W2 is running again since 2026-10-15 14:37 (resumed at pair 146, see
    above). If it is interrupted again, resume it the same way. Do not start other
    heavy work beside it.
