@@ -591,6 +591,7 @@ class NativeHashSizingTests(unittest.TestCase):
             40.0,
         )
 
+    @unittest.skipUnless(LEGACY_LIBRARY.is_file(), "legacy V1 DLL is absent")
     def test_legacy_dll_layout_keeps_its_72_byte_budget(self):
         self.assertEqual(LEGACY_NATIVE_TT_ENTRY_BYTES, 72)
         self.assertEqual(native_tt_entry_bytes(LEGACY_LIBRARY), 72)

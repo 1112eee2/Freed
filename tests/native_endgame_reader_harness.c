@@ -1,6 +1,6 @@
 /* Linux ASan/UBSan + allocation-free probe contract. Use sparse fixtures from
  * test_native_endgame_ranked.write_fixture; never generate solved TBs here.
- * Build instructions: docs/architecture/ENDGAME_NATIVE_C1_TB456_TH.md. */
+ * Build instructions: docs/architecture/ENDGAME_NATIVE_C1_TB456_TH.md on branch research-archive. */
 #include "../native/makhos_endgame_tb.h"
 #include <assert.h>
 #include <stddef.h>

@@ -1,9 +1,34 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "thai-checkers-engine"
-version = "0.1.0"
-description = "A verified-reference Thai Makhos engine with best and win-oriented modes"
+name = "thai-makhos-engine"
+version = "1.0.0"
+description = "Thai Makhos (Thai checkers) engine: exact rules, alpha-beta search, NNUE evaluation and endgame tablebases"
+readme = "README.md"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
+authors = [{ name = "Pinggo" }]
+keywords = ["thai-checkers", "makhos", "draughts", "game-engine", "nnue"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment :: Board Games",
+]
+
+[project.optional-dependencies]
+tune = ["numpy"]
+
+[project.scripts]
+makhos = "makhos.cli:main"
+
+[project.urls]
+Repository = "https://github.com/1112eee2/ThaiMakhosEngine"
+
+[tool.setuptools.packages.find]
+include = ["makhos", "makhos.*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-

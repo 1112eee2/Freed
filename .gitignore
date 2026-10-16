@@ -17,18 +17,19 @@ htmlcov/
 *.bin
 *.tt
 
-# Exceptions: Essential model weights, accepted baseline, and Gate C results
+# Exceptions: V1 NNUE model, accepted baseline DLL and the quantization contract
 !build/nnue_quantized_v1/model_a.mknnue
 !build/makhos_native_accepted.dll
-!build/nnue_gate_c_contract_v1.json
-!build/nnue_gate_c_1000ms_seed20261105.json
-!build/nnue_gate_c_2000ms_seed20261106.json
+!build/nnue_phase1_evidence/quantization_contract_v2.json
+
+# Packaging output
+/dist/
+*.egg-info/
 
 # Logs and runtime artifacts
 logs/
 saved_games/
 *.log
-work/skill_validator_dependencies/
 
 # IDE and OS
 .vscode/

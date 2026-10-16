@@ -670,6 +670,10 @@ class SPRTTests(unittest.TestCase):
         self.assertGreaterEqual(dev_eg.native_endgame_search.close.call_count, 1)
         self.assertGreaterEqual(master_eg.native_endgame_search.close.call_count, 1)
 
+    @unittest.skipUnless(
+        Path("build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll").is_file(),
+        "6T/12T SPRT DLLs are absent",
+    )
     def test_command_sprt_attaches_c4_endgame_to_factories(self):
         from makhos.cli import command_sprt, build_parser
 
