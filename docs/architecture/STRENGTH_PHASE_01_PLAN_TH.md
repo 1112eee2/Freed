@@ -93,6 +93,20 @@ G1–G3 และ G7 เป็นเกณฑ์บังคับ G4–G6 บ�
 3. **C3** (หลัง RC-2) opening book ระยะสั้นจาก opening ที่แพ้บ่อยใน part A
    ติดป้าย "ตรวจด้วยการค้นลึกที่ depth/เวลา X" ไม่ใช่ "ดีที่สุดแน่นอน" ค่าเริ่มต้นปิด
 
+### Track D: ไอเดียจาก Stockfish (backlog เพิ่ม 2026-10-16)
+
+รายการเต็ม เหตุผล และวิธีปรับให้หมากฮอส อยู่ใน [SF_IDEAS_TH.md](../research/SF_IDEAS_TH.md)
+ไม่แทรก critical path: เขียนโค้ดได้ระหว่างที่ gate รัน แต่ทุก screen/W1 ต้องรอช่วงที่ไม่มี gate
+แต่ละไอเดียมี flag แยก ปิดเป็นค่าเริ่มต้น
+
+1. **D1** time management แบบ soft/hard ตามความนิ่งของ best move (S1)
+2. **D2** correction history โดยใช้ hash โครงสร้างเบี้ยและวัสดุ (S2)
+3. **D3** continuation history 1–2 ply (S3)
+4. หลัง RC-2: S4–S9 + SPSA ทั้งชุด (T1) → SEARCH_INT_02 วัดเทียบกับ RC-2
+   NNUE ถัดไป: output buckets + ครู RC-2 (มีใน DP2/DP4 อยู่แล้ว) → QAT → threat/man-pair inputs (V3)
+
+D1–D3 ตัวไหนผ่าน W1 ก่อน R1 ให้รวมเข้า RC-2 ตามหลักการเดิม แต่ไม่เลื่อน R1 เพื่อรอ
+
 ### ประกอบและยืนยัน
 
 1. **R1** RC-2 = SEARCH_INT_01 + NNUE ที่ดีกว่า (v2-A ถ้าผ่าน B4 ไม่งั้น v1)

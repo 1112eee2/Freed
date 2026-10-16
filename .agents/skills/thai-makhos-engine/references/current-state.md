@@ -267,6 +267,12 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    whatever fails is removed.
 4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
+5. **Track D backlog (owner request 2026-10-16, nothing measured yet):** Stockfish
+   ideas mapped to Thai Makhos in
+   [SF_IDEAS_TH.md](../../../../docs/research/SF_IDEAS_TH.md). D1 time management
+   (soft/hard by best-move stability), D2 correction history, and D3 continuation
+   history can be coded during gates, but screens wait for a gate-free gap. The rest
+   comes after RC-2.
 
 ## Standing scope: practical no-loss track against Invincible 2
 
