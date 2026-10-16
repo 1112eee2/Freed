@@ -4,6 +4,13 @@ Updated 2026-10-14. This file owns the current scope and the next action. It is
 kept short on purpose: historical commands and counters are evidence, not launch
 instructions, and detail that is no longer current lives in the snapshots below.
 
+**Repository split (owner, 2026-10-16, V1 release v1.0.0):** `main` now holds only
+the engine source, tests and build scripts. Plans (`docs/`), experiment evidence
+(`benchmarks/`), research tooling (`scratch/`, `work/`, `tools/arena`,
+`tools/verification`), roadmaps and their tests live on branch `research-archive`
+(cut from `17cc324`). Links below to those paths resolve on that branch; read them
+with `git show research-archive:<path>` and commit plan or evidence updates there.
+
 - Full text before the 2026-10-13 update:
   [history/20261013-current-state-before-director-loop-update.md](history/20261013-current-state-before-director-loop-update.md)
   (this includes the long 2026-09-25 narrative, the PR #28/#31/#32 notes and the
