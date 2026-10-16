@@ -245,17 +245,21 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    malus, build orchestrator, PV validation). The diff changes search only, not move
    generation or state; perft 10, the differential and the full suite still run once
    W2 ends, before A4.
-3. **Next after W2:** the A3 checks above, then A2 (HISTORY_MALUS_01 W1), then A4
-   (SEARCH_INT_01 vs production, W1 H1 +5, then W2). B1 is done and contract v2 is
-   approved, so B2 acquisition can start in the first gap without a gate. **C1 tool done** (local branch
-   `collapse-suite-01`, `cb8b849`): `tools/analysis/collapse_suite.py`
-   build/label/run/report; the suite is `build/runs/collapse_suite01/suite.json`
-   (781 positions, 758 active, 23 with <= 6 pieces excluded). A 5-position smoke run
-   from a cleared engine at the original move time: production and SEARCH_INT_01
-   both replayed the collapse move in 5/5, SEARCH_INT_01 one or two plies deeper and
-   with lower scores. Still to run when no gate is running (timed searches beside
-   W2 would be starved): the reference labels (12T, several seconds per move,
-   about 3-6 hours) and the variant runs (about 5 minutes each at 1T).
+3. **A3 checks done 2026-10-16** (branch `search-int-01`, now `fc30ace`): a native exe
+   with the same five -D flags gave perft 1-10 ending at `861842812`; `verify-native`
+   seed 20261016 passed 1,004 positions / 5,917 moves / 10 exact 3-piece cases; full
+   suite 556 passed, 103 skipped, 7 failed, of which 6 need untracked `build/` files
+   absent from the worktree (they pass in the main checkout) and 1 was a stale
+   `NATIVE_COMPILE_FLAGS.md`, regenerated in `fc30ace`.
+   **A2 running:** HISTORY_MALUS_01 W1 started 2026-10-16 17:59 local (pid 30116,
+   BelowNormal, detached via WMI, `build/runs/histmalus_l1w/launch_w1.py`, run dir
+   `build/histmalus01/sprt-w1-20261016`, seed 20261016, same settings as NULL_EVAL_01
+   W1). Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
+   (`build/runs/run_watcher.py RUN_DIR NAME`, at-logon trigger, writes
+   `watcher_notified.txt` after its one pop-up); re-point it at each new run.
+   Then A4 (SEARCH_INT_01 vs production, W1 H1 +5, then W2); B2 and the C1 labels
+   need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
+   everything that passes.
 4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
 
