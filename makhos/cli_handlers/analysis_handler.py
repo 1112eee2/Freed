@@ -19,7 +19,6 @@ from ..core import (
 )
 from ..eval import trace_evaluation
 from ..eval_corpus import build_exact_wdl_corpus
-from ..eval_tune import audit_and_fit_corpus
 from ..game_analysis import (
     EXTERNAL_NO_REPETITION_RULES,
     GAME_ANALYSIS_FORMAT,
@@ -524,6 +523,9 @@ def command_build_eval_corpus(args: argparse.Namespace) -> int:
 
 
 def command_fit_eval(args: argparse.Namespace) -> int:
+    # numpy is needed only for fitting, so the rest of the CLI runs without it.
+    from ..eval_tune import audit_and_fit_corpus
+
     report = audit_and_fit_corpus(
         args.corpus,
         args.output,
