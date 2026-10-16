@@ -260,6 +260,11 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    Then A4 (SEARCH_INT_01 vs production, W1 H1 +5, then W2); B2 and the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
+   **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
+   behavior and always plays its best move, like Stockfish; no user-selectable modes
+   in the GUI. Compile/runtime flags such as safety mode are default-off only for
+   isolated SPRT; whatever passes its gates becomes default behavior in RC-2, and
+   whatever fails is removed.
 4. Not queued: STRICT_KEY_01's gates are withdrawn; TBDRAW_01 needs a
    scope-specific instruction; RFP_01 ended INCONCLUSIVE (see below).
 
