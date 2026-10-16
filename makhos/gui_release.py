@@ -59,6 +59,11 @@ def load_release(pointer: Path = DEFAULT_POINTER, *, root: Path = ROOT,
     # presence/size without rereading 5 GB and delaying the browser.
     for table in manifest["tablebases"]:
         path = contained_path(root, table["path"])
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"Tablebase file missing: {path}. Download it from the release "
+                "page and place it in the build folder."
+            )
         if path.stat().st_size != table["bytes"]:
             raise ValueError(f"GUI release tablebase size mismatch: {path}")
     return {**config, "release_id": manifest["release_id"], "profile": selected,
