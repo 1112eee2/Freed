@@ -1,4 +1,4 @@
-"""Thai Makhos Web GUI Launcher.
+"""Freed (Thai Makhos engine) Web GUI Launcher.
 
 Run this script directly with:
     python server.py
@@ -18,7 +18,7 @@ from makhos.server import run_server
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Thai Makhos Web GUI Launcher")
+    parser = argparse.ArgumentParser(description="Freed Web GUI Launcher")
     parser.add_argument("--port", type=int, default=8000, help="HTTP server port (default 8000)")
     parser.add_argument("--no-browser", action="store_true", help="Do not open browser automatically")
     parser.add_argument("--release-pointer", help="GUI release selection JSON")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
                    native_library=args.native_library, nnue_model=args.nnue_model,
                    release_pointer=args.release_pointer, release_profile=args.release_profile)
     except (OSError, ValueError) as error:
-        print(f"Cannot start Thai Makhos Engine: {error}", file=sys.stderr)
+        print(f"Cannot start Freed: {error}", file=sys.stderr)
         if getattr(sys, "frozen", False):
             input("Press Enter to exit.")
         sys.exit(1)

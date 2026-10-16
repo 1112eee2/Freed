@@ -1,4 +1,4 @@
-"""Lightweight Web GUI Server for Thai Makhos Engine.
+"""Lightweight Web GUI Server for Freed, the Thai Makhos engine.
 
 Serves the web GUI frontend and provides JSON API endpoints for move generation,
 engine search (bestmove), move application, and game state management.
@@ -590,7 +590,7 @@ def run_server(
         )
         if not address_in_use:
             raise
-        print(f"Thai Makhos Engine is already running on {url}")
+        print(f"Freed is already running on {url}")
         if open_browser:
             webbrowser.open(url)
         return
@@ -603,7 +603,7 @@ def run_server(
         raise
 
     print(f"==================================================")
-    print(f"  Thai Makhos Engine Web GUI running on {url}")
+    print(f"  Freed Web GUI running on {url}")
     print("  Search engine is warming up without blocking the browser.")
     print(f"==================================================")
 

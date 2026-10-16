@@ -4,6 +4,10 @@ Updated 2026-10-14. This file owns the current scope and the next action. It is
 kept short on purpose: historical commands and counters are evidence, not launch
 instructions, and detail that is no longer current lives in the snapshots below.
 
+**Project name (owner, 2026-10-16): Freed**, "เอนจิ้นสำหรับคนไทย เพื่อคนไทย โดยคนไทย".
+The GitHub repository is `1112eee2/Freed` (renamed from ThaiMakhosEngine). The local
+folder `D:\ThaiMakhosEngine`, the Python module `makhos` and this skill keep their names.
+
 **Repository split (owner, 2026-10-16, V1 release v1.0.0):** `main` now holds only
 the engine source, tests and build scripts. Plans (`docs/`), experiment evidence
 (`benchmarks/`), research tooling (`scratch/`, `work/`, `tools/arena`,
