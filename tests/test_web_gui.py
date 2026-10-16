@@ -34,7 +34,7 @@ class WebGuiContractTests(unittest.TestCase):
         self.assertIn('id="select-engine-threads"', page)
         self.assertIn('id="select-engine-hash"', page)
         self.assertIn('<option value="12" selected>12 Threads (root split ทดลอง)</option>', page)
-        self.assertIn('ENGINE v2.1', page)
+        self.assertIn('ENGINE v1.0.0', page)
         self.assertIn('id="select-rules-profile"', page)
         self.assertIn('value="external-no-repetition"', page)
         self.assertIn('app.js?v=20260909-1', page)
