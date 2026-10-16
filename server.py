@@ -27,6 +27,12 @@ if __name__ == "__main__":
     parser.add_argument("--nnue-model", help="Explicit NNUE model")
     args = parser.parse_args()
 
-    run_server(port=args.port, open_browser=not args.no_browser,
-               native_library=args.native_library, nnue_model=args.nnue_model,
-               release_pointer=args.release_pointer, release_profile=args.release_profile)
+    try:
+        run_server(port=args.port, open_browser=not args.no_browser,
+                   native_library=args.native_library, nnue_model=args.nnue_model,
+                   release_pointer=args.release_pointer, release_profile=args.release_profile)
+    except (OSError, ValueError) as error:
+        print(f"Cannot start Thai Makhos Engine: {error}", file=sys.stderr)
+        if getattr(sys, "frozen", False):
+            input("Press Enter to exit.")
+        sys.exit(1)
