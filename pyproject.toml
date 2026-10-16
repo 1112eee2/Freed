@@ -3,15 +3,15 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "thai-makhos-engine"
+name = "freed"
 version = "1.0.0"
-description = "Thai Makhos (Thai checkers) engine: exact rules, alpha-beta search, NNUE evaluation and endgame tablebases"
+description = "Freed: a Thai Makhos (Thai checkers) engine by Thai people, for Thai people. Exact rules, alpha-beta search, NNUE evaluation and endgame tablebases"
 readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 authors = [{ name = "Pinggo" }]
-keywords = ["thai-checkers", "makhos", "draughts", "game-engine", "nnue"]
+keywords = ["freed", "thai-checkers", "makhos", "draughts", "game-engine", "nnue"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -22,10 +22,11 @@ classifiers = [
 tune = ["numpy"]
 
 [project.scripts]
+freed = "makhos.cli:main"
 makhos = "makhos.cli:main"
 
 [project.urls]
-Repository = "https://github.com/1112eee2/ThaiMakhosEngine"
+Repository = "https://github.com/1112eee2/Freed"
 
 [tool.setuptools.packages.find]
 include = ["makhos", "makhos.*"]

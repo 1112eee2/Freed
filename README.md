@@ -1,9 +1,12 @@
-# ThaiMakhosEngine
+# Freed
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v1.0.0-green.svg)](https://github.com/1112eee2/ThaiMakhosEngine/releases)
+[![Release](https://img.shields.io/badge/release-v1.0.0-green.svg)](https://github.com/1112eee2/Freed/releases)
 
-A strong, rules-exact engine for **Thai Makhos** (หมากฮอสไทย, Thai checkers).
+**Freed** is a strong, rules-exact engine for **Thai Makhos** (หมากฮอสไทย, Thai checkers),
+made by Thai people, for Thai people.
+
+> เอนจิ้นหมากฮอสไทย สำหรับคนไทย เพื่อคนไทย โดยคนไทย
 
 - **Exact rules:** forced captures and multi-jumps, flying kings that must land right
   behind the captured piece, immediate piece removal, promotion that ends the move,
@@ -17,19 +20,19 @@ A strong, rules-exact engine for **Thai Makhos** (หมากฮอสไทย
 
 ## Quick start (Windows)
 
-1. Download `ThaiMakhosEngine-v1.0.0-windows-x64.zip` from
-   [Releases](https://github.com/1112eee2/ThaiMakhosEngine/releases) and extract it.
+1. Download `Freed-v1.0.0-windows-x64.zip` from
+   [Releases](https://github.com/1112eee2/Freed/releases) and extract it.
 2. Download the tablebases from the same release into the `build\` folder next to
-   `ThaiMakhosEngine.exe`, and join the TB6 parts (see [Tablebases](#tablebases)).
-3. Run `ThaiMakhosEngine.exe`. The GUI opens at <http://localhost:8000>.
+   `Freed.exe`, and join the TB6 parts (see [Tablebases](#tablebases)).
+3. Run `Freed.exe`. The GUI opens at <http://localhost:8000>.
 
 ## From source
 
 Requires Python 3.11+ (no third-party packages for play).
 
 ```powershell
-git clone https://github.com/1112eee2/ThaiMakhosEngine.git
-cd ThaiMakhosEngine
+git clone https://github.com/1112eee2/Freed.git
+cd Freed
 python -m makhos perft --depth 6          # move-generation check
 python -m makhos bestmove --depth 8       # best move from the start position
 python server.py                          # Web GUI (needs the native files below)
@@ -46,8 +49,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build_nnue_search_candidat
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build_endgame_c4.ps1
 ```
 
-Install the CLI as a package: `pip install thai_makhos_engine-1.0.0-py3-none-any.whl`,
-then run `makhos --help`.
+Install the CLI as a package: `pip install freed-1.0.0-py3-none-any.whl`,
+then run `freed --help`.
 
 ## Tablebases
 
@@ -95,7 +98,7 @@ Full definition: [RULESET.json](RULESET.json).
 | `config/`, `releases/` | Hash-bound GUI release selection |
 
 Research notes, experiment evidence and SPRT records are on the
-[`research-archive`](https://github.com/1112eee2/ThaiMakhosEngine/tree/research-archive) branch.
+[`research-archive`](https://github.com/1112eee2/Freed/tree/research-archive) branch.
 
 ## License
 
@@ -103,7 +106,7 @@ Research notes, experiment evidence and SPRT records are on the
 
 ---
 
-**ภาษาไทย:** เอนจิ้นหมากฮอสไทยที่ใช้กติกาถูกต้องแม่นยำ ค้นหาด้วย alpha-beta แบบ native
+**ภาษาไทย:** Freed คือเอนจิ้นหมากฮอสไทยที่ใช้กติกาถูกต้องแม่นยำ ค้นหาด้วย alpha-beta แบบ native
 ประเมินกระดานด้วย NNUE และมี tablebase ผลแน่นอนสำหรับหมาก 3–6 ตัว
 ดาวน์โหลดไฟล์ Windows จากหน้า Releases แตกไฟล์ วาง tablebase ไว้ใน `build\` แล้วเปิด
-`ThaiMakhosEngine.exe` เพื่อเล่นผ่านเบราว์เซอร์
+`Freed.exe` เพื่อเล่นผ่านเบราว์เซอร์

@@ -1,5 +1,5 @@
 /**
- * Thai Makhos Engine Web GUI Frontend Application.
+ * Freed Web GUI Frontend Application.
  * Handles drag-and-drop, click-to-move, board flip, bot thinking, bot vs bot, and move logging.
  */
 
