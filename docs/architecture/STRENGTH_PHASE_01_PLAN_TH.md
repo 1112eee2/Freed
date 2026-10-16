@@ -107,6 +107,18 @@ G1–G3 และ G7 เป็นเกณฑ์บังคับ G4–G6 บ�
 
 D1–D3 ตัวไหนผ่าน W1 ก่อน R1 ให้รวมเข้า RC-2 ตามหลักการเดิม แต่ไม่เลื่อน R1 เพื่อรอ
 
+### Track E: ไอเดียจากเอนจิ้นหมากฮอสฝรั่ง (backlog เพิ่ม 2026-10-16)
+
+รายการเต็มอยู่ใน [DRAUGHTS_IDEAS_TH.md](../research/DRAUGHTS_IDEAS_TH.md) (Chinook, Cake, KingsRow, Scan)
+กติกาเดียวกับ Track D: ไม่แทรก critical path, flag แยก ปิดค่าเริ่มต้น, วัดเฉพาะช่วงที่ไม่มี gate
+
+1. **E1** ตาบังคับ (ตาถูกกฎตาเดียว) ไม่กินความลึก รวมกับ S6 เป็น flag เดียว
+2. **E2** verified null move ไม่ใช่การเอา null move ออก (การปิด null move เคยไม่ผ่าน screen)
+3. **E6** ชุดเปิดเกมแบบ ballot ที่ตัด opening แพ้แน่ออก ใช้กับ run หลัง RC-2
+4. หลัง RC-2: E5 opening book แบบ drop-out expansion คู่กับ C3
+   NNUE v3: E3 pattern eval (เทียบ/เสริม NNUE) และ E4 ความรู้หมากฮอสคลาสสิก (เริ่มจากวิเคราะห์ชุด collapse)
+   E7 TB7 / DTW อยู่นอก scope ตอนนี้ ต้องให้เจ้าของอนุมัติ
+
 ### ประกอบและยืนยัน
 
 1. **R1** RC-2 = SEARCH_INT_01 + NNUE ที่ดีกว่า (v2-A ถ้าผ่าน B4 ไม่งั้น v1)
