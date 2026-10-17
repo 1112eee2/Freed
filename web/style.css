@@ -155,7 +155,8 @@ body {
   color: var(--text-sub);
 }
 
-.setting-group select {
+.setting-group select,
+.setting-group input[type="number"] {
   background: rgba(13, 17, 23, 0.8);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -569,4 +570,8 @@ button:focus-visible, select:focus-visible {
   .move-log-sidebar { display: flex; }
   .history-card { height: 300px; flex: auto; }
   .board { width: min(540px, calc(96vw - 20px)); }
+}
+
+.setting-group input[type="number"] {
+  cursor: text;
 }

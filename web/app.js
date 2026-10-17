@@ -197,22 +197,42 @@ function restoreSettings() {
   const bindings = [
     ['select-human-side', 'humanSide', 'string'],
     ['select-think-time', 'thinkTimeSec', 'float'],
-    ['select-engine-threads', 'engineThreads', 'int'],
-    ['select-engine-hash', 'engineHashMb', 'int'],
+    ['input-engine-threads', 'engineThreads', 'int'],
+    ['input-engine-hash', 'engineHashMb', 'int'],
     ['select-engine-mode', 'engineMode', 'string'],
     ['select-rules-profile', 'rulesProfile', 'string'],
   ];
   for (const [elementId, stateKey, type] of bindings) {
-    const select = document.getElementById(elementId);
+    const element = document.getElementById(elementId);
     const raw = saved[stateKey];
     if (raw === undefined) continue;
     const value = String(raw);
-    if (![...select.options].some(option => option.value === value)) continue;
-    select.value = value;
+    if (!settingAccepts(element, value)) continue;
+    element.value = value;
     gameState[stateKey] = type === 'int'
       ? parseInt(value, 10)
       : (type === 'float' ? parseFloat(value) : value);
   }
+}
+
+// A select accepts one of its options; a number input accepts an integer
+// inside its own min/max, the same range the server validates.
+function settingAccepts(element, value) {
+  if (element.options) return [...element.options].some(option => option.value === value);
+  if (!/^\d+$/.test(value)) return false;
+  const number = parseInt(value, 10);
+  return number >= parseInt(element.min, 10) && number <= parseInt(element.max, 10);
+}
+
+// Typed values are rounded and clamped to the input's range; an empty or
+// non-numeric entry keeps the previous value.
+function readIntInput(element, previous) {
+  const typed = Math.round(Number(element.value));
+  const number = element.value.trim() === '' || !Number.isFinite(typed)
+    ? previous
+    : Math.min(parseInt(element.max, 10), Math.max(parseInt(element.min, 10), typed));
+  element.value = String(number);
+  return number;
 }
 
 function persistSettings() {
@@ -276,13 +296,13 @@ function setupUI() {
     persistSettings();
   });
 
-  document.getElementById('select-engine-threads').addEventListener('change', (e) => {
-    gameState.engineThreads = parseInt(e.target.value, 10);
+  document.getElementById('input-engine-threads').addEventListener('change', (e) => {
+    gameState.engineThreads = readIntInput(e.target, gameState.engineThreads);
     persistSettings();
   });
 
-  document.getElementById('select-engine-hash').addEventListener('change', (e) => {
-    gameState.engineHashMb = parseInt(e.target.value, 10);
+  document.getElementById('input-engine-hash').addEventListener('change', (e) => {
+    gameState.engineHashMb = readIntInput(e.target, gameState.engineHashMb);
     persistSettings();
   });
 
@@ -877,18 +897,18 @@ function applyServerReleaseDefaults(data) {
   const defaultHash = defaults.hash_mb_total !== undefined ? defaults.hash_mb_total : data.hash_mb;
 
   if (saved.engineThreads === undefined && defaultThreads !== undefined) {
-    const select = document.getElementById('select-engine-threads');
+    const input = document.getElementById('input-engine-threads');
     const valStr = String(defaultThreads);
-    if ([...select.options].some(opt => opt.value === valStr)) {
-      select.value = valStr;
+    if (settingAccepts(input, valStr)) {
+      input.value = valStr;
       gameState.engineThreads = defaultThreads;
     }
   }
   if (saved.engineHashMb === undefined && defaultHash !== undefined) {
-    const select = document.getElementById('select-engine-hash');
+    const input = document.getElementById('input-engine-hash');
     const valStr = String(defaultHash);
-    if ([...select.options].some(opt => opt.value === valStr)) {
-      select.value = valStr;
+    if (settingAccepts(input, valStr)) {
+      input.value = valStr;
       gameState.engineHashMb = defaultHash;
     }
   }

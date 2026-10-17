@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260909-1">
+  <link rel="stylesheet" href="style.css?v=20261017-1">
 </head>
 <body>
 
@@ -65,28 +65,14 @@
 
         <div class="engine-resource-grid">
           <div class="setting-group">
-            <label for="select-engine-threads">Threads:</label>
-            <select id="select-engine-threads">
-              <option value="1">1 Thread (control แนะนำที่ 1 วิ)</option>
-              <option value="2">2 Threads</option>
-              <option value="4">4 Threads</option>
-              <option value="6">6 Threads</option>
-              <option value="8">8 Threads</option>
-              <option value="12" selected>12 Threads (root split ทดลอง)</option>
-            </select>
-            <small class="setting-note">ค่ามากกว่า 1 ใช้ root split ซึ่งยังไม่ได้พิสูจน์ว่าแกร่งกว่า control ที่เวลา 1 วินาที</small>
+            <label for="input-engine-threads">Threads (1–12):</label>
+            <input type="number" id="input-engine-threads" min="1" max="12" step="1" value="12" inputmode="numeric">
+            <small class="setting-note">1 = control แนะนำที่ 1 วิ · ค่ามากกว่า 1 ใช้ root split (ทดลอง) ซึ่งยังไม่ได้พิสูจน์ว่าแกร่งกว่า control ที่เวลา 1 วินาที</small>
           </div>
 
           <div class="setting-group">
-            <label for="select-engine-hash">Hash (รวม):</label>
-            <select id="select-engine-hash">
-              <option value="16">16 MB</option>
-              <option value="32">32 MB</option>
-              <option value="64">64 MB</option>
-              <option value="128">128 MB</option>
-              <option value="256">256 MB</option>
-              <option value="512" selected>512 MB</option>
-            </select>
+            <label for="input-engine-hash">Hash รวม (MB, 4–1024):</label>
+            <input type="number" id="input-engine-hash" min="4" max="1024" step="1" value="512" inputmode="numeric">
           </div>
         </div>
 
@@ -226,6 +212,6 @@
     </aside>
   </div>
 
-  <script src="app.js?v=20261017-1"></script>
+  <script src="app.js?v=20261017-2"></script>
 </body>
 </html>
