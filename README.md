@@ -14,6 +14,7 @@ made by Thai people, for Thai people.
 - **Native search:** C alpha-beta (PVS, TT, null move, LMR, quiescence on forced captures)
   with multi-threaded root search
 - **NNUE evaluation:** an incrementally updated network with AVX2 inference
+  ([how it works and how it was trained](docs/NNUE.md))
 - **Endgame tablebases:** exact win/draw/loss for every position with 3–6 pieces
   (4.85 billion positions for 6 pieces), built under the 80-ply rule
 - **Web GUI:** play in the browser, take back moves, and save games as JSON
@@ -97,6 +98,7 @@ Full definition: [RULESET.json](RULESET.json).
 | `tests/` | Test suite |
 | `tools/build/` | Reproducible native build orchestrator |
 | `config/`, `releases/` | Hash-bound GUI release selection |
+| `docs/` | Design notes ([NNUE](docs/NNUE.md)) |
 
 Research notes, experiment evidence and SPRT records are on the
 [`research-archive`](https://github.com/1112eee2/Freed/tree/research-archive) branch.
