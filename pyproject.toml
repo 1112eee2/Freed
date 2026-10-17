@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "freed"
-version = "1.0.1"
+version = "1.0.2"
 description = "Freed: a Thai Makhos (Thai checkers) engine by Thai people, for Thai people. Exact rules, alpha-beta search, NNUE evaluation and endgame tablebases"
 readme = "README.md"
 license = "GPL-3.0-only"
