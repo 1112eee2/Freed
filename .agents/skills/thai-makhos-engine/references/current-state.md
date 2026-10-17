@@ -318,8 +318,9 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    12T)**; time to depth 18 vs 1T 0.49x (root split), 1.85x / 3.00x / 3.10x (Lazy
    2T / 6T / 12T). Depth is not Elo. **Next: F3** SPRT Lazy 12T vs root split 12T
    (W2 conditions, H1 +5, 1,000 pairs, seed 20261019): prepare the tree with
-   `tools/smp/prepare_f3_sprt.py`, start `launch_f3.py` only when no gate runs (after
-   A4 W2, or in a gap the owner picks).
+   `tools/smp/prepare_f3_sprt.py`, start `launch_f3.py` only when no gate runs.
+   **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
+   between B3 and B4 so R1 is not delayed.
 
 ## Standing scope: practical no-loss track against Invincible 2
 
