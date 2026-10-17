@@ -1,0 +1,13 @@
+{
+  "format": "thai-makhos-lazy-smp-parity-v1",
+  "lazy_library": "D:\\ThaiMakhosEngine\\.claude\\worktrees\\check-a2-status-5aa197\\build\\lazy_smp_01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+  "control_library": "D:\\ThaiMakhosEngine\\build\\search_int01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+  "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+  "depth": 13,
+  "hash_power": 16,
+  "hash_mb": 2.5,
+  "positions": 960,
+  "mismatches": 0,
+  "first_mismatches": [],
+  "verdict": "PASS"
+}

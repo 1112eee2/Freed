@@ -1,0 +1,60 @@
+{
+  "format": "thai-makhos-smp-m1-v1",
+  "library": "D:\\ThaiMakhosEngine\\build\\search_int01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+  "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+  "positions": 12,
+  "time_ms": 1000,
+  "hash_mb_per_process": 64,
+  "rows": [
+    {
+      "processes": 1,
+      "nps_per_process_mean": 2326016.0,
+      "nps_per_process_min": 2326016.0,
+      "nps_aggregate": 2326016.0,
+      "aggregate_vs_one_process": 1.0
+    },
+    {
+      "processes": 2,
+      "nps_per_process_mean": 2165797.589756409,
+      "nps_per_process_min": 2161749.3333333335,
+      "nps_aggregate": 4331595.179512818,
+      "aggregate_vs_one_process": 1.8622379121694856
+    },
+    {
+      "processes": 4,
+      "nps_per_process_mean": 1841412.4799715006,
+      "nps_per_process_min": 1834513.7905174568,
+      "nps_aggregate": 7365649.919886002,
+      "aggregate_vs_one_process": 3.166637684300539
+    },
+    {
+      "processes": 6,
+      "nps_per_process_mean": 1666244.388369453,
+      "nps_per_process_min": 1656332.5835207864,
+      "nps_aggregate": 9997466.330216717,
+      "aggregate_vs_one_process": 4.298107291702515
+    },
+    {
+      "processes": 8,
+      "nps_per_process_mean": 1463137.842698294,
+      "nps_per_process_min": 1446750.7287415673,
+      "nps_aggregate": 11705102.741586352,
+      "aggregate_vs_one_process": 5.032253751301088
+    },
+    {
+      "processes": 10,
+      "nps_per_process_mean": 1324077.577605973,
+      "nps_per_process_min": 1315243.4413258932,
+      "nps_aggregate": 13240775.77605973,
+      "aggregate_vs_one_process": 5.692469774954141
+    },
+    {
+      "processes": 12,
+      "nps_per_process_mean": 1090189.116784259,
+      "nps_per_process_min": 933105.9037840524,
+      "nps_aggregate": 13082269.401411107,
+      "aggregate_vs_one_process": 5.624324768793984
+    }
+  ],
+  "measured_utc": "2026-10-17T10:59:25Z"
+}

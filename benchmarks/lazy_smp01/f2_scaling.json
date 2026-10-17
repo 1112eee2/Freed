@@ -1,0 +1,3653 @@
+{
+  "format": "thai-makhos-smp-scaling-v1",
+  "lazy_library": "D:\\ThaiMakhosEngine\\.claude\\worktrees\\check-a2-status-5aa197\\build\\lazy_smp_01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+  "control_library": "D:\\ThaiMakhosEngine\\build\\search_int01\\candidate\\makhos_native_nnue_candidate_v1.dll",
+  "nnue_model": "D:\\ThaiMakhosEngine\\build\\nnue_quantized_v1\\model_a.mknnue",
+  "positions": 24,
+  "time_ms": 1000,
+  "depth": 18,
+  "hash_mb": 512,
+  "results": {
+    "control-1t": {
+      "fixed_time": {
+        "mean_depth": 22.791666666666668,
+        "long_move_matches": 17,
+        "leader_nps": 2196830.5190142794,
+        "aggregate_nps": 2196830.5190142794,
+        "total_wall_s": 24.011552800016943
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 17,
+        "leader_nps": 2042437.85618788,
+        "aggregate_nps": 2042437.85618788,
+        "total_wall_s": 6.660025399934966,
+        "speedup_vs_control_1t": 1.0
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1911808,
+            "aggregate_nodes": 1911808,
+            "wall_ms": 1000.7634999928996
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 2394112,
+            "aggregate_nodes": 2394112,
+            "wall_ms": 1000.353899988113
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 33,
+            "nodes": 3103744,
+            "aggregate_nodes": 3103744,
+            "wall_ms": 1000.4270999925211
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 2408448,
+            "aggregate_nodes": 2408448,
+            "wall_ms": 1000.1898999908008
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1824768,
+            "aggregate_nodes": 1824768,
+            "wall_ms": 1000.6255000189412
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 2061312,
+            "aggregate_nodes": 2061312,
+            "wall_ms": 1000.5684999923687
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "3-7",
+            "matches_long_move": false,
+            "depth": 21,
+            "nodes": 1637376,
+            "aggregate_nodes": 1637376,
+            "wall_ms": 1000.7326000195462
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 17,
+            "nodes": 1959936,
+            "aggregate_nodes": 1959936,
+            "wall_ms": 1000.3772000200115
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 20,
+            "nodes": 2284544,
+            "aggregate_nodes": 2284544,
+            "wall_ms": 1000.2601000014693
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1952768,
+            "aggregate_nodes": 1952768,
+            "wall_ms": 1000.3068000078201
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1853440,
+            "aggregate_nodes": 1853440,
+            "wall_ms": 1000.3404000017326
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2069504,
+            "aggregate_nodes": 2069504,
+            "wall_ms": 1000.5306000239216
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 2169856,
+            "aggregate_nodes": 2169856,
+            "wall_ms": 1000.9029000066221
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1929216,
+            "aggregate_nodes": 1929216,
+            "wall_ms": 1000.3888999926858
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 1963008,
+            "aggregate_nodes": 1963008,
+            "wall_ms": 1000.326799985487
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1944576,
+            "aggregate_nodes": 1944576,
+            "wall_ms": 1000.9224000095855
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 23,
+            "nodes": 2103296,
+            "aggregate_nodes": 2103296,
+            "wall_ms": 1000.6405999884009
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 20,
+            "nodes": 2980864,
+            "aggregate_nodes": 2980864,
+            "wall_ms": 1000.4847000236623
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 1992704,
+            "aggregate_nodes": 1992704,
+            "wall_ms": 1000.4835999861825
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 2200576,
+            "aggregate_nodes": 2200576,
+            "wall_ms": 1000.2865999995265
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 2433024,
+            "aggregate_nodes": 2433024,
+            "wall_ms": 1000.4912999866065
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 2890752,
+            "aggregate_nodes": 2890752,
+            "wall_ms": 1000.4266999894753
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 2486272,
+            "aggregate_nodes": 2486272,
+            "wall_ms": 1000.3191000141669
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 2193408,
+            "aggregate_nodes": 2193408,
+            "wall_ms": 1000.4030999843962
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 106773,
+            "aggregate_nodes": 106773,
+            "wall_ms": 54.33879999327473
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 649162,
+            "aggregate_nodes": 649162,
+            "wall_ms": 269.18170001590624
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 9942,
+            "aggregate_nodes": 9942,
+            "wall_ms": 3.8337000005412847
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 871601,
+            "aggregate_nodes": 871601,
+            "wall_ms": 374.665899988031
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1416553,
+            "aggregate_nodes": 1416553,
+            "wall_ms": 779.94760000729
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 498411,
+            "aggregate_nodes": 498411,
+            "wall_ms": 229.89800001960248
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 479286,
+            "aggregate_nodes": 479286,
+            "wall_ms": 256.25570002011955
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 3208816,
+            "aggregate_nodes": 3208816,
+            "wall_ms": 1523.546799988253
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 413760,
+            "aggregate_nodes": 413760,
+            "wall_ms": 189.07939997734502
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 71397,
+            "aggregate_nodes": 71397,
+            "wall_ms": 38.53669998352416
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1032046,
+            "aggregate_nodes": 1032046,
+            "wall_ms": 663.7581999821123
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 130424,
+            "aggregate_nodes": 130424,
+            "wall_ms": 71.8359999882523
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 527956,
+            "aggregate_nodes": 527956,
+            "wall_ms": 275.1300999952946
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 536379,
+            "aggregate_nodes": 536379,
+            "wall_ms": 301.1695999884978
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 101249,
+            "aggregate_nodes": 101249,
+            "wall_ms": 59.44189999718219
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 244337,
+            "aggregate_nodes": 244337,
+            "wall_ms": 130.5731000029482
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 109529,
+            "aggregate_nodes": 109529,
+            "wall_ms": 52.76409999351017
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1584336,
+            "aggregate_nodes": 1584336,
+            "wall_ms": 587.6520999881905
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 541876,
+            "aggregate_nodes": 541876,
+            "wall_ms": 280.38050001487136
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 555282,
+            "aggregate_nodes": 555282,
+            "wall_ms": 283.5211000056006
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 220364,
+            "aggregate_nodes": 220364,
+            "wall_ms": 108.80149999866262
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 91706,
+            "aggregate_nodes": 91706,
+            "wall_ms": 36.452500004088506
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 131708,
+            "aggregate_nodes": 131708,
+            "wall_ms": 53.98040000000037
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 69795,
+            "aggregate_nodes": 69795,
+            "wall_ms": 35.27999998186715
+          }
+        ]
+      }
+    },
+    "root-split-12t": {
+      "fixed_time": {
+        "mean_depth": 20.625,
+        "long_move_matches": 17,
+        "leader_nps": 5650044.1548421895,
+        "aggregate_nps": 5650044.1548421895,
+        "total_wall_s": 24.028733100014506
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 16,
+        "leader_nps": 6179806.388539256,
+        "aggregate_nps": 6179806.388539256,
+        "total_wall_s": 11.437646999926073,
+        "speedup_vs_control_1t": 0.4885089141768043
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 3785350,
+            "aggregate_nodes": 3785350,
+            "wall_ms": 1002.3228999925777
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 8430496,
+            "aggregate_nodes": 8430496,
+            "wall_ms": 1002.574000012828
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 5397803,
+            "aggregate_nodes": 5397803,
+            "wall_ms": 1000.8162999874912
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 17,
+            "nodes": 5988029,
+            "aggregate_nodes": 5988029,
+            "wall_ms": 1001.3323999883141
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "10-15",
+            "matches_long_move": false,
+            "depth": 17,
+            "nodes": 5669270,
+            "aggregate_nodes": 5669270,
+            "wall_ms": 1002.6601999998093
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 4689029,
+            "aggregate_nodes": 4689029,
+            "wall_ms": 1000.6967000081204
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 21,
+            "nodes": 5096109,
+            "aggregate_nodes": 5096109,
+            "wall_ms": 1000.9209999989253
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 16,
+            "nodes": 7184005,
+            "aggregate_nodes": 7184005,
+            "wall_ms": 1001.3302000006661
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 19,
+            "nodes": 6140176,
+            "aggregate_nodes": 6140176,
+            "wall_ms": 1001.1197999992874
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 4289682,
+            "aggregate_nodes": 4289682,
+            "wall_ms": 1000.7081000076141
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "24-19",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 6160016,
+            "aggregate_nodes": 6160016,
+            "wall_ms": 1001.1904000130016
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 4814103,
+            "aggregate_nodes": 4814103,
+            "wall_ms": 1000.9266999841202
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 6131286,
+            "aggregate_nodes": 6131286,
+            "wall_ms": 1000.8127999899443
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 4469430,
+            "aggregate_nodes": 4469430,
+            "wall_ms": 1000.7299999997485
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 6035469,
+            "aggregate_nodes": 6035469,
+            "wall_ms": 1000.7880000048317
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 5919587,
+            "aggregate_nodes": 5919587,
+            "wall_ms": 1000.7247000175994
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 5707337,
+            "aggregate_nodes": 5707337,
+            "wall_ms": 1002.8643000114243
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 17,
+            "nodes": 9752501,
+            "aggregate_nodes": 9752501,
+            "wall_ms": 1001.2751999893226
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 5690300,
+            "aggregate_nodes": 5690300,
+            "wall_ms": 1000.7157000072766
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 5650574,
+            "aggregate_nodes": 5650574,
+            "wall_ms": 1000.7163999835029
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "18-15",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 7603488,
+            "aggregate_nodes": 7603488,
+            "wall_ms": 1000.8894000202417
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 2621718,
+            "aggregate_nodes": 2621718,
+            "wall_ms": 1001.1656999995466
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 3389237,
+            "aggregate_nodes": 3389237,
+            "wall_ms": 1000.5289000109769
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 5148408,
+            "aggregate_nodes": 5148408,
+            "wall_ms": 1000.9232999873348
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 368428,
+            "aggregate_nodes": 368428,
+            "wall_ms": 88.07080000406131
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2221178,
+            "aggregate_nodes": 2221178,
+            "wall_ms": 317.2611999907531
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 214914,
+            "aggregate_nodes": 214914,
+            "wall_ms": 55.59569998877123
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 6350789,
+            "aggregate_nodes": 6350789,
+            "wall_ms": 1128.9375000051223
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 8658526,
+            "aggregate_nodes": 8658526,
+            "wall_ms": 1496.9558999873698
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1300859,
+            "aggregate_nodes": 1300859,
+            "wall_ms": 311.4013000158593
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1444063,
+            "aggregate_nodes": 1444063,
+            "wall_ms": 279.07190000405535
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 16804637,
+            "aggregate_nodes": 16804637,
+            "wall_ms": 2221.063699980732
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 3879139,
+            "aggregate_nodes": 3879139,
+            "wall_ms": 703.3745000080671
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 527218,
+            "aggregate_nodes": 527218,
+            "wall_ms": 133.36169999092817
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "24-19",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 4629783,
+            "aggregate_nodes": 4629783,
+            "wall_ms": 893.0341000086628
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 840658,
+            "aggregate_nodes": 840658,
+            "wall_ms": 194.30029997602105
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2221934,
+            "aggregate_nodes": 2221934,
+            "wall_ms": 430.2122000080999
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1518099,
+            "aggregate_nodes": 1518099,
+            "wall_ms": 339.0349999826867
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2092946,
+            "aggregate_nodes": 2092946,
+            "wall_ms": 428.5784999956377
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 803369,
+            "aggregate_nodes": 803369,
+            "wall_ms": 156.7499999946449
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "1-5",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 796936,
+            "aggregate_nodes": 796936,
+            "wall_ms": 124.21209999592975
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 9944055,
+            "aggregate_nodes": 9944055,
+            "wall_ms": 975.7527000037953
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1557945,
+            "aggregate_nodes": 1557945,
+            "wall_ms": 312.895999988541
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2252948,
+            "aggregate_nodes": 2252948,
+            "wall_ms": 357.3020999901928
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1193190,
+            "aggregate_nodes": 1193190,
+            "wall_ms": 208.40780000435188
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 170237,
+            "aggregate_nodes": 170237,
+            "wall_ms": 74.0354000008665
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 278102,
+            "aggregate_nodes": 278102,
+            "wall_ms": 89.69839999917895
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 612491,
+            "aggregate_nodes": 612491,
+            "wall_ms": 118.33820000174455
+          }
+        ]
+      }
+    },
+    "lazy-1t": {
+      "fixed_time": {
+        "mean_depth": 22.791666666666668,
+        "long_move_matches": 17,
+        "leader_nps": 2190585.641574507,
+        "aggregate_nps": 2190585.641574507,
+        "total_wall_s": 24.01315840004827
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 17,
+        "leader_nps": 2188004.3429299076,
+        "aggregate_nps": 2188004.3429299076,
+        "total_wall_s": 6.21693829994183,
+        "speedup_vs_control_1t": 1.0618700866993083
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2073600,
+            "aggregate_nodes": 2073600,
+            "wall_ms": 1000.6890000076964
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 2382848,
+            "aggregate_nodes": 2382848,
+            "wall_ms": 1000.5211000097916
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 33,
+            "nodes": 2817024,
+            "aggregate_nodes": 2817024,
+            "wall_ms": 1000.3610999847297
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 2283520,
+            "aggregate_nodes": 2283520,
+            "wall_ms": 1000.6720000237692
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1715200,
+            "aggregate_nodes": 1715200,
+            "wall_ms": 1000.4030000127386
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 2152448,
+            "aggregate_nodes": 2152448,
+            "wall_ms": 1000.5242000042927
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 1953792,
+            "aggregate_nodes": 1953792,
+            "wall_ms": 1000.5498999962583
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 17,
+            "nodes": 2241536,
+            "aggregate_nodes": 2241536,
+            "wall_ms": 1000.6144999933895
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 20,
+            "nodes": 2300928,
+            "aggregate_nodes": 2300928,
+            "wall_ms": 1000.689800013788
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1944576,
+            "aggregate_nodes": 1944576,
+            "wall_ms": 1000.562400004128
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1826816,
+            "aggregate_nodes": 1826816,
+            "wall_ms": 1000.3559999749996
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1829888,
+            "aggregate_nodes": 1829888,
+            "wall_ms": 1000.98679997609
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 2056192,
+            "aggregate_nodes": 2056192,
+            "wall_ms": 1000.4557000065688
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1935360,
+            "aggregate_nodes": 1935360,
+            "wall_ms": 1000.8086999878287
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 1945600,
+            "aggregate_nodes": 1945600,
+            "wall_ms": 1000.7257999968715
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1966080,
+            "aggregate_nodes": 1966080,
+            "wall_ms": 1000.7621000113431
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 23,
+            "nodes": 2216960,
+            "aggregate_nodes": 2216960,
+            "wall_ms": 1000.714900001185
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 20,
+            "nodes": 3025920,
+            "aggregate_nodes": 3025920,
+            "wall_ms": 1000.5877000221517
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 1625088,
+            "aggregate_nodes": 1625088,
+            "wall_ms": 1000.5104999872856
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 2093056,
+            "aggregate_nodes": 2093056,
+            "wall_ms": 1000.3852999943774
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 2512896,
+            "aggregate_nodes": 2512896,
+            "wall_ms": 1000.3253000031691
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 2841600,
+            "aggregate_nodes": 2841600,
+            "wall_ms": 1000.3140000044368
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 2573312,
+            "aggregate_nodes": 2573312,
+            "wall_ms": 1000.3045000194106
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 2288640,
+            "aggregate_nodes": 2288640,
+            "wall_ms": 1000.334100011969
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 106773,
+            "aggregate_nodes": 106773,
+            "wall_ms": 53.28300001565367
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 649162,
+            "aggregate_nodes": 649162,
+            "wall_ms": 273.9747000159696
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 9942,
+            "aggregate_nodes": 9942,
+            "wall_ms": 4.029500007163733
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 871601,
+            "aggregate_nodes": 871601,
+            "wall_ms": 371.4423000055831
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1416553,
+            "aggregate_nodes": 1416553,
+            "wall_ms": 775.4379999823868
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 498411,
+            "aggregate_nodes": 498411,
+            "wall_ms": 233.2544999953825
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 479286,
+            "aggregate_nodes": 479286,
+            "wall_ms": 253.32499999785796
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 3208816,
+            "aggregate_nodes": 3208816,
+            "wall_ms": 1421.5915000240784
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 413760,
+            "aggregate_nodes": 413760,
+            "wall_ms": 189.92360000265762
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 71397,
+            "aggregate_nodes": 71397,
+            "wall_ms": 36.24149999814108
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1032046,
+            "aggregate_nodes": 1032046,
+            "wall_ms": 541.5901999804191
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 130424,
+            "aggregate_nodes": 130424,
+            "wall_ms": 66.63250000565313
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 527956,
+            "aggregate_nodes": 527956,
+            "wall_ms": 240.5445000040345
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 536379,
+            "aggregate_nodes": 536379,
+            "wall_ms": 276.08839998720214
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 101249,
+            "aggregate_nodes": 101249,
+            "wall_ms": 54.141399974469095
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 244337,
+            "aggregate_nodes": 244337,
+            "wall_ms": 120.28159998590127
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 109529,
+            "aggregate_nodes": 109529,
+            "wall_ms": 51.6955999773927
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1584336,
+            "aggregate_nodes": 1584336,
+            "wall_ms": 515.027099987492
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 541876,
+            "aggregate_nodes": 541876,
+            "wall_ms": 264.81300001614727
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 555282,
+            "aggregate_nodes": 555282,
+            "wall_ms": 263.2005999912508
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 220364,
+            "aggregate_nodes": 220364,
+            "wall_ms": 96.65039999526925
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 91706,
+            "aggregate_nodes": 91706,
+            "wall_ms": 35.37520000827499
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 131708,
+            "aggregate_nodes": 131708,
+            "wall_ms": 45.76979999546893
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 69795,
+            "aggregate_nodes": 69795,
+            "wall_ms": 32.62439998798072
+          }
+        ]
+      }
+    },
+    "lazy-2t": {
+      "fixed_time": {
+        "mean_depth": 23.875,
+        "long_move_matches": 17,
+        "leader_nps": 2230460.566622416,
+        "aggregate_nps": 4462381.248116475,
+        "total_wall_s": 24.011809400020866
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 18,
+        "leader_nps": 2083303.5239804944,
+        "aggregate_nps": 4098635.301593778,
+        "total_wall_s": 3.5964648999797646,
+        "speedup_vs_control_1t": 1.8465246289416897
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1943229,
+            "aggregate_nodes": 3895997,
+            "wall_ms": 1000.4096000047866
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 2319781,
+            "aggregate_nodes": 4582821,
+            "wall_ms": 1000.4206000012346
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 33,
+            "nodes": 3263488,
+            "aggregate_nodes": 6637357,
+            "wall_ms": 1000.4223999858368
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 2532320,
+            "aggregate_nodes": 5063648,
+            "wall_ms": 1000.4863000067417
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 19,
+            "nodes": 1824768,
+            "aggregate_nodes": 3643333,
+            "wall_ms": 1000.8122000144795
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2331648,
+            "aggregate_nodes": 4661244,
+            "wall_ms": 1000.3477999998722
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 1866752,
+            "aggregate_nodes": 3725059,
+            "wall_ms": 1000.6771000043955
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 2241277,
+            "aggregate_nodes": 4467453,
+            "wall_ms": 1000.4614999925252
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 2349939,
+            "aggregate_nodes": 4709235,
+            "wall_ms": 1000.2784999960568
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2027520,
+            "aggregate_nodes": 3999498,
+            "wall_ms": 1000.5177000130061
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 1869824,
+            "aggregate_nodes": 3743819,
+            "wall_ms": 1000.3331000043545
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2018757,
+            "aggregate_nodes": 4041157,
+            "wall_ms": 1000.5068999889772
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 2147764,
+            "aggregate_nodes": 4269492,
+            "wall_ms": 1000.4516000044532
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 1885184,
+            "aggregate_nodes": 3793531,
+            "wall_ms": 1000.6503000040539
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 1965056,
+            "aggregate_nodes": 3927895,
+            "wall_ms": 1000.5729999975301
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 1998848,
+            "aggregate_nodes": 3997524,
+            "wall_ms": 1000.4994999908376
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 2262016,
+            "aggregate_nodes": 4544479,
+            "wall_ms": 1000.595899997279
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 3162474,
+            "aggregate_nodes": 6247786,
+            "wall_ms": 1000.3759000101127
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1883136,
+            "aggregate_nodes": 3772345,
+            "wall_ms": 1000.7045000093058
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2180096,
+            "aggregate_nodes": 4389077,
+            "wall_ms": 1000.4146999854129
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 2315264,
+            "aggregate_nodes": 4612781,
+            "wall_ms": 1000.5044999998063
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 2547588,
+            "aggregate_nodes": 5189508,
+            "wall_ms": 1000.4640000115614
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 2558839,
+            "aggregate_nodes": 5076855,
+            "wall_ms": 1000.5719999899156
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 2061826,
+            "aggregate_nodes": 4157954,
+            "wall_ms": 1000.3298000083305
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 85030,
+            "aggregate_nodes": 169968,
+            "wall_ms": 41.16449999855831
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 398622,
+            "aggregate_nodes": 786978,
+            "wall_ms": 207.31279999017715
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 5261,
+            "aggregate_nodes": 9553,
+            "wall_ms": 2.3295999853871763
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 420083,
+            "aggregate_nodes": 862115,
+            "wall_ms": 186.98260001838207
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1183467,
+            "aggregate_nodes": 2161470,
+            "wall_ms": 652.3608999850694
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 282983,
+            "aggregate_nodes": 563893,
+            "wall_ms": 131.06459999107756
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 277006,
+            "aggregate_nodes": 564431,
+            "wall_ms": 165.5787999916356
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1419950,
+            "aggregate_nodes": 2834641,
+            "wall_ms": 625.6192000000738
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 166044,
+            "aggregate_nodes": 328032,
+            "wall_ms": 72.07140000537038
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 47668,
+            "aggregate_nodes": 99604,
+            "wall_ms": 28.483000001870096
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 755840,
+            "aggregate_nodes": 1492145,
+            "wall_ms": 398.4925000113435
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 129765,
+            "aggregate_nodes": 256955,
+            "wall_ms": 63.27189999865368
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 333390,
+            "aggregate_nodes": 669955,
+            "wall_ms": 155.26349999709055
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 197648,
+            "aggregate_nodes": 390922,
+            "wall_ms": 121.21620000107214
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 47446,
+            "aggregate_nodes": 91517,
+            "wall_ms": 25.858000008156523
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 79238,
+            "aggregate_nodes": 157571,
+            "wall_ms": 39.269400003831834
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "6-9",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 58420,
+            "aggregate_nodes": 118805,
+            "wall_ms": 28.419200010830536
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 828222,
+            "aggregate_nodes": 1625943,
+            "wall_ms": 272.30929999495856
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 288146,
+            "aggregate_nodes": 581510,
+            "wall_ms": 147.85290000145324
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 226065,
+            "aggregate_nodes": 451935,
+            "wall_ms": 111.84369999682531
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "19-16",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 92636,
+            "aggregate_nodes": 193904,
+            "wall_ms": 50.173700001323596
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 52075,
+            "aggregate_nodes": 102330,
+            "wall_ms": 23.512499989010394
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 82168,
+            "aggregate_nodes": 150820,
+            "wall_ms": 28.039800003170967
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 35355,
+            "aggregate_nodes": 75601,
+            "wall_ms": 17.97489999444224
+          }
+        ]
+      }
+    },
+    "lazy-4t": {
+      "fixed_time": {
+        "mean_depth": 24.916666666666668,
+        "long_move_matches": 18,
+        "leader_nps": 2081724.636486765,
+        "aggregate_nps": 8376168.886026934,
+        "total_wall_s": 24.010713100055
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 17,
+        "leader_nps": 2033067.9664694918,
+        "aggregate_nps": 6234572.084738732,
+        "total_wall_s": 3.6488485000736546,
+        "speedup_vs_control_1t": 2.098921763093635
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 1973204,
+            "aggregate_nodes": 7798318,
+            "wall_ms": 1000.4631000047084
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2340864,
+            "aggregate_nodes": 9413334,
+            "wall_ms": 1000.6226999976207
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 36,
+            "nodes": 3296460,
+            "aggregate_nodes": 12339677,
+            "wall_ms": 1000.402200006647
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 2273058,
+            "aggregate_nodes": 9161561,
+            "wall_ms": 1000.4015000013169
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 20,
+            "nodes": 1609619,
+            "aggregate_nodes": 6357412,
+            "wall_ms": 1000.4114000184927
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2131828,
+            "aggregate_nodes": 8626371,
+            "wall_ms": 1000.4677000106312
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 1796096,
+            "aggregate_nodes": 7250019,
+            "wall_ms": 1000.4334000113886
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2081663,
+            "aggregate_nodes": 8502329,
+            "wall_ms": 1000.3457000129856
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "19-23",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 2019110,
+            "aggregate_nodes": 8236637,
+            "wall_ms": 1000.4111000162084
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1886986,
+            "aggregate_nodes": 7508980,
+            "wall_ms": 1000.4423999926075
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 1724739,
+            "aggregate_nodes": 6906297,
+            "wall_ms": 1000.5175999831408
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1972931,
+            "aggregate_nodes": 7683256,
+            "wall_ms": 1000.6686999986414
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 2059523,
+            "aggregate_nodes": 8125746,
+            "wall_ms": 1000.370900001144
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1804872,
+            "aggregate_nodes": 7302382,
+            "wall_ms": 1000.364300009096
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1741465,
+            "aggregate_nodes": 7093699,
+            "wall_ms": 1000.4192999913357
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 1878598,
+            "aggregate_nodes": 7526432,
+            "wall_ms": 1000.5142999871168
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 1934813,
+            "aggregate_nodes": 8039979,
+            "wall_ms": 1000.5098000110593
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2974647,
+            "aggregate_nodes": 11920074,
+            "wall_ms": 1000.4121999954805
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "21-17",
+            "matches_long_move": false,
+            "depth": 23,
+            "nodes": 1833931,
+            "aggregate_nodes": 7476955,
+            "wall_ms": 1000.5458999949042
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 2004982,
+            "aggregate_nodes": 7989761,
+            "wall_ms": 1000.3906000056304
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 26,
+            "nodes": 2190261,
+            "aggregate_nodes": 8895458,
+            "wall_ms": 1000.4231000202708
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2338120,
+            "aggregate_nodes": 9877077,
+            "wall_ms": 1000.3971999976784
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2162688,
+            "aggregate_nodes": 8974308,
+            "wall_ms": 1000.3497999859974
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 26,
+            "nodes": 1953235,
+            "aggregate_nodes": 8111726,
+            "wall_ms": 1000.428200000897
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 39868,
+            "aggregate_nodes": 160069,
+            "wall_ms": 20.81379998708144
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 228999,
+            "aggregate_nodes": 731624,
+            "wall_ms": 102.50050001195632
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 4120,
+            "aggregate_nodes": 12219,
+            "wall_ms": 1.9988999993074685
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 267855,
+            "aggregate_nodes": 845300,
+            "wall_ms": 120.79149999772198
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "10-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 1093588,
+            "aggregate_nodes": 2927471,
+            "wall_ms": 651.1622999969404
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 168666,
+            "aggregate_nodes": 611925,
+            "wall_ms": 76.12380001228303
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 141988,
+            "aggregate_nodes": 469018,
+            "wall_ms": 74.96590001392178
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 2301547,
+            "aggregate_nodes": 6922077,
+            "wall_ms": 1064.972799998941
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 278556,
+            "aggregate_nodes": 936381,
+            "wall_ms": 133.52639999357052
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 31398,
+            "aggregate_nodes": 121094,
+            "wall_ms": 17.194400017615408
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 655521,
+            "aggregate_nodes": 2034719,
+            "wall_ms": 369.55370000214316
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 65581,
+            "aggregate_nodes": 218613,
+            "wall_ms": 33.87839999049902
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 267781,
+            "aggregate_nodes": 923541,
+            "wall_ms": 140.17420000163838
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 207833,
+            "aggregate_nodes": 724952,
+            "wall_ms": 114.25959999905899
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 67080,
+            "aggregate_nodes": 199288,
+            "wall_ms": 37.81690000323579
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 93805,
+            "aggregate_nodes": 340616,
+            "wall_ms": 48.43349999282509
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 85351,
+            "aggregate_nodes": 299816,
+            "wall_ms": 47.730599995702505
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 630734,
+            "aggregate_nodes": 1973314,
+            "wall_ms": 210.09899998898618
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 358365,
+            "aggregate_nodes": 1012566,
+            "wall_ms": 177.62130001210608
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 174486,
+            "aggregate_nodes": 561568,
+            "wall_ms": 86.96550002787262
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 103926,
+            "aggregate_nodes": 290024,
+            "wall_ms": 47.518600011244416
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 36619,
+            "aggregate_nodes": 107660,
+            "wall_ms": 15.646799991372973
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 41540,
+            "aggregate_nodes": 135234,
+            "wall_ms": 14.105100010056049
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 73150,
+            "aggregate_nodes": 189920,
+            "wall_ms": 40.99500001757406
+          }
+        ]
+      }
+    },
+    "lazy-6t": {
+      "fixed_time": {
+        "mean_depth": 25.041666666666668,
+        "long_move_matches": 18,
+        "leader_nps": 1892641.8623826033,
+        "aggregate_nps": 11213410.694155123,
+        "total_wall_s": 24.012296199973207
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 16,
+        "leader_nps": 1870196.597561556,
+        "aggregate_nps": 8407746.928551208,
+        "total_wall_s": 2.3355320000555366,
+        "speedup_vs_control_1t": 3.0022362650534644
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 27,
+            "nodes": 1777728,
+            "aggregate_nodes": 10190635,
+            "wall_ms": 1000.4866999806836
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1867516,
+            "aggregate_nodes": 11409701,
+            "wall_ms": 1000.4848000244237
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 35,
+            "nodes": 2933060,
+            "aggregate_nodes": 16934918,
+            "wall_ms": 1000.3990999830421
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2038591,
+            "aggregate_nodes": 12455322,
+            "wall_ms": 1000.5106999888085
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "10-15",
+            "matches_long_move": false,
+            "depth": 19,
+            "nodes": 1476956,
+            "aggregate_nodes": 8779204,
+            "wall_ms": 1000.5511000053957
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2040810,
+            "aggregate_nodes": 11679418,
+            "wall_ms": 1000.6061000167392
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 1597416,
+            "aggregate_nodes": 9457983,
+            "wall_ms": 1000.4804999916814
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1726397,
+            "aggregate_nodes": 10771745,
+            "wall_ms": 1000.562400004128
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 23,
+            "nodes": 2063360,
+            "aggregate_nodes": 11620118,
+            "wall_ms": 1000.5114999949001
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1556746,
+            "aggregate_nodes": 9555406,
+            "wall_ms": 1000.522499991348
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 1562210,
+            "aggregate_nodes": 9157268,
+            "wall_ms": 1000.4026999813505
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1746132,
+            "aggregate_nodes": 10480728,
+            "wall_ms": 1000.4486000107136
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 21,
+            "nodes": 1817963,
+            "aggregate_nodes": 10903869,
+            "wall_ms": 1000.6298999942373
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1617920,
+            "aggregate_nodes": 9512727,
+            "wall_ms": 1000.5654999986291
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1675176,
+            "aggregate_nodes": 10020993,
+            "wall_ms": 1000.5260999896564
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1588970,
+            "aggregate_nodes": 9657645,
+            "wall_ms": 1000.596099998802
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "6-9",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 1745920,
+            "aggregate_nodes": 10520367,
+            "wall_ms": 1000.4711000074167
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 2805408,
+            "aggregate_nodes": 16627324,
+            "wall_ms": 1000.4744000034407
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 22,
+            "nodes": 1552976,
+            "aggregate_nodes": 9369240,
+            "wall_ms": 1000.492299994221
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1926609,
+            "aggregate_nodes": 11104544,
+            "wall_ms": 1000.5726999952458
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 27,
+            "nodes": 2157026,
+            "aggregate_nodes": 12239783,
+            "wall_ms": 1000.5827999848407
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2137527,
+            "aggregate_nodes": 12909092,
+            "wall_ms": 1000.5105000163894
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2143956,
+            "aggregate_nodes": 12610297,
+            "wall_ms": 1000.4734999965876
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 26,
+            "nodes": 1890304,
+            "aggregate_nodes": 11291412,
+            "wall_ms": 1000.434600020526
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 36079,
+            "aggregate_nodes": 169072,
+            "wall_ms": 18.298099981620908
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 129431,
+            "aggregate_nodes": 617800,
+            "wall_ms": 69.76770001347177
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 3703,
+            "aggregate_nodes": 14390,
+            "wall_ms": 2.045800007181242
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 180601,
+            "aggregate_nodes": 923729,
+            "wall_ms": 94.0532999811694
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 496832,
+            "aggregate_nodes": 2301233,
+            "wall_ms": 305.0851000007242
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 108126,
+            "aggregate_nodes": 590256,
+            "wall_ms": 65.5010000045877
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 303977,
+            "aggregate_nodes": 998130,
+            "wall_ms": 162.10909999790601
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 531453,
+            "aggregate_nodes": 2836154,
+            "wall_ms": 284.72369999508373
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 209975,
+            "aggregate_nodes": 1040912,
+            "wall_ms": 112.74979999870993
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 25816,
+            "aggregate_nodes": 145671,
+            "wall_ms": 17.525199975352734
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "24-19",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 542971,
+            "aggregate_nodes": 2184035,
+            "wall_ms": 329.67630002531223
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 38040,
+            "aggregate_nodes": 250353,
+            "wall_ms": 27.230900013819337
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 161876,
+            "aggregate_nodes": 878281,
+            "wall_ms": 86.58170001581311
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 46890,
+            "aggregate_nodes": 235984,
+            "wall_ms": 25.604700000258163
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 28548,
+            "aggregate_nodes": 158666,
+            "wall_ms": 22.417000000132248
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 55585,
+            "aggregate_nodes": 258814,
+            "wall_ms": 29.396900004940107
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 20659,
+            "aggregate_nodes": 110974,
+            "wall_ms": 10.826400015503168
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "29-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 490065,
+            "aggregate_nodes": 2379087,
+            "wall_ms": 195.74190001003444
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 162883,
+            "aggregate_nodes": 895797,
+            "wall_ms": 108.8842999888584
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 619356,
+            "aggregate_nodes": 1863590,
+            "wall_ms": 289.08750001573935
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 104573,
+            "aggregate_nodes": 434637,
+            "wall_ms": 46.39800000586547
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 28137,
+            "aggregate_nodes": 120517,
+            "wall_ms": 11.437000008299947
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 24432,
+            "aggregate_nodes": 128361,
+            "wall_ms": 11.444400006439537
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 17896,
+            "aggregate_nodes": 100119,
+            "wall_ms": 8.946199988713488
+          }
+        ]
+      }
+    },
+    "lazy-8t": {
+      "fixed_time": {
+        "mean_depth": 25.083333333333332,
+        "long_move_matches": 19,
+        "leader_nps": 1674024.560497074,
+        "aggregate_nps": 13210187.42037013,
+        "total_wall_s": 24.013529400108382
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 18,
+        "leader_nps": 1673114.828094088,
+        "aggregate_nps": 10732781.384879924,
+        "total_wall_s": 2.4062156000290997,
+        "speedup_vs_control_1t": 3.1098612419393907
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 1535773,
+            "aggregate_nodes": 12356898,
+            "wall_ms": 1000.4967999993823
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1714662,
+            "aggregate_nodes": 13747525,
+            "wall_ms": 1000.5816000048071
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 36,
+            "nodes": 2795770,
+            "aggregate_nodes": 20750056,
+            "wall_ms": 1000.589500006754
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1928634,
+            "aggregate_nodes": 15320902,
+            "wall_ms": 1000.596099998802
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "8-11",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 1291615,
+            "aggregate_nodes": 10106738,
+            "wall_ms": 1000.5429000011645
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1657663,
+            "aggregate_nodes": 13585489,
+            "wall_ms": 1000.5613999965135
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 21,
+            "nodes": 1441453,
+            "aggregate_nodes": 11383214,
+            "wall_ms": 1000.5508000031114
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 17,
+            "nodes": 1660768,
+            "aggregate_nodes": 13146689,
+            "wall_ms": 1000.6396000098903
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 23,
+            "nodes": 1643803,
+            "aggregate_nodes": 13140005,
+            "wall_ms": 1000.6215000175871
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1364777,
+            "aggregate_nodes": 10951756,
+            "wall_ms": 1000.932399998419
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 19,
+            "nodes": 1330176,
+            "aggregate_nodes": 10514967,
+            "wall_ms": 1000.6761999975424
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1319007,
+            "aggregate_nodes": 10730722,
+            "wall_ms": 1000.491900020279
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1631232,
+            "aggregate_nodes": 13024175,
+            "wall_ms": 1000.4450999840628
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1401130,
+            "aggregate_nodes": 10877215,
+            "wall_ms": 1000.4537000204436
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1508671,
+            "aggregate_nodes": 11701522,
+            "wall_ms": 1000.5696000007447
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1441575,
+            "aggregate_nodes": 11592070,
+            "wall_ms": 1000.5185000190977
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 1567477,
+            "aggregate_nodes": 12494576,
+            "wall_ms": 1000.6252000166569
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2628234,
+            "aggregate_nodes": 19765310,
+            "wall_ms": 1000.4635000077542
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1407747,
+            "aggregate_nodes": 11415890,
+            "wall_ms": 1000.4862000059802
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1600959,
+            "aggregate_nodes": 13139993,
+            "wall_ms": 1000.623900006758
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 1704871,
+            "aggregate_nodes": 13646658,
+            "wall_ms": 1000.4446000093594
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 2089172,
+            "aggregate_nodes": 15771159,
+            "wall_ms": 1000.4881999921054
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1935360,
+            "aggregate_nodes": 14984602,
+            "wall_ms": 1000.5905000143684
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 26,
+            "nodes": 1598709,
+            "aggregate_nodes": 13075093,
+            "wall_ms": 1000.5396999767981
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 28658,
+            "aggregate_nodes": 173578,
+            "wall_ms": 14.536700007738546
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 128416,
+            "aggregate_nodes": 876805,
+            "wall_ms": 62.31789998128079
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 3172,
+            "aggregate_nodes": 17798,
+            "wall_ms": 1.8942999886348844
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 141722,
+            "aggregate_nodes": 966302,
+            "wall_ms": 82.07720000064
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "7-11",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 744950,
+            "aggregate_nodes": 4724014,
+            "wall_ms": 541.3960999867413
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 69971,
+            "aggregate_nodes": 569498,
+            "wall_ms": 47.118899994529784
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "3-7",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 225375,
+            "aggregate_nodes": 1071576,
+            "wall_ms": 136.1511999857612
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 953645,
+            "aggregate_nodes": 6419992,
+            "wall_ms": 551.3930000015534
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 178220,
+            "aggregate_nodes": 1262297,
+            "wall_ms": 105.14369999873452
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 25613,
+            "aggregate_nodes": 190289,
+            "wall_ms": 18.16160001908429
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 282279,
+            "aggregate_nodes": 1878616,
+            "wall_ms": 196.1963000067044
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 42897,
+            "aggregate_nodes": 342233,
+            "wall_ms": 30.807300005108118
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 145184,
+            "aggregate_nodes": 997069,
+            "wall_ms": 86.11360000213608
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 82211,
+            "aggregate_nodes": 641593,
+            "wall_ms": 61.130300018703565
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 28860,
+            "aggregate_nodes": 222309,
+            "wall_ms": 21.891300013521686
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 49719,
+            "aggregate_nodes": 333791,
+            "wall_ms": 33.38899998925626
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "6-9",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 20323,
+            "aggregate_nodes": 162608,
+            "wall_ms": 14.13149997824803
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 365125,
+            "aggregate_nodes": 2245282,
+            "wall_ms": 151.18960000108927
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 231495,
+            "aggregate_nodes": 944431,
+            "wall_ms": 115.96940000890754
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 123358,
+            "aggregate_nodes": 790926,
+            "wall_ms": 57.13410000316799
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 85693,
+            "aggregate_nodes": 561780,
+            "wall_ms": 46.29540001042187
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 14385,
+            "aggregate_nodes": 118601,
+            "wall_ms": 9.180399996694177
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 33736,
+            "aggregate_nodes": 176988,
+            "wall_ms": 12.229800020577386
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 20868,
+            "aggregate_nodes": 137010,
+            "wall_ms": 10.367000009864569
+          }
+        ]
+      }
+    },
+    "lazy-12t": {
+      "fixed_time": {
+        "mean_depth": 25.166666666666668,
+        "long_move_matches": 19,
+        "leader_nps": 1337629.1618841428,
+        "aggregate_nps": 16074907.459231572,
+        "total_wall_s": 24.022373999934644
+      },
+      "fixed_depth": {
+        "mean_depth": 18.0,
+        "long_move_matches": 19,
+        "leader_nps": 1413204.1180720166,
+        "aggregate_nps": 13979256.353628052,
+        "total_wall_s": 2.3589776999433525,
+        "speedup_vs_control_1t": 3.0986459593761957
+      },
+      "positions": {
+        "fixed_time": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1210267,
+            "aggregate_nodes": 14820393,
+            "wall_ms": 1000.9315999923274
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1398784,
+            "aggregate_nodes": 16908024,
+            "wall_ms": 1001.1801999935415
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 37,
+            "nodes": 2072628,
+            "aggregate_nodes": 23169919,
+            "wall_ms": 1000.8191000088118
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1543754,
+            "aggregate_nodes": 18166271,
+            "wall_ms": 1000.9529999806546
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "8-11",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 1046816,
+            "aggregate_nodes": 12489712,
+            "wall_ms": 1000.9034999820869
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 25,
+            "nodes": 1481062,
+            "aggregate_nodes": 17307709,
+            "wall_ms": 1000.884999986738
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "8-11",
+            "matches_long_move": false,
+            "depth": 22,
+            "nodes": 1158008,
+            "aggregate_nodes": 13977594,
+            "wall_ms": 1001.0056000028271
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1308782,
+            "aggregate_nodes": 15957064,
+            "wall_ms": 1000.8436000207439
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 24,
+            "nodes": 1424614,
+            "aggregate_nodes": 17007679,
+            "wall_ms": 1000.9342000121251
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 23,
+            "nodes": 1194068,
+            "aggregate_nodes": 14270873,
+            "wall_ms": 1000.9069999796338
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 1118554,
+            "aggregate_nodes": 13275638,
+            "wall_ms": 1000.9261000086553
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 26,
+            "nodes": 1161540,
+            "aggregate_nodes": 14633069,
+            "wall_ms": 1000.9203999943566
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 20,
+            "nodes": 1301968,
+            "aggregate_nodes": 15588858,
+            "wall_ms": 1000.9412000072189
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1081159,
+            "aggregate_nodes": 13257469,
+            "wall_ms": 1000.9128999954555
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1096577,
+            "aggregate_nodes": 13653381,
+            "wall_ms": 1001.3115000037942
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 28,
+            "nodes": 1130125,
+            "aggregate_nodes": 13902040,
+            "wall_ms": 1000.7912000000942
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "6-9",
+            "matches_long_move": false,
+            "depth": 30,
+            "nodes": 1262983,
+            "aggregate_nodes": 14865847,
+            "wall_ms": 1000.961699988693
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 2001103,
+            "aggregate_nodes": 24390107,
+            "wall_ms": 1000.8211999956984
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1150740,
+            "aggregate_nodes": 13592439,
+            "wall_ms": 1000.7683000003453
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 24,
+            "nodes": 1262982,
+            "aggregate_nodes": 15407194,
+            "wall_ms": 1000.8417000062764
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 27,
+            "nodes": 1391901,
+            "aggregate_nodes": 16961187,
+            "wall_ms": 1001.0831999825314
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 29,
+            "nodes": 1475830,
+            "aggregate_nodes": 18806326,
+            "wall_ms": 1000.8396999910474
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 30,
+            "nodes": 1573663,
+            "aggregate_nodes": 18306658,
+            "wall_ms": 1001.0268999903928
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "7-10",
+            "matches_long_move": false,
+            "depth": 25,
+            "nodes": 1285120,
+            "aggregate_nodes": 15441988,
+            "wall_ms": 1000.865200010594
+          }
+        ],
+        "fixed_depth": [
+          {
+            "id": "000cc31f718f189febb17741",
+            "move": "27-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 24967,
+            "aggregate_nodes": 248216,
+            "wall_ms": 18.110700009856373
+          },
+          {
+            "id": "003ceb284eac95846118e16f",
+            "move": "29-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 103329,
+            "aggregate_nodes": 929311,
+            "wall_ms": 61.39470002381131
+          },
+          {
+            "id": "003e6cd59379bf06a912a3f2",
+            "move": "26-23",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 3138,
+            "aggregate_nodes": 24094,
+            "wall_ms": 2.2114999883342534
+          },
+          {
+            "id": "0063b85787115bf872610004",
+            "move": "14-5",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 132973,
+            "aggregate_nodes": 1244258,
+            "wall_ms": 84.25010001519695
+          },
+          {
+            "id": "00999a475d7071484e1aceb1",
+            "move": "10-15",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 362510,
+            "aggregate_nodes": 3785621,
+            "wall_ms": 315.0964000087697
+          },
+          {
+            "id": "00cd194463b20688445345c0",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 81476,
+            "aggregate_nodes": 810204,
+            "wall_ms": 56.57019998761825
+          },
+          {
+            "id": "00df0612f9c8b71b00ca25af",
+            "move": "6-10",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 73207,
+            "aggregate_nodes": 771207,
+            "wall_ms": 58.22700000135228
+          },
+          {
+            "id": "01b1edd4b80191b3aba0d190",
+            "move": "28-32",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 1170642,
+            "aggregate_nodes": 11969155,
+            "wall_ms": 801.9237999978941
+          },
+          {
+            "id": "01e2c731867583656ae136bc",
+            "move": "1-10",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 139108,
+            "aggregate_nodes": 1342455,
+            "wall_ms": 93.70820000185631
+          },
+          {
+            "id": "02532697ba41630f67a32f2a",
+            "move": "9-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 13013,
+            "aggregate_nodes": 136509,
+            "wall_ms": 11.088900006143376
+          },
+          {
+            "id": "02581a0e46306a86481a2277",
+            "move": "2-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 174234,
+            "aggregate_nodes": 1872517,
+            "wall_ms": 148.7945000117179
+          },
+          {
+            "id": "0285dcef6b81fe29e61cf900",
+            "move": "22-18",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 79418,
+            "aggregate_nodes": 522221,
+            "wall_ms": 51.67389998678118
+          },
+          {
+            "id": "0289443e4195585f3a9c8450",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 118007,
+            "aggregate_nodes": 1171162,
+            "wall_ms": 79.11809999495745
+          },
+          {
+            "id": "036494432b9b2cf4ef8a6f65",
+            "move": "17-13",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 125392,
+            "aggregate_nodes": 1186990,
+            "wall_ms": 103.21870000916533
+          },
+          {
+            "id": "03891f147af6c790a910867e",
+            "move": "11-15",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 17657,
+            "aggregate_nodes": 177816,
+            "wall_ms": 14.609799982281402
+          },
+          {
+            "id": "03e7ccad1e8ebab2e20847e9",
+            "move": "11-16",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 44015,
+            "aggregate_nodes": 503924,
+            "wall_ms": 35.77600000426173
+          },
+          {
+            "id": "03fcf0156e6af4478e1b2095",
+            "move": "18-22",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 37305,
+            "aggregate_nodes": 341159,
+            "wall_ms": 26.531799987424165
+          },
+          {
+            "id": "0408f5e456bee09894c80b37",
+            "move": "32-28",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 286862,
+            "aggregate_nodes": 2589612,
+            "wall_ms": 145.36219998262823
+          },
+          {
+            "id": "042bbc877d3568788445cd1e",
+            "move": "9-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 160724,
+            "aggregate_nodes": 1497485,
+            "wall_ms": 128.6977999843657
+          },
+          {
+            "id": "0440d2e5ee6ef708f44e5828",
+            "move": "1-6",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 63985,
+            "aggregate_nodes": 681261,
+            "wall_ms": 45.9252999862656
+          },
+          {
+            "id": "046cda40722d0832b042ce44",
+            "move": "27-24",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 62619,
+            "aggregate_nodes": 584356,
+            "wall_ms": 39.60749998805113
+          },
+          {
+            "id": "049706acbc5164820b4f6c55",
+            "move": "10x19",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 23125,
+            "aggregate_nodes": 214648,
+            "wall_ms": 13.221199973486364
+          },
+          {
+            "id": "049ee5f769af1eac9365cc8f",
+            "move": "17-14",
+            "matches_long_move": true,
+            "depth": 18,
+            "nodes": 17854,
+            "aggregate_nodes": 194129,
+            "wall_ms": 11.343700025463477
+          },
+          {
+            "id": "04b48db863f37117e9cbbf82",
+            "move": "14-17",
+            "matches_long_move": false,
+            "depth": 18,
+            "nodes": 18157,
+            "aggregate_nodes": 178444,
+            "wall_ms": 12.515699985669926
+          }
+        ]
+      }
+    }
+  },
+  "measured_utc": "2026-10-17T11:03:21Z"
+}

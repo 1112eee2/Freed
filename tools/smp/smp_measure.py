@@ -36,6 +36,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from makhos.cli_handlers.sprt_handler import _set_windows_process_priority  # noqa: E402
 from makhos.core import DEFAULT_RULES, parse_position  # noqa: E402
 from makhos.native import (  # noqa: E402
     NativeLazySmpSearch,
@@ -56,10 +57,7 @@ BELOW_NORMAL_PRIORITY_CLASS = 0x00004000
 
 def _below_normal() -> None:
     if os.name == "nt":
-        import ctypes
-
-        kernel32 = ctypes.WinDLL("kernel32")
-        kernel32.SetPriorityClass(kernel32.GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS)
+        _set_windows_process_priority(BELOW_NORMAL_PRIORITY_CLASS)
 
 
 def _running_sprt_pids() -> list[int]:

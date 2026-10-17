@@ -127,7 +127,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--commit", default="HEAD")
     parser.add_argument("--tree", type=Path, default=PROJECT / "build" / "runs" / "lazysmp_f3")
-    parser.add_argument("--seed", type=int, default=20261018)
+    parser.add_argument("--seed", type=int, default=20261019)
     parser.add_argument("--pairs", type=int, default=1000)
     args = parser.parse_args()
 
