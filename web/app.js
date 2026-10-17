@@ -69,10 +69,18 @@ function resetGameRecord() {
   markRecordChanged();
 }
 
+// Display names only. The engine's 'black' side starts on squares 25-32 and
+// moves first; the GUI shows it as red (Thai convention). Side ids, position
+// strings (B/R), API payloads and saved records keep the engine's names.
+const SIDE_NAME = { black: 'แดง', red: 'ดำ' };
+const SIDE_NAME_EN = { black: 'RED', red: 'BLACK' };
+const SIDE_DOT = { black: '🔴', red: '⚫' };
+
 function resultLabel(result) {
   if (!result) return 'ยังไม่จบเกม';
   if (result.winner === null) return 'เสมอ';
-  return result.winner === 'black' ? 'ดำชนะ · แดงแพ้' : 'แดงชนะ · ดำแพ้';
+  const loser = result.winner === 'black' ? 'red' : 'black';
+  return `${SIDE_NAME[result.winner]}ชนะ · ${SIDE_NAME[loser]}แพ้`;
 }
 
 function updateGameControls() {
@@ -135,7 +143,7 @@ function resumeGame() {
   updateTurnBadges();
   updateGameControls();
   renderBoard();
-  setStatusMessage(`เล่นต่อ · ${gameState.turn === 'black' ? 'ดำ' : 'แดง'} เดิน`);
+  setStatusMessage(`เล่นต่อ · ${SIDE_NAME[gameState.turn]} เดิน`);
   checkBotTurn();
 }
 
@@ -350,17 +358,12 @@ function updatePlayerLabels() {
   const bottomDot = document.getElementById('dot-bottom');
   const bottomName = document.getElementById('name-bottom');
 
-  if (gameState.isFlipped) {
-    topDot.textContent = '⚫';
-    topName.textContent = 'BLACK (ดำ)';
-    bottomDot.textContent = '🔴';
-    bottomName.textContent = 'RED (แดง)';
-  } else {
-    topDot.textContent = '🔴';
-    topName.textContent = 'RED (แดง)';
-    bottomDot.textContent = '⚫';
-    bottomName.textContent = 'BLACK (ดำ)';
-  }
+  const topSide = gameState.isFlipped ? 'black' : 'red';
+  const bottomSide = gameState.isFlipped ? 'red' : 'black';
+  topDot.textContent = SIDE_DOT[topSide];
+  topName.textContent = `${SIDE_NAME_EN[topSide]} (${SIDE_NAME[topSide]})`;
+  bottomDot.textContent = SIDE_DOT[bottomSide];
+  bottomName.textContent = `${SIDE_NAME_EN[bottomSide]} (${SIDE_NAME[bottomSide]})`;
   updateTurnBadges();
 }
 
@@ -409,7 +412,7 @@ async function startNewGame() {
       body: JSON.stringify({
         first: 2,
         rules_profile: gameState.rulesProfile,
-      }) // Black moves first
+      }) // The engine's black side (shown red) moves first
     });
     const data = await res.json();
     if (generation !== gameGeneration) return;
@@ -423,7 +426,7 @@ async function startNewGame() {
     renderBoard();
     updateMoveHistoryUI();
     updateGameControls();
-    setStatusMessage('เกมใหม่เริ่มแล้ว! ดำเดินก่อน');
+    setStatusMessage(`เกมใหม่เริ่มแล้ว! ${SIDE_NAME.black}เดินก่อน`);
 
     checkBotTurn();
   } catch (err) {
@@ -449,7 +452,7 @@ function updateGameState(data) {
   if (data.terminal) {
     gameState.isGameOver = true;
     if (data.winner) {
-      const winnerName = data.winner === 'black' ? 'ดำ (BLACK)' : 'แดง (RED)';
+      const winnerName = `${SIDE_NAME[data.winner]} (${SIDE_NAME_EN[data.winner]})`;
       setStatusMessage(`🏆 จบเกม! ${winnerName} ชนะ (${data.reason})`);
     } else {
       setStatusMessage(`🤝 จบเกม! เสมอกัน (${data.reason})`);
@@ -531,10 +534,11 @@ function renderBoard() {
           const pieceEl = document.createElement('div');
           pieceEl.classList.add('piece');
 
+          // Engine black is drawn red, engine red is drawn dark (see SIDE_NAME).
           if (pieceVal === BLACK_MAN || pieceVal === BLACK_KING) {
-            pieceEl.classList.add('black-piece');
-          } else {
             pieceEl.classList.add('red-piece');
+          } else {
+            pieceEl.classList.add('black-piece');
           }
 
           if (pieceVal === BLACK_KING || pieceVal === RED_KING) {

@@ -37,7 +37,17 @@ class WebGuiContractTests(unittest.TestCase):
         self.assertIn('ENGINE v1.0.0', page)
         self.assertIn('id="select-rules-profile"', page)
         self.assertIn('value="external-no-repetition"', page)
-        self.assertIn('app.js?v=20260909-1', page)
+        self.assertIn('app.js?v=20261017-1', page)
+
+    def test_first_mover_is_shown_as_red_without_renaming_engine_sides(self) -> None:
+        app = (WEB_DIR / "app.js").read_text(encoding="utf-8")
+        page = (WEB_DIR / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn("const SIDE_NAME = { black: 'แดง', red: 'ดำ' };", app)
+        self.assertIn("turn: 'black',", app)
+        self.assertIn("first: 2,", app)
+        self.assertIn('<option value="black" selected>🔴 แดง (เดินก่อน)</option>', page)
+        self.assertIn('<option value="red">⚫ ดำ (เดินหลัง)</option>', page)
 
     def test_engine_settings_persist_across_refreshes(self) -> None:
         app = (WEB_DIR / "app.js").read_text(encoding="utf-8")
