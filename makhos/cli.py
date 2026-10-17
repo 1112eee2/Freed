@@ -575,6 +575,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="enable experimental shared TT for candidate Threads only",
     )
     sprt_parser.add_argument(
+        "--lazy-smp",
+        action="store_true",
+        help=(
+            "candidate-only native Lazy SMP: all Threads search from the root "
+            "and share one lockless TT (needs a MAKHOS_NATIVE_LAZY_SMP DLL)"
+        ),
+    )
+    sprt_parser.add_argument(
         "--root-alpha",
         action="store_true",
         help="candidate-only parallel root PVS with a shared alpha bound",

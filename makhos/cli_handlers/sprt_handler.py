@@ -11,6 +11,7 @@ import sys
 from ..core import DEFAULT_RULES
 from ..game_analysis import build_match_game_record
 from ..native import (
+    NativeLazySmpSearch,
     NativeSearch,
     hash_power_for_megabytes,
     native_tt_entry_bytes,
@@ -208,11 +209,18 @@ def command_sprt(args: argparse.Namespace) -> int:
         raise ValueError("--root-alpha requires candidate Threads 2 or greater")
     if args.root_alpha and (args.selective_root or args.shared_tt):
         raise ValueError("test --root-alpha separately from selective-root/shared-TT")
+    lazy_smp = bool(getattr(args, "lazy_smp", False))
+    if lazy_smp and candidate_threads == 1:
+        raise ValueError("--lazy-smp requires candidate Threads 2 or greater")
+    if lazy_smp and (args.selective_root or args.shared_tt or args.root_alpha):
+        raise ValueError("test --lazy-smp separately from the root-split options")
     if args.resume and not args.output:
         raise ValueError("--resume requires --output")
     tb_draw_cutoff = bool(getattr(args, "tb_draw_cutoff", False))
     if tb_draw_cutoff and args.no_tablebase:
         raise ValueError("--tb-draw-cutoff requires tablebases")
+    if tb_draw_cutoff and lazy_smp:
+        raise ValueError("--tb-draw-cutoff is not wired into --lazy-smp workers")
     if tb_draw_cutoff and candidate_threads == 1 and not args.persistent_search:
         raise ValueError("--tb-draw-cutoff requires --persistent-search at one thread")
 
@@ -278,6 +286,16 @@ def command_sprt(args: argparse.Namespace) -> int:
             "candidate DLL does not provide the windowed API required by "
             "--root-alpha"
         )
+    if lazy_smp:
+        # Builds one worker on the smallest TT: proves the Lazy-SMP API and
+        # the NNUE binding before any game starts.
+        with NativeLazySmpSearch(
+            dev_library,
+            threads=1,
+            hash_mb=1,
+            nnue_model=dev_nnue_model,
+        ):
+            pass
 
     effective_hash_mb = args.hash_mb
     if max(candidate_threads, baseline_threads) > 1 and effective_hash_mb is None:
@@ -422,6 +440,9 @@ def command_sprt(args: argparse.Namespace) -> int:
             raise ValueError("--tb-draw-cutoff requires the native endgame tablebases")
         sprt_config["candidate_tb_draw_cutoff"] = True
         sprt_config["candidate_tb_draw_max_pieces"] = shared_endgame_tb.max_pieces
+    if lazy_smp:
+        # Present only when enabled, so existing checkpoint identities hold.
+        sprt_config["candidate_lazy_smp"] = True
     print(
         "SPRT_CONFIG " + json.dumps(sprt_config, sort_keys=True),
         flush=True,
@@ -440,7 +461,15 @@ def command_sprt(args: argparse.Namespace) -> int:
         selective_root: bool,
         root_alpha: bool,
         shared_tt: bool,
+        lazy_smp: bool = False,
     ):
+        if lazy_smp:
+            return NativeLazySmpSearch(
+                library,
+                threads=threads,
+                hash_mb=effective_hash_mb,
+                nnue_model=nnue_model,
+            )
         if threads == 1:
             hash_power = args.search_hash_power
             if effective_hash_mb is not None:
@@ -491,6 +520,7 @@ def command_sprt(args: argparse.Namespace) -> int:
             selective_root=args.selective_root,
             root_alpha=args.root_alpha,
             shared_tt=args.shared_tt,
+            lazy_smp=lazy_smp,
         )
         if tb_draw_cutoff:
             dev_native_search.attach_tablebase(shared_endgame_tb)

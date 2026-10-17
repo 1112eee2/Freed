@@ -346,6 +346,12 @@ class SPRTTests(unittest.TestCase):
         self.assertTrue(shared.shared_tt)
         self.assertEqual(shared.shared_tt_group_size, 4)
 
+        lazy = parser.parse_args(
+            ["sprt", "--threads", "12", "--hash-mb", "512", "--lazy-smp"]
+        )
+        self.assertTrue(lazy.lazy_smp)
+        self.assertFalse(shared.lazy_smp)
+
         architecture = parser.parse_args(
             [
                 "sprt",

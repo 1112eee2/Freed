@@ -1271,6 +1271,15 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #ifndef MAKHOS_SHARED_TT
 #define MAKHOS_SHARED_TT 0
 #endif
+#ifndef MAKHOS_LOCKLESS_TT
+#define MAKHOS_LOCKLESS_TT 0
+#endif
+#if MAKHOS_LOCKLESS_TT && (!MAKHOS_SHARED_TT || !MAKHOS_COMPACT_TT)
+#error "MAKHOS_LOCKLESS_TT publishes the shared compact 40-byte TT entry"
+#endif
+#if MAKHOS_LOCKLESS_TT && defined(_MSC_VER) && !defined(__clang__)
+#error "MAKHOS_LOCKLESS_TT uses the GCC/Clang __atomic builtins"
+#endif
 #ifndef MAKHOS_ENDGAME_KING_VALUE
 #define MAKHOS_ENDGAME_KING_VALUE 330
 #endif
@@ -1354,8 +1363,22 @@ static bool parse_bounded_int(const char *text, int minimum, int maximum, int *v
 #ifndef MAKHOS_NATIVE_LAZY_SMP
 #define MAKHOS_NATIVE_LAZY_SMP 0
 #endif
+/* Helpers diversify by one rule: rotate the root order (the striped-lock
+ * prototype) or skip iterations by worker index (the lockless track). */
+#ifndef MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH
+#define MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH 0
+#endif
 #ifndef MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION
-#define MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION 1
+#define MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION (!MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH)
+#endif
+#if MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH && MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION
+#error "Lazy SMP helpers use one diversification rule"
+#endif
+#if MAKHOS_NATIVE_LAZY_SMP && !defined(_WIN32)
+#error "MAKHOS_NATIVE_LAZY_SMP currently requires Win32 worker primitives"
+#endif
+#if MAKHOS_NATIVE_LAZY_SMP && !MAKHOS_SHARED_TT
+#error "MAKHOS_NATIVE_LAZY_SMP workers share one TT"
 #endif
 #ifndef MAKHOS_NATIVE_ROOT_PVS_SMP
 #define MAKHOS_NATIVE_ROOT_PVS_SMP 0
@@ -1479,20 +1502,28 @@ typedef struct {
 #endif
 } NativeTTEntry;
 
-#if MAKHOS_SHARED_TT
+/* The striped-lock shared TT; the lockless one has no locks and keeps the
+ * generation in each search context, exactly like a private TT. */
+#define MAKHOS_LOCKED_SHARED_TT (MAKHOS_SHARED_TT && !MAKHOS_LOCKLESS_TT)
+
+#if MAKHOS_LOCKED_SHARED_TT
 #define MAKHOS_SHARED_TT_LOCKS 4096
 typedef struct {
     atomic_flag flag;
     uint8_t padding[63];
 } NativeTTLock;
+_Static_assert(sizeof(NativeTTLock) == 64, "shared TT lock must fill a cache line");
+#endif
+#if MAKHOS_SHARED_TT
 typedef struct {
     NativeTTEntry *entries;
     size_t count;
     atomic_uint references;
+#if MAKHOS_LOCKED_SHARED_TT
     atomic_uint generation;
     NativeTTLock locks[MAKHOS_SHARED_TT_LOCKS];
+#endif
 } NativeSharedTT;
-_Static_assert(sizeof(NativeTTLock) == 64, "shared TT lock must fill a cache line");
 #endif
 
 typedef struct {
@@ -1639,7 +1670,9 @@ typedef struct {
 #if MAKHOS_SHARED_TT
     NativeSharedTT *shared_tt;
     bool owns_shared_tt;
+#if MAKHOS_LOCKED_SHARED_TT
     bool tt_requires_lock;
+#endif
 #endif
     MoveList *workspace[MAKHOS_SEARCH_MAX_PLY];
     size_t workspace_count;
@@ -2204,7 +2237,55 @@ static void record_iir_census(
 }
 #endif
 
-#if MAKHOS_SHARED_TT
+#if MAKHOS_LOCKLESS_TT
+/*
+ * Lockless shared TT.  Every entry is five 64-bit words that threads read and
+ * write only with relaxed atomics, so concurrent access is not a data race.
+ * Word 0 stores the key XOR the four payload words.  A reader that mixes words
+ * from two stores decodes a key no probe asks for, so a torn entry is a miss.
+ * Each payload word still comes whole from some store, so a torn move decodes
+ * to in-range fields and is only ever compared against generated moves.
+ */
+#define NATIVE_TT_WORDS 5
+_Static_assert(
+    sizeof(NativeTTEntry) == NATIVE_TT_WORDS * sizeof(uint64_t),
+    "lockless TT entry must be five 64-bit words"
+);
+
+static uint64_t *native_tt_words(NativeSearchContext *context, size_t index) {
+    return (uint64_t *)(void *)&context->tt[index];
+}
+
+static void load_native_tt_entry(
+    NativeSearchContext *context,
+    size_t index,
+    NativeTTEntry *output
+) {
+    const uint64_t *slot = native_tt_words(context, index);
+    uint64_t words[NATIVE_TT_WORDS];
+    words[0] = __atomic_load_n(&slot[0], __ATOMIC_RELAXED);
+    for (size_t word = 1; word < NATIVE_TT_WORDS; ++word) {
+        words[word] = __atomic_load_n(&slot[word], __ATOMIC_RELAXED);
+        words[0] ^= words[word];
+    }
+    memcpy(output, words, sizeof(*output));
+}
+
+static void publish_native_tt_entry(
+    NativeSearchContext *context,
+    size_t index,
+    const NativeTTEntry *entry
+) {
+    uint64_t *slot = native_tt_words(context, index);
+    uint64_t words[NATIVE_TT_WORDS];
+    memcpy(words, entry, sizeof(words));
+    for (size_t word = 1; word < NATIVE_TT_WORDS; ++word) {
+        __atomic_store_n(&slot[word], words[word], __ATOMIC_RELAXED);
+        words[0] ^= words[word];
+    }
+    __atomic_store_n(&slot[0], words[0], __ATOMIC_RELAXED);
+}
+#elif MAKHOS_SHARED_TT
 static void lock_native_tt(NativeSearchContext *context, size_t index) {
     if (!context->tt_requires_lock) return;
     atomic_flag *lock = &context->shared_tt->locks[
@@ -3563,7 +3644,39 @@ static int score_to_tt(int score, int ply) {
     return score;
 }
 
-#if MAKHOS_SHARED_TT
+#if MAKHOS_LOCKLESS_TT
+/* Same replacement rule as the private TT, applied to a fresh snapshot, so one
+ * thread replays the private-TT search node for node. */
+static int store_native_tt_entry(
+    NativeSearchContext *context,
+    size_t index,
+    uint64_t key,
+    int score,
+    int depth,
+    uint8_t flag,
+    const Move *best_move,
+    int ply
+) {
+    NativeTTEntry entry;
+    load_native_tt_entry(context, index, &entry);
+    bool replace =
+        entry.key != key ||
+#if !MAKHOS_TT_KEEP_DEEP_STALE_SAME_KEY
+        entry.generation != context->generation ||
+#endif
+        depth >= entry.depth;
+    if (!replace) return 0;
+    bool collision = entry.flag != SEARCH_TT_EMPTY && entry.key != key;
+    entry.key = key;
+    entry.score = score_to_tt(score, ply);
+    entry.depth = (int16_t)depth;
+    entry.flag = flag;
+    entry.generation = context->generation;
+    compact_tt_move(&entry.best_move, best_move);
+    publish_native_tt_entry(context, index, &entry);
+    return collision ? 2 : 1;
+}
+#elif MAKHOS_SHARED_TT
 static int store_native_tt_entry(
     NativeSearchContext *context,
     size_t index,
@@ -4453,13 +4566,15 @@ static bool allocate_native_search(
     }
     shared->count = context->tt_count;
     atomic_init(&shared->references, 1);
+#if MAKHOS_LOCKED_SHARED_TT
     atomic_init(&shared->generation, 1);
     for (size_t index = 0; index < MAKHOS_SHARED_TT_LOCKS; ++index) {
         atomic_flag_clear(&shared->locks[index].flag);
     }
+    context->tt_requires_lock = false;
+#endif
     context->shared_tt = shared;
     context->owns_shared_tt = true;
-    context->tt_requires_lock = false;
     context->tt = shared->entries;
 #else
     context->tt = calloc(context->tt_count, sizeof(*context->tt));
@@ -4504,8 +4619,10 @@ static bool allocate_native_search_shared(
     context->tt = context->shared_tt->entries;
     context->tt_count = context->shared_tt->count;
     context->owns_shared_tt = false;
+#if MAKHOS_LOCKED_SHARED_TT
     context->tt_requires_lock = true;
     owner->tt_requires_lock = true;
+#endif
     atomic_fetch_add_explicit(
         &context->shared_tt->references,
         1,
@@ -4560,7 +4677,7 @@ static void prepare_native_search(
     context->start = search_now_seconds();
     context->no_progress_plies = (uint8_t)no_progress_plies;
     context->repetition_limit = (uint8_t)repetition_limit;
-#if MAKHOS_SHARED_TT
+#if MAKHOS_LOCKED_SHARED_TT
     unsigned int generation = atomic_fetch_add_explicit(
         &context->shared_tt->generation,
         1,
@@ -4907,12 +5024,32 @@ static void finish_native_root_pvs_shadow_iteration(
 }
 #endif
 
+#if MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH
+/* Stockfish's classic helper schedule: helper i skips the iterations where
+ * (depth + phase) / size is odd, so helpers spread over the next depths
+ * instead of repeating the leader's.  Worker zero searches every depth. */
+static const uint8_t lazy_smp_skip_size[20] = {
+    1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4
+};
+static const uint8_t lazy_smp_skip_phase[20] = {
+    0, 1, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 7
+};
+
+static bool lazy_smp_helper_skips_depth(uint32_t worker_index, int depth) {
+    if (worker_index == 0) return false;
+    uint32_t slot = (worker_index - 1) % 20;
+    return
+        ((depth + lazy_smp_skip_phase[slot]) / lazy_smp_skip_size[slot]) % 2
+        != 0;
+}
+#endif
+
 static int execute_native_search_impl(
     NativeSearchContext *context,
     Position root,
     int start_depth,
     int max_depth,
-    uint32_t root_order_rotation,
+    uint32_t lazy_worker_index,
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
     NativeRootPvsHandle *root_pvs,
 #endif
@@ -4954,6 +5091,9 @@ static int execute_native_search_impl(
     }
 
     for (int depth = start_depth; depth <= max_depth; ++depth) {
+#if MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH
+        if (lazy_smp_helper_skips_depth(lazy_worker_index, depth)) continue;
+#endif
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
         bool shadow_started = false;
         if (root_pvs != NULL) root_pvs->stats.attempted_depth = (uint32_t)depth;
@@ -4966,12 +5106,12 @@ static int execute_native_search_impl(
             has_previous_best ? &previous_best : NULL,
             0
         );
-#if MAKHOS_NATIVE_LAZY_SMP
+#if MAKHOS_NATIVE_LAZY_SMP && MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION
         /* Worker zero retains the ordinary root order.  Helpers use a small,
          * deterministic rotation only at the root to diversify TT discovery
          * without sharing mutable history, PV, or move lists. */
-        if (root_order_rotation != 0 && root_moves->count > 1) {
-            uint32_t rotation = root_order_rotation % root_moves->count;
+        if (lazy_worker_index != 0 && root_moves->count > 1) {
+            uint32_t rotation = lazy_worker_index % root_moves->count;
             while (rotation-- > 0) {
                 Move first = root_moves->moves[0];
                 memmove(
@@ -4982,8 +5122,8 @@ static int execute_native_search_impl(
                 root_moves->moves[root_moves->count - 1] = first;
             }
         }
-#else
-        (void)root_order_rotation;
+#elif !MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH
+        (void)lazy_worker_index;
 #endif
 
         int alpha = -MAKHOS_SEARCH_INFINITY;
@@ -5110,7 +5250,7 @@ static int execute_native_search(
     Position root,
     int start_depth,
     int max_depth,
-    uint32_t root_order_rotation,
+    uint32_t lazy_worker_index,
     MakhosSearchResult *result
 ) {
     return execute_native_search_impl(
@@ -5118,7 +5258,7 @@ static int execute_native_search(
         root,
         start_depth,
         max_depth,
-        root_order_rotation,
+        lazy_worker_index,
 #if MAKHOS_NATIVE_ROOT_PVS_SMP
         NULL,
 #endif
@@ -5131,7 +5271,7 @@ typedef struct {
     NativeSearchContext *context;
     Position root;
     int max_depth;
-    uint32_t root_order_rotation;
+    uint32_t worker_index;
     HANDLE start_event;
     MakhosSearchResult result;
     int status;
@@ -5172,10 +5312,11 @@ static DWORD WINAPI run_native_lazy_smp_worker(void *argument) {
         job->root,
         1,
         job->max_depth,
-        job->root_order_rotation,
+        job->worker_index,
         &job->result
     );
-    if (job->status == 2) {
+    /* Only worker zero's result is returned, so its end ends the search. */
+    if (job->status == 2 || job->worker_index == 0) {
         atomic_store_explicit(
             &job->context->lazy_smp_control->stop,
             true,
@@ -5902,7 +6043,7 @@ static int clear_native_search(void *handle, bool clear_tt) {
     NativeSearchContext *context = handle;
     if (clear_tt) {
         memset(context->tt, 0, context->tt_count * sizeof(*context->tt));
-#if MAKHOS_SHARED_TT
+#if MAKHOS_LOCKED_SHARED_TT
         atomic_store_explicit(
             &context->shared_tt->generation,
             1,
@@ -6437,6 +6578,10 @@ MAKHOS_API int makhos_lazy_smp_run(
         context->has_deadline = lazy->control.has_deadline;
         context->deadline = lazy->control.deadline;
         context->lazy_smp_control = &lazy->control;
+#if MAKHOS_LOCKLESS_TT
+        /* One search is one TT generation for every worker. */
+        context->generation = lazy->workers[0].generation;
+#endif
     }
 
     NativeLazySmpJob jobs[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
@@ -6454,8 +6599,7 @@ MAKHOS_API int makhos_lazy_smp_run(
         jobs[index].context = &lazy->workers[index];
         jobs[index].root = root;
         jobs[index].max_depth = max_depth;
-        jobs[index].root_order_rotation =
-            MAKHOS_NATIVE_LAZY_SMP_ROOT_ROTATION ? index : 0;
+        jobs[index].worker_index = index;
         jobs[index].start_event = start_event;
         threads[index] = CreateThread(
             NULL,

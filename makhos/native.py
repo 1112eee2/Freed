@@ -515,7 +515,86 @@ def _unpack_move(packed: _PackedMove) -> Move:
     )
 
 
-class NativeSearch:
+class _NnueCandidateBinding:
+    """Bind the process-wide NNUE model of an NNUE candidate DLL.
+
+    The model lives in the DLL, so it must be loaded before any search
+    context is allocated.  Subclasses set ``self._library`` and the
+    ``nnue_*`` defaults first.
+    """
+
+    def _configure_nnue_candidate(self, model: str | Path | None) -> None:
+        library = self._library
+        candidate = all(
+            hasattr(library, name)
+            for name in (
+                "makhos_search_nnue_load_model",
+                "makhos_search_nnue_ready",
+                "makhos_search_nnue_feature_abi",
+                "makhos_search_nnue_model_sha256",
+                "makhos_search_nnue_source_model_sha256",
+                "makhos_search_nnue_last_error",
+            )
+        )
+        if not candidate:
+            if model is not None:
+                raise ValueError("nnue_model requires an NNUE candidate DLL")
+            return
+        if model is None:
+            raise ValueError("NNUE candidate DLL requires an explicit nnue_model")
+        path = Path(model)
+        if not path.is_file():
+            raise FileNotFoundError(f"NNUE model not found: {path}")
+        library.makhos_search_nnue_load_model.argtypes = [ctypes.c_char_p]
+        library.makhos_search_nnue_load_model.restype = ctypes.c_int
+        library.makhos_search_nnue_ready.argtypes = []
+        library.makhos_search_nnue_ready.restype = ctypes.c_int
+        for name in (
+            "makhos_search_nnue_feature_abi",
+            "makhos_search_nnue_model_sha256",
+            "makhos_search_nnue_source_model_sha256",
+            "makhos_search_nnue_last_error",
+        ):
+            function = getattr(library, name)
+            function.argtypes = []
+            function.restype = ctypes.c_char_p
+        status = int(
+            library.makhos_search_nnue_load_model(
+                str(path.resolve()).encode("utf-8")
+            )
+        )
+        if status != 0 or not library.makhos_search_nnue_ready():
+            encoded = library.makhos_search_nnue_last_error()
+            detail = encoded.decode("utf-8", errors="replace") if encoded else ""
+            raise RuntimeError(
+                f"NNUE candidate model load failed ({status})"
+                + (f": {detail}" if detail else "")
+            )
+        self.nnue_enabled = True
+        self.nnue_model_path = path.resolve()
+        self.nnue_model_sha256 = (
+            library.makhos_search_nnue_model_sha256().decode("ascii")
+        )
+        self.nnue_source_model_sha256 = (
+            library.makhos_search_nnue_source_model_sha256().decode("ascii")
+        )
+        self.nnue_feature_abi = (
+            library.makhos_search_nnue_feature_abi().decode("ascii")
+        )
+        self.supports_nnue_telemetry = hasattr(
+            library, "makhos_search_nnue_telemetry"
+        )
+        if self.supports_nnue_telemetry:
+            library.makhos_search_nnue_telemetry.argtypes = [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_uint64),
+                ctypes.POINTER(ctypes.c_uint64),
+                ctypes.POINTER(ctypes.c_uint64),
+            ]
+            library.makhos_search_nnue_telemetry.restype = ctypes.c_int
+
+
+class NativeSearch(_NnueCandidateBinding):
     """Fast native search with a stable, deliberately small Python surface."""
 
     def __init__(
@@ -607,76 +686,6 @@ class NativeSearch:
             if not handle:
                 raise MemoryError("native persistent search allocation failed")
             self._handle = int(handle)
-
-    def _configure_nnue_candidate(self, model: str | Path | None) -> None:
-        library = self._library
-        candidate = all(
-            hasattr(library, name)
-            for name in (
-                "makhos_search_nnue_load_model",
-                "makhos_search_nnue_ready",
-                "makhos_search_nnue_feature_abi",
-                "makhos_search_nnue_model_sha256",
-                "makhos_search_nnue_source_model_sha256",
-                "makhos_search_nnue_last_error",
-            )
-        )
-        if not candidate:
-            if model is not None:
-                raise ValueError("nnue_model requires an NNUE candidate DLL")
-            return
-        if model is None:
-            raise ValueError("NNUE candidate DLL requires an explicit nnue_model")
-        path = Path(model)
-        if not path.is_file():
-            raise FileNotFoundError(f"NNUE model not found: {path}")
-        library.makhos_search_nnue_load_model.argtypes = [ctypes.c_char_p]
-        library.makhos_search_nnue_load_model.restype = ctypes.c_int
-        library.makhos_search_nnue_ready.argtypes = []
-        library.makhos_search_nnue_ready.restype = ctypes.c_int
-        for name in (
-            "makhos_search_nnue_feature_abi",
-            "makhos_search_nnue_model_sha256",
-            "makhos_search_nnue_source_model_sha256",
-            "makhos_search_nnue_last_error",
-        ):
-            function = getattr(library, name)
-            function.argtypes = []
-            function.restype = ctypes.c_char_p
-        status = int(
-            library.makhos_search_nnue_load_model(
-                str(path.resolve()).encode("utf-8")
-            )
-        )
-        if status != 0 or not library.makhos_search_nnue_ready():
-            encoded = library.makhos_search_nnue_last_error()
-            detail = encoded.decode("utf-8", errors="replace") if encoded else ""
-            raise RuntimeError(
-                f"NNUE candidate model load failed ({status})"
-                + (f": {detail}" if detail else "")
-            )
-        self.nnue_enabled = True
-        self.nnue_model_path = path.resolve()
-        self.nnue_model_sha256 = (
-            library.makhos_search_nnue_model_sha256().decode("ascii")
-        )
-        self.nnue_source_model_sha256 = (
-            library.makhos_search_nnue_source_model_sha256().decode("ascii")
-        )
-        self.nnue_feature_abi = (
-            library.makhos_search_nnue_feature_abi().decode("ascii")
-        )
-        self.supports_nnue_telemetry = hasattr(
-            library, "makhos_search_nnue_telemetry"
-        )
-        if self.supports_nnue_telemetry:
-            library.makhos_search_nnue_telemetry.argtypes = [
-                ctypes.c_void_p,
-                ctypes.POINTER(ctypes.c_uint64),
-                ctypes.POINTER(ctypes.c_uint64),
-                ctypes.POINTER(ctypes.c_uint64),
-            ]
-            library.makhos_search_nnue_telemetry.restype = ctypes.c_int
 
     def _configure_signatures(self) -> None:
         library = self._library
@@ -1604,14 +1613,17 @@ class NativeSearch:
         )
 
 
-class NativeLazySmpSearch:
+class NativeLazySmpSearch(_NnueCandidateBinding):
     """Candidate-only native Lazy-SMP search handle.
 
     The returned result is always native worker zero's completed iteration.
-    Helper workers have private search state and share only the guarded native
-    TT, so this class must not be substituted for the accepted engine path
-    without the full multi-thread strength gate.
+    Helper workers have private search state and share only the native TT, so
+    this class must not be substituted for the accepted engine path without
+    the full multi-thread strength gate.  The TT persists between searches
+    until ``clear``.
     """
+
+    persistent = True
 
     def __init__(
         self,
@@ -1619,6 +1631,7 @@ class NativeLazySmpSearch:
         *,
         threads: int,
         hash_mb: int,
+        nnue_model: str | Path | None = None,
     ) -> None:
         if not 1 <= threads <= _NATIVE_LAZY_SMP_MAX_THREADS:
             raise ValueError("lazy SMP threads must be in 1..12")
@@ -1631,6 +1644,12 @@ class NativeLazySmpSearch:
         self._lock = threading.RLock()
         self._handle: int | None = None
         self._closed = False
+        self.nnue_enabled = False
+        self.nnue_model_path: Path | None = None
+        self.nnue_model_sha256: str | None = None
+        self.nnue_source_model_sha256: str | None = None
+        self.nnue_feature_abi: str | None = None
+        self.supports_nnue_telemetry = False
         required = (
             "makhos_lazy_smp_available",
             "makhos_lazy_smp_create",
@@ -1650,6 +1669,7 @@ class NativeLazySmpSearch:
                 "native search ABI mismatch: expected "
                 f"{MIN_SEARCH_ABI_VERSION}..{SEARCH_ABI_VERSION}, got {self.abi_version}"
             )
+        self._configure_nnue_candidate(nnue_model)
         self.tt_entry_bytes = native_tt_entry_bytes(self.path)
         self.hash_power = hash_power_for_megabytes(
             hash_mb,
