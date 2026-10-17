@@ -381,6 +381,21 @@ Tooling on `main` since PR #28, each default-off: `sprt --games-dir`
 
 ## Repository and PR state
 
+- **Branch cleanup (owner-approved, 2026-10-17).** `origin` now has only `main` and
+  `research-archive`.
+  - 19 branches already contained in both were deleted outright.
+  - The other 24 were first tagged `archive/<branch name>` at their exact tips
+    (tags verified on the remote), then deleted. Restore one with
+    `git push origin archive/<name>:refs/heads/<name>`.
+  - Name/SHA lists are in `D:\ThaiMakhosEngine\build\branches_A.txt` and `branches_B.txt`.
+  - Deleting the head branches **auto-closed the 12 unmerged open PRs**: #18–#22,
+    #24–#27, #29, #35 and #36. They are closed, not merged. Any of them can be
+    reopened after restoring its branch.
+  - Releases: v1.0.2 is latest (GUI only; same engine as v1.0.0). The v1.0.1
+    release was deleted because it was published without files under GitHub
+    immutable releases; tag `v1.0.1` remains.
+  - `main` also has `docs/NNUE.md` (`62da0dc`).
+
 - `origin/main` is at `f67f9a9` (2026-10-13), which holds the six tech-debt merges and the
   docs state. Before that it was `664e981`. Since `a0f7964` (PR #17) these merged:
   #28 (no-loss track docs, match tooling, STRICT_KEY_01 evidence, TBDRAW_01),
