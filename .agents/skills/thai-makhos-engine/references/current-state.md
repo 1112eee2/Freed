@@ -287,7 +287,8 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    draughts engines (Chinook, Cake, KingsRow, Scan) in
    [DRAUGHTS_IDEAS_TH.md](../../../../docs/research/DRAUGHTS_IDEAS_TH.md). E1 forced-move
    extension (merged with S6) and E2 verified null move are default-off flags queued
-   after D1-D3; null move itself stays, since disabling it failed the screen. E6 ballot
+   after D1-D3; null move stays (disabling it failed the screen, while the NULL_EVAL_01
+   guard that uses it less often gave +55.5), so E2 adds caution, not removal. E6 ballot
    openings apply only to runs after RC-2. The rest is post-RC-2 or needs owner scope.
 
 ## Standing scope: practical no-loss track against Invincible 2
