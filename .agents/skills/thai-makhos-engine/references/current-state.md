@@ -296,8 +296,9 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    root move each depth (median 7 root moves), splits the TT 12 ways and pays Python
    overhead. Proposed fix: Stockfish-style Lazy SMP in C with one lockless shared TT;
    gates use 1T parity, scaling and SPRT, not >=2T determinism. M1 (hardware ceiling)
-   and any prototype runs wait for a gate-free gap. Timing (before V2 or V2.1) is the
-   owner's decision; it is DP3 and outside the no-loss track scope.
+   and any prototype runs wait for a gate-free gap. **Owner decision 2026-10-17:** build
+   it now as parallel Track F (branch `lazy-smp-01` from `search-int-01`), measure only
+   in gate-free gaps; it joins V2 if it passes before R1, otherwise V2.1.
 
 ## Standing scope: practical no-loss track against Invincible 2
 

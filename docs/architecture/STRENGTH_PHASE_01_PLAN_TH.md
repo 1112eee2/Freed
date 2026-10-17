@@ -119,6 +119,18 @@ D1–D3 ตัวไหนผ่าน W1 ก่อน R1 ให้รวมเ�
    NNUE v3: E3 pattern eval (เทียบ/เสริม NNUE) และ E4 ความรู้หมากฮอสคลาสสิก (เริ่มจากวิเคราะห์ชุด collapse)
    E7 TB7 / DTW อยู่นอก scope ตอนนี้ ต้องให้เจ้าของอนุมัติ
 
+### Track F: Lazy SMP (เจ้าของอนุมัติ 2026-10-17)
+
+สาเหตุที่ 12T ไม่แรงกว่า 1T อยู่ใน [SMP_ROOT_CAUSE_TH.md](../research/SMP_ROOT_CAUSE_TH.md)
+เจ้าของสั่ง: "ทำ Lazy SMP เป็น track คู่ขนาน เขียนโค้ดตอนนี้ วัดตอนไม่มี gate
+ถ้าผ่านทันก่อน R1 ให้เข้า V2 ไม่ทันก็เป็น V2.1"
+
+1. **F1** branch `lazy-smp-01` ต่อจาก `search-int-01`: Lazy SMP ใน C, shared TT แบบ lockless,
+   helper threads, Python เรียกครั้งเดียวต่อการค้น 1T ต้อง bit-exact กับ SEARCH_INT_01
+2. **F2** (ไม่มี gate) M1 เพดานฮาร์ดแวร์ แล้ว scaling 1/2/4/6/12T (time-to-depth, NPS)
+3. **F3** (ไม่มี gate) SPRT Lazy SMP 12T เทียบ root split 12T ที่ fixed 1 s (สภาพเดียวกับ W2/G2)
+   ผ่านแล้วแทน root split ใน RC-2 ไม่ทัน R1 ก็เข้า V2.1 ไม่เลื่อน R1 เพื่อรอ
+
 ### ประกอบและยืนยัน
 
 1. **R1** RC-2 = SEARCH_INT_01 + NNUE ที่ดีกว่า (v2-A ถ้าผ่าน B4 ไม่งั้น v1)
