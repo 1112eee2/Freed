@@ -290,6 +290,14 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    after D1-D3; null move stays (disabling it failed the screen, while the NULL_EVAL_01
    guard that uses it less often gave +55.5), so E2 adds caution, not removal. E6 ballot
    openings apply only to runs after RC-2. The rest is post-RC-2 or needs owner scope.
+7. **12T root cause (owner request 2026-10-17, analysis only):**
+   [SMP_ROOT_CAUSE_TH.md](../../../../docs/research/SMP_ROOT_CAUSE_TH.md). The 12T root
+   split searches every root move full-window (3.4-4.3x nodes), waits for the slowest
+   root move each depth (median 7 root moves), splits the TT 12 ways and pays Python
+   overhead. Proposed fix: Stockfish-style Lazy SMP in C with one lockless shared TT;
+   gates use 1T parity, scaling and SPRT, not >=2T determinism. M1 (hardware ceiling)
+   and any prototype runs wait for a gate-free gap. Timing (before V2 or V2.1) is the
+   owner's decision; it is DP3 and outside the no-loss track scope.
 
 ## Standing scope: practical no-loss track against Invincible 2
 
