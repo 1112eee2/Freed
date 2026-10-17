@@ -33,7 +33,7 @@ class WebGuiContractTests(unittest.TestCase):
         self.assertIn("rules_profile: gameState.rulesProfile", app)
         self.assertIn('<input type="number" id="input-engine-threads" min="1" max="12" step="1" value="12"', page)
         self.assertIn('<input type="number" id="input-engine-hash" min="4" max="1024" step="1" value="512"', page)
-        self.assertIn('ENGINE v1.0.0', page)
+        self.assertIn('ENGINE v1.0.1', page)
         self.assertIn('id="select-rules-profile"', page)
         self.assertIn('value="external-no-repetition"', page)
         self.assertIn('app.js?v=20261017-2', page)
