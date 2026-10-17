@@ -251,13 +251,23 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    suite 556 passed, 103 skipped, 7 failed, of which 6 need untracked `build/` files
    absent from the worktree (they pass in the main checkout) and 1 was a stale
    `NATIVE_COMPILE_FLAGS.md`, regenerated in `fc30ace`.
-   **A2 running:** HISTORY_MALUS_01 W1 started 2026-10-16 17:59 local (pid 30116,
-   BelowNormal, detached via WMI, `build/runs/histmalus_l1w/launch_w1.py`, run dir
-   `build/histmalus01/sprt-w1-20261016`, seed 20261016, same settings as NULL_EVAL_01
-   W1). Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
+   **A2 done: HISTORY_MALUS_01 W1 PASS** (2026-10-17 11:00 local) at 2,751 pairs:
+   W 1809 / D 2107 / L 1586, Ptnml 113/501/1337/650/150, LLR +2.97, **+14.1 ± 5.8 Elo**
+   (candidate 5d1445ac vs strict control 8b82fef8, 1T 10s+0.1s, seed 20261016, run dir
+   `build/runs/histmalus_l1w/build/histmalus01/sprt-w1-20261016`). Interrupted once at
+   226 pairs by a GUI exe smoke test (workload lease) and resumed. History malus stays
+   in SEARCH_INT_01.
+   **A4 running:** SEARCH_INT_01 W1 vs production started 2026-10-17 16:37 local
+   (pid 15696, BelowNormal, detached, `build/runs/searchint_a4w1/launch_w1.py`, run dir
+   `build/search_int01/sprt-w1-20261017` in that tree). Candidate `5ed1fe18…eac9` vs
+   production `32c32302…7e79`, same NNUE `07b9ab0f…`, 1T 10s+0.1s, persistent search,
+   TB4-6 np80 + C4, 2 parallel games, H0 0 / H1 +5, cap 4,000 pairs, seed 20261017.
+   Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
    (`build/runs/run_watcher.py RUN_DIR NAME`, at-logon trigger, writes
-   `watcher_notified.txt` after its one pop-up); re-point it at each new run.
-   Then A4 (SEARCH_INT_01 vs production, W1 H1 +5, then W2); B2 and the C1 labels
+   `watcher_notified.txt` after its one pop-up), now pointed at this run; re-point it
+   at each new run. Next: A4 W2 (12T
+   fixed 1 s); do not start the GUI or exe while it runs.
+   After A4 W1 and W2: B2 and the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
    **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
