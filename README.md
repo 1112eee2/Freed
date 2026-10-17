@@ -1,7 +1,7 @@
 # Freed
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v1.0.1-green.svg)](https://github.com/1112eee2/Freed/releases)
+[![Release](https://img.shields.io/badge/release-v1.0.2-green.svg)](https://github.com/1112eee2/Freed/releases)
 
 **Freed** is a strong, rules-exact engine for **Thai Makhos** (หมากฮอสไทย, Thai checkers),
 made by Thai people, for Thai people.
@@ -20,7 +20,7 @@ made by Thai people, for Thai people.
 
 ## Quick start (Windows)
 
-1. Download `Freed-v1.0.1-windows-x64.zip` from
+1. Download `Freed-v1.0.2-windows-x64.zip` from
    [Releases](https://github.com/1112eee2/Freed/releases) and extract it.
 2. Download the tablebases from the
    [v1.0.0 release](https://github.com/1112eee2/Freed/releases/tag/v1.0.0) into the `build\` folder next to
@@ -50,7 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build_nnue_search_candidat
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\build_endgame_c4.ps1
 ```
 
-Install the CLI as a package: `pip install freed-1.0.1-py3-none-any.whl`,
+Install the CLI as a package: `pip install freed-1.0.2-py3-none-any.whl`,
 then run `freed --help`.
 
 ## Tablebases
