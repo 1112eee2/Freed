@@ -257,16 +257,20 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    `build/runs/histmalus_l1w/build/histmalus01/sprt-w1-20261016`). Interrupted once at
    226 pairs by a GUI exe smoke test (workload lease) and resumed. History malus stays
    in SEARCH_INT_01.
-   **A4 running:** SEARCH_INT_01 W1 vs production started 2026-10-17 16:37 local
-   (pid 15696, BelowNormal, detached, `build/runs/searchint_a4w1/launch_w1.py`, run dir
-   `build/search_int01/sprt-w1-20261017` in that tree). Candidate `5ed1fe18…eac9` vs
-   production `32c32302…7e79`, same NNUE `07b9ab0f…`, 1T 10s+0.1s, persistent search,
-   TB4-6 np80 + C4, 2 parallel games, H0 0 / H1 +5, cap 4,000 pairs, seed 20261017.
-   Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
+   **A4 W1 PASS** (2026-10-17 17:55 local) at 215 pairs: W 189 / D 170 / L 71,
+   Ptnml 1/17/87/83/27, LLR +2.94, **+97.9 ± 20.8 Elo** (SEARCH_INT_01 `5ed1fe18…eac9`
+   vs production `32c32302…7e79`, same NNUE `07b9ab0f…`, 1T 10s+0.1s, persistent
+   search, TB4-6 np80 + C4, 2 parallel games, H0 0 / H1 +5, seed 20261017); stderr
+   empty, `sprt.json` SHA-256 `3cc8a2f0…dc48b`, run dir
+   `build/runs/searchint_a4w1/build/search_int01/sprt-w1-20261017`.
+   **A4 W2 running:** started 2026-10-17 18:04 local (pid 18856, BelowNormal,
+   detached, `build/runs/searchint_a4w1/launch_w2.py`, run dir
+   `build/search_int01/sprt-w2-20261017` in that tree): same DLLs and NNUE, 12T,
+   512 MiB, fixed 1 s, TB4-6 + C4, one game at a time, H0 0 / H1 +5, cap 1,000 pairs,
+   seed 20261018. Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
    (`build/runs/run_watcher.py RUN_DIR NAME`, at-logon trigger, writes
-   `watcher_notified.txt` after its one pop-up), now pointed at this run; re-point it
-   at each new run. Next: A4 W2 (12T
-   fixed 1 s); do not start the GUI or exe while it runs.
+   `watcher_notified.txt` after its one pop-up), now pointed at the W2 run and
+   started; re-point it at each new run. Do not start the GUI or exe while it runs.
    After A4 W1 and W2: B2 and the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
@@ -299,6 +303,23 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    and any prototype runs wait for a gate-free gap. **Owner decision 2026-10-17:** build
    it now as parallel Track F (branch `lazy-smp-01` from `search-int-01`), measure only
    in gate-free gaps; it joins V2 if it passes before R1, otherwise V2.1.
+   **F1 done (local `lazy-smp-01` `ad5dff5`, evidence `c303258`, not pushed):**
+   `MAKHOS_LOCKLESS_TT` (five relaxed-atomic words, key XOR payload) +
+   `MAKHOS_NATIVE_LAZY_SMP_SKIP_DEPTH`, `makhos sprt --lazy-smp`, orchestrator
+   `-LazySmp`. Candidate `21bead74…f27d` (two byte-identical builds); the default-flag
+   build stays byte-identical to `5ed1fe18`. 1T parity vs `5ed1fe18`: 960/960
+   middlegame_search_v5 positions at depth 13 (move, score, depth, nodes, PV); 1T
+   cost about 0.5%.
+   **F2 measured 2026-10-17 ~18:00 local** in the gap between A4 W1 and W2 (no GUI;
+   both runs at Normal priority because of a tool bug, since fixed), files in
+   `benchmarks/lazy_smp01/` on that branch. M1 ceiling: aggregate 1T NPS 4.30x at 6
+   processes, 5.69x at 10, 5.62x at 12. Scaling on 24 stable v5 positions, empty TT
+   per search: mean depth at 1 s 22.79 (1T), **20.62 (root split 12T), 25.17 (Lazy
+   12T)**; time to depth 18 vs 1T 0.49x (root split), 1.85x / 3.00x / 3.10x (Lazy
+   2T / 6T / 12T). Depth is not Elo. **Next: F3** SPRT Lazy 12T vs root split 12T
+   (W2 conditions, H1 +5, 1,000 pairs, seed 20261019): prepare the tree with
+   `tools/smp/prepare_f3_sprt.py`, start `launch_f3.py` only when no gate runs (after
+   A4 W2, or in a gap the owner picks).
 
 ## Standing scope: practical no-loss track against Invincible 2
 
