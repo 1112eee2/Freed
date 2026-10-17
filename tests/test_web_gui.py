@@ -31,13 +31,12 @@ class WebGuiContractTests(unittest.TestCase):
         self.assertIn("threads: gameState.engineThreads", app)
         self.assertIn("hash_mb: gameState.engineHashMb", app)
         self.assertIn("rules_profile: gameState.rulesProfile", app)
-        self.assertIn('id="select-engine-threads"', page)
-        self.assertIn('id="select-engine-hash"', page)
-        self.assertIn('<option value="12" selected>12 Threads (root split ทดลอง)</option>', page)
+        self.assertIn('<input type="number" id="input-engine-threads" min="1" max="12" step="1" value="12"', page)
+        self.assertIn('<input type="number" id="input-engine-hash" min="4" max="1024" step="1" value="512"', page)
         self.assertIn('ENGINE v1.0.0', page)
         self.assertIn('id="select-rules-profile"', page)
         self.assertIn('value="external-no-repetition"', page)
-        self.assertIn('app.js?v=20261017-1', page)
+        self.assertIn('app.js?v=20261017-2', page)
 
     def test_first_mover_is_shown_as_red_without_renaming_engine_sides(self) -> None:
         app = (WEB_DIR / "app.js").read_text(encoding="utf-8")
