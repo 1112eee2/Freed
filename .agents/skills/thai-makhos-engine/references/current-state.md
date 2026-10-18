@@ -296,8 +296,12 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
      18.4 at 79,675), so 450,000 games give about 7.1M train rows, short of 10M;
      about 660,000 games are needed. The contract's stop rule fixes the volume inside
      seeds 2026200000-2026999999, so **part 2 is chained**: `b2_chain.py` (pid 11120,
-     Idle, `chain.log`) starts `b2_part2_runner.py` (seeds 2026650000 onward, 250,000
-     games, `part-2.jsonl`, about 8.5 h) only after part 1 logs `=== exit 0`; it stops
+     Idle, `chain.log`) starts `b2_part2_runner.py` (seeds 2026650000-2026999999,
+     **350,000 games** since 2026-10-18 owner decision, `part-2.jsonl`, about 11.6 h)
+     only after part 1 logs `=== exit 0`. Reason: a stop-rule count on 226,369 real
+     part-1 games gave 3,738,891 train rows (slope -1.19 rows/game per doubling) and
+     projected 10.22M at 700,000 games (2% margin); 800,000 give about 11.4M. Clock
+     buckets at 226k games: 19,112 / 11,752 / 9,225 / 6,934 / 4,877. It stops
      with a pop-up on any other ending. It is not restarted after a reboot. Kill pid
      11120 to cancel part 2.
    - **Clock gate: data contract v3 frozen 2026-10-18 (owner chose option A).** The
