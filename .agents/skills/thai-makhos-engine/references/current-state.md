@@ -300,13 +300,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
      games, `part-2.jsonl`, about 8.5 h) only after part 1 logs `=== exit 0`; it stops
      with a pop-up on any other ending. It is not restarted after a reboot. Kill pid
      11120 to cancel part 2.
-   - **Clock gate trends to FAIL (owner decision needed).** The contract asks for at
-     least 2% of rows with reversible clock >= 30. Measured: 2.57% at 10k games,
-     1.72% at 80k, 1.887% on the first 1M train rows, falling toward about 1%. The
-     other gates pass at 1M rows (phase bands 39.5/32.6/27.8%, kings 43.3%, black to
-     move 50.1%, leakage 0). A failed gate stops acquisition and is reported; the
-     contract is not edited to pass it. Options for the owner: a contract v3 with a
-     different clock gate or generator, or weighting.
+   - **Clock gate: data contract v3 frozen 2026-10-18 (owner chose option A).** The
+     v2 gate (2% of deduplicated train rows with clock >= 30) was heading to about
+     1-1.6%: 98.9% of those rows have 6 or fewer pieces, and deduplication removes
+     repeats of the finite 2-piece set as games are added. v3 needs at least 5,000
+     train rows in each clock bucket 30-39 .. 70-79 (rehearsal at 79,675 games: 10,650 /
+     6,924 / 5,626 / 4,059 / 2,944, growing about x1.7 per doubling); nothing else
+     changes, and B2 part 1 and part 2 count under v3. Local branch
+     `nnue2-contract-v3-draft` `6c4ee28` (from `9878d37`): `data_contract_v3.json`, the
+     options record `data_contract_v3_draft.json`, and `extract_rows.py` gating on the
+     buckets while still reporting the v2 share result (17 tests pass).
    - **B3 prepared** (local `nnue2-b3-prep` `6025e72`, from `9878d37`): `pack_rows.py`
      (uint8 features, chunked, peak 642 MB) and `train.py` (float NNUE with v1
      parameter names, deterministic CPU/CUDA, atomic checkpoint and resume),
