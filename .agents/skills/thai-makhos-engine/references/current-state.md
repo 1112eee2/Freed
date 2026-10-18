@@ -310,20 +310,26 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
      `nnue2-contract-v3-draft` `6c4ee28` (from `9878d37`): `data_contract_v3.json`, the
      options record `data_contract_v3_draft.json`, and `extract_rows.py` gating on the
      buckets while still reporting the v2 share result (17 tests pass).
-   - **B3 prepared** (local `nnue2-b3-prep` `6025e72`, from `9878d37`): `pack_rows.py`
-     (uint8 features, chunked, peak 642 MB) and `train.py` (float NNUE with v1
-     parameter names, deterministic CPU/CUDA, atomic checkpoint and resume),
-     5 tests. Trainer contract `benchmarks/nnue2_stage3/trainer_contract_v2a_draft.json`
-     is a DRAFT: v1 values recovered from its checkpoint (AdamW 1e-3, weight decay
-     1e-4, batch 256, 2 warm-up epochs, cosine over 30, patience 5); the Huber delta,
-     loss mix and phase weights were not recoverable and are open decisions.
+   - **B3 prepared and trainer contract frozen 2026-10-18** (local `nnue2-b3-prep`
+     `6d3f8a3`, which also merges contract v3, so extract, pack and train all run from
+     this branch): `pack_rows.py` (uint8 features, chunked, peak 642 MB) and `train.py`
+     (float NNUE with v1 parameter names, deterministic, atomic checkpoint and resume).
+     Owner choices: loss from pilot arm N (`train_config.json`, declared before any
+     label, arm passed +14.2 Elo): Huber 0.1, mix teacher / outcome / exact WDL
+     1.0 / 0.1 / 0.5, phase weights 1.0; optimizer recovered from v1 (AdamW 1e-3, wd
+     1e-4, batch 256, warm-up 2 + cosine 30, patience 5); one deterministic CPU thread.
+     Two seeds, 20290001 and 20290002 (`trainer_contract_v2a_seed*.json`); the lower best
+     validation loss goes on, never the sealed split. Still to adapt: quantization and
+     parity for the v2 model.
    Then the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
    **Text protocol for V2 (owner, 2026-10-18: ships with Release V2):** local branch
    `text-protocol-01` `f7ade0c` from `main`. `makhos uci` now serves the GUI's release
    engine (same release selection, TB3 and NNUE checks, Threads/Hash options); refusals
-   end with `bestmove (none)`; `docs/PROTOCOL.md`. Not merged or pushed.
+   end with `bestmove (none)`; `docs/PROTOCOL.md`. Pushed to origin 2026-10-18 (owner),
+   not merged into `main`. The refactored `/api/bestmove` passed an HTTP smoke on the V1
+   NNUE files at 1 thread (NNUE middlegame, TB3 endgame root, forced move, validation).
    **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
    behavior and always plays its best move, like Stockfish; no user-selectable modes
    in the GUI. Compile/runtime flags such as safety mode are default-off only for
@@ -371,7 +377,7 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    Threads 1..1024 and free-size Hash (4,096 to 2^36 entries; power-of-two counts keep
    the mask index, other counts use multiply-high). Candidate `b397b084…5768`; default
    flags still reproduce `5ed1fe18`; 1T parity 960/960 at depth 13 with 2^16 and 2^20
-   TTs. Only `sprt --lazy-smp` selects it. README `fe0735a` (local).
+   TTs. Only `sprt --lazy-smp` selects it. README `fe0735a` (pushed 2026-10-18).
    **F3 tree frozen 2026-10-18, not started:** `build/runs/lazysmp_f3` from `7253326`
    (artifact hashes checked; Lazy 12T vs root split 12T, W2 conditions, H1 +5,
    1,000 pairs, seed 20261019). Start `launch_f3.py` there only when no gate or data
