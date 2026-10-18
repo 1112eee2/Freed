@@ -28,7 +28,7 @@ DLL = "makhos_native_nnue_candidate_v1.dll"
 ARTIFACTS = (
     (ROOT / "build" / "lazy_smp_01" / "candidate" / DLL,
      Path("build/lazy_smp_01/candidate") / DLL,
-     "21BEAD7480725DB8196F5B63695DC5E6247B64B07B2168F86942C6A6175FF27D"),
+     "B397B0841661E30E14FD511A26304ECEB867389B494BE8793FCEBD8724845768"),
     (PROJECT / "build" / "search_int01" / "candidate" / DLL,
      Path("build/search_int01/candidate") / DLL,
      "5ED1FE187A09A060C02E1C433C5C9C6813D01D7B8C21B71A67323546B695EAC9"),

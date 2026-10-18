@@ -123,7 +123,11 @@ class _RepetitionCensusTelemetry(ctypes.Structure):
     ]
 
 
-_NATIVE_LAZY_SMP_MAX_THREADS = 12
+# Server-class Lazy-SMP limits, matching makhos_native.c.
+NATIVE_LAZY_SMP_MAX_THREADS = 1024
+_NATIVE_LAZY_SMP_MIN_TT_ENTRIES = 1 << 12
+_NATIVE_LAZY_SMP_MAX_TT_ENTRIES = 1 << 36
+_NATIVE_ROOT_PVS_MAX_THREADS = 12
 
 
 class _LazySmpStats(ctypes.Structure):
@@ -133,8 +137,6 @@ class _LazySmpStats(ctypes.Structure):
         ("aggregate_nodes", ctypes.c_uint64),
         ("leader_nodes", ctypes.c_uint64),
         ("leader_depth", ctypes.c_uint32),
-        ("worker_nodes", ctypes.c_uint64 * _NATIVE_LAZY_SMP_MAX_THREADS),
-        ("worker_depth", ctypes.c_uint32 * _NATIVE_LAZY_SMP_MAX_THREADS),
     ]
 
 
@@ -240,6 +242,32 @@ def hash_power_for_megabytes(
     bytes_per_partition = hash_mb * 1024 * 1024 // partitions
     entries = max(1, bytes_per_partition // entry_bytes)
     return max(12, min(24, int(math.floor(math.log2(entries)))))
+
+
+def lazy_smp_tt_entries_for_megabytes(
+    hash_mb: float,
+    *,
+    entry_bytes: int = NATIVE_TT_ENTRY_BYTES,
+) -> int:
+    """Return the Lazy-SMP TT entry count for Hash MiB, without rounding.
+
+    Like a UCI Hash option, the whole budget is used; a power-of-two count
+    keeps the private-TT index, any other count maps keys by multiply-high.
+    """
+
+    if hash_mb < 1:
+        raise ValueError("hash_mb must be positive")
+    if entry_bytes < 1:
+        raise ValueError("entry_bytes must be positive")
+    entries = max(
+        _NATIVE_LAZY_SMP_MIN_TT_ENTRIES,
+        int(hash_mb * 1024 * 1024) // entry_bytes,
+    )
+    if entries > _NATIVE_LAZY_SMP_MAX_TT_ENTRIES:
+        raise ValueError(
+            f"Lazy-SMP Hash above {_NATIVE_LAZY_SMP_MAX_TT_ENTRIES} TT entries"
+        )
+    return entries
 
 
 def hash_megabytes_for_power(
@@ -370,16 +398,20 @@ class NativeRootPvsShadowStats:
     main_wait_us: int
 
 
-def _unpack_lazy_smp_stats(raw: _LazySmpStats) -> NativeLazySmpStats:
-    threads = min(int(raw.requested_threads), _NATIVE_LAZY_SMP_MAX_THREADS)
+def _unpack_lazy_smp_stats(
+    raw: _LazySmpStats,
+    worker_nodes,
+    worker_depth,
+) -> NativeLazySmpStats:
+    threads = min(int(raw.requested_threads), len(worker_nodes))
     return NativeLazySmpStats(
         requested_threads=threads,
         completed_threads=min(int(raw.completed_threads), threads),
         aggregate_nodes=int(raw.aggregate_nodes),
         leader_nodes=int(raw.leader_nodes),
         leader_depth=int(raw.leader_depth),
-        worker_nodes=tuple(int(raw.worker_nodes[index]) for index in range(threads)),
-        worker_depth=tuple(int(raw.worker_depth[index]) for index in range(threads)),
+        worker_nodes=tuple(int(worker_nodes[index]) for index in range(threads)),
+        worker_depth=tuple(int(worker_depth[index]) for index in range(threads)),
     )
 
 
@@ -1633,8 +1665,10 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
         hash_mb: int,
         nnue_model: str | Path | None = None,
     ) -> None:
-        if not 1 <= threads <= _NATIVE_LAZY_SMP_MAX_THREADS:
-            raise ValueError("lazy SMP threads must be in 1..12")
+        if not 1 <= threads <= NATIVE_LAZY_SMP_MAX_THREADS:
+            raise ValueError(
+                f"lazy SMP threads must be in 1..{NATIVE_LAZY_SMP_MAX_THREADS}"
+            )
         self.path = Path(library)
         if not self.path.is_file():
             raise FileNotFoundError(f"native search library not found: {self.path}")
@@ -1658,6 +1692,8 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
             "makhos_lazy_smp_run",
             "makhos_lazy_smp_memory_bytes",
             "makhos_lazy_smp_stats",
+            # Marks the entry-count create and the per-worker stats ABI.
+            "makhos_lazy_smp_worker_stats",
         )
         if not all(hasattr(self._library, name) for name in required):
             raise RuntimeError("native Lazy-SMP is unavailable in this DLL")
@@ -1671,22 +1707,19 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
             )
         self._configure_nnue_candidate(nnue_model)
         self.tt_entry_bytes = native_tt_entry_bytes(self.path)
-        self.hash_power = hash_power_for_megabytes(
+        self.tt_entries = lazy_smp_tt_entries_for_megabytes(
             hash_mb,
-            partitions=1,
             entry_bytes=self.tt_entry_bytes,
         )
-        self.allocated_hash_mb = hash_megabytes_for_power(
-            self.hash_power,
-            partitions=1,
-            entry_bytes=self.tt_entry_bytes,
+        self.allocated_hash_mb = (
+            self.tt_entries * self.tt_entry_bytes / (1024.0 * 1024.0)
         )
         self._configure_signatures()
         if not self._library.makhos_lazy_smp_available():
             raise RuntimeError("native Lazy-SMP is unavailable in this DLL")
         handle = self._library.makhos_lazy_smp_create(
             self.threads,
-            self.hash_power,
+            self.tt_entries,
         )
         if not handle:
             raise RuntimeError("native Lazy-SMP allocation failed")
@@ -1696,7 +1729,7 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
         library = self._library
         library.makhos_lazy_smp_available.argtypes = []
         library.makhos_lazy_smp_available.restype = ctypes.c_int
-        library.makhos_lazy_smp_create.argtypes = [ctypes.c_int, ctypes.c_int]
+        library.makhos_lazy_smp_create.argtypes = [ctypes.c_int, ctypes.c_uint64]
         library.makhos_lazy_smp_create.restype = ctypes.c_void_p
         library.makhos_lazy_smp_destroy.argtypes = [ctypes.c_void_p]
         library.makhos_lazy_smp_destroy.restype = None
@@ -1725,6 +1758,13 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
             ctypes.POINTER(_LazySmpStats),
         ]
         library.makhos_lazy_smp_stats.restype = ctypes.c_int
+        library.makhos_lazy_smp_worker_stats.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_uint64),
+            ctypes.POINTER(ctypes.c_uint32),
+            ctypes.c_uint32,
+        ]
+        library.makhos_lazy_smp_worker_stats.restype = ctypes.c_int
 
     def _require_open(self) -> None:
         if self._closed or self._handle is None:
@@ -1747,14 +1787,24 @@ class NativeLazySmpSearch(_NnueCandidateBinding):
     @property
     def stats(self) -> NativeLazySmpStats:
         raw = _LazySmpStats()
+        worker_nodes = (ctypes.c_uint64 * self.threads)()
+        worker_depth = (ctypes.c_uint32 * self.threads)()
         with self._lock:
+            handle = self._require_handle()
             status = self._library.makhos_lazy_smp_stats(
-                self._require_handle(),
+                handle,
                 ctypes.byref(raw),
             )
+            if status == 0:
+                status = self._library.makhos_lazy_smp_worker_stats(
+                    handle,
+                    worker_nodes,
+                    worker_depth,
+                    self.threads,
+                )
         if status != 0:
             raise RuntimeError(f"native Lazy-SMP stats failed ({status})")
-        return _unpack_lazy_smp_stats(raw)
+        return _unpack_lazy_smp_stats(raw, worker_nodes, worker_depth)
 
     def clear(self) -> None:
         with self._lock:
@@ -1853,7 +1903,7 @@ class NativeRootPvsShadowSearch:
         threads: int,
         hash_mb: int,
     ) -> None:
-        if not 1 <= threads <= _NATIVE_LAZY_SMP_MAX_THREADS:
+        if not 1 <= threads <= _NATIVE_ROOT_PVS_MAX_THREADS:
             raise ValueError("root-PVS shadow threads must be in 1..12")
         if hash_mb < 1:
             raise ValueError("root-PVS shadow Hash must be positive")

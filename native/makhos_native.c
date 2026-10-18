@@ -1667,6 +1667,9 @@ typedef struct NativeRootPvsHandle NativeRootPvsHandle;
 typedef struct {
     NativeTTEntry *tt;
     size_t tt_count;
+#if MAKHOS_NATIVE_LAZY_SMP
+    bool tt_power_of_two;
+#endif
 #if MAKHOS_SHARED_TT
     NativeSharedTT *shared_tt;
     bool owns_shared_tt;
@@ -2169,21 +2172,33 @@ struct NativeLazySmpControl {
 #endif
 
 #if MAKHOS_NATIVE_LAZY_SMP
-#define MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS 12
+/* Server-class limits: Threads up to 1024 and any Hash from 4096 entries
+ * to 2^36 entries (2.5 TiB of 40-byte entries). */
+#define MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS 1024
+#define MAKHOS_NATIVE_LAZY_SMP_MIN_TT_ENTRIES ((uint64_t)1 << 12)
+#define MAKHOS_NATIVE_LAZY_SMP_MAX_TT_ENTRIES ((uint64_t)1 << 36)
+/* A TT at least this large is zeroed by several threads. */
+#define MAKHOS_NATIVE_LAZY_SMP_PARALLEL_CLEAR_BYTES ((size_t)64 << 20)
+#define MAKHOS_NATIVE_LAZY_SMP_MAX_CLEAR_THREADS 64
 
+/* Per-worker counters come from makhos_lazy_smp_worker_stats. */
 typedef struct {
     uint32_t requested_threads;
     uint32_t completed_threads;
     uint64_t aggregate_nodes;
     uint64_t leader_nodes;
     uint32_t leader_depth;
-    uint64_t worker_nodes[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
-    uint32_t worker_depth[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
 } MakhosLazySmpStats;
+
+typedef struct NativeLazySmpJob NativeLazySmpJob;
 
 typedef struct {
     NativeLazySmpControl control;
-    NativeSearchContext workers[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
+    NativeSearchContext *workers;
+    NativeLazySmpJob *jobs;
+    HANDLE *thread_handles;
+    uint64_t *worker_nodes;
+    uint32_t *worker_depth;
     MakhosLazySmpStats stats;
     uint32_t threads;
     bool running;
@@ -2236,6 +2251,24 @@ static void record_iir_census(
     telemetry->missing_depth_sum += (uint64_t)depth;
 }
 #endif
+
+static inline size_t native_tt_index(
+    const NativeSearchContext *context,
+    uint64_t key
+) {
+#if MAKHOS_NATIVE_LAZY_SMP
+    /* A free-size Hash maps the key by its multiply-high product; a
+     * power-of-two Hash keeps the mask, so one thread replays the private-TT
+     * search node for node. */
+    if (!context->tt_power_of_two) {
+        return (size_t)(
+            ((unsigned __int128)key * (unsigned __int128)context->tt_count)
+            >> 64
+        );
+    }
+#endif
+    return (size_t)(key & (context->tt_count - 1));
+}
 
 #if MAKHOS_LOCKLESS_TT
 /*
@@ -3950,10 +3983,10 @@ static int native_negamax(
     search_position_key_with_legacy_tt_index(
         position, &key, &legacy_index_key
     );
-    size_t tt_index = (size_t)(legacy_index_key & (context->tt_count - 1));
+    size_t tt_index = native_tt_index(context, legacy_index_key);
 #else
     key = search_position_key(position);
-    size_t tt_index = (size_t)(key & (context->tt_count - 1));
+    size_t tt_index = native_tt_index(context, key);
 #endif
 #if MAKHOS_SHARED_TT
     NativeTTEntry entry_snapshot;
@@ -4540,10 +4573,17 @@ static uint32_t search_elapsed_ms(const NativeSearchContext *context) {
         : (uint32_t)(milliseconds + 0.5);
 }
 
+#if MAKHOS_NATIVE_LAZY_SMP
+static bool allocate_native_search_entries(
+    NativeSearchContext *context,
+    size_t tt_count
+) {
+#else
 static bool allocate_native_search(
     NativeSearchContext *context,
     int hash_power
 ) {
+#endif
 #if MAKHOS_NNUE_SEARCH_CANDIDATE
     if (native_nnue_model == NULL || !avx2_supported_cached()) return false;
 #endif
@@ -4551,7 +4591,12 @@ static bool allocate_native_search(
 #if MAKHOS_NNUE_SEARCH_CANDIDATE
     native_nnue_initialize_stack(context);
 #endif
+#if MAKHOS_NATIVE_LAZY_SMP
+    context->tt_count = tt_count;
+    context->tt_power_of_two = (tt_count & (tt_count - 1)) == 0;
+#else
     context->tt_count = (size_t)1 << hash_power;
+#endif
 #if MAKHOS_SHARED_TT
     NativeSharedTT *shared = calloc(1, sizeof(*shared));
     if (shared == NULL) {
@@ -4602,6 +4647,15 @@ static bool allocate_native_search(
     return true;
 }
 
+#if MAKHOS_NATIVE_LAZY_SMP
+static bool allocate_native_search(
+    NativeSearchContext *context,
+    int hash_power
+) {
+    return allocate_native_search_entries(context, (size_t)1 << hash_power);
+}
+#endif
+
 #if MAKHOS_SHARED_TT
 static bool allocate_native_search_shared(
     NativeSearchContext *context,
@@ -4618,6 +4672,9 @@ static bool allocate_native_search_shared(
     context->shared_tt = owner->shared_tt;
     context->tt = context->shared_tt->entries;
     context->tt_count = context->shared_tt->count;
+#if MAKHOS_NATIVE_LAZY_SMP
+    context->tt_power_of_two = owner->tt_power_of_two;
+#endif
     context->owns_shared_tt = false;
 #if MAKHOS_LOCKED_SHARED_TT
     context->tt_requires_lock = true;
@@ -5267,7 +5324,7 @@ static int execute_native_search(
 }
 
 #if MAKHOS_NATIVE_LAZY_SMP
-typedef struct {
+struct NativeLazySmpJob {
     NativeSearchContext *context;
     Position root;
     int max_depth;
@@ -5275,7 +5332,7 @@ typedef struct {
     HANDLE start_event;
     MakhosSearchResult result;
     int status;
-} NativeLazySmpJob;
+};
 
 static DWORD WINAPI run_native_lazy_smp_worker(void *argument) {
     NativeLazySmpJob *job = argument;
@@ -6463,17 +6520,45 @@ MAKHOS_API int makhos_lazy_smp_available(void) {
     return 1;
 }
 
-MAKHOS_API void *makhos_lazy_smp_create(int threads, int hash_power) {
+static void free_native_lazy_smp(
+    NativeLazySmpHandle *lazy,
+    uint32_t allocated
+) {
+    for (uint32_t index = allocated; index > 0; --index) {
+        destroy_native_search(&lazy->workers[index - 1]);
+    }
+    free(lazy->workers);
+    free(lazy->jobs);
+    free(lazy->thread_handles);
+    free(lazy->worker_nodes);
+    free(lazy->worker_depth);
+    free(lazy);
+}
+
+MAKHOS_API void *makhos_lazy_smp_create(int threads, uint64_t tt_entries) {
     if (
         threads < 1 || threads > MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS ||
-        hash_power < 12 || hash_power > 24
+        tt_entries < MAKHOS_NATIVE_LAZY_SMP_MIN_TT_ENTRIES ||
+        tt_entries > MAKHOS_NATIVE_LAZY_SMP_MAX_TT_ENTRIES ||
+        tt_entries > SIZE_MAX / sizeof(NativeTTEntry)
     ) {
         return NULL;
     }
     NativeLazySmpHandle *handle = calloc(1, sizeof(*handle));
     if (handle == NULL) return NULL;
-    if (!allocate_native_search(&handle->workers[0], hash_power)) {
-        free(handle);
+    size_t count = (size_t)threads;
+    handle->workers = calloc(count, sizeof(*handle->workers));
+    handle->jobs = calloc(count, sizeof(*handle->jobs));
+    handle->thread_handles = calloc(count, sizeof(*handle->thread_handles));
+    handle->worker_nodes = calloc(count, sizeof(*handle->worker_nodes));
+    handle->worker_depth = calloc(count, sizeof(*handle->worker_depth));
+    if (
+        handle->workers == NULL || handle->jobs == NULL ||
+        handle->thread_handles == NULL || handle->worker_nodes == NULL ||
+        handle->worker_depth == NULL ||
+        !allocate_native_search_entries(&handle->workers[0], (size_t)tt_entries)
+    ) {
+        free_native_lazy_smp(handle, 0);
         return NULL;
     }
     uint32_t allocated = 1;
@@ -6482,11 +6567,7 @@ MAKHOS_API void *makhos_lazy_smp_create(int threads, int hash_power) {
             &handle->workers[index],
             &handle->workers[0]
         )) {
-            while (allocated > 0) {
-                --allocated;
-                destroy_native_search(&handle->workers[allocated]);
-            }
-            free(handle);
+            free_native_lazy_smp(handle, allocated);
             return NULL;
         }
         ++allocated;
@@ -6499,22 +6580,77 @@ MAKHOS_API void *makhos_lazy_smp_create(int threads, int hash_power) {
 MAKHOS_API void makhos_lazy_smp_destroy(void *handle) {
     if (handle == NULL) return;
     NativeLazySmpHandle *lazy = handle;
-    for (uint32_t index = lazy->threads; index > 0; --index) {
-        destroy_native_search(&lazy->workers[index - 1]);
+    free_native_lazy_smp(lazy, lazy->threads);
+}
+
+typedef struct {
+    unsigned char *start;
+    size_t bytes;
+} NativeTTClearJob;
+
+static DWORD WINAPI run_native_tt_clear(void *argument) {
+    NativeTTClearJob *job = argument;
+    memset(job->start, 0, job->bytes);
+    return 0;
+}
+
+/* Zero the shared TT in up to Threads slices (at most 64), so a 16 GiB Hash
+ * does not clear on one core. */
+static void clear_native_lazy_smp_tt(NativeLazySmpHandle *lazy) {
+    NativeSearchContext *owner = &lazy->workers[0];
+    unsigned char *base = (unsigned char *)owner->tt;
+    size_t bytes = owner->tt_count * sizeof(*owner->tt);
+    uint32_t parts = lazy->threads < MAKHOS_NATIVE_LAZY_SMP_MAX_CLEAR_THREADS
+        ? lazy->threads
+        : MAKHOS_NATIVE_LAZY_SMP_MAX_CLEAR_THREADS;
+    if (parts < 2 || bytes < MAKHOS_NATIVE_LAZY_SMP_PARALLEL_CLEAR_BYTES) {
+        memset(base, 0, bytes);
+        return;
     }
-    free(lazy);
+    NativeTTClearJob jobs[MAKHOS_NATIVE_LAZY_SMP_MAX_CLEAR_THREADS];
+    HANDLE handles[MAKHOS_NATIVE_LAZY_SMP_MAX_CLEAR_THREADS];
+    size_t slice = bytes / parts;
+    for (uint32_t index = 0; index < parts; ++index) {
+        jobs[index].start = base + (size_t)index * slice;
+        jobs[index].bytes = index + 1 == parts
+            ? bytes - (size_t)index * slice
+            : slice;
+        handles[index] = CreateThread(
+            NULL, 0, run_native_tt_clear, &jobs[index], 0, NULL
+        );
+        /* A slice without a thread is cleared here. */
+        if (handles[index] == NULL) run_native_tt_clear(&jobs[index]);
+    }
+    for (uint32_t index = 0; index < parts; ++index) {
+        if (handles[index] == NULL) continue;
+        WaitForSingleObject(handles[index], INFINITE);
+        CloseHandle(handles[index]);
+    }
 }
 
 MAKHOS_API int makhos_lazy_smp_clear(void *handle) {
     if (handle == NULL) return 1;
     NativeLazySmpHandle *lazy = handle;
     if (lazy->running) return 1;
-    if (clear_native_search(&lazy->workers[0], true) != 0) return 1;
-    for (uint32_t index = 1; index < lazy->threads; ++index) {
+    clear_native_lazy_smp_tt(lazy);
+#if MAKHOS_LOCKED_SHARED_TT
+    atomic_store_explicit(
+        &lazy->workers[0].shared_tt->generation,
+        1,
+        memory_order_relaxed
+    );
+#endif
+    for (uint32_t index = 0; index < lazy->threads; ++index) {
         if (clear_native_search(&lazy->workers[index], false) != 0) return 1;
     }
     atomic_store_explicit(&lazy->control.stop, false, memory_order_release);
     memset(&lazy->stats, 0, sizeof(lazy->stats));
+    memset(
+        lazy->worker_nodes, 0, lazy->threads * sizeof(*lazy->worker_nodes)
+    );
+    memset(
+        lazy->worker_depth, 0, lazy->threads * sizeof(*lazy->worker_depth)
+    );
     return 0;
 }
 
@@ -6584,10 +6720,16 @@ MAKHOS_API int makhos_lazy_smp_run(
 #endif
     }
 
-    NativeLazySmpJob jobs[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
-    HANDLE threads[MAKHOS_NATIVE_LAZY_SMP_MAX_THREADS];
-    memset(jobs, 0, sizeof(jobs));
-    memset(threads, 0, sizeof(threads));
+    NativeLazySmpJob *jobs = lazy->jobs;
+    HANDLE *threads = lazy->thread_handles;
+    memset(jobs, 0, lazy->threads * sizeof(*jobs));
+    memset(threads, 0, lazy->threads * sizeof(*threads));
+    memset(
+        lazy->worker_nodes, 0, lazy->threads * sizeof(*lazy->worker_nodes)
+    );
+    memset(
+        lazy->worker_depth, 0, lazy->threads * sizeof(*lazy->worker_depth)
+    );
     HANDLE start_event = CreateEventA(NULL, TRUE, FALSE, NULL);
     if (start_event == NULL) {
         status = 2;
@@ -6621,17 +6763,12 @@ MAKHOS_API int makhos_lazy_smp_run(
         status = 2;
         atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
     }
-    if (created > 0) {
-        DWORD waited = WaitForMultipleObjects(created, threads, TRUE, INFINITE);
-        if (waited != WAIT_OBJECT_0) {
+    /* One wait per worker: WaitForMultipleObjects takes at most 64 handles.
+     * Jobs and the shared control stay alive until every worker exits. */
+    for (uint32_t index = 0; index < created; ++index) {
+        if (WaitForSingleObject(threads[index], INFINITE) != WAIT_OBJECT_0) {
             status = 2;
             atomic_store_explicit(&lazy->control.stop, true, memory_order_release);
-            /* Keep jobs and the shared control alive until every worker exits. */
-            for (uint32_t index = 0; index < created; ++index) {
-                if (WaitForSingleObject(threads[index], INFINITE) != WAIT_OBJECT_0) {
-                    status = 2;
-                }
-            }
         }
     }
     for (uint32_t index = 0; index < created; ++index) {
@@ -6643,8 +6780,8 @@ MAKHOS_API int makhos_lazy_smp_run(
         status = 2;
     }
     for (uint32_t index = 0; index < created; ++index) {
-        lazy->stats.worker_nodes[index] = lazy->workers[index].nodes;
-        lazy->stats.worker_depth[index] = jobs[index].result.depth;
+        lazy->worker_nodes[index] = lazy->workers[index].nodes;
+        lazy->worker_depth[index] = jobs[index].result.depth;
         lazy->stats.aggregate_nodes += lazy->workers[index].nodes;
         if (jobs[index].status == 0) ++lazy->stats.completed_threads;
         if (jobs[index].status == 2) status = 2;
@@ -6767,8 +6904,11 @@ MAKHOS_API uint64_t makhos_search_workspace_lists(void *handle) {
 MAKHOS_API uint64_t makhos_lazy_smp_memory_bytes(void *handle) {
     if (handle == NULL) return 0;
     const NativeLazySmpHandle *lazy = handle;
-    uint64_t bytes = (uint64_t)sizeof(*lazy) -
-        (uint64_t)lazy->threads * (uint64_t)sizeof(NativeSearchContext);
+    uint64_t bytes = (uint64_t)sizeof(*lazy) +
+        (uint64_t)lazy->threads * (uint64_t)(
+            sizeof(*lazy->jobs) + sizeof(*lazy->thread_handles) +
+            sizeof(*lazy->worker_nodes) + sizeof(*lazy->worker_depth)
+        );
     for (uint32_t index = 0; index < lazy->threads; ++index) {
         bytes += makhos_search_memory_bytes((void *)&lazy->workers[index]);
     }
@@ -6782,6 +6922,22 @@ MAKHOS_API int makhos_lazy_smp_stats(
     if (handle == NULL || output == NULL) return 1;
     const NativeLazySmpHandle *lazy = handle;
     *output = lazy->stats;
+    return 0;
+}
+
+/* Copies the first min(capacity, Threads) workers' nodes and completed
+ * depths of the last search; returns 1 on a missing handle or buffer. */
+MAKHOS_API int makhos_lazy_smp_worker_stats(
+    void *handle,
+    uint64_t *nodes,
+    uint32_t *depths,
+    uint32_t capacity
+) {
+    if (handle == NULL || nodes == NULL || depths == NULL) return 1;
+    const NativeLazySmpHandle *lazy = handle;
+    uint32_t count = capacity < lazy->threads ? capacity : lazy->threads;
+    memcpy(nodes, lazy->worker_nodes, count * sizeof(*nodes));
+    memcpy(depths, lazy->worker_depth, count * sizeof(*depths));
     return 0;
 }
 

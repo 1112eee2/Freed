@@ -17,7 +17,12 @@ import time
 import unittest
 
 from makhos.core import initial_state, legal_moves, parse_position
-from makhos.native import NativeLazySmpSearch, NativeSearch
+from makhos.native import (
+    NATIVE_LAZY_SMP_MAX_THREADS,
+    NativeLazySmpSearch,
+    NativeSearch,
+    lazy_smp_tt_entries_for_megabytes,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SEARCH = dict(no_progress_plies=80, repetition_limit=3)
@@ -85,13 +90,14 @@ class NativeLazySmpTests(unittest.TestCase):
 
     def test_one_thread_replays_the_control_search(self):
         # Both handles keep their TT across the sequence, so the replacement
-        # rule and the generation must match as well as the search.
+        # rule and the generation must match as well as the search.  40 MiB
+        # of 40-byte entries is exactly 2^20, the control's mask-indexed TT.
         with NativeSearch(
-            self.control_path, hash_power=16, persistent=True
+            self.control_path, hash_power=20, persistent=True
         ) as control, NativeLazySmpSearch(
-            self.candidate_path, threads=1, hash_mb=3
+            self.candidate_path, threads=1, hash_mb=40
         ) as lazy:
-            self.assertEqual(lazy.hash_power, control.hash_power)
+            self.assertEqual(lazy.tt_entries, 1 << 20)
             for state in _states():
                 for depth in (6, 11):
                     with self.subTest(state=state, depth=depth):
@@ -124,6 +130,61 @@ class NativeLazySmpTests(unittest.TestCase):
                     self.assertEqual(stats.completed_threads, 4)
                     self.assertTrue(all(depth <= 10 for depth in stats.worker_depth))
                     self.assertGreaterEqual(stats.aggregate_nodes, stats.leader_nodes)
+
+    def test_free_size_hash_uses_the_whole_budget(self):
+        self.assertEqual(lazy_smp_tt_entries_for_megabytes(1, entry_bytes=40), 26214)
+        self.assertEqual(
+            lazy_smp_tt_entries_for_megabytes(16384, entry_bytes=40),
+            16384 * 1024 * 1024 // 40,
+        )
+        # 3 MiB is not a power of two, so keys map by multiply-high.
+        with NativeLazySmpSearch(self.candidate_path, threads=2, hash_mb=3) as lazy:
+            self.assertEqual(lazy.tt_entries, 3 * 1024 * 1024 // 40)
+            self.assertEqual(lazy.allocated_hash_mb, lazy.tt_entries * 40 / 1048576)
+            for state in _states():
+                with self.subTest(state=state):
+                    result = lazy.search(
+                        state, depth=9, time_ms=None,
+                        history={state.position_key: 1}, **SEARCH,
+                    )
+                    self.assertIn(result.move, legal_moves(state))
+                    self.assertEqual(result.depth, 9)
+
+    def test_more_threads_than_one_wait_call_takes(self):
+        # WaitForMultipleObjects stops at 64 handles; 80 workers must all
+        # start, finish and report.
+        state = parse_position(POSITIONS[1])
+        with NativeLazySmpSearch(self.candidate_path, threads=80, hash_mb=8) as lazy:
+            result = lazy.search(
+                state, depth=8, time_ms=None,
+                history={state.position_key: 1}, **SEARCH,
+            )
+            stats = lazy.stats
+        self.assertIn(result.move, legal_moves(state))
+        self.assertEqual(result.depth, 8)
+        self.assertEqual(stats.requested_threads, 80)
+        self.assertEqual(stats.completed_threads, 80)
+        self.assertEqual(len(stats.worker_nodes), 80)
+        self.assertEqual(sum(stats.worker_nodes), stats.aggregate_nodes)
+
+    def test_parallel_clear_resets_a_large_hash(self):
+        # 96 MiB with 4 Threads takes the multi-thread clear path.
+        state = parse_position(POSITIONS[2])
+        options = dict(
+            depth=9, time_ms=None, history={state.position_key: 1}, **SEARCH
+        )
+        with NativeLazySmpSearch(self.candidate_path, threads=4, hash_mb=96) as lazy:
+            lazy.search(state, **options)
+            lazy.clear()
+            self.assertEqual(lazy.stats.aggregate_nodes, 0)
+            result = lazy.search(state, **options)
+        self.assertIn(result.move, legal_moves(state))
+        self.assertEqual(result.depth, 9)
+
+    def test_thread_bounds(self):
+        for threads in (0, NATIVE_LAZY_SMP_MAX_THREADS + 1):
+            with self.subTest(threads=threads), self.assertRaises(ValueError):
+                NativeLazySmpSearch(self.candidate_path, threads=threads, hash_mb=8)
 
     def test_four_threads_stop_at_the_deadline(self):
         state = parse_position(POSITIONS[0])

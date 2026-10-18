@@ -17,7 +17,7 @@ from ..native import (
     native_tt_entry_bytes,
 )
 from ..native_tablebase import NativeTablebase
-from ..parallel_native import ParallelNativeSearch
+from ..parallel_native import MAX_PARALLEL_NATIVE_THREADS, ParallelNativeSearch
 from ..ranked_tablebase import RankedTablebase
 from ..search import Engine
 from .. import sprt
@@ -214,6 +214,15 @@ def command_sprt(args: argparse.Namespace) -> int:
         raise ValueError("--lazy-smp requires candidate Threads 2 or greater")
     if lazy_smp and (args.selective_root or args.shared_tt or args.root_alpha):
         raise ValueError("test --lazy-smp separately from the root-split options")
+    if baseline_threads > MAX_PARALLEL_NATIVE_THREADS:
+        raise ValueError(
+            f"baseline Threads must be in 1..{MAX_PARALLEL_NATIVE_THREADS}"
+        )
+    if candidate_threads > MAX_PARALLEL_NATIVE_THREADS and not lazy_smp:
+        raise ValueError(
+            f"candidate Threads above {MAX_PARALLEL_NATIVE_THREADS} "
+            "require --lazy-smp"
+        )
     if args.resume and not args.output:
         raise ValueError("--resume requires --output")
     tb_draw_cutoff = bool(getattr(args, "tb_draw_cutoff", False))

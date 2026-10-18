@@ -1,7 +1,7 @@
 """Unit tests for the SPRT testing harness."""
 
 from collections import Counter
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 import io
 import json
 from pathlib import Path
@@ -351,6 +351,16 @@ class SPRTTests(unittest.TestCase):
         )
         self.assertTrue(lazy.lazy_smp)
         self.assertFalse(shared.lazy_smp)
+        server = parser.parse_args(
+            ["sprt", "--dev-threads", "256", "--master-threads", "12",
+             "--hash-mb", "16384", "--lazy-smp"]
+        )
+        self.assertEqual(server.dev_threads, 256)
+        self.assertEqual(server.hash_mb, 16384)
+        with redirect_stderr(io.StringIO()):
+            for threads in ("0", "1025"):
+                with self.assertRaises(SystemExit):
+                    parser.parse_args(["sprt", "--dev-threads", threads])
 
         architecture = parser.parse_args(
             [

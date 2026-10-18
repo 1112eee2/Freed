@@ -10,7 +10,7 @@ import argparse
 import sys
 
 from .core import BLACK, DEFAULT_RULES, RED
-from .native import project_native_library
+from .native import NATIVE_LAZY_SMP_MAX_THREADS, project_native_library
 from .provenance import DEFAULT_MANIFEST_PATH
 from .search import Mode
 
@@ -59,6 +59,17 @@ from .cli_handlers.analysis_handler import (
     command_profile_native,
     command_verify_native,
 )
+
+
+def _sprt_threads(text: str) -> int:
+    # Lazy SMP accepts server-class counts; the handler limits the other
+    # engines to their own 1..12.
+    value = int(text)
+    if not 1 <= value <= NATIVE_LAZY_SMP_MAX_THREADS:
+        raise argparse.ArgumentTypeError(
+            f"Threads must be in 1..{NATIVE_LAZY_SMP_MAX_THREADS}"
+        )
+    return value
 
 
 def _add_search_arguments(parser: argparse.ArgumentParser) -> None:
@@ -535,22 +546,19 @@ def build_parser() -> argparse.ArgumentParser:
     sprt_parser.add_argument("--search-hash-power", type=int, default=20)
     sprt_parser.add_argument(
         "--threads",
-        type=int,
-        choices=range(1, 13),
+        type=_sprt_threads,
         default=1,
-        help="Threads per engine (1..12)",
+        help="Threads per engine (1..12; up to 1024 with --lazy-smp)",
     )
     sprt_parser.add_argument(
         "--dev-threads",
-        type=int,
-        choices=range(1, 13),
+        type=_sprt_threads,
         default=None,
         help="candidate Threads override; defaults to --threads",
     )
     sprt_parser.add_argument(
         "--master-threads",
-        type=int,
-        choices=range(1, 13),
+        type=_sprt_threads,
         default=None,
         help="baseline Threads override; defaults to --threads",
     )

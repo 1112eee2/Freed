@@ -9,6 +9,9 @@ position, with both handles keeping their TT across the whole sequence.
         --control-library build/search_int01/candidate/makhos_native_nnue_candidate_v1.dll \
         --nnue-model build/nnue_quantized_v1/model_a.mknnue --depth 9 --positions 120
 
+--hash-mb must give a power-of-two TT (2.5 or 40 MiB of 40-byte entries are
+2^16 and 2^20): only then does the Lazy-SMP handle use the control's index.
+
 Exit status 0 means every position matched.
 """
 
@@ -70,7 +73,7 @@ def main() -> int:
     )
     parser.add_argument("--positions", type=int, default=120)
     parser.add_argument("--depth", type=int, default=9)
-    parser.add_argument("--hash-mb", type=int, default=3)
+    parser.add_argument("--hash-mb", type=float, default=2.5)
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -97,9 +100,10 @@ def main() -> int:
         hash_mb=args.hash_mb,
         nnue_model=args.nnue_model,
     ) as lazy:
-        if lazy.hash_power != hash_power:
+        if lazy.tt_entries != 1 << hash_power:
             raise RuntimeError(
-                f"hash power differs: lazy {lazy.hash_power}, control {hash_power}"
+                f"TT differs: lazy {lazy.tt_entries} entries, control "
+                f"2^{hash_power}; pick a --hash-mb whose TT is a power of two"
             )
         for sample_id, state in corpus_positions(args.corpus, args.positions):
             options = {
