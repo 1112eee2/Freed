@@ -263,15 +263,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    search, TB4-6 np80 + C4, 2 parallel games, H0 0 / H1 +5, seed 20261017); stderr
    empty, `sprt.json` SHA-256 `3cc8a2f0…dc48b`, run dir
    `build/runs/searchint_a4w1/build/search_int01/sprt-w1-20261017`.
-   **A4 W2 running:** started 2026-10-17 18:04 local (pid 18856, BelowNormal,
-   detached, `build/runs/searchint_a4w1/launch_w2.py`, run dir
-   `build/search_int01/sprt-w2-20261017` in that tree): same DLLs and NNUE, 12T,
-   512 MiB, fixed 1 s, TB4-6 + C4, one game at a time, H0 0 / H1 +5, cap 1,000 pairs,
-   seed 20261018. Completion pop-up: Windows scheduled task `ThaiMakhos run watcher`
-   (`build/runs/run_watcher.py RUN_DIR NAME`, at-logon trigger, writes
-   `watcher_notified.txt` after its one pop-up), now pointed at the W2 run and
-   started; re-point it at each new run. Do not start the GUI or exe while it runs.
-   After A4 W1 and W2: B2 and the C1 labels
+   **A4 W2 PASS** (2026-10-18 01:28 local) at 229 pairs: W 201 / D 160 / L 97,
+   Ptnml 2/19/111/67/30, LLR +2.95, **+80.3 ± 20.3 Elo** (SEARCH_INT_01 `5ed1fe18…eac9`
+   vs production `32c32302…7e79`, same NNUE, 12T, 512 MiB, fixed 1 s, TB4-6 + C4,
+   H0 0 / H1 +5, seed 20261018); `complete: true`, stderr empty, `sprt.json` SHA-256
+   `7a4d26e5a0df6ca7…`, run dir `build/runs/searchint_a4w1/build/search_int01/sprt-w2-20261017`.
+   Paused three times on 2026-10-17 for owner GUI/release work (68, 70, 71 pairs),
+   each through the interactive-priority event, and resumed with `--resume`.
+   SEARCH_INT_01 has now passed both gates and is the RC-2 search; it is not
+   merged into `main` or shipped yet (RC-2 also waits for the NNUE v2 track).
+   Next: B2 and the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
    **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
