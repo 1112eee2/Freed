@@ -272,7 +272,19 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    each through the interactive-priority event, and resumed with `--resume`.
    SEARCH_INT_01 has now passed both gates and is the RC-2 search; it is not
    merged into `main` or shipped yet (RC-2 also waits for the NNUE v2 track).
-   Next: B2 and the C1 labels
+   **B2 running** (started 2026-10-18 08:12 local under data contract v2). The run
+   tree is `build/runs/nnue2_b2`, a `git archive` of `nnue2-stage2-data-contract`
+   `96aa1fb`; its `selfplay.py` is byte-identical to `5747714`.
+   - Teacher: DLL `32c32302…`, model `07b9ab0f…`, depth 10, hash power 20.
+   - Load: 5 workers at Idle priority, seeds 2026200000 onward, 450,000 games.
+   - Output: `build/nnue2_stage2/raw/part-1.jsonl` in that tree.
+   - First rate was about 0.86M engine labels/hour, so roughly 16–17 h in total.
+   - Resume after any stop: `python -B launch_b2.py` (finished seeds are skipped).
+     The runner shows a pop-up when it ends.
+   - B2 is not a gate. F3, C1 labels and other 12-thread work must not run beside it.
+   - After it ends: run `extract_rows.py` with the 10M-train-row stop rule, then
+     the coverage gates and `regen_check.py`.
+   Then the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
    **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
