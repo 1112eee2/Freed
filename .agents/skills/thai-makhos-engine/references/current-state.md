@@ -284,9 +284,43 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    - B2 is not a gate. F3, C1 labels and other 12-thread work must not run beside it.
    - After it ends: run `extract_rows.py` with the 10M-train-row stop rule, then
      the coverage gates and `regen_check.py`.
+   **B2 status 2026-10-18 11:43 local:** 104,500 / 450,000 games, about 30k games/h,
+   so part 1 ends near 23:30 local.
+   - **Rehearsal on real B2 output** (`build/runs/nnue2_b2_rehearsal`, read-only
+     copies; findings in `benchmarks/nnue2_stage2/b2_rehearsal_20261018.json` on
+     `nnue2-stage2-data-contract` `9878d37`, local). The old extractor held every
+     row in memory; `9878d37` streams it (seed-ordered offsets, 128-bit key digests,
+     stop rule, shard leakage re-read) and matches the old output byte for byte on
+     5,000 games. Regen check 60/60.
+   - **Volume:** train rows per game after dedup fall as games grow (23.7 at 1k,
+     18.4 at 79,675), so 450,000 games give about 7.1M train rows, short of 10M;
+     about 660,000 games are needed. The contract's stop rule fixes the volume inside
+     seeds 2026200000-2026999999, so **part 2 is chained**: `b2_chain.py` (pid 11120,
+     Idle, `chain.log`) starts `b2_part2_runner.py` (seeds 2026650000 onward, 250,000
+     games, `part-2.jsonl`, about 8.5 h) only after part 1 logs `=== exit 0`; it stops
+     with a pop-up on any other ending. It is not restarted after a reboot. Kill pid
+     11120 to cancel part 2.
+   - **Clock gate trends to FAIL (owner decision needed).** The contract asks for at
+     least 2% of rows with reversible clock >= 30. Measured: 2.57% at 10k games,
+     1.72% at 80k, 1.887% on the first 1M train rows, falling toward about 1%. The
+     other gates pass at 1M rows (phase bands 39.5/32.6/27.8%, kings 43.3%, black to
+     move 50.1%, leakage 0). A failed gate stops acquisition and is reported; the
+     contract is not edited to pass it. Options for the owner: a contract v3 with a
+     different clock gate or generator, or weighting.
+   - **B3 prepared** (local `nnue2-b3-prep` `6025e72`, from `9878d37`): `pack_rows.py`
+     (uint8 features, chunked, peak 642 MB) and `train.py` (float NNUE with v1
+     parameter names, deterministic CPU/CUDA, atomic checkpoint and resume),
+     5 tests. Trainer contract `benchmarks/nnue2_stage3/trainer_contract_v2a_draft.json`
+     is a DRAFT: v1 values recovered from its checkpoint (AdamW 1e-3, weight decay
+     1e-4, batch 256, 2 warm-up epochs, cosine over 30, patience 5); the Huber delta,
+     loss mix and phase weights were not recoverable and are open decisions.
    Then the C1 labels
    need gate-free gaps. The owner declined shortcuts (2026-10-16): one RC-2 with
    everything that passes.
+   **Text protocol for V2 (owner, 2026-10-18: ships with Release V2):** local branch
+   `text-protocol-01` `f7ade0c` from `main`. `makhos uci` now serves the GUI's release
+   engine (same release selection, TB3 and NNUE checks, Threads/Hash options); refusals
+   end with `bestmove (none)`; `docs/PROTOCOL.md`. Not merged or pushed.
    **Single default behavior (owner, 2026-10-16):** the shipped V2 engine has one
    behavior and always plays its best move, like Stockfish; no user-selectable modes
    in the GUI. Compile/runtime flags such as safety mode are default-off only for
@@ -329,9 +363,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    processes, 5.69x at 10, 5.62x at 12. Scaling on 24 stable v5 positions, empty TT
    per search: mean depth at 1 s 22.79 (1T), **20.62 (root split 12T), 25.17 (Lazy
    12T)**; time to depth 18 vs 1T 0.49x (root split), 1.85x / 3.00x / 3.10x (Lazy
-   2T / 6T / 12T). Depth is not Elo. **Next: F3** SPRT Lazy 12T vs root split 12T
-   (W2 conditions, H1 +5, 1,000 pairs, seed 20261019): prepare the tree with
-   `tools/smp/prepare_f3_sprt.py`, start `launch_f3.py` only when no gate runs.
+   2T / 6T / 12T). Depth is not Elo.
+   **Server limits (`7253326`, pushed to origin `lazy-smp-01` 2026-10-18):** Lazy SMP
+   Threads 1..1024 and free-size Hash (4,096 to 2^36 entries; power-of-two counts keep
+   the mask index, other counts use multiply-high). Candidate `b397b084…5768`; default
+   flags still reproduce `5ed1fe18`; 1T parity 960/960 at depth 13 with 2^16 and 2^20
+   TTs. Only `sprt --lazy-smp` selects it. README `fe0735a` (local).
+   **F3 tree frozen 2026-10-18, not started:** `build/runs/lazysmp_f3` from `7253326`
+   (artifact hashes checked; Lazy 12T vs root split 12T, W2 conditions, H1 +5,
+   1,000 pairs, seed 20261019). Start `launch_f3.py` there only when no gate or data
+   run uses the CPU and the GUI is closed.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
