@@ -382,6 +382,11 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    (artifact hashes checked; Lazy 12T vs root split 12T, W2 conditions, H1 +5,
    1,000 pairs, seed 20261019). Start `launch_f3.py` there only when no gate or data
    run uses the CPU and the GUI is closed.
+   **F3 auto-start (owner, 2026-10-18, overrides the B3-B4 slot):** F3 starts right after
+   B2. `build/runs/lazysmp_f3/f3_after_b2.py` (pid 28816, Idle, `f3_chain.log`) waits for
+   B2 part 2 to log `=== exit 0`, then for no Freed.exe / server.py / makhos gui, uci or
+   sprt process, then runs `launch_f3.py` once. Any other B2 ending stops it with a
+   pop-up. Not restarted after a reboot. Extraction, C1 and B3 wait until F3 ends.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
