@@ -15,11 +15,14 @@ import threading
 from .core import (
     BLACK,
     DEFAULT_RULES,
+    EMPTY,
     Rules,
     format_position,
+    legal_moves,
     parse_position,
 )
 from .compact_tb3 import CompactTablebase
+from .endgame_routing import is_native_endgame_position
 from .tb3_service import TB3Service
 from .native import NativeSearch, hash_power_for_megabytes, native_tt_entry_bytes
 from .native_endgame import NativeEndgameTablebase
@@ -33,7 +36,10 @@ from .gui_release import DEFAULT_POINTER, load_release
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_ENGINE_THREADS = 1
 DEFAULT_ENGINE_HASH_MB = 64
+MIN_ENGINE_HASH_MB = 4
+MAX_ENGINE_HASH_MB = 1024
 GUI_SEARCH_DEPTH = 64
+MAX_SEARCH_DEPTH = 94
 DEFAULT_NATIVE_ENDGAME_ENABLED = True
 DEFAULT_NATIVE_ENDGAME_C2_LIBRARY = PROJECT_ROOT / "build" / "native_endgame_c2" / (
     "makhos_endgame_search" + (".dll" if sys.platform == "win32" else ".so")
@@ -165,6 +171,45 @@ def configure_gui_native_search(
     GUI_RELEASE = None
 
 
+def configure_engine_release(
+    native_library: str | Path | None = None,
+    nnue_model: str | Path | None = None,
+    *,
+    native_endgame: bool = DEFAULT_NATIVE_ENDGAME_ENABLED,
+    native_endgame_library: str | Path | None = None,
+    release_pointer: str | Path | None = None,
+    release_profile: str | None = None,
+) -> dict | None:
+    """Select the hash-checked release, or explicit files, for the shared engine.
+
+    The GUI server and the text protocol both start here, so they play the
+    same engine. Returns the release, or None for explicit files or an
+    unconfigured development checkout.
+    """
+
+    global GUI_RELEASE
+    if native_library is not None and (release_pointer is not None or release_profile is not None):
+        raise ValueError("Select explicit native files or a release, not both")
+    release = None
+    if native_library is None and nnue_model is None:
+        release = load_release(DEFAULT_POINTER if release_pointer is None else Path(release_pointer).resolve(),
+                               profile=release_profile)
+        if release is not None:
+            native_library, nnue_model = release["native_library"], release["nnue_model"]
+    configure_gui_native_search(
+        native_library,
+        nnue_model,
+        native_endgame=native_endgame,
+        native_endgame_library=native_endgame_library,
+    )
+    GUI_RELEASE = release
+    if release is not None:
+        with NativeSearch(native_library, hash_power=12, persistent=True, nnue_model=nnue_model) as probe:
+            if probe.abi_version != release["native_search_abi"] or probe.nnue_feature_abi != release["nnue_feature_abi"]:
+                raise ValueError("GUI release ABI mismatch")
+    return release
+
+
 def configured_gui_native_library() -> Path:
     return GUI_NATIVE_LIBRARY_OVERRIDE or production_native_library()
 
@@ -254,6 +299,18 @@ def engine_search_provenance(engine: Engine) -> dict[str, object]:
     )
     configured["native_endgame_proof_precedence"] = "terminal>tablebase>nnue"
     return configured
+
+
+def checked_search_provenance(engine: Engine) -> dict[str, object]:
+    """Provenance of the last search; a selected NNUE must really have been used."""
+
+    provenance = engine_search_provenance(engine)
+    if GUI_NNUE_MODEL_OVERRIDE is not None and (
+        not provenance["nnue_enabled"] or provenance["native_error"]
+        or provenance["search_backend"] == "python-fallback"
+    ):
+        raise RuntimeError(f"NNUE search unavailable: {provenance['native_error']}")
+    return provenance
 
 
 def _close_engine_resources(engine: Engine) -> None:
@@ -432,6 +489,38 @@ def ensure_native_endgame_ready(engine: Engine) -> bool:
     return True
 
 
+def prepare_root_search(engine: Engine, state) -> bool | None:
+    """Attach the endgame resources a root needs before it is searched.
+
+    Returns None when the root needs none, True when they are attached, and
+    False when TB3 is not loaded: such a root must not silently fall back to
+    expensive or incomplete Python solving. 4..6 -> 3 transitions count as
+    endgame roots; a forced move needs nothing.
+    """
+
+    choices = len(legal_moves(state))
+    regular_endgame = (
+        sum(piece != EMPTY for piece in state.board)
+        <= max((3, *engine.ranked_tablebases))
+        and choices > 1
+    )
+    native_endgame_position = (
+        engine.native_endgame_enabled
+        and choices > 1
+        and is_native_endgame_position(state)
+    )
+    if not (regular_endgame or native_endgame_position):
+        return None
+    if not ensure_native_tablebase_ready(engine):
+        return False
+    if native_endgame_position:
+        # The candidate is created only after TB3 is ready. If it is
+        # unavailable, Engine.search performs a visible Python fallback and
+        # provenance reports the reason.
+        ensure_native_endgame_ready(engine)
+    return True
+
+
 def close_global_engine() -> None:
     """Close GUI-owned native search and tablebase resources."""
 
@@ -458,8 +547,8 @@ def get_default_engine(
     global GLOBAL_ENGINE, GLOBAL_ENGINE_CONFIG, GLOBAL_ENGINE_PROVENANCE
     if not 1 <= threads <= MAX_PARALLEL_NATIVE_THREADS:
         raise ValueError("threads must be in 1..12")
-    if not 4 <= hash_mb <= 1024:
-        raise ValueError("hash_mb must be in 4..1024")
+    if not MIN_ENGINE_HASH_MB <= hash_mb <= MAX_ENGINE_HASH_MB:
+        raise ValueError(f"hash_mb must be in {MIN_ENGINE_HASH_MB}..{MAX_ENGINE_HASH_MB}")
     if rules_profile not in RULE_PROFILES:
         raise ValueError("unsupported rules profile")
     rules = RULE_PROFILES[rules_profile]

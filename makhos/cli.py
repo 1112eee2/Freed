@@ -453,9 +453,12 @@ def build_parser() -> argparse.ArgumentParser:
     check_parser.set_defaults(func=command_check_proof)
 
     uci_parser = subparsers.add_parser(
-        "uci", help="run engine in UCI/UGI protocol mode for GUI integration"
+        "uci", help="serve the release engine over the UCI-style text protocol"
     )
-    _add_search_arguments(uci_parser)
+    uci_parser.add_argument("--native-library", help="explicit native-search DLL instead of the release")
+    uci_parser.add_argument("--nnue-model", help="explicit NNUE model for the selected DLL")
+    uci_parser.add_argument("--release-pointer", help="GUI release selection JSON")
+    uci_parser.add_argument("--release-profile", choices=["nnue", "hce"])
     uci_parser.set_defaults(func=command_uci)
 
     gui_parser = subparsers.add_parser(

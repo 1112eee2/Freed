@@ -21,7 +21,6 @@ import webbrowser
 
 from .core import (
     BLACK,
-    EMPTY,
     RED,
     apply_move,
     format_position,
@@ -35,9 +34,6 @@ from .search import Mode, SearchLimits
 from .workload_isolation import InteractiveSessionLease
 from .game_records import MAX_RECORD_BYTES, save_game_record
 from .search_profile import RequestProfiler
-from .endgame_routing import is_native_endgame_position
-from .native import NativeSearch
-from .gui_release import DEFAULT_POINTER, load_release
 
 # Import authoritative engine manager
 from . import engine_manager
@@ -59,6 +55,9 @@ from .engine_manager import (
     GUI_NNUE_MODEL_OVERRIDE,
     GUI_RELEASE,
     GUI_SEARCH_DEPTH,
+    MAX_ENGINE_HASH_MB,
+    MAX_SEARCH_DEPTH,
+    MIN_ENGINE_HASH_MB,
     PROJECT_ROOT,
     RULE_PROFILES,
     TB3_SERVICE,
@@ -372,14 +371,14 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
         if not 0.01 <= time_sec <= 3600:
             self.send_json({"error": "time_sec must be in 0.01..3600"}, 400)
             return
-        if not 1 <= depth <= 94:
-            self.send_json({"error": "depth must be in 1..94"}, 400)
+        if not 1 <= depth <= MAX_SEARCH_DEPTH:
+            self.send_json({"error": f"depth must be in 1..{MAX_SEARCH_DEPTH}"}, 400)
             return
         if not 1 <= threads <= MAX_PARALLEL_NATIVE_THREADS:
             self.send_json({"error": "threads must be in 1..12"}, 400)
             return
-        if not 4 <= hash_mb <= 1024:
-            self.send_json({"error": "hash_mb must be in 4..1024"}, 400)
+        if not MIN_ENGINE_HASH_MB <= hash_mb <= MAX_ENGINE_HASH_MB:
+            self.send_json({"error": f"hash_mb must be in {MIN_ENGINE_HASH_MB}..{MAX_ENGINE_HASH_MB}"}, 400)
             return
 
         try:
@@ -428,34 +427,16 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                 )
                 engine_ready = time.perf_counter()
                 tb3_ready_before = engine.native_tablebase is not None
-                tb3_load_attempted = False
-                regular_endgame = (
-                    sum(piece != EMPTY for piece in state.board)
-                    <= max((3, *engine.ranked_tablebases))
-                    and len(legal_moves(state)) > 1
-                )
-                native_endgame_position = (
-                    engine.native_endgame_enabled
-                    and len(legal_moves(state)) > 1
-                    and is_native_endgame_position(state)
-                )
-                if regular_endgame or native_endgame_position:
-                    # Include 4..6 -> 3 transitions. A missing oracle must not
-                    # silently fall back to expensive/incomplete Python solving.
-                    tb3_load_attempted = not tb3_ready_before
-                    if not engine_manager.ensure_native_tablebase_ready(engine):
-                        status = engine_manager.TB3_SERVICE.status()
-                        self.send_json({
-                            "error": "TB3 ยังไม่พร้อม กรุณารอให้โหลดเสร็จแล้วกดเล่นต่อ; "
-                                     "ถ้าสถานะ error/timeout ให้ตรวจไฟล์แล้วเริ่มเซิร์ฟเวอร์ใหม่",
-                            "engine_unavailable": True, "tb3": status,
-                        }, 503)
-                        return
-                if native_endgame_position:
-                    # The candidate is created only after TB3 is ready. If it
-                    # is unavailable, Engine.search performs a visible Python
-                    # fallback and provenance reports the reason.
-                    engine_manager.ensure_native_endgame_ready(engine)
+                root_resources = engine_manager.prepare_root_search(engine, state)
+                tb3_load_attempted = root_resources is not None and not tb3_ready_before
+                if root_resources is False:
+                    status = engine_manager.TB3_SERVICE.status()
+                    self.send_json({
+                        "error": "TB3 ยังไม่พร้อม กรุณารอให้โหลดเสร็จแล้วกดเล่นต่อ; "
+                                 "ถ้าสถานะ error/timeout ให้ตรวจไฟล์แล้วเริ่มเซิร์ฟเวอร์ใหม่",
+                        "engine_unavailable": True, "tb3": status,
+                    }, 503)
+                    return
                 search_started = time.perf_counter()
                 result = engine.search(
                     state,
@@ -464,12 +445,7 @@ class EngineRequestHandler(SimpleHTTPRequestHandler):
                     history=history,
                 )
                 search_finished = time.perf_counter()
-            provenance = engine_manager.engine_search_provenance(engine)
-            if engine_manager.GUI_NNUE_MODEL_OVERRIDE is not None and (
-                not provenance["nnue_enabled"] or provenance["native_error"]
-                or provenance["search_backend"] == "python-fallback"
-            ):
-                raise RuntimeError(f"NNUE search unavailable: {provenance['native_error']}")
+            provenance = engine_manager.checked_search_provenance(engine)
 
             # Snapshot shared resources under the same lock as the search.
             # A later request can reconfigure the engine before JSON is written.
@@ -560,25 +536,14 @@ def run_server(
     release_pointer: str | Path | None = None,
     release_profile: str | None = None,
 ) -> None:
-    if native_library is not None and (release_pointer is not None or release_profile is not None):
-        raise ValueError("Select explicit native files or a release, not both")
-    release = None
-    if native_library is None and nnue_model is None:
-        release = load_release(DEFAULT_POINTER if release_pointer is None else Path(release_pointer).resolve(),
-                               profile=release_profile)
-        if release is not None:
-            native_library, nnue_model = release["native_library"], release["nnue_model"]
-    engine_manager.configure_gui_native_search(
+    engine_manager.configure_engine_release(
         native_library,
         nnue_model,
         native_endgame=native_endgame,
         native_endgame_library=native_endgame_library,
+        release_pointer=release_pointer,
+        release_profile=release_profile,
     )
-    engine_manager.GUI_RELEASE = release
-    if release is not None:
-        with NativeSearch(native_library, hash_power=12, persistent=True, nnue_model=nnue_model) as probe:
-            if probe.abi_version != release["native_search_abi"] or probe.nnue_feature_abi != release["nnue_feature_abi"]:
-                raise ValueError("GUI release ABI mismatch")
     server_address = ("", port)
     url = f"http://localhost:{port}/?v={WEB_ASSET_VERSION}"
     try:

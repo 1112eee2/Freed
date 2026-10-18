@@ -38,6 +38,7 @@ cd Freed
 python -m makhos perft --depth 6          # move-generation check
 python -m makhos bestmove --depth 8       # best move from the start position
 python server.py                          # Web GUI (needs the native files below)
+python -m makhos uci                      # same engine over a UCI-style text protocol
 ```
 
 The GUI runs the release that `config/gui_release.json` names and checks every file
@@ -98,7 +99,7 @@ Full definition: [RULESET.json](RULESET.json).
 | `tests/` | Test suite |
 | `tools/build/` | Reproducible native build orchestrator |
 | `config/`, `releases/` | Hash-bound GUI release selection |
-| `docs/` | Design notes ([NNUE](docs/NNUE.md)) |
+| `docs/` | Design notes ([NNUE](docs/NNUE.md), [text protocol](docs/PROTOCOL.md)) |
 
 Research notes, experiment evidence and SPRT records are on the
 [`research-archive`](https://github.com/1112eee2/Freed/tree/research-archive) branch.

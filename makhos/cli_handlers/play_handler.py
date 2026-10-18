@@ -19,7 +19,7 @@ from ..core import (
     terminal_status,
 )
 from ..exact import ExactSolver
-from ..search import SearchLimits, TimeManager
+from ..search import SearchLimits
 from ..selfplay import train_self_play
 from .common import _get_engine, _get_state
 
@@ -250,109 +250,12 @@ def command_gui(args: argparse.Namespace) -> int:
 
 
 def command_uci(args: argparse.Namespace) -> int:
-    engine = _get_engine(args)
-    state = _get_state(args)
-    history: Counter = Counter({state.position_key: 1})
-
-    while True:
-        try:
-            line = sys.stdin.readline()
-        except (KeyboardInterrupt, EOFError):
-            break
-        if not line:
-            break
-        line = line.strip()
-        if not line:
-            continue
-
-        tokens = line.split()
-        cmd = tokens[0].lower()
-
-        if cmd in ("uci", "ugi"):
-            print("id name ThaiMakhos 2.0")
-            print("id author Pinggo")
-            print("option name Mode type combo default win var win var best")
-            print("uciok" if cmd == "uci" else "ugiok")
-            sys.stdout.flush()
-        elif cmd == "isready":
-            print("readyok")
-            sys.stdout.flush()
-        elif cmd == "ucinewgame":
-            state = _get_state(args)
-            history = Counter({state.position_key: 1})
-            engine._tt.clear()
-            engine._move_hints.clear()
-            if engine.native_search is not None and engine.native_search.persistent:
-                engine.native_search.clear()
-        elif cmd == "position":
-            idx = 1
-            if idx < len(tokens) and tokens[idx].lower() == "startpos":
-                state = _get_state(args)
-                history = Counter({state.position_key: 1})
-                idx += 1
-            elif idx < len(tokens) and tokens[idx].lower() in ("fen", "pos"):
-                idx += 1
-                if idx < len(tokens):
-                    state = parse_position(tokens[idx])
-                    history = Counter({state.position_key: 1})
-                    idx += 1
-
-            if idx < len(tokens) and tokens[idx].lower() == "moves":
-                idx += 1
-                while idx < len(tokens):
-                    move_str = tokens[idx].lower()
-                    moves = legal_moves(state)
-                    found = next((m for m in moves if m.notation.lower() == move_str), None)
-                    if found:
-                        state = apply_move(state, found, validate=False)
-                        history[state.position_key] += 1
-                    idx += 1
-        elif cmd == "go":
-            depth = args.depth
-            time_limit_ms = args.time_ms
-            wtime = btime = winc = binc = movestogo = None
-
-            i = 1
-            while i < len(tokens):
-                t = tokens[i].lower()
-                if t == "depth" and i + 1 < len(tokens):
-                    depth = int(tokens[i + 1])
-                    i += 2
-                elif t == "movetime" and i + 1 < len(tokens):
-                    time_limit_ms = int(tokens[i + 1])
-                    i += 2
-                elif t == "wtime" and i + 1 < len(tokens):
-                    wtime = int(tokens[i + 1]); i += 2
-                elif t == "btime" and i + 1 < len(tokens):
-                    btime = int(tokens[i + 1]); i += 2
-                elif t == "winc" and i + 1 < len(tokens):
-                    winc = int(tokens[i + 1]); i += 2
-                elif t == "binc" and i + 1 < len(tokens):
-                    binc = int(tokens[i + 1]); i += 2
-                elif t == "movestogo" and i + 1 < len(tokens):
-                    movestogo = int(tokens[i + 1]); i += 2
-                else:
-                    i += 1
-
-            if time_limit_ms is None and (wtime is not None or btime is not None):
-                my_time = wtime or 0
-                my_inc = winc or 0
-                if state.turn == BLACK:
-                    my_time = btime or 0
-                    my_inc = binc or 0
-                time_limit_ms = TimeManager.allocate_time(
-                    my_time_ms=my_time,
-                    my_inc_ms=my_inc,
-                    moves_to_go=movestogo,
-                )
-
-            limits = SearchLimits(depth=depth, time_ms=time_limit_ms, win_margin=args.win_margin)
-            result = engine.search(state, limits, mode=args.mode, history=history)
-            pv_str = " ".join(m.notation for m in result.pv)
-            print(f"info depth {result.depth} score cp {result.score} nodes {result.nodes} time {result.elapsed_ms} pv {pv_str}")
-            print(f"bestmove {result.move.notation}")
-            sys.stdout.flush()
-        elif cmd in ("quit", "exit"):
-            break
-
-    return 0
+    from ..uci import run_protocol
+    return run_protocol(
+        sys.stdin,
+        sys.stdout,
+        native_library=args.native_library,
+        nnue_model=args.nnue_model,
+        release_pointer=args.release_pointer,
+        release_profile=args.release_profile,
+    )

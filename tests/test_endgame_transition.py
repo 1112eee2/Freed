@@ -65,7 +65,7 @@ class TransitionRoutingTests(unittest.TestCase):
                           for m in legal_moves(state)}
                 self.assertEqual(actual, expected)
                 self.assertTrue(is_native_endgame_position(state))
-                self.assertTrue(server.is_native_endgame_position(state))
+                self.assertTrue(server.engine_manager.is_native_endgame_position(state))
                 self.assertTrue(NativeEndgameSearch.supports_position(None, state))
 
     def test_quiet_midgame_and_non_crossing_captures_stay_out(self):
