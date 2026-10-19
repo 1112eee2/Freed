@@ -436,6 +436,20 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    `model.mknnue` sha256 `BC2B36CF…0D42`. Native parity PASS: 0 mismatches for scalar,
    full eval (both sides) and AVX2. Artifacts: `build/runs/nnue2_v2b/build/nnue2_stage3/
    quantized-20290001/` and `native-parity-20290001/`. Next: sealed report, then B4.
+   **Sealed report DONE 2026-10-19 (owner go-ahead):** `tools/nnue2/sealed_report.py`
+   (`nnue2-b3-prep` `dfb54f0`..`4b08535`, local). Commitment sha256 `622c3f4c…fbad`
+   committed before opening (validation loss reproduced to 1e-8). Sealed split opened once:
+   1,672,029 rows, 68,712 games. Weighted loss float 0.05840, quantized 0.05840 (parity MAE
+   0.00218, max 0.0281, within limits), v1 reference 0.06993; exact-WDL MSE 0.065 vs v1
+   0.183. Sealed agrees with validation (0.05849), so no sign of overfitting. It selected
+   nothing. Report: `benchmarks/nnue2_stage3/sealed_report_v2b_seed20290001.json`.
+   **B4 started 2026-10-19 21:58:** branch `nnue2-b4` `ca9b315` (local, from
+   `lazy-smp-01`) adds `MAKHOS_NNUE_MODEL_V2B` (default 0): the search DLL pins only its
+   own model. Default build reproduces `b397b084` byte for byte; `-ModelV2b` gives
+   `d253f275`. `build/runs/nnue2_b4/b4_chain.py` (pid 19828): screen (1T 2s+0.02s, no TB,
+   H1 +5, cap 2,000, seed 20261020), then W1 only on PASS (1T 10s+0.1s, TB4-6 + C4,
+   H1 +5, cap 4,000, seed 20261021). Both sides use the RC-2 search; only the model differs.
+   Screen FAIL/INCONCLUSIVE stops for DP2 (owner).
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
