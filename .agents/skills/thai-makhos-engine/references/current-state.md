@@ -192,7 +192,9 @@ branches stay local, per the owner.
   screen (+5, 1T, 2s) is queued behind part A and the W2 gates.
 - **Opening book** (branch `opening-book-01`, draft only, local): entries would be
   labelled "deep-search verified at depth/time", never "proven"; parameters wait for
-  part A. The branch holds a plan only.
+  part A. The branch holds a plan only. **Owner 2026-10-19:** V2 ships without a
+  book; the book is built later with the final V2 engine and released as a separate
+  add-on.
 - `selfplay-baseline-01`'s `sprt` changes (`--openings-file`, `--play-all-pairs`)
   and the report tool are not yet in `main`.
 
