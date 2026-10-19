@@ -416,6 +416,19 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    rows, takes the lower validation loss, and runs `tools/nnue2/quantize.py` and
    `tools/nnue2/native_parity.py`. Pop-up on failure or at the end. Then the sealed
    report and B4.
+   **F3 PASS 2026-10-19 20:38:** Lazy SMP 12T (`b397b084`) vs root split 12T
+   (`5ed1fe18`), 237 pairs / 474 games, W195 D183 L96, Elo +73.6 +/- 20.0, LLR +2.96,
+   pentanomial 2/26/108/73/28 (`build/runs/lazysmp_f3/build/lazy_smp_01/sprt-f3-20261019/
+   sprt.json`). Lazy SMP becomes the V2 default. The v2b chain started training both
+   seeds at 20:38:46.
+   **History rewrite 2026-10-19 (owner approved):** every commit authored or committed as
+   `pinggo@users.noreply.github.com` now reads `1112eee2`; trees, dates and messages are
+   unchanged. Force-pushed main, research-archive, lazy-smp-01, text-protocol-01 and the
+   `archive/*` tags; all local branches moved. Commit hashes in this file and in run trees
+   (`SOURCE_COMMIT`, contracts) are the old ones: look them up in
+   `docs/history_rewrite_20261019/commit-map.txt` (old new). Tags v1.0.0-v1.0.2 are
+   immutable releases and still point at the old commits. Backup bundle:
+   `build/backups/freed-before-rewrite-20261019.bundle`.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
