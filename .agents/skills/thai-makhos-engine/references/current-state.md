@@ -455,6 +455,10 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    `nnue2-b4` `47eb521`: `sprt --dev-native-endgame-library` (candidate gets its own C4)
    and `endgame_c4 -ModelV2b`; both C4 DLLs rebuilt from that commit (control `c642c02e`,
    candidate `287eaf77`). **W1 running since 22:39** (chain pid 35924).
+   **B4 W1 PASS 2026-10-20 00:00:** v2b vs v1 on the RC-2 search, 1T 10s+0.1s, TB4-6 + C4:
+   207 pairs / 414 games, W195 D159 L60, +117.6 +/- 20.6 Elo, LLR +2.96, pentanomial
+   0/10/81/87/29 (`build/runs/nnue2_b4/build/nnue2_b4/sprt-w1/sprt.json`). DP2: v2b goes
+   into RC-2. Next: R1 (RC-2 = SEARCH_INT_01 + Lazy SMP + NNUE v2b), then R2 G1/G2/G4/G7.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
