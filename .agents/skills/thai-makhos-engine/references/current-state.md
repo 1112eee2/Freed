@@ -450,6 +450,10 @@ Decisions of 2026-09-25 (still in force unless the owner changes them):
   the match is to be automated. Invincible 2's moves come from the developer's
   server, so the developer's permission comes first; a request is drafted for the
   owner to send, and the relay is built only after a yes.
+  **Developer replied 2026-10-19 (owner's report):** no limit on the number of games,
+  no clear restrictions. The reply text is not in the repo yet. Concurrency starts at
+  2-3 games, with a stop on server errors or slowness; no training on its moves; full
+  win/draw/loss results published with credit.
 - If PR #29 merges, the frozen NNUE-v1 tools stay blocked rather than re-bound.
   Promotion gates then compare plain `unittest discover` failure IDs with `main`'s.
 
