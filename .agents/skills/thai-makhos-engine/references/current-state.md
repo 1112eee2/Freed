@@ -450,6 +450,11 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    H1 +5, cap 2,000, seed 20261020), then W1 only on PASS (1T 10s+0.1s, TB4-6 + C4,
    H1 +5, cap 4,000, seed 20261021). Both sides use the RC-2 search; only the model differs.
    Screen FAIL/INCONCLUSIVE stops for DP2 (owner).
+   **B4 screen PASS 2026-10-19 22:35:** 207 pairs, W234 D123 L57, +158.7 +/- 25.0 Elo,
+   LLR +2.96. The first W1 start failed at once: the shared C4 endgame DLL pins v1. Fix
+   `nnue2-b4` `47eb521`: `sprt --dev-native-endgame-library` (candidate gets its own C4)
+   and `endgame_c4 -ModelV2b`; both C4 DLLs rebuilt from that commit (control `c642c02e`,
+   candidate `287eaf77`). **W1 running since 22:39** (chain pid 35924).
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
