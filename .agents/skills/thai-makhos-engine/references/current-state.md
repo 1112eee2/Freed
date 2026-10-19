@@ -399,6 +399,21 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    After that it waits for no GUI / uci / sprt process and runs `launch_f3.py` once.
    Each finished step leaves a marker in `done/`, so a rerun resumes. Any failure
    stops the chain with a pop-up.
+   **B3 DONE 2026-10-19:** extract exit 0 (697,608 games -> 10,000,000 train /
+   1,685,124 validation / 1,672,029 sealed rows, coverage passed, leakage 0); regen
+   20/20 per split; both v2a seeds trained (best validation loss 0.0584892 for
+   20290001, 0.0586215 for 20290002). F3 started 12:48 (pid 2112).
+   **v2a cannot be quantized:** its weights exceed the frozen v1 integer format
+   (hidden |w| up to 5.37 against the int8 limit 0.496; feature |w| up to 4.70 against
+   the int16 accumulator proof). Clipping a trained model is not allowed.
+   **Owner 2026-10-19: trainer contract v2b** (`nnue2-b3-prep` `fd8a17d`, local) is
+   v2a plus `weight_clamp` after every optimizer step (feature weights 0.88, feature
+   bias 1.0, hidden 127/256, output 127/192). `build/runs/nnue2_v2b/v2b_chain.py`
+   (pid 24804, Below Normal, `git archive` of `fd8a17d`) waits until F3's `sprt.json`
+   is complete and its process has exited, then trains both seeds on the B3 packed
+   rows, takes the lower validation loss, and runs `tools/nnue2/quantize.py` and
+   `tools/nnue2/native_parity.py`. Pop-up on failure or at the end. Then the sealed
+   report and B4.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
