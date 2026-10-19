@@ -284,6 +284,10 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    - B2 is not a gate. F3, C1 labels and other 12-thread work must not run beside it.
    - After it ends: run `extract_rows.py` with the 10M-train-row stop rule, then
      the coverage gates and `regen_check.py`.
+   **B2 DONE 2026-10-19:** part 1 exit 0 at 00:32 (450,000 games, 16.3 h, including an
+   owner GUI pause 22:30-23:38 by process suspend; labels are fixed depth 10, so no
+   row changed). Part 2 exit 0 at 11:17 (350,000 games, 10.7 h). Extraction started
+   11:18 in the B3 chain below.
    **B2 status 2026-10-18 11:43 local:** 104,500 / 450,000 games, about 30k games/h,
    so part 1 ends near 23:30 local.
    - **Rehearsal on real B2 output** (`build/runs/nnue2_b2_rehearsal`, read-only
@@ -386,11 +390,15 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    (artifact hashes checked; Lazy 12T vs root split 12T, W2 conditions, H1 +5,
    1,000 pairs, seed 20261019). Start `launch_f3.py` there only when no gate or data
    run uses the CPU and the GUI is closed.
-   **F3 auto-start (owner, 2026-10-18, overrides the B3-B4 slot):** F3 starts right after
-   B2. `build/runs/lazysmp_f3/f3_after_b2.py` (pid 28816, Idle, `f3_chain.log`) waits for
-   B2 part 2 to log `=== exit 0`, then for no Freed.exe / server.py / makhos gui, uci or
-   sprt process, then runs `launch_f3.py` once. Any other B2 ending stops it with a
-   pop-up. Not restarted after a reboot. Extraction, C1 and B3 wait until F3 ends.
+   **Order changed 2026-10-19 10:38 (owner: fastest path): B3 before F3.** The F3
+   watcher (pid 28816) was stopped before B2 ended (noted in `f3_chain.log`).
+   `build/runs/nnue2_b3/b3_chain.py` (pid 24256, Below Normal, `chain.log`, `logs/`)
+   runs from a `git archive` of `nnue2-b3-prep` `6d3f8a3`. It waits for B2 part 2
+   exit 0, then runs extract (contract v3), `regen_check.py` (20 per split), pack,
+   and training of seeds 20290001 and 20290002 in parallel (one CPU thread each).
+   After that it waits for no GUI / uci / sprt process and runs `launch_f3.py` once.
+   Each finished step leaves a marker in `done/`, so a rerun resumes. Any failure
+   stops the chain with a pop-up.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
