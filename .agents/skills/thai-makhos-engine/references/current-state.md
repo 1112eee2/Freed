@@ -429,6 +429,15 @@ rate and never as "proven perfect". It excludes proof/DFPN work, tablebases of 7
 or more pieces, and any Lazy SMP redesign. The track is in Phase 0; no production
 default, rules file, model or accepted artifact has changed under it.
 
+**Owner 2026-10-19, second top-level goal:** beyond zero losses, Freed should **win
+games that Invincible 2 can only draw** (practically stronger, not just safe).
+Matches against Invincible 2 report wins, draws and losses separately, and the win
+rate is a target next to zero losses. The self-play draw goal measures soundness;
+it does not mean settling for draws. Ideas that trade draws for winning chances
+(contempt, practical-chance tie-breaks, pressure-keeping book lines) are judged
+against non-self opponents, must not raise the loss rate, and ship only if they
+pass (single default behaviour).
+
 Decisions of 2026-09-25 (still in force unless the owner changes them):
 
 - The owner confirmed the F1 form: extract only what the track needs from PR #25
