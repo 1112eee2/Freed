@@ -429,6 +429,13 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    `docs/history_rewrite_20261019/commit-map.txt` (old new). Tags v1.0.0-v1.0.2 are
    immutable releases and still point at the old commits. Backup bundle:
    `build/backups/freed-before-rewrite-20261019.bundle`.
+   **v2b DONE 2026-10-19 21:46:** both clamped seeds trained (best validation loss
+   0.0584882 for 20290001, 0.0587251 for 20290002; v2a was 0.0584892 / 0.0586215), so
+   the clamps cost no measurable loss. Seed 20290001 quantized with the frozen v1 format:
+   PASS on 1,685,124 validation rows (MAE 0.00218, max 0.0281, sign mismatches 0.28%),
+   `model.mknnue` sha256 `BC2B36CF…0D42`. Native parity PASS: 0 mismatches for scalar,
+   full eval (both sides) and AVX2. Artifacts: `build/runs/nnue2_v2b/build/nnue2_stage3/
+   quantized-20290001/` and `native-parity-20290001/`. Next: sealed report, then B4.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
