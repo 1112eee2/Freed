@@ -445,8 +445,11 @@ Decisions of 2026-09-25 (still in force unless the owner changes them):
 - A game that reaches a `project` draw that Invincible 2 does not declare is
   reported non-comparable. There is no external rules profile and `RULESET.json`
   is unchanged.
-- No relay or automated play against Invincible 2, and no permission request for
-  now.
+- ~~No relay or automated play against Invincible 2, and no permission request for
+  now.~~ **Replaced 2026-10-19 (owner):** the owner will not relay games by hand, so
+  the match is to be automated. Invincible 2's moves come from the developer's
+  server, so the developer's permission comes first; a request is drafted for the
+  owner to send, and the relay is built only after a yes.
 - If PR #29 merges, the frozen NNUE-v1 tools stay blocked rather than re-bound.
   Promotion gates then compare plain `unittest discover` failure IDs with `main`'s.
 
