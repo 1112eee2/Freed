@@ -459,6 +459,20 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    207 pairs / 414 games, W195 D159 L60, +117.6 +/- 20.6 Elo, LLR +2.96, pentanomial
    0/10/81/87/29 (`build/runs/nnue2_b4/build/nnue2_b4/sprt-w1/sprt.json`). DP2: v2b goes
    into RC-2. Next: R1 (RC-2 = SEARCH_INT_01 + Lazy SMP + NNUE v2b), then R2 G1/G2/G4/G7.
+   **R1 DONE 2026-10-20:** local branch `rc-2` `e28b0cc` (from `nnue2-b4`): the GUI search
+   factory uses Lazy SMP above one Thread when the DLL has it (backend `native-lazy-smp`),
+   `sprt --no-early-stop` for fixed-length gates, `tools/build/build_rc2.ps1`. RC-2 = search
+   `d253f275` (= the B4 candidate, byte-identical) + v2b `BC2B36CF` + C4 `da853f46` (C4 is not
+   byte-reproducible). C defaults and the GUI release are unchanged until R3.
+   **R2 G1 running since 2026-10-20 00:21** (`build/runs/rc2_g1/g1_chain.py`): RC-2 vs
+   production (32c32302 + model_a + C4 eb8af045), 1T 10s+0.1s, TB4-6 + per-side C4, seed
+   20261101, fixed 2,000 pairs, every game written for G3/G5. At 1,046 pairs (07:05):
+   W1184 D686 L222, +172.7 +/- 10.9 Elo.
+   **Owner decision 2026-10-20, G6:** the sealed commitment did not name MAE per piece band
+   or for the king group, and the sealed split is not opened again. G6 counts as passed on
+   the evidence already sealed: v2b loss below v1 in every phase band (13-16 0.0743 vs
+   0.0796, 9-12 0.0501 vs 0.0576, 5-8 0.0522 vs 0.0746), overall 0.05840 vs 0.06993, and
+   the v2b B4 W1 pass.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
