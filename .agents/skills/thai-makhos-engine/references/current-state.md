@@ -485,6 +485,13 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    diagnosed in `build/runs/rc2_g1/slow_kill_pair964.md` (C4 downgrades a TB WIN to DRAW..WIN under
    a repetition limit; V2.1 item). **G2 started 13:16** (`g2_chain.py`, 12T 512 MiB fixed 1 s,
    Lazy SMP vs root split, seed 20261102, 1,000 pairs, ~34 h). Next: G4, G7.
+   **Mined G1 games 2026-10-20** (`tools/arena/mine_games.py`, rc-2 `49d9871`; output
+   `build/runs/rc2_g1/mined/`): of RC-2's 445 losses 320 (72%) are `bad_start` (its first searched
+   score is already below -50: the random 6-ply opening, the partner game of a pair), 55 are sudden
+   collapses (median cause ply 22, depth 22, score 0 -> -283) and 70 gradual declines. 125 entries
+   form the collapse corpus for V2.1. TB-win suite: 2,636 won games reach a TB-win position, 917
+   convert in > 40 plies (822 by RC-2); 500-position seeded suite for the C4 fix.
+   G2 corrected ETA: ~28.5 pairs/h, about 00:15 on 2026-10-22 (no nightly pause; owner cancelled).
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
