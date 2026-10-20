@@ -473,6 +473,18 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    the evidence already sealed: v2b loss below v1 in every phase band (13-16 0.0743 vs
    0.0796, 9-12 0.0501 vs 0.0576, 5-8 0.0522 vs 0.0746), overall 0.05840 vs 0.06993, and
    the v2b B4 W1 pass.
+   **R2 G1 PASS 2026-10-20 13:15:** RC-2 vs production, 1T 10s+0.1s, TB4-6 + per-side C4, seed
+   20261101, all 2,000 pairs / 4,000 games, no early stop: W2272 D1283 L445, **+171.4 +/- 7.8
+   Elo (lower bound +163.6)**, pentanomial 3/50/578/855/514
+   (`build/runs/rc2_g1/build/rc2_g1/sprt.json`; game records in `games/`). Gate +50/+35: pass.
+   **G3 PASS:** RC-2 lost 445 games, production lost 2,272 (19.6%; limit 60%). **G5 PASS**
+   (`tools/arena/conversion_report.py`, rc-2 `93c4d7a`; reading: own score +100..+200 at two
+   consecutive own moves by ply 40): RC-2 wins 78.2% (76.1-80.1%) of 1,627 such games, production
+   32.1% (29.0-35.4%). Large advantage (>= +300): RC-2 wins 93.7%, production 60.1%. Win speed:
+   from a WIN bound to the end median 6 plies for both; 2 RC-2 slow kills (> 20 plies), one
+   diagnosed in `build/runs/rc2_g1/slow_kill_pair964.md` (C4 downgrades a TB WIN to DRAW..WIN under
+   a repetition limit; V2.1 item). **G2 started 13:16** (`g2_chain.py`, 12T 512 MiB fixed 1 s,
+   Lazy SMP vs root split, seed 20261102, 1,000 pairs, ~34 h). Next: G4, G7.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
