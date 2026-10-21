@@ -501,6 +501,20 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    Win speed (`conversion_report.py`, 12T): WIN bound to end median 8 plies for both sides, 0 slow
    kills; one draw by `no_progress`, 362 by repetition. Report in
    `build/runs/rc2_g1/build/rc2_g2/conversion_report.json`. Next: G4, G7.
+   **G7 checks done 2026-10-21 (rc-2 `49d9871`, native source unchanged since A3):** immutable
+   artifacts OK against the real build tree (`verify_immutable_artifacts.py --root D:/ThaiMakhosEngine`;
+   the worktree copy lacks untracked fixtures); native exe built with the RC-2 -D flags: perft 1-10
+   ends at 861,842,812; `verify-native` seed 20261021 PASS (1,004 positions, 5,757 moves, 10 exact
+   3-piece cases); full suite 620 passed, 67 skipped, 1 failed for a missing untracked fixture
+   (`native_endgame_boundaries.exe`), that file passes with the fixture copied (11 passed). Evidence
+   in `build/runs/rc2_g1/g7/`. **GUI smoke + rollback still open: do it at R3** (GUI still loads
+   production until the defaults flip).
+   **G4 part1 started 2026-10-21 11:18** (contract `benchmarks/rc2_g4/contract_g4.json`, rc-2
+   `42a3e52`, declared before the first game; run tree `build/runs/rc2_g4/`, `g4_chain.py`): RC-2
+   against itself, 1T 10s+0.1, the 613 part1 openings x 2 = 1,226 games in two halves, 4 games at
+   once. Baseline part1 draws 514/1,226 = 41.9%. Pass at part1 only if the Wilson lower bound is above
+   43.9%; otherwise the owner chooses whether to play part2. Owner chose part1 only (2026-10-21).
+   The openings feature came from `selfplay-baseline-01` (cherry-picked `d6648e0`..`f24491c`).
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
