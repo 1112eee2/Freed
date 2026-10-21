@@ -515,6 +515,16 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    once. Baseline part1 draws 514/1,226 = 41.9%. Pass at part1 only if the Wilson lower bound is above
    43.9%; otherwise the owner chooses whether to play part2. Owner chose part1 only (2026-10-21).
    The openings feature came from `selfplay-baseline-01` (cherry-picked `d6648e0`..`f24491c`).
+   **G4 PASS at part1 (2026-10-21 13:18, 2.0 h, 1,226 games, 0 invalid):** RC-2 against itself draws
+   703 = **57.3% (95% 54.6-60.1%)**; lower bound above the 43.9% gate. Baseline on the same 613
+   openings: 514 = 41.9% (39.2-44.7%). Black won 300, red 223 (baseline 370/342). Termination:
+   repetition 702, no legal move 523, no progress 1. Per opening: both games drawn 232 (baseline
+   114), results differ 258 (349), same colour won both 123 (150). Report
+   `build/runs/rc2_g4/part1_report.json`, baseline `baseline_part1_report.json`. Part1 only, never
+   report it as the full part A; part2 not played. The sprt processes exit 1 (status
+   INCONCLUSIVE, no pass/fail meaning in this measurement); the chain checks completeness instead.
+   **Gates now: G1, G2 (624 pairs), G3, G4, G5, G6 pass; G7 open only for GUI smoke + rollback (R3).**
+   rc-2 `ec100d1` adds .env/*.pem/*.key to `.gitignore` (local, not pushed).
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
