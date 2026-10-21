@@ -492,6 +492,15 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
    form the collapse corpus for V2.1. TB-win suite: 2,636 won games reach a TB-win position, 917
    convert in > 40 plies (822 by RC-2); 500-position seeded suite for the C4 fix.
    G2 corrected ETA: ~28.5 pairs/h, about 00:15 on 2026-10-22 (no nightly pause; owner cancelled).
+   **R2 G2 stopped early by owner decision 2026-10-21 11:01, at pair 624 of 1,000** (no early-stop
+   flag, so the SPRT status did not end it; 1,248 game records match 624 pairs; checkpoint
+   `complete: false`; the game in flight was lost). Result: 12T 512 MiB fixed 1 s, Lazy SMP RC-2 vs
+   root-split production: W765 D363 L120, Ptnml 0/9/148/280/187, **+198.7 +/- 14.3 Elo (lower bound
+   about +184)**, LLR +8.92. Gate +50/+20: pass by a wide margin; G2 is not a mandatory gate and
+   it was not played to the planned 1,000 pairs, so report it as 624 pairs, never as complete.
+   Win speed (`conversion_report.py`, 12T): WIN bound to end median 8 plies for both sides, 0 slow
+   kills; one draw by `no_progress`, 362 by repetition. Report in
+   `build/runs/rc2_g1/build/rc2_g2/conversion_report.json`. Next: G4, G7.
    **Owner decision 2026-10-17:** order after A4 W2 is B2 then C1; F3 goes in a gap
    between B3 and B4 so R1 is not delayed.
 
