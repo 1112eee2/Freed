@@ -262,6 +262,8 @@ run trees `build/runs/<slug>`; `gate_chain.py` (corr-hist-01 `fdf4177`) runs the
 | 5 | FORCED_EXT_01 single-move extension, E1 (`forced-ext-01` `c24ac7b`) | `9B4CBD3E` |
 | 6 | NULL_VERIFY_01 verified null move at depth >= 6, E2 (`null-verify-01`) | `9AD48B1C` |
 | 7 | TIME_STAB_01 best-move stability time stop, D1 (`time-mgmt-01`) | `F9410E04` |
+| 8 | SELFPLAY_MINING_01: RC-2 runs + labels (12T, 10 s) on the 4 self-play suites (`selfplay-mining-01` `ea81213`) | RC-2 |
+| 9 | SPSA_01: 800 iterations x 6 pairs, 5 parameters (LMR base/div, deep null reduction/depth, history bonus), then a screen of the tuned values vs RC-2 (`spsa-01` `57534c8`) | `8B3D3485` + `.tune` |
 
 Passing concepts go into one integrated V2 candidate (SEARCH_INT_02), measured again as a whole.
 
