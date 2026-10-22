@@ -265,6 +265,29 @@ run trees `build/runs/<slug>`; `gate_chain.py` (corr-hist-01 `fdf4177`) runs the
 
 Passing concepts go into one integrated V2 candidate (SEARCH_INT_02), measured again as a whole.
 
+### Owner 2026-10-22 (night): everything in V2, opening book included
+
+"ใช่ ตอนนี้เราจะรวมทั้งหมดเลย แผนที่เราคิดไว้ลองให้หมด (ทำให้มันเก่งกว่านี้อีก ผมยังรู้สึกไม่ค่อยพอใจกับผลลัพธ์เท่าไหร่)":
+every planned idea is tried for V2, and the opening book now ships in V2 (this replaces the 2026-10-19
+"V2 without a book" decision). Order (all local, nothing promoted without its gate):
+
+1. Search concepts D1-D3, E1-E2 and the C4 band (queue above).
+2. **Self-play losses and bad draws** (`selfplay-mining-01` `ea81213`): `mine_games.py --any-side` on
+   RC-2's G4 self-play (1,226 games): 523 losses = 324 collapses + 199 lost from the opening
+   (`bad_start`, input for the book), plus 255 bad draws (a side reached +150 and ended below +50).
+   Four suites (568 active positions) in `build/runs/selfplay_mining01`; labels (12T, 10 s) and RC-2 runs
+   queued after TIME_STAB_01.
+3. SEARCH_INT_02: the concepts that pass, integrated, measured against RC-2 plus all quality suites.
+4. SPSA on the integrated candidate's search parameters.
+5. NNUE: new data round labelled by the integrated engine, with positions around the collapse,
+   bad-draw and GameIndy 10-piece positions; a new data contract frozen before generation; then
+   architecture work (buckets / threat inputs) against the new data.
+6. **Opening book** (`opening-book-02` `d96632e`): `makhos.book` (root lookup, never over a learned
+   loss, bound to the verifying DLL + model hashes), `sprt --dev-opening-book`,
+   `tools/book/build_book.py` (1,527 positions up to 4 plies; 1/4 and full-time searches must agree
+   within 40 cp). Built with the final V2 engine (about 30 h at 60 s, 12T), then measured.
+7. Final V2 candidate: SPRT against RC-2, quality suites, GameIndy and Invincible 2 W/D/L.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
