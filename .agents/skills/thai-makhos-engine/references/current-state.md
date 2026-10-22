@@ -244,6 +244,27 @@ RC-2 baseline chain started 2026-10-22 17:52). Local main `1c1a68f` adds 4 learn
 two GameIndy Black losses of 2026-10-22 (culprits 25-21 at ply 17 and 23-19 at ply 13, both scored by Freed
 as its best move). First concept: the C4 slow-kill fix (TB WIN band, `build/runs/rc2_g1/slow_kill_pair964.md`).
 
+### V2 strength queue (2026-10-22 19:00, all local, nothing promoted)
+
+Each concept is one default-off compile switch on its own branch from `v2-dev`
+(main + quality suite + C4 band + `--parallel-games`), built with the RC-2 switches plus its own;
+with its switch off every branch rebuilds RC-2 `D253F275` byte for byte. Each runs screen
+(1T 2s+0.02s, no TB, H0 0/H1 +5, cap 2000) and, only on a screen PASS, W1 (1T 10s+0.1s, TB4-6 + C4,
+H0 0/H1 +2, cap 4000) against RC-2, 6 parallel games. Contracts in `benchmarks/<slug>/contract.json`,
+run trees `build/runs/<slug>`; `gate_chain.py` (corr-hist-01 `fdf4177`) runs them one after another.
+
+| Order | Concept (branch, commit) | Candidate DLL |
+|---|---|---|
+| 1 | C4_BAND_01 conversion (500 TB-win pairs) + no-regression SPRT (`c4-band-01`) | C4 `B3636BC7` |
+| 2 | RC-2 TB-win baseline (`build/runs/quality_suite01`, measurement only) | RC-2 |
+| 3 | CORR_HIST_01 correction history, D2 (`corr-hist-01` `25f688b`) | `D77AF85D` |
+| 4 | CONT_HIST_01 continuation history 1+2 ply, D3 (`cont-hist-01` `2d400e4`) | `51E20871` |
+| 5 | FORCED_EXT_01 single-move extension, E1 (`forced-ext-01` `c24ac7b`) | `9B4CBD3E` |
+| 6 | NULL_VERIFY_01 verified null move at depth >= 6, E2 (`null-verify-01`) | `9AD48B1C` |
+| 7 | TIME_STAB_01 best-move stability time stop, D1 (`time-mgmt-01`) | `F9410E04` |
+
+Passing concepts go into one integrated V2 candidate (SEARCH_INT_02), measured again as a whole.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
