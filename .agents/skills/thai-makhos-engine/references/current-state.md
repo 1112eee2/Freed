@@ -232,6 +232,18 @@ branch map: `handoff.md` in the 2026-10-22 session (quality suite from the GameI
 corpus and the TB-win suite; Track D1-D3, E1-E2, SEARCH_INT_02, SPSA, C4 repetition fix; then V3 data
 contract and architecture).
 
+## Owner decision 2026-10-22 (evening): everything goes into V2
+
+The owner replaced the V2.1-then-V3 split the same evening ("ทำต่อให้เสร็จงานเลย เราจะรวมทุกอย่างเข้าไว้ในV2
+ผมอยากทำให้มันแกร่งที่สุดเท่าที่จะเป็นไปได้"): all strength work (search Track D/E, SEARCH_INT_02, SPSA,
+the C4 repetition fix, NNUE data and architecture) goes into one V2, made as strong as possible before any
+release. Still no push, tag or release of V2 until the owner says so. Each concept is measured against RC-2
+(paired SPRT) plus the quality suite: branch `quality-suite-01` (`6760b8a`), run tree
+`build/runs/quality_suite01` (G1 collapse corpus 120 positions, 500 TB-win openings, 3 GameIndy traps;
+RC-2 baseline chain started 2026-10-22 17:52). Local main `1c1a68f` adds 4 learned-loss entries from the
+two GameIndy Black losses of 2026-10-22 (culprits 25-21 at ply 17 and 23-19 at ply 13, both scored by Freed
+as its best move). First concept: the C4 slow-kill fix (TB WIN band, `build/runs/rc2_g1/slow_kill_pair964.md`).
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
