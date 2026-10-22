@@ -219,6 +219,19 @@ the untracked `build/nnue_sprt_6t_vs_12t/makhos_native_6t.dll`.
 
 **Why the matches stopped (2026-10-14).** Both processes stopped between 02:39:28 and 02:39:54 local, with empty stderr and fresh checkpoints. Windows logged the Claude desktop app package servicing (AppX deployment, `CoworkVMService` restart) at 02:39:59–02:40:01, so the app update most likely killed the child processes. This is an inference; no process exit record was found. The earlier unexplained STRICT_KEY_02 stop at 1,909 pairs may have the same cause. Long matches should therefore be started detached from the app, or the app's auto-update should be avoided while they run.
 
+## Owner decision 2026-10-22: no V2 release; V2.1 then V3
+
+The owner cancelled the public V2 release ("ยกเลิกการปล่อย release V2 เราจะข้ามไป V3 เลย"): the playing
+quality seen in real games (GameIndy) is not good enough yet. V2.1 (search and borrowed ideas that pass
+SPRT, measured against RC-2) and V3 (NNUE architecture) are done back to back, locally; the V2 launch
+checklist (README, topics, announcements, packaged text protocol) moves to the first public release after
+this. Do not push, tag or release V2. Local main `a2044fb` = RC-2 (2.0.0) + learned-loss avoid list.
+Real-game results (GameIndy W/D/L by colour, Invincible 2 W/D/L) are reported beside SPRT. Open owner
+questions: the version label on local main, and whether V2.1 is released on its own. Suggested order and
+branch map: `handoff.md` in the 2026-10-22 session (quality suite from the GameIndy trap, the G1 collapse
+corpus and the TB-win suite; Track D1-D3, E1-E2, SEARCH_INT_02, SPSA, C4 repetition fix; then V3 data
+contract and architecture).
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
