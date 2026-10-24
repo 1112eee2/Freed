@@ -290,6 +290,32 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
    within 40 cp). Built with the final V2 engine (about 30 h at 60 s, 12T), then measured.
 7. Final V2 candidate: SPRT against RC-2, quality suites, GameIndy and Invincible 2 W/D/L.
 
+### Queue 2026-10-24/25: restart, screens first, NNUE data v4 drafted
+
+- **Queue down 2026-10-23 14:27 to 2026-10-24 22:37:** the machine went down (rebooted 17:43 on 10-24)
+  and every chain died. Before that the C4 chain and the baseline chain had waited on each other from
+  10-22 20:00 to 10-23 11:41 (`baseline_chain.py` was on gate_chain's busy list; removed, v2-dev
+  `6cee0cb`). `tools/arena/queue_status.py` now flags a chain that logs nothing for 15 minutes as DEAD,
+  and `tools/arena/keep_awake.py` holds ES_SYSTEM_REQUIRED while any chain runs (v2-dev `d7702d1`).
+- **C4_BAND_01: gate 1 FAIL as declared.** No TB-win game drawn, but p90/max plies from the first WIN
+  bound to the win 8/16 against RC-2's 8/10 (it needed lower). From a large advantage it wins faster
+  (median 28 vs 42, p90 40 vs 114) - not the declared metric. Gate 2 stopped at pair 1116 (LLR +1.25)
+  and the band is parked: it adds about 0 Elo. Fresh TB-win openings for a possible C4_BAND_02:
+  `build/runs/c4_band02/tb_win_openings_g4.txt` (504 positions from RC-2 G4, sha `cefedfd8`).
+  The RC-2 TB-win baseline (measurement only) is skipped.
+- **Order now (owner 2026-10-24: maximum strength first):** the five screens back to back, then W1 only
+  for passing screens. **CORR_HIST_01 screen FAIL** (912 games, W224 D401 L287, -24.0 Elo, LLR -2.95):
+  rejected, no W1.
+- **NNUE data contract v4 DRAFT** (`nnue2-data-v4` `96b39a5`, local, from v2-dev + the nnue2-b3-prep
+  tools; native file unchanged): labels from RC-2 (D253F275 + v2b) at depth 10 instead of production +
+  v1; seeds 2027000000-2027999999; split salt `nnue2-stage4-split-v1` (fresh sealed); 10% of games start
+  from one of 1,637 positions (`build/nnue2_data_v4/start_lines_v4.txt` `5c875469`: 449 RC-2
+  collapses, 255 bad draws, 933 external-opponent positions); otherwise as v3 (10M train rows, same
+  gates). `selfplay.py --start-lines` (no file = byte-identical v3 games), contract chosen by seed range
+  in `extract_rows.py`/`regen_check.py`, 71 tooling tests pass. The dry run (100 games, regen 15/15)
+  is queued between the NULL_VERIFY_01 and TIME_STAB_01 screens (`build/runs/nnue2_v4_dryrun`);
+  the freeze waits for the owner.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
