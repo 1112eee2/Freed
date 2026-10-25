@@ -367,6 +367,22 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   both run before it. Rehearsed end to end with gate_chain on the smoke model (select, pin, build, screen,
   W1 skipped on a non-PASS screen, then the W1 command for one pair). Chain relaunched as pid 28108. The
   sealed report stays a manual step (its commitment needs a git commit between open and report).
+- **Black weakness = evaluation blind spot; owner chose the root fix (2026-10-25).** Engine-vs-engine,
+  Black (first mover) is the stronger side (screens: Black wins 32-33%, Red 24%; W1 TC 28% vs 23%), and
+  V2's first move 25-22 is the best first move by game score (0.612 over ~1,900 games each) and a 15 s
+  search. All 4 GameIndy losses go wrong at plies 13-19 after 25-22, in positions RC-2 scores positive
+  that lose 3/3 in playouts. Opening randomization was rejected by the data (every other first move costs
+  about 25-35 Elo in Black games) and by the owner ("แก้ที่ต้นเหตุดีกว่า ... เป้าหมายของเราคือเอนจิ้นที่
+  เข้าใจเกมหมากฮอสจริงๆ ไม่ใช่แค่การท่องจำ"). Root cause: trainer contracts v2b/v3 learn from the RC-2
+  depth-10 teacher (1.0) with the game outcome at 0.1 (carried over from v1, never tuned) and TB WDL only
+  for 4-6 pieces. Owner option ก: (1) **MISJUDGE_SUITE_01** (`tools/analysis/misjudge_suite.py`, v2-dev
+  `094c5ab`; chain `build/runs/misjudge01`): 600 held-out positions judged >= -25 cp and lost (10-16
+  pieces, ply >= 13, >= 30 plies left) + 600 piece-matched controls from draws, truth from 4 RC-2 playouts
+  each (3s+0.03s, TB4-6 + C4), scored for RC-2 (d10, 1 s) and v1 (d10, sanity check); GameIndy traps stay
+  test-only. (2) **Draft trainer arms** (not frozen; `nnue2-data-v4` `1e2b3bb`,
+  `benchmarks/nnue2_stage4/trainer_contract_v4_arms_draft.json`, `docs/architecture/NNUE_UNDERSTANDING_PLAN_TH.md`):
+  O3 / O10 (outcome weight 0.3 / 1.0) and F16 (lookahead target: the same game's teacher score 16+ plies
+  later). Awaiting the owner's freeze; arms are decided by SPRT against RC-2, the suite explains.
 
 ## Next action
 
