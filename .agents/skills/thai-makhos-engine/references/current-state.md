@@ -342,14 +342,31 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   choose edges from the v4 train split and train when the rows are ready.
 - **Trainer contract v3 FROZEN 2026-10-25 by the owner** ("Yes: freeze trainer contract v3 (v2b recipe on
   data v4, seeds 20300001 and 20300002) and chain the training right after extraction and regen pass.";
-  `nnue2-data-v4` `61a3125`, merged into `nnue3-buckets-01`). Chain `build/runs/nnue3_v3` (src `61a3125`):
+  `nnue2-data-v4` `61a3125`, merged into `nnue3-buckets-01`). Chain `build/runs/nnue3_v3` (src now `2cff922`):
   waits for the acquisition chain's `done/regen` (written only on a regen pass), packs the rows into
   `build/nnue2_data_v4/packed`, trains both seeds in parallel (1 CPU thread each, `train_seeds.py`),
   quantizes and runs native parity on both, then `select` writes `selected_seed.txt` (lower best
   validation loss, tie to the lower seed). The TIME_STAB_01 screen now waits for this chain's
   `_finished`. Rehearsed on the 100 dry-run games: extract, pack, train, quantize PASS, native parity 0
-  mismatches. After it: sealed report (commitment committed to git first), a search build pinned to the
-  selected model, then screen and W1 against RC-2 (v2b).
+  mismatches.
+- **Generic model pin + NNUE v3 matches chained (owner 2026-10-25: "Yes: add a generic model pin for the
+  search and C4 builds (default off, RC-2 must still rebuild byte for byte), and chain the pinned build
+  plus the NNUE v3 screen and W1 vs RC-2 right after select, before the TIME_STAB screen.").**
+  `nnue2-data-v4` `e0ff1f5` + `2cff922` (merged into `nnue3-buckets-01` `c7115f4`): `tools/nnue2/model_pin.py`
+  writes a pin header from a passing quantize output; `makhos_native.c` takes it via `-include`
+  (`MAKHOS_NNUE_MODEL_PINNED`; with V2B it is a compile error); `build_orchestrator.ps1 -ModelPin`,
+  `build_rc2.ps1 -PinHeader` (RC-2 switches + that model, copied as `model_<sha8>.mknnue`). Checked: RC-2
+  search rebuilds D253F275; preprocessed C4/search identical; a KEEP v1 pin header builds the same DLL as
+  the built-in KEEP pin (B4341FA4); pinned search and C4 load their model and refuse v2b. C4 links are not
+  byte-reproducible (same source twice: 2d00385c, 3faee27f); since RC-2's `e28b0cc` the C4 source differs only
+  by the default-off TB band and the probe `progress` field only the band reads, so the dev C4 plays like
+  RC-2's C4 apart from the model. Chain steps after `select` (which now copies the winner to `out/selected`):
+  `pin`, `build` (`src/build/nnue3_v3`), `screen` (2s+0.02s, 2000 pairs, elo1 5, seed 20261035) and `w1`
+  (10s+0.1s TB4-6, dev C4 pinned via `--dev-native-endgame-library`, master RC-2 C4 DA853F46, 4000 pairs,
+  elo1 2, seed 20261036; runs only on a screen PASS). The TIME_STAB_01 screen waits for `_finished`, so
+  both run before it. Rehearsed end to end with gate_chain on the smoke model (select, pin, build, screen,
+  W1 skipped on a non-PASS screen, then the W1 command for one pair). Chain relaunched as pid 28108. The
+  sealed report stays a manual step (its commitment needs a git commit between open and report).
 
 ## Next action
 
