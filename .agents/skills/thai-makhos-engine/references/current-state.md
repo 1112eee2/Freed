@@ -340,6 +340,16 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   and native buckets behind `MAKHOS_NNUE_OUTPUT_BUCKETS` `e36f6a9` (off: RC-2 search build D253F275
   byte for byte; on with v2b as one bucket: 20 self-play games, 671 labels identical to RC-2). Next:
   choose edges from the v4 train split and train when the rows are ready.
+- **Trainer contract v3 FROZEN 2026-10-25 by the owner** ("Yes: freeze trainer contract v3 (v2b recipe on
+  data v4, seeds 20300001 and 20300002) and chain the training right after extraction and regen pass.";
+  `nnue2-data-v4` `61a3125`, merged into `nnue3-buckets-01`). Chain `build/runs/nnue3_v3` (src `61a3125`):
+  waits for the acquisition chain's `done/regen` (written only on a regen pass), packs the rows into
+  `build/nnue2_data_v4/packed`, trains both seeds in parallel (1 CPU thread each, `train_seeds.py`),
+  quantizes and runs native parity on both, then `select` writes `selected_seed.txt` (lower best
+  validation loss, tie to the lower seed). The TIME_STAB_01 screen now waits for this chain's
+  `_finished`. Rehearsed on the 100 dry-run games: extract, pack, train, quantize PASS, native parity 0
+  mismatches. After it: sealed report (commitment committed to git first), a search build pinned to the
+  selected model, then screen and W1 against RC-2 (v2b).
 
 ## Next action
 
