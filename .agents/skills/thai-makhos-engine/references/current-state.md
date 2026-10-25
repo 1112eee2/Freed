@@ -336,6 +336,10 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   architecture trained on the same rows; the SPRT winner goes into V2. Plan:
   `docs/architecture/NNUE3_ARCHITECTURE_PLAN_TH.md`; candidate A = output buckets by piece count
   (branch `nnue3-buckets-01`, trainer `7c7b62c`: no `output_buckets` field = v2b byte-identical).
+  MKNNUE2 export `713c917` (re-quantizing v2b gives BC2B36CF, its contract and report byte for byte)
+  and native buckets behind `MAKHOS_NNUE_OUTPUT_BUCKETS` `e36f6a9` (off: RC-2 search build D253F275
+  byte for byte; on with v2b as one bucket: 20 self-play games, 671 labels identical to RC-2). Next:
+  choose edges from the v4 train split and train when the rows are ready.
 
 ## Next action
 
