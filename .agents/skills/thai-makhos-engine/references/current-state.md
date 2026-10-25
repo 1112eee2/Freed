@@ -382,7 +382,22 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   test-only. (2) **Draft trainer arms** (not frozen; `nnue2-data-v4` `1e2b3bb`,
   `benchmarks/nnue2_stage4/trainer_contract_v4_arms_draft.json`, `docs/architecture/NNUE_UNDERSTANDING_PLAN_TH.md`):
   O3 / O10 (outcome weight 0.3 / 1.0) and F16 (lookahead target: the same game's teacher score 16+ plies
-  later). Awaiting the owner's freeze; arms are decided by SPRT against RC-2, the suite explains.
+  later). Arms are decided by SPRT against RC-2, the suite explains.
+- **Trainer arms FROZEN and chained (2026-10-26, owner delegated: "แล้วแต่เลย(คุณตัดสินใจ)").**
+  `nnue2-data-v4` `3ed7c11`: `trainer_contract_v4_{O3_seed20310001,O10_seed20310011,F16_seed20310021}.json`
+  (the draft is marked SUPERSEDED), `tools/nnue2/future_target.py` (lookahead array per packed row, bound to
+  the packed manifest) and a `future_score` term in `train.py` used only when a contract names it (v3 smoke
+  retrain byte-identical, da6aaf79). Chain `build/runs/nnue3_arms` (src = archive of `3ed7c11`, plan from
+  `make_arms_plan.py`): `future16` after `nnue3_v3/done/pack`, the three arms trained in parallel beside
+  NNUE v3 (`train_arms.py`, 1 thread each), quantize, parity, pin and pinned build per arm
+  (`src/build/nnue3_<arm>`), MISJUDGE_SUITE_01 at depth 10 for the arms and NNUE v3 (with misjudge01's
+  source), `overlap.py` (suite positions found in the v4 rows; nothing is dropped from the data, such
+  positions are read out instead), a combined report (`misjudge/report.json`), screens per arm (2s+0.02s,
+  2000 pairs, elo1 5, seeds 20261042-44, after `nnue3_v3/done/_finished`) and `w1_passers.py` (W1 10s+0.1s
+  TB4-6 + pinned C4, 4000 pairs, elo1 2, seeds 20261045-47, only for arms whose screen PASSed). The
+  TIME_STAB_01 screen now waits for `nnue3_arms/done/_finished` (old plan kept as `plan.before-arms.json`);
+  queue.json lists nnue3_arms after nnue3_v3. Promotion: an arm goes into V2 only by passing W1 against
+  RC-2, and must beat NNUE v3 if both pass.
 
 ## Next action
 
