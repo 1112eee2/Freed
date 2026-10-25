@@ -316,6 +316,15 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   is queued between the NULL_VERIFY_01 and TIME_STAB_01 screens (`build/runs/nnue2_v4_dryrun`);
   the freeze waits for the owner.
 
+- **2026-10-25 owner: freeze v4 if the dry run passes** (regen 15/15, throughput reported) and generate
+  right after the screens, before the W1 gates. Contract FROZEN with that condition (`nnue2-data-v4`
+  `7e8043a`). `tools/nnue2/acquire.py` (`9b29e4e`) generates 50,000-game chunks from seed 2027000000 and
+  stops after the first chunk at which the extractor's own stop-rule count (`StopCounter`) reaches 10M.
+  Chain `build/runs/nnue2_v4_acq` (src `ff3b89f`): check the dry run's regen.json, acquire into
+  `build/nnue2_data_v4/raw`, extract with TB4-6 into `rows/`, regen 20 per split. The TIME_STAB_01 screen
+  and every W1 wait for it. **CONT_HIST_01 screen FAIL** (3,488 games, -4.2 Elo): rejected.
+  FORCED_EXT_01 screen at 1,314 pairs: +10.1 +/- 7.8 Elo, LLR +2.37.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
