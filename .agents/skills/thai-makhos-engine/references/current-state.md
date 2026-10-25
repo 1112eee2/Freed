@@ -323,7 +323,19 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   Chain `build/runs/nnue2_v4_acq` (src `ff3b89f`): check the dry run's regen.json, acquire into
   `build/nnue2_data_v4/raw`, extract with TB4-6 into `rows/`, regen 20 per split. The TIME_STAB_01 screen
   and every W1 wait for it. **CONT_HIST_01 screen FAIL** (3,488 games, -4.2 Elo): rejected.
-  FORCED_EXT_01 screen at 1,314 pairs: +10.1 +/- 7.8 Elo, LLR +2.37.
+  **FORCED_EXT_01 screen PASS** (3,164 games, +10.2 Elo, LLR +2.96): W1 queued after the TIME_STAB_01
+  screen. **NULL_VERIFY_01 screen INCONCLUSIVE** at the 4,000-game cap (+7.5 Elo, LLR +2.50): no W1
+  unless a policy for capped positives is decided.
+- **Dry run PASS** (`build/runs/nnue2_v4_dryrun`, 100 games from 2027000000, 5 workers): regen 15/15
+  identical, about 1.1-1.3M engine labels/hour, 58 plies and 35 engine labels per game on average
+  (97 games end with no legal move, 3 by repetition), 10 games from start lines, median 11.7k nodes
+  per label. Acquisition: chunk 0 (50,000 games, 4,957 s) gave 922,744 train rows by the stop rule,
+  so 10M needs about 11 chunks, about 15 h, then extraction with TB4-6.
+- **NNUE v3 plan (owner 2026-10-25, "ทำตามที่คุณแนะนำเลย"):** NNUE v3 = the v2b shape and recipe
+  on data v4 (trainer contract v3 DRAFT, seeds 20300001/20300002, awaiting freeze). In parallel a new
+  architecture trained on the same rows; the SPRT winner goes into V2. Plan:
+  `docs/architecture/NNUE3_ARCHITECTURE_PLAN_TH.md`; candidate A = output buckets by piece count
+  (branch `nnue3-buckets-01`, trainer `7c7b62c`: no `output_buckets` field = v2b byte-identical).
 
 ## Next action
 
