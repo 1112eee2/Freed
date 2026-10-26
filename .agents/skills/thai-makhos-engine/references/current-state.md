@@ -398,6 +398,14 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   TIME_STAB_01 screen now waits for `nnue3_arms/done/_finished` (old plan kept as `plan.before-arms.json`);
   queue.json lists nnue3_arms after nnue3_v3. Promotion: an arm goes into V2 only by passing W1 against
   RC-2, and must beat NNUE v3 if both pass.
+- **MISJUDGE_SUITE_01 result (2026-10-26 08:15, `build/runs/misjudge01/report.json`, suite 7eecc97b).**
+  929 playout-verified positions: 246 LOST, 683 HOLDS (ambiguous ones dropped). Seen = score <= -50 cp.
+  RC-2 d10: lost seen 36%, holds not alarmed 83%, balanced accuracy 0.596, AUC 0.647. RC-2 1 s: 65% / 86%,
+  0.753 / 0.801. v1 d10: 29% / 79%, 0.542 / 0.584. The suite separates engines in the right order (v2b
+  beat v1 by +117.6 Elo), so it measures something real; at depth 10 RC-2 misses about 2 of 3 lost positions,
+  which is the evaluation gap the arms target (arms and NNUE v3 are scored at d10 in nnue3_arms). The first
+  run stopped at score-rc2_d10 (the output folder was not created); fixed in v2-dev `db49bca`, patched
+  into misjudge01/src and resumed.
 
 ## Next action
 
