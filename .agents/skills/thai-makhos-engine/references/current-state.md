@@ -416,6 +416,13 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   (no win, no loss); scored RC-2 d10 / 1 s and v1 d10; report seen = score <= +100. Use: which engines
   still think DRAWN positions are winning (over-optimism) vs see WON ones; arms and NNUE v3 get scored on
   it after their chain. queue.json lists missedwin01 after misjudge01.
+- **MISSED_WIN_SUITE_01 result (2026-10-26 17:42, `build/runs/missedwin01/report.json`, suite 7fc90279).**
+  997 verified positions: 330 DRAWN, 667 WON (of the 600 "missed" picks, 143 were really winning, so
+  about 1 in 4 bad-draw positions was a win thrown away). Seen = score <= +100. RC-2 d10: drawn seen 57%,
+  won not alarmed 77%, AUC 0.734 (mean drawn +94, won +210). RC-2 1 s: 46% / 95%, AUC 0.895 (mean +118 /
+  +388). v1 d10: 70% / 59%, AUC 0.680. At d10 RC-2 calls 43% of drawn positions winning by more than +100;
+  more search separates the classes much better but raises all scores. Arms and NNUE v3 to be scored on
+  this suite at d10 after their training.
 
 ## Next action
 
