@@ -406,6 +406,16 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   which is the evaluation gap the arms target (arms and NNUE v3 are scored at d10 in nnue3_arms). The first
   run stopped at score-rc2_d10 (the output folder was not created); fixed in v2-dev `db49bca`, patched
   into misjudge01/src and resumed.
+- **MISSED_WIN_SUITE_01 chained (2026-10-26 15:15, `build/runs/missedwin01`, src = v2-dev `22b428a`).**
+  Target: bad draws (Black on the external-opponent site drew 14 games after leading +196 to +456; most
+  leads faded before ply 40, none ended by the 80-ply rule, so the no-progress clock is not the cause).
+  `misjudge_suite.py mine --mode missed-win`: from the same five screen game folders, positions where the
+  side to move scored >= +150 in a game that ended drawn (missed) vs the eventual winner's positions
+  (converted), 600 + 600, seed 20261050. Playouts RC-2 vs RC-2 x4 (3s+0.03s, TB4-6, C4, seed 20261051,
+  2,400 pairs, waits for `nnue2_v4_acq/done/regen`); verify keeps WON (no loss, >= 3 of 4 wins) and DRAWN
+  (no win, no loss); scored RC-2 d10 / 1 s and v1 d10; report seen = score <= +100. Use: which engines
+  still think DRAWN positions are winning (over-optimism) vs see WON ones; arms and NNUE v3 get scored on
+  it after their chain. queue.json lists missedwin01 after misjudge01.
 
 ## Next action
 
