@@ -451,6 +451,12 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   passes before the freeze), then time_stab01. Data contract v5 and P1/AP are NOT frozen: they come back to the
   owner with the dry-run numbers. The external-opponent exclusion list stays local
   (`build/nnue2_data_v5/exclude_external.json`).
+- 2026-10-28 dry run done (`build/runs/nnue_v5_dryrun`): 737 positions/h at 6 parallel, all 240 playouts end by
+  the rules, labels byte-identical on recompute, teacher matches v4, gates pass, P1 trains. Finding: v4-sourced
+  L/M positions are rarely real disagreements (1/11 each vs match 2/5, 3/5): exploration moves after the position
+  decide the v4 result. Proposed `--v4-clean-results` (nnue-v5-01 5d319fe): 24k selection becomes 22,007
+  positions, v4/match/self-play 23/70/7 instead of 60/33/7. Data contract v5 is ready to freeze (7f94661); the
+  clean rule and the freeze are the owner's decision. A4 screen running since 04:40.
 
 ## Next action
 
