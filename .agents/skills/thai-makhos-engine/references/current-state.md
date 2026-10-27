@@ -456,7 +456,11 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   L/M positions are rarely real disagreements (1/11 each vs match 2/5, 3/5): exploration moves after the position
   decide the v4 result. Proposed `--v4-clean-results` (nnue-v5-01 5d319fe): 24k selection becomes 22,007
   positions, v4/match/self-play 23/70/7 instead of 60/33/7. Data contract v5 is ready to freeze (7f94661); the
-  clean rule and the freeze are the owner's decision. A4 screen running since 04:40.
+  clean rule and the freeze are the owner's decision.
+- 2026-10-28 06:45 A4 screen PASS: +21.0 Elo, 671 pairs, LLR 2.98, pentanomial [17, 112, 341, 175, 26]
+  (`build/runs/nnue_v5_a4/screen/sprt.json`). Data v5 was not frozen yet, so W1 was released (wait on the pilot
+  dropped, runner restarted) and started 06:47; the v5 pilot playouts go after A4 W1. Not promoted: A4 still
+  needs W1 vs RC-2 and a head-to-head vs NNUE v3.
 
 ## Next action
 
