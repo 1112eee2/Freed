@@ -436,15 +436,19 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
 - **Arm screens (2026-10-27).** O3 INCONCLUSIVE at the 2000-pair cap, -2.5 Elo (LLR -2.31); O10 FAIL
   -31.2 Elo after 397 pairs. More weight on the single game result does not help (v4 games use 5-20%
   exploration moves: 858,583 v4 train rows are scored >= -25 cp in a game that side lost). F16 screen running.
-- **NNUE v5 drafts (2026-10-27, owner: "Approved. Start drafting data contract v5 (playout labels) and the
-  new net architecture. Bring them back before freezing."; NOT frozen).** Branch `nnue-v5-01` `4560fb1`
-  (worktree `D:/nnue_v5_wt`, from `nnue3-buckets-01` + `nnue2-data-v4`): `data_contract_v5_draft.json`
-  (7-16 piece positions where the teacher and the game disagree, 4 classes with piece-matched controls,
-  4 playouts each at 3s+0.03s TB4-6 + C4, label = mean result; suites and GameIndy positions excluded;
-  pilot 6,000 positions, 24,000 only by the declared scale rule), `trainer_contract_v5_drafts.json` (A4 =
-  output buckets 2-6/7-9/10-12/13-16 on data v4; P1 = playout term on v5 rows, teacher 0.25 there; AP =
-  both; seeds 20320001/11/21), plan `docs/architecture/NNUE_V5_PLAN_TH.md`. Open for the owner: playout
-  engine, source shares, volume, queue place, freeze A4 now or later, v5 row weight.
+- **NNUE v5 (2026-10-27).** Owner approved drafting data contract v5 (playout labels) and the new net
+  ("Bring them back before freezing"), then accepted the 5 proposed values: RC-2 plays the playouts, sources
+  60/30/10 with 24,000 positions, pilot right after nnue3_arms, freeze A4 now, v5 row weight 1.0. Branch
+  `nnue-v5-01` (worktree `D:/nnue_v5_wt`): A4 FROZEN `0152591` (`trainer_contract_v5_A4_seed20320001.json`,
+  output buckets 2-6/7-9/10-12/13-16 on data v4; model_pin turns the native bucket build on); tools
+  `b845255` (`v5_mine.py`, `v5_labels.py` openings/labels/teacher/rows/check, playout array in
+  `pack_rows.py`, playout term in `train.py`; v3 and A4 contracts retrain to the same model bytes);
+  P1/AP full draft contracts `ac794fd`. Chains: `build/runs/nnue_v5_a4` (A4 training beside the F16 screen,
+  then quantize/parity/pin/build/suites; its screen waits for nnue3_arms and the dry run) and
+  `build/runs/nnue_v5_dryrun` (60 positions; mining 278 s, teacher re-searched 10 v4 positions with equal
+  scores; playouts wait for the F16 screen). Data contract v5 and P1/AP are NOT frozen: they come back to the
+  owner with the dry-run numbers. The external-opponent exclusion list stays local
+  (`build/nnue2_data_v5/exclude_external.json`).
 
 ## Next action
 
