@@ -423,6 +423,16 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   +388). v1 d10: 70% / 59%, AUC 0.680. At d10 RC-2 calls 43% of drawn positions winning by more than +100;
   more search separates the classes much better but raises all scores. Arms and NNUE v3 to be scored on
   this suite at d10 after their training.
+- **NNUE v3 PASSED W1 (2026-10-27, `build/runs/nnue3_v3`).** Screen PASS +14.9 Elo (1,051 pairs, LLR
+  2.95); W1 vs RC-2 (10s+0.1s, TB4-6, C4) PASS **+7.1 Elo** at 3,926 pairs (W 2084 / D 3845 / L 1923,
+  LLR 2.96). Candidate for V2 (promotion of the model/DLL needs owner approval); an arm must beat it to
+  replace it. The chains were relaunched 2026-10-26 23:58 via WMI after an app restart killed them.
+- **Arms + v3 on the eval suites (d10).** MISJUDGE: 429 of 924 suite positions occur in data v4 rows, so
+  read the held-out 500 (141 LOST / 359 HOLDS): AUC RC-2 0.658, O3 0.691, v3 0.670, O10 0.668, F16 0.665,
+  v1 0.571; lost seen RC-2 35.5%, v3 44.0%, O3 42.6%. Same order on the in-rows part, so no memorization
+  effect. MISSED_WIN (`missedwin01/report_v3arms.json`, overlap not checked): AUC RC-2 0.734, v3 0.729,
+  F16 0.728, O3 0.725, O10 0.701; the new nets score everything higher (mean on DRAWN +116 to +126 vs RC-2
+  +94), so they do not fix the over-optimism on bad draws yet. O3 screen running.
 
 ## Next action
 
