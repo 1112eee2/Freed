@@ -432,7 +432,19 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   v1 0.571; lost seen RC-2 35.5%, v3 44.0%, O3 42.6%. Same order on the in-rows part, so no memorization
   effect. MISSED_WIN (`missedwin01/report_v3arms.json`, overlap not checked): AUC RC-2 0.734, v3 0.729,
   F16 0.728, O3 0.725, O10 0.701; the new nets score everything higher (mean on DRAWN +116 to +126 vs RC-2
-  +94), so they do not fix the over-optimism on bad draws yet. O3 screen running.
+  +94), so they do not fix the over-optimism on bad draws yet.
+- **Arm screens (2026-10-27).** O3 INCONCLUSIVE at the 2000-pair cap, -2.5 Elo (LLR -2.31); O10 FAIL
+  -31.2 Elo after 397 pairs. More weight on the single game result does not help (v4 games use 5-20%
+  exploration moves: 858,583 v4 train rows are scored >= -25 cp in a game that side lost). F16 screen running.
+- **NNUE v5 drafts (2026-10-27, owner: "Approved. Start drafting data contract v5 (playout labels) and the
+  new net architecture. Bring them back before freezing."; NOT frozen).** Branch `nnue-v5-01` `4560fb1`
+  (worktree `D:/nnue_v5_wt`, from `nnue3-buckets-01` + `nnue2-data-v4`): `data_contract_v5_draft.json`
+  (7-16 piece positions where the teacher and the game disagree, 4 classes with piece-matched controls,
+  4 playouts each at 3s+0.03s TB4-6 + C4, label = mean result; suites and GameIndy positions excluded;
+  pilot 6,000 positions, 24,000 only by the declared scale rule), `trainer_contract_v5_drafts.json` (A4 =
+  output buckets 2-6/7-9/10-12/13-16 on data v4; P1 = playout term on v5 rows, teacher 0.25 there; AP =
+  both; seeds 20320001/11/21), plan `docs/architecture/NNUE_V5_PLAN_TH.md`. Open for the owner: playout
+  engine, source shares, volume, queue place, freeze A4 now or later, v5 row weight.
 
 ## Next action
 
