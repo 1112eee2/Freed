@@ -446,7 +446,9 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   P1/AP full draft contracts `ac794fd`. Chains: `build/runs/nnue_v5_a4` (A4 training beside the F16 screen,
   then quantize/parity/pin/build/suites; its screen waits for nnue3_arms and the dry run) and
   `build/runs/nnue_v5_dryrun` (60 positions; mining 278 s, teacher re-searched 10 v4 positions with equal
-  scores; playouts wait for the F16 screen). Data contract v5 and P1/AP are NOT frozen: they come back to the
+  scores; playouts wait for the F16 screen). Queue order (owner 2026-10-27: "ทำตามที่คุณแนะนำเลย"): dry run,
+  A4 screen, v5 pilot playouts, A4 W1 (waits for `nnue_v5_pilot/done/playouts-pilot`; released if the screen
+  passes before the freeze), then time_stab01. Data contract v5 and P1/AP are NOT frozen: they come back to the
   owner with the dry-run numbers. The external-opponent exclusion list stays local
   (`build/nnue2_data_v5/exclude_external.json`).
 
