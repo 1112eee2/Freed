@@ -471,6 +471,10 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   L 1634, pentanomial [48, 563, 1909, 701, 54] (`build/runs/nnue_v5_a4/w1/sprt.json`, 8.1 h). Not promoted:
   head-to-head vs NNUE v3 still open; promotion is the owner's call. Pilot playouts started 14:59 (11,376 pairs,
   ~8 h); time_stab01 waits for nnue_v5_pilot _finished.
+- 2026-10-28 15:20 owner: queue A4 vs NNUE v3 head-to-head after the pilot ("Queue after pilot"). Chain
+  build/runs/a4_vs_v3 (step h2h: A4 dev vs v3 master, 10+0.1, TB + each side's C4, elo0 0 / elo1 2, 4000 pairs,
+  seed 20261081) waits for nnue_v5_pilot _finished; time_stab01 screen now also waits for a4_vs_v3 _finished
+  (backup plan.before-a4-vs-v3.json). Both had passed W1 vs RC-2 (A4 +8.0, v3 +7.1).
 
 ## Next action
 
