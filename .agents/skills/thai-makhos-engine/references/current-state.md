@@ -461,6 +461,12 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   (`build/runs/nnue_v5_a4/screen/sprt.json`). Data v5 was not frozen yet, so W1 was released (wait on the pilot
   dropped, runner restarted) and started 06:47; the v5 pilot playouts go after A4 W1. Not promoted: A4 still
   needs W1 vs RC-2 and a head-to-head vs NNUE v3.
+- 2026-10-28 owner froze data contract v5 + trainer arms P1/AP with the clean v4 rule on ("ทำเลย"; nnue-v5-01
+  a7f4c2d, file benchmarks/nnue2_stage4/data_contract_v5.json). Selection mined (seed 20261060, S2 incl. the A4
+  screen games): 22,748 positions, pilot 5,688, data in build/nnue2_data_v5; teacher done (4,418 searched, v4
+  check 10/10). Chain build/runs/nnue_v5_pilot: playouts wait for nnue_v5_a4 _finished (A4 W1), then labels,
+  gated rows-pilot, P1 + AP train/build/suites, held-out report, screens, scale rule (scale_rule.json). W1s wait
+  for the full-stage chain.
 
 ## Next action
 
