@@ -467,6 +467,10 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   check 10/10). Chain build/runs/nnue_v5_pilot: playouts wait for nnue_v5_a4 _finished (A4 W1), then labels,
   gated rows-pilot, P1 + AP train/build/suites, held-out report, screens, scale rule (scale_rule.json). W1s wait
   for the full-stage chain.
+- 2026-10-28 14:54 A4 W1 PASS vs RC-2 (10+0.1, TB + C4): +8.0 Elo, 3,275 pairs, LLR 2.95, W 1784 / D 3132 /
+  L 1634, pentanomial [48, 563, 1909, 701, 54] (`build/runs/nnue_v5_a4/w1/sprt.json`, 8.1 h). Not promoted:
+  head-to-head vs NNUE v3 still open; promotion is the owner's call. Pilot playouts started 14:59 (11,376 pairs,
+  ~8 h); time_stab01 waits for nnue_v5_pilot _finished.
 
 ## Next action
 
