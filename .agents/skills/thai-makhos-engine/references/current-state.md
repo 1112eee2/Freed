@@ -475,6 +475,14 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   build/runs/a4_vs_v3 (step h2h: A4 dev vs v3 master, 10+0.1, TB + each side's C4, elo0 0 / elo1 2, 4000 pairs,
   seed 20261081) waits for nnue_v5_pilot _finished; time_stab01 screen now also waits for a4_vs_v3 _finished
   (backup plan.before-a4-vs-v3.json). Both had passed W1 vs RC-2 (A4 +8.0, v3 +7.1).
+- 2026-10-29/30 results. Data v5 pilot chain done: playouts-pilot 11,376 pairs, labels 5,688 positions, rows gates
+  passed. P1 screen INCONCLUSIVE +2.8 Elo (2,000 pairs, LLR +0.14), AP INCONCLUSIVE +2.7. Held-out AUC (misjudge /
+  missedwin): v3 0.6662 / 0.7557, P1 0.6607 / 0.7522, AP 0.6871 / 0.7413, A4 0.6510 / 0.7496. Scale rule
+  (scale_rule.json): scale_up false (P1 below v3 on both suites) -> the full 24,000-position run does NOT start.
+  A4 vs NNUE v3 head to head (W1 setting, 4,000 pairs): INCONCLUSIVE, A4 +2.3 Elo, LLR +0.68, pentanomial
+  [54, 762, 2330, 785, 69]; no winner, nothing promoted. time_stab01 screen FAIL (-24.1 Elo, 433 pairs).
+  forced_ext01 W1 running from 2026-10-30; selfplay_mining01 and spsa01 wait. Open owner decisions: which of A4 / v3
+  goes forward, and whether any pilot arm gets a W1.
 
 ## Next action
 
