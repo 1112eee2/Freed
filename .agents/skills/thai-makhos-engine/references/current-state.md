@@ -483,6 +483,9 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   [54, 762, 2330, 785, 69]; no winner, nothing promoted. time_stab01 screen FAIL (-24.1 Elo, 433 pairs).
   forced_ext01 W1 running from 2026-10-30; selfplay_mining01 and spsa01 wait. Open owner decisions: which of A4 / v3
   goes forward, and whether any pilot arm gets a W1.
+- 2026-10-30 owner decision ("ตามนั้นเลย"): promote neither A4 nor NNUE v3 yet (A4 kept as the spare, stronger
+  screen +21.0 vs +14.9 but lower held-out AUC); no W1 for P1 or AP; the full data v5 run stays stopped. Queue
+  unchanged (forced_ext01 W1, selfplay_mining01, spsa01).
 
 ## Next action
 
