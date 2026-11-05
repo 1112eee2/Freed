@@ -520,6 +520,17 @@ The external opponent's name and games stay out of public files.
 - **Tooling (local `v2-dev`, not pushed):** `1cc37be` `queue_status.py` (DEAD = runner gone),
   `c2bcfb8` `colour_report.py` and its test.
 
+- **spsa01_w1 PASS** (2026-11-05 21:03): 3,881 pairs, W 2,075 / D 3,770 / L 1,917, Ptnml
+  58/692/2,243/810/78, LLR +2.96, **+7.1 +/- 4.0 Elo**, `complete: true`. The SPSA parameters go into
+  the integrated candidate. Not promoted.
+- **black_root01** (root-cause workflow, `build/runs/black_root01/REPORT_SUMMARY.md`): in self-play
+  vs RC-2 variants Black lost 4/215 (White 0/215); two losses come from one opening structure
+  (11-16 at ply 7 / 3-7 at ply 11 lose 31/32 playouts at 16k nodes, 12-16 / 11-15 hold), two
+  from endgame slips at 8 pieces. Narrow blind spot; expected Elo gain small.
+- **nnue_cap01** (started 2026-11-05 21:05, GPU): capacity probe on data v4, arms c0 (v3 shape),
+  w512, pair128, pair256 (+784 diagonal-neighbour pair features). Validation loss only; a clear
+  drop leads to a native port and screen.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
