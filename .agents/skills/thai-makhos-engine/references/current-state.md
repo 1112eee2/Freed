@@ -487,6 +487,39 @@ every planned idea is tried for V2, and the opening book now ships in V2 (this r
   screen +21.0 vs +14.9 but lower held-out AUC); no W1 for P1 or AP; the full data v5 run stays stopped. Queue
   unchanged (forced_ext01 W1, selfplay_mining01, spsa01).
 
+## Update 2026-11-05: search candidates, Black weakness, SPSA W1 running
+
+Written from the 2026-11-05 handoff plus a live read of `spsa01_w1`. Nothing here is
+promoted; production, the accepted DLL, `RULESET.json` and `makhos/core.py` are unchanged.
+The external opponent's name and games stay out of public files.
+
+- **forced_ext01:** screen +10.2; W1 INCONCLUSIVE +5.1 (4,000 pairs, LLR 2.07); the
+  independent repeat `forced_ext01_w1b` INCONCLUSIVE +2.6 (LLR 0.81). No further rerun.
+- **time_stab01:** screen FAIL, -24.1.
+- **selfplay_mining01:** finished (collapse and bad-draw corpora, reports in its run
+  tree). RC-2 repeats the confirmed blunder 21-41% of the time.
+- **spsa01:** 800 iterations; tuned theta lmr_base 75, lmr_div 223, null_deep_reduction 5
+  (from 3), null_deep_depth 6, history_bonus 32. 2 s screen PASS +10.8 Elo (1,417 pairs).
+- **spsa01_w1 (running):** tuned DLL `build/runs/spsa01/work/tuned.dll` (`8b3d3485...`)
+  against RC-2 (`d253f275...`, model `BC2B36CF...`), 1T, 10s+0.1s, H0=0/H1=+2, cap 4,000
+  pairs, seed 20261121, runner pid 47096, started 2026-11-05 ~10:52. Live read at 15:36:
+  1,797 pairs, W 939 / D 1,765 / L 890, Ptnml 31/327/1031/378/30, LLR +0.84 (bound +2.94),
+  +4.7 +/- 5.8 Elo, INCONCLUSIVE, `complete: false`. PASS means the SPSA parameters can be
+  adopted into the integrated candidate; INCONCLUSIVE or FAIL means drop them.
+- **Per-colour data** (`tools/arena/colour_report.py`, W1 games, candidate vs RC-2): the
+  candidate scores 0.54 as Black and 0.46 as Red in v3, A4 and forced_ext01. Self-play
+  therefore does not show the Black weakness; the earlier claim that Black is not weaker
+  was wrong.
+- **black_probe01** (Black engine against the recorded external-opponent moves, learned-loss
+  safety net removed, 8 games per start ply, 2 s/move). Losses of 32 games: RC-2 9
+  (ply 15 W0 D2 L6; ply 19 W0 D5 L3), v3 7, A4 11 (ply 19 L6), forced_ext01 12 (ply 19
+  L7). Small samples. No engine fixes the blind spot. Hypothesis, not concluded: after the
+  opponent's combo the evaluation judges the position about equal while a tablebase says
+  lost about 27 plies later (pruning ruled out). The `black-root-cause` workflow
+  (`wf_de6e4e12-f32`) result has not been read; its scratch is in `build/runs/black_root01/`.
+- **Tooling (local `v2-dev`, not pushed):** `1cc37be` `queue_status.py` (DEAD = runner gone),
+  `c2bcfb8` `colour_report.py` and its test.
+
 ## Next action
 
 0. **Approved 2026-10-15 (owner: Q1–Q4 as recommended; no separate W2 for LMR_LOG_01
