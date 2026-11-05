@@ -991,3 +991,6 @@ established. See its [transition record](../../../../docs/architecture/ENDGAME_T
 - Previous current-state snapshots are listed at the top of this file. Do not
   execute their old next-action instructions.
 - Rejected Root-PVS/SMP, large DFPN and tablebase expansion remain deferred.
+
+- 2026-11-06 INT01 W1 (SPSA-tuned search + NNUE v3 vs RC-2, 10s+0.1, TB4-6 + C4): **PASS +11.6 +/- 5.2 Elo**, 2,266 pairs, W1276 D2131 L1125, LLR +2.96. Candidate: branch `int-v3-spsa-01`, `build/runs/int01_w1/cand` (+ .tune). Not promoted yet.
+- 2026-11-06 NNUE width 512 (v3 recipe, data v4): best val 0.05781 vs v3 0.05860. Native/quantizer width option on `int-v3-spsa-01`; screen vs INT01 queued in `build/runs/nnue_w512`.
