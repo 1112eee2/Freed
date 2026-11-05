@@ -994,3 +994,4 @@ established. See its [transition record](../../../../docs/architecture/ENDGAME_T
 
 - 2026-11-06 INT01 W1 (SPSA-tuned search + NNUE v3 vs RC-2, 10s+0.1, TB4-6 + C4): **PASS +11.6 +/- 5.2 Elo**, 2,266 pairs, W1276 D2131 L1125, LLR +2.96. Candidate: branch `int-v3-spsa-01`, `build/runs/int01_w1/cand` (+ .tune). Not promoted yet.
 - 2026-11-06 NNUE width 512 (v3 recipe, data v4): best val 0.05781 vs v3 0.05860. Native/quantizer width option on `int-v3-spsa-01`; screen vs INT01 queued in `build/runs/nnue_w512`.
+- 2026-11-06 w512 screen vs INT01 (2s+0.02, no TB): **FAIL -14.9 +/- 10.5 Elo**, 723 pairs, LLR -2.97. Lower val loss (-1.3%) does not pay for the 4x wider accumulator at this time control. Not pursued at 512; INT01 stays the best candidate.
